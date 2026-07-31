@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>B-CITY · 춘천기업혁신파크</title>
+  <meta name="description" content="서부개척 시대의 골드러시가 21세기 데이터 러시로. AI 데이터를 중심으로 한 새로운 기회의 도시가 춘천에 탄생합니다." />
+
+  <!-- 오프라인 시연용: Tailwind·폰트를 CDN 대신 assets/vendor 의 로컬 파일로 쓴다.
+       외부 네트워크 없이 동작한다. 원본 출처는 assets/vendor/README.md 참고. -->
+  <link href="assets/vendor/inter/inter.local.css" rel="stylesheet" />
+  <link href="assets/vendor/pretendard/pretendard.local.css" rel="stylesheet" />
+
+  <script src="assets/vendor/tailwind-browser-4.js"></script>
+
+  <!-- DESIGN.md 토큰을 일반 CSS로도 고정 선언.
+       Tailwind @theme 변수는 유틸리티 클래스로 쓰이지 않으면 제거되므로,
+       인라인 style의 var(--color-district-*) 참조가 무효화되는 것을 막는다. -->
+  <style>
+    :root {
+      --color-primary: #344198;
+      --color-primary-hover: #2a3680;
+      --color-navy: #002742;
+      --color-mint: #3dbfa8;
+      --color-azure: #4e7ac7;
+      --color-light-blue: #bbccf0;
+      --color-bg: #f4f8fe;
+      --color-surface: #ffffff;
+      --color-text: #111111;
+      --color-text-muted: #5b6b82;
+      --color-line: #d8e3f2;
+      --color-district-ai: #344198;
+      --color-district-bio: #21b9a5;
+      --color-district-food: #e19a32;
+      --color-district-mice: #5aa6e8;
+      --color-district-biz: #6d5fa8;
+      --color-district-housing: #c9a56a;
+      --color-district-edu: #a2be52;
+      --color-district-golf: #50a86f;
+
+      /* 토지이용계획도의 권역 면 색(불투명도 100% 기준) — 번호 배지에 쓴다.
+         zone-0N.svg 의 fill 값을 그대로 뽑았다. */
+      --color-zone-ai: #d1aef2;
+      --color-zone-bio: #98ffe4;
+      --color-zone-food: #ff9100;
+      --color-zone-mice: #4fceff;
+      --color-zone-housing: #fefed4;
+      --color-zone-edu: #a8bd62;
+      --color-zone-biz: #e5babd;
+      --color-zone-golf: #00b050;
+    }
+  </style>
+
+  <!-- Design tokens: DESIGN.md -->
+  <style type="text/tailwindcss">
+    @theme {
+      --color-primary: #344198;
+      --color-primary-hover: #2a3680;
+      --color-navy: #002742;
+      --color-mint: #3dbfa8;
+      --color-azure: #4e7ac7;
+      --color-light-blue: #bbccf0;
+      --color-bg: #f4f8fe;
+      --color-surface: #ffffff;
+      --color-text: #111111;
+      --color-text-muted: #5b6b82;
+      --color-line: #d8e3f2;
+      --color-district-ai: #344198;
+      --color-district-bio: #21b9a5;
+      --color-district-food: #e19a32;
+      --color-district-mice: #5aa6e8;
+      --color-district-biz: #6d5fa8;
+      --color-district-housing: #c9a56a;
+      --color-district-edu: #a2be52;
+      --color-district-golf: #50a86f;
+
+      /* 토지이용계획도의 권역 면 색(불투명도 100% 기준) — 번호 배지에 쓴다.
+         zone-0N.svg 의 fill 값을 그대로 뽑았다. */
+      --color-zone-ai: #d1aef2;
+      --color-zone-bio: #98ffe4;
+      --color-zone-food: #ff9100;
+      --color-zone-mice: #4fceff;
+      --color-zone-housing: #fefed4;
+      --color-zone-edu: #a8bd62;
+      --color-zone-biz: #e5babd;
+      --color-zone-golf: #00b050;
+
+      --font-display: "Paperlogy", "Pretendard", "Noto Sans KR", sans-serif;
+      --font-body: "Inter", "Pretendard", sans-serif;
+
+      --text-hero: 68px;
+      --text-hero--line-height: 1.15;
+      --text-hero--letter-spacing: -0.025em;
+      --text-h2: 54px;
+      --text-h2--line-height: 1.2;
+      --text-h2--letter-spacing: -0.02em;
+      --text-h3: 38px;
+      --text-h3--line-height: 1.28;
+      --text-h3--letter-spacing: -0.015em;
+      --text-card: 22px;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+    body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); }
+    .font-display { font-family: var(--font-display); }
+
+    /* ===== 페이징 스크롤 =====
+       주의: CSS scroll-snap은 시네마 섹션(sticky+스크럽)의 중간 스크롤을 건너뛰게 만들어
+       영상이 멈춘 것처럼 보이게 함. 페이징 느낌은 sticky 고정 + 도트 내비로 구현한다. */
+    html { scroll-behavior: smooth; }
+
+    /* ===== 로고 ===== */
+    .bcity-logo { height: 20px; width: auto; display: block; flex-shrink: 0; }
+    .bcity-logo-lg { height: 24px; }
+    /* 투명 헤더(영상 위)에서는 흰색 + 그림자, 흰 헤더에서는 브랜드 네이비 */
+    #gnb:not(.solid) .bcity-logo { color: #fff; filter: drop-shadow(0 1px 10px rgba(0,10,30,.55)); }
+    #gnb.solid .bcity-logo { color: #2C3E91; filter: none; }
+
+    /* ===== GNB ===== */
+    :root { --gnb-pad-top: 20px; }          /* GNB 상단 여백 */
+    #gnb nav { padding-top: var(--gnb-pad-top); }
+    #gnb { background: transparent; border-color: transparent; }
+    #gnb .gnb-logo, #gnb .gnb-link, #gnb .gnb-lang, #gnb .gnb-sns { color: #fff; }
+    #gnb .gnb-link:hover { color: var(--color-light-blue); }
+    /* 스크롤해도 배경은 넣지 않는다 (투명 유지) — 글자 색만 바뀐다.
+       배경은 메가메뉴를 펼칠 때만 깔린다. */
+    #gnb.solid { background: rgba(244,248,254,.97); backdrop-filter: blur(10px);
+      border-color: var(--color-line); box-shadow: 0 2px 24px rgba(0,10,30,.06); }
+    #gnb.open { background: rgba(255,255,255,.97); backdrop-filter: blur(10px); border-color: var(--color-line); }
+    #gnb.solid .gnb-logo { color: var(--color-primary); }
+    #gnb.solid .gnb-link { color: var(--color-text); }
+    #gnb.solid .gnb-link:hover { color: var(--color-primary); }
+    #gnb.solid .gnb-lang, #gnb.solid .gnb-sns { color: var(--color-text-muted); }
+    #gnb.solid .gnb-burger { color: var(--color-text); }
+    #gnb:not(.solid) .gnb-logo, #gnb:not(.solid) .gnb-link,
+    #gnb:not(.solid) .gnb-lang, #gnb:not(.solid) .gnb-sns { text-shadow: 0 1px 10px rgba(0,10,30,.55); }
+    #gnb .gnb-burger { color: #fff; }
+    #gnb nav { align-items: flex-start; }
+    #gnb .gnb-item { display: flex; flex-direction: column; width: 168px; }
+    /* 3단(하위의 하위) 항목 들여쓰기 */
+    #gnb .gnb-sub a.gnb-sub2 { display: flex; align-items: center; gap: 7px; padding-left: 10px; font-size: 13px; }
+    #gnb .gnb-tick { display: inline-block; width: 7px; height: 1px; background: currentColor; opacity: .5; flex-shrink: 0; }
+
+    /* 독립 CTA (헤더) */
+    .cta-ghost, .cta-solid { display: inline-flex; align-items: center; white-space: nowrap;
+      border-radius: 999px; font-size: 13px; font-weight: 700; padding: 9px 17px;
+      transition: background .25s, color .25s, border-color .25s, transform .25s; }
+    .cta-ghost { border: 1px solid rgba(255,255,255,.55); color: #fff; }
+    .cta-ghost:hover { background: rgba(255,255,255,.16); transform: translateY(-1px); }
+    .cta-solid { background: var(--color-mint); color: var(--color-navy); }
+    .cta-solid:hover { filter: brightness(.95); transform: translateY(-1px); }
+    #gnb.solid .cta-ghost { border-color: var(--color-line); color: var(--color-primary); }
+    #gnb.solid .cta-ghost:hover { background: var(--color-bg); border-color: var(--color-primary); }
+    #gnb.solid .cta-solid { background: var(--color-primary); color: #fff; }
+    #gnb .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+      transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
+    #gnb.open .gnb-sub { max-height: 460px; opacity: 1; padding-top: 24px; padding-bottom: 30px; }
+    #gnb .gnb-sub a { display: block; padding: 6px 0; white-space: nowrap; font-weight: 400;
+      color: var(--color-text-muted); transition: color .15s; }
+    #gnb .gnb-sub a:hover { color: var(--color-primary); }
+    #gnb .gnb-divider { position: absolute; left: 0; right: 0; top: calc(64px + var(--gnb-pad-top, 20px)); height: 1px;
+      background: var(--color-line); opacity: 0; transition: opacity .28s ease; }
+    #gnb.open .gnb-divider { opacity: 1; }
+
+    /* ===== 모바일 메뉴 ===== */
+    #mobileNav { transition: opacity .3s ease, visibility .3s ease; }
+    #mobileNav.hidden-nav { opacity: 0; visibility: hidden; pointer-events: none; }
+    #mobileNav .m-panel { transition: transform .3s cubic-bezier(.22,1,.36,1); }
+    #mobileNav.hidden-nav .m-panel { transform: translateX(100%); }
+    .m-sub { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .m-acc.open .m-sub { max-height: 520px; }
+    .m-acc.open .m-caret { transform: rotate(180deg); }
+    .m-caret { transition: transform .3s ease; }
+
+    /* ===== 타이포 연출 ===== */
+    .hero-shadow { text-shadow: 0 2px 18px rgba(0,10,30,.5), 0 1px 3px rgba(0,10,30,.35); }
+    @keyframes heroUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+    .anim { opacity: 0; animation: heroUp .9s cubic-bezier(.22,1,.36,1) forwards; }
+    .reveal { opacity: 0; transform: translateY(28px);
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+    .reveal.in { opacity: 1; transform: none; }
+    .lr .lr-line { display: block; overflow: hidden; }
+    .lr .lr-inner { display: inline-block; transform: translateY(112%);
+      transition: transform .85s cubic-bezier(.22,1,.36,1); }
+    .lr.in .lr-inner { transform: none; }
+
+    /* ===== 입지 (LOCATION) — 밝은 배경 변형 ===== */
+    /* .ov 프레임(아이브로우·자세히보기·세로라벨)을 밝은 배경용 색으로 덮는다 */
+    .ov--light .cine-stage { color: var(--color-text); }
+    .ov--light .ov-eyebrow { color: var(--color-text-muted); }
+    .ov--light .ov-eyebrow b { color: var(--color-primary); }
+    .ov--light .ov-rule { background: var(--color-primary); opacity: .5; }
+    .ov--light .ov-more { color: var(--color-text); border-color: var(--color-line); }
+    .ov--light .ov-more:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+    /* 우측 세로 라벨 + 페이지 점 */
+    .ov-vrail { position: absolute; right: 30px; top: 50%; z-index: 4;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      transform: translateY(-50%); }
+    .ov-vrail-txt { font-size: 11.5px; letter-spacing: .2em; color: var(--color-text-muted); }
+    .ov-vrail .cine-dots { position: static; transform: none; flex-direction: column; gap: 10px; }
+    .ov-vrail .cine-dots i { width: 6px; height: 6px; border-radius: 999px;
+      background: rgba(17,17,17,.18); transition: background .35s, transform .35s; }
+    .ov-vrail .cine-dots i.on { width: 6px; background: var(--color-primary); transform: scale(1.55); }
+
+    /* 2단 그리드 — 지도 좌측 / 카피 우측 */
+    /* 지도는 좌측 끝까지 붙이고(풀블리드) 우측 카피만 컨테이너 라인을 지킨다.
+       지도 폭을 세로 예산에서 직접 계산해 그리드 auto의 순환 의존을 피한다. */
+    .lo-grid { position: absolute; inset: 0; z-index: 3;
+      --lo-pad-t: 128px; --lo-pad-b: 112px; --lo-cap: 30px;   /* 상·하 패딩 + 각주 */
+      --lo-map-h: calc(100vh - var(--lo-pad-t) - var(--lo-pad-b) - var(--lo-cap));
+      display: grid; align-items: center; gap: clamp(28px, 3.2vw, 60px);
+      /* 우측 카피가 좁아지지 않게 지도 폭을 50vw로 제한한다 */
+      grid-template-columns: minmax(0, min(calc(var(--lo-map-h) * 16 / 9), 50vw)) minmax(0, 1fr);
+      width: 100%; margin: 0;
+      padding: var(--lo-pad-t) max(28px, calc((100vw - 1320px) / 2 + 24px)) var(--lo-pad-b) 0; }
+    .lo-copy { position: relative; height: 100%; display: flex; flex-direction: column;
+      justify-content: center; }
+    .lo-copy .cine-page { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); }
+    .lo-copy .cine-page.on { position: relative; top: auto; transform: none; }
+
+    /* 큰 고스트 번호 */
+    .lo-no { font-family: var(--font-display); font-size: clamp(44px, 4.4vw, 68px);
+      font-weight: 700; line-height: 1; letter-spacing: -.03em; color: #b9c0e0; }
+    .lo-title { margin-top: 18px; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(30px, 3.5vw, 54px); line-height: 1.24; letter-spacing: -.025em;
+      color: var(--color-text); }
+    .lo-desc { margin-top: 22px; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.7;
+      color: var(--color-text-muted); }
+    /* 값 배지 */
+    .lo-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .lo-pill { display: inline-flex; align-items: baseline; gap: 7px;
+      padding: 10px 20px; border: 1px solid var(--color-line); border-radius: 999px;
+      background: var(--color-surface); font-size: 13px; color: var(--color-text-muted);
+      transition: border-color .25s, color .25s; }
+    .lo-pill b { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--color-primary); }
+    .lo-pill:hover { border-color: var(--color-primary); color: var(--color-text); }
+    .lo-pill--on { border-color: var(--color-primary); background: var(--color-primary); color: #fff; font-weight: 700; }
+
+    /* 하단 페이지 탭 */
+    .lo-tabs { position: absolute; left: 0; bottom: -18px; display: flex; flex-wrap: wrap; gap: 26px; }
+    .lo-tab { position: relative; display: inline-flex; align-items: baseline; gap: 8px;
+      padding-bottom: 12px; font-size: 13.5px; letter-spacing: .01em;
+      color: var(--color-text-muted); transition: color .25s; }
+    .lo-tab b { font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; }
+    .lo-tab::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+      background: var(--color-line); }
+    .lo-tab::before { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+      background: var(--color-primary); transition: width .45s cubic-bezier(.22,1,.36,1); z-index: 1; }
+    .lo-tab:hover { color: var(--color-text); }
+    .lo-tab.is-on { color: var(--color-primary); font-weight: 700; }
+    .lo-tab.is-on::before { width: 100%; }
+    /* 지도 컬럼 — 각주가 지도 바로 아래 붙는다 */
+    .lo-mapcol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .lo-note { align-self: stretch; text-align: right;
+      font-size: 11.5px; line-height: 1.5; color: var(--color-text-muted); }
+
+    @media (max-width: 1023px) {
+      .ov-vrail { display: none; }
+      .lo-grid { position: relative; inset: auto; grid-template-columns: 1fr;
+        width: calc(100vw - 44px); padding: 108px 0 96px; gap: 28px; }
+      .lo-copy .cine-page { position: absolute; top: 0; transform: none; }
+      .lo-copy .cine-page.on { position: relative; }
+      .lo-tabs { position: relative; bottom: auto; margin-top: 34px; gap: 18px; }
+    }
+
+    /* ===== 입지 지도 · 경로 모션그래픽 =====
+       좌표계는 배경 이미지 픽셀 공간(1671×949)이라 선/글자 크기도 그 기준이다. */
+    .lm { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; }
+    .lm-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    /* 전경 레이어 — 배경과 같은 프레임에 정렬돼 있어 같은 규칙을 쓴다 */
+    .lm-fg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+      pointer-events: none; }
+    .lm-svg { position: relative; display: block; width: 100%; height: 100%; }
+
+    .lm-g { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility .45s; }
+    .lm-g.on { opacity: 1; visibility: visible; }
+    /* 경로 — 옅은 밑선 위로 마커가 지나가며 진한 선이 이어진다.
+       dash 애니메이션에는 filter를 쓰지 않는다(매 프레임 재필터 = 깜빡임·부하). */
+    .lm-base { fill: none; stroke: #BBD0EE; stroke-width: 6; stroke-linecap: round; }
+    .lm-path { fill: none; stroke: #2B6DEF; stroke-width: 7; stroke-linecap: round; }
+    .lm-path--rail { stroke: var(--color-mint); }
+    /* travel — 이미지에 이미 그려진 노선 위를 밝은 구간이 지나가며 '이동'을 나타낸다 */
+    .lm-path--comet { stroke: #EAF3FF; stroke-width: 9; stroke-linecap: round; }
+    /* 선을 끌고 가는 라운드 마커 — 외곽 글로우 + 흰 코어 */
+    .lm-glow { fill: #2B6DEF; opacity: 0; }
+    .lm-head { fill: #fff; stroke: #2B6DEF; stroke-width: 5; opacity: 0; }
+    /* 경로 끝점 — 받침대에 살짝 걸치는 작은 라운드 점. 선이 끊겨 보이지 않게 접점을 만든다. */
+    .lm-cap-dot { fill: #2B6DEF; }
+    /* 지점 */
+    .lm-node { opacity: 0; transform: scale(.4); transform-box: fill-box; transform-origin: center;
+      transition: opacity .45s ease, transform .6s cubic-bezier(.34,1.5,.64,1); }
+    .lm-g.on .lm-node { opacity: 1; transform: none; }
+    .lm-ring { fill: var(--color-surface); stroke: var(--color-primary); stroke-width: 5; }
+    .lm-core { fill: var(--color-primary); }
+    .lm-name { font-family: var(--font-body); font-size: 32px; font-weight: 700;
+      fill: var(--color-text); }
+    /* 소요시간 배지 — 경로 위 (예전 방식) */
+    .lm-tag { opacity: 0; transition: opacity .5s ease; }
+    .lm-g.on .lm-tag { opacity: 1; }
+    .lm-tag rect { fill: var(--color-primary); }
+    .lm-tag text { font-family: var(--font-display); font-size: 26px; font-weight: 700; fill: #fff; }
+    /* 허브 */
+    .lm-hub circle.h1 { fill: var(--color-mint); opacity: .2;
+      animation: lmHub 2.8s cubic-bezier(.22,1,.36,1) infinite;
+      transform-box: fill-box; transform-origin: center; }
+    .lm-hub circle.h2 { fill: var(--color-primary); }
+    .lm-hub text { font-family: var(--font-display); font-size: 30px; font-weight: 700;
+      fill: var(--color-primary); }
+    @keyframes lmHub { 0% { transform: scale(1); opacity: .32; } 70%,100% { transform: scale(2.1); opacity: 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lm-path, .lm-node, .lm-tag, .lm-g { transition: none; }
+      .lm-path { stroke-dashoffset: 0; }
+      .lm-hub circle.h1 { animation: none; }
+    }
+
+    /* ===== 존 오버뷰 · 토지이용계획도 ===== */
+    .az-grid { display: grid; align-items: start; gap: clamp(28px, 3vw, 56px);
+      grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 1024px) {
+      /* 카드는 좁게 좌측, 지도는 우측 고정 폭 */
+      .az-grid { grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 420px); }
+    }
+    /* 지도: 베이스 + 권역 레이어를 같은 박스에 겹친다 */
+    .az-map { position: relative; aspect-ratio: 462 / 577; width: 100%; }
+    .az-map img { position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: contain; pointer-events: none; }
+    /* 베이스 래스터는 원본 SVG가 preserveAspectRatio="none" 으로 깔던 것이라 그대로 늘린다 */
+    .az-map-plate, .az-map-base { object-fit: fill; }
+    /* 흰 바탕판 — 알파는 그대로 두고 모든 색을 흰색으로 (지도 실루엣) */
+    .az-map-plate { filter: brightness(0) invert(1)
+      drop-shadow(0 18px 40px rgba(0,10,30,.5)); }
+    .az-map-hl { opacity: 0; transition: opacity .3s ease; }
+    .az-map-hl.on { opacity: 1; }
+    /* 권역이 선택되면 베이스는 살짝 눌러 강조를 살린다 */
+    .az-map.is-on .az-map-base { opacity: .55; transition: opacity .3s ease; }
+    /* 면책 문구 — 좌측 권역부지 합계 박스 아래 */
+    .az-note { margin-top: 14px; font-size: 12px; line-height: 1.65;
+      color: rgba(255,255,255,.45); text-indent: -1em; padding-left: 1em; }
+    /* 선택된 카드 강조 */
+    .az-card { cursor: pointer; outline: none; }
+    .az-card.is-on { background: rgba(0,39,66,.82); border-color: rgba(255,255,255,.45);
+      transform: translateY(-6px); }
+    @media (max-width: 1023px) {
+      .az-map { max-width: 340px; margin: 8px auto 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .az-map-hl, .az-map.is-on .az-map-base { transition: none; }
+    }
+
+    /* ===== 사업개요 (OVERVIEW) ===== */
+    .ov .cine-stage { color: #fff; }
+    /* 상단 좌 라벨 */
+    .ov-eyebrow { position: absolute; left: max(28px, calc((100vw - 1320px) / 2 + 24px)); top: 74px; z-index: 4;
+      display: flex; align-items: center; gap: 14px;
+      font-size: 12.5px; letter-spacing: .22em; color: rgba(255,255,255,.72); }
+    .ov-eyebrow b { font-weight: 700; color: #fff; }
+    .ov-rule { display: block; width: 0; height: 1px; background: rgba(255,255,255,.55);
+      transition: width .9s cubic-bezier(.22,1,.36,1) .2s; }
+    .ov.in .ov-rule { width: 42px; }
+    /* 상단 우 링크 */
+    .ov-more { position: absolute; right: max(28px, calc((100vw - 1320px) / 2 + 24px)); top: 70px; z-index: 4;
+      display: inline-flex; align-items: center; gap: 12px; padding-bottom: 7px;
+      font-size: 14px; font-weight: 700; color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,.45); transition: border-color .25s, gap .3s; }
+    .ov-more svg { width: 19px; height: 19px; transition: transform .4s cubic-bezier(.22,1,.36,1); }
+    .ov-more:hover { border-color: #fff; }
+    .ov-more:hover svg { transform: translateX(5px); }
+    /* 우측 세로 라벨 */
+    .ov-vlabel { position: absolute; right: 30px; top: 50%; z-index: 4;
+      display: flex; align-items: center; gap: 12px; transform: translateY(-50%);
+      font-size: 11.5px; letter-spacing: .2em; color: rgba(255,255,255,.5); }
+    .ov-vlabel i { width: 7px; height: 7px; border-radius: 999px; background: var(--color-azure); }
+    /* 중앙 카피 */
+    .ov-center { position: absolute; left: 0; right: 0; top: 30%; z-index: 3;
+      padding: 0 24px; text-align: center; }
+    .ov-center .cine-page { position: absolute; left: 0; right: 0; top: 0; }
+    .ov-center .cine-page.on { position: relative; }
+    .ov-title { font-family: var(--font-display); font-weight: 700; line-height: 1.22;
+      letter-spacing: -.025em; font-size: clamp(30px, 3.6vw, 56px); }
+    /* 줄 단위 마스크 리빌 — 페이지가 바뀔 때마다 다시 재생된다 */
+    .ov-line { display: block; overflow: hidden; }
+    .ov-line > span { display: inline-block; transform: translateY(106%);
+      transition: transform .95s cubic-bezier(.22,1,.36,1); }
+    .cine-page.on .ov-line > span { transform: none; }
+    .cine-page.on .ov-line:nth-child(1) > span { transition-delay: .06s; }
+    .cine-page.on .ov-line:nth-child(2) > span { transition-delay: .2s; }
+    .ov-title em { font-style: normal; color: var(--color-light-blue); }
+    .ov-em { color: var(--color-light-blue); }
+    .ov-desc { max-width: 760px; margin: 26px auto 0; font-size: clamp(14px, 1.05vw, 17px);
+      line-height: 1.95; color: rgba(255,255,255,.86); }
+    /* 페이지 인디케이터 — 가는 대시 */
+    .ov .cine-dots { bottom: auto; top: 66%; flex-direction: row; gap: 14px; }
+    .ov .cine-dots i { width: 26px; height: 2px; border-radius: 2px; background: rgba(255,255,255,.32);
+      transition: width .5s cubic-bezier(.22,1,.36,1), background .4s; }
+    .ov .cine-dots i.on { width: 54px; background: #fff; }
+    /* 하단 지표 */
+    .ov-stats { position: absolute; left: 50%; bottom: 78px; z-index: 4; margin: 0;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      width: min(1272px, calc(100vw - 56px)); transform: translateX(-50%);
+      border-top: 1px solid rgba(255,255,255,.18); }
+    .ov-stat { padding: 30px 12px 0 34px; opacity: 0; transform: translateY(18px);
+      transition: opacity .8s ease, transform .9s cubic-bezier(.22,1,.36,1); }
+    .ov-stat + .ov-stat { border-left: 1px solid rgba(255,255,255,.18); }
+    .ov.in .ov-stat { opacity: 1; transform: none; }
+    .ov.in .ov-stat:nth-child(1) { transition-delay: .35s; }
+    .ov.in .ov-stat:nth-child(2) { transition-delay: .47s; }
+    .ov.in .ov-stat:nth-child(3) { transition-delay: .59s; }
+    .ov.in .ov-stat:nth-child(4) { transition-delay: .71s; }
+    .ov-stat dt { display: flex; align-items: baseline; gap: 7px; font-family: var(--font-display); }
+    .ov-stat dt b { font-size: clamp(30px, 2.6vw, 42px); font-weight: 700; letter-spacing: -.02em; color: #fff; }
+    .ov-stat dt span { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.9); }
+    .ov-stat dd { margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,.62); }
+
+    @media (max-width: 1023px) {
+      .ov-vlabel { display: none; }
+      .ov-eyebrow { left: 22px; top: 84px; }
+      .ov-more { right: 22px; top: 80px; font-size: 13px; }
+      .ov-center { top: 24%; }
+      .ov-stats { bottom: 40px; width: calc(100vw - 36px); grid-template-columns: repeat(2, 1fr);
+        border-top: 0; gap: 0; }
+      .ov-stat { padding: 18px 10px 18px 18px; border-top: 1px solid rgba(255,255,255,.18); }
+      .ov-stat:nth-child(odd) { border-left: 0; }
+      .ov .cine-dots { top: auto; bottom: 236px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ov-rule { width: 42px; transition: none; }
+      .ov-stat { opacity: 1; transform: none; transition: none; }
+      .ov-line > span { transform: none; transition: none; }
+    }
+
+    /* ===== 문의하기 폼 ===== */
+    .ct-form { display: flex; flex-direction: column; gap: 22px; padding-bottom: 32px; }
+    .ct-row { display: block; }
+    .ct-label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; color: var(--color-text); }
+    /* 관심분야: 라벨 옆에 선택 버튼을 한 줄로 → 세로 공간 절약
+       (.ct-row 와 명시도가 같으므로 반드시 뒤에 와야 display:flex 가 적용된다) */
+    .ct-row--inline { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
+    .ct-row--inline .ct-label { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; }
+    .ct-row--inline .ct-chips { flex: 1 1 auto; }
+    .ct-row--inline .ct-err { flex: 1 1 100%; margin-top: 0; }
+    .ct-req { color: var(--color-mint); }
+    .ct-input { width: 100%; padding: 14px 16px; font-size: 15px; color: var(--color-text);
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
+    .ct-input::placeholder { color: #9aa8bb; }
+    .ct-input:focus { outline: none; border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(52,65,152,.12); }
+    .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
+    /* 관심분야 칩 */
+    .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ct-chip { position: relative; cursor: pointer; }
+    .ct-chip input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .ct-chip span { display: inline-flex; align-items: center; padding: 10px 18px;
+      font-size: 14px; font-weight: 600; color: var(--color-text-muted);
+      background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 999px;
+      transition: background .22s, color .22s, border-color .22s; }
+    .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(52,65,152,.18); }
+    /* 동의 */
+    .ct-agree { display: flex; flex-direction: column; gap: 10px;
+      padding: 18px 22px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer;
+      font-size: 14px; line-height: 1.55; color: var(--color-text); }
+    .ct-check input { flex-shrink: 0; width: 19px; height: 19px; margin-top: 1px;
+      accent-color: var(--color-primary); cursor: pointer; }
+    .ct-tag { margin-right: 6px; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; vertical-align: 1.5px; }
+    .ct-tag--req { background: var(--color-primary); color: #fff; }
+    .ct-tag--opt { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-view { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+      text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+    .ct-view:hover { color: var(--color-primary); text-decoration-color: currentColor; }
+    /* 에러 */
+    .ct-err { display: none; margin-top: 8px; font-size: 13px; font-weight: 600; color: #d8564f; }
+    .ct-err.on { display: block; }
+    .ct-input.bad { border-color: #d8564f; box-shadow: 0 0 0 3px rgba(216,86,79,.12); }
+    /* 버튼 — 우측 안내 컬럼 하단.
+       컬럼이 그리드 행 높이만큼 늘어나므로 sticky로 스크롤 내내 붙어 있는다. */
+    .ct-actions { position: sticky; bottom: 0; margin-top: auto;
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 32px;   /* 좌측 폼과 동일한 32px */
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0, var(--color-surface) 14px); }
+    .ct-actions .ct-submit, .ct-actions .ct-reset { flex: 1 1 0; min-width: 116px;
+      padding: 15px 18px; }
+    .ct-actions .ct-status { flex: 1 1 100%; margin: 0; }
+    .ct-submit, .ct-reset { padding: 16px 40px; border-radius: 999px;
+      font-size: 15px; font-weight: 700; transition: background .25s, color .25s, border-color .25s, transform .3s; }
+    .ct-submit { background: var(--color-primary); color: #fff; }
+    .ct-submit:hover { background: var(--color-primary-hover); transform: translateY(-2px); }
+    .ct-submit[disabled] { opacity: .6; pointer-events: none; }
+    .ct-reset { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-reset:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-status { display: none; font-size: 14px; font-weight: 600; }
+    .ct-status.on { display: block; }
+    .ct-status.ok { color: #1a8f74; }
+    .ct-status.ng { color: #d8564f; }
+    /* 우측 안내 */
+    .ct-side { display: flex; flex-direction: column; gap: 14px; }  /* 그리드 기본 stretch로 행 전체 높이 */
+    .ct-card { padding: 22px 24px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-azure); }
+    .ct-card-a { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--color-primary); }
+    .ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
+    .ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
+      font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .ct-steps li { counter-increment: s; position: relative; padding-left: 26px; }
+    .ct-steps li + li { margin-top: 9px; }
+    .ct-steps li::before { content: counter(s); position: absolute; left: 0; top: 0;
+      display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
+      background: var(--color-primary); color: #fff; font-size: 10.5px; font-weight: 700; }
+    .ct-card-note { padding: 0 4px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+    /* 모바일: 1단으로 스택되면 컬럼 높이가 콘텐츠에 딱 맞아 sticky가 의미 없다 */
+    @media (max-width: 1023px) {
+      .ct-actions { position: static; margin-top: 8px; padding-bottom: 0; background: none; }
+    }
+
+    /* ===== 개인정보 수집·이용약관 모달 ===== */
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
+    .pv[hidden] { display: none; }
+    .pv-back { position: absolute; inset: 0; background: rgba(0,39,66,.55); backdrop-filter: blur(4px);
+      opacity: 0; transition: opacity .3s ease; }
+    .pv.on .pv-back { opacity: 1; }
+    .pv--wide .pv-panel { max-width: 1040px; }
+    .pv-panel { position: relative; display: flex; flex-direction: column; overflow: hidden;
+      width: 100%; max-width: 720px; max-height: min(86vh, 860px);
+      max-height: min(86dvh, 860px);          /* 모바일 주소창 높이 변화 대응 */
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-lg, 16px); box-shadow: 0 30px 80px rgba(0,10,30,.3);
+      opacity: 0; transform: translateY(18px) scale(.98);
+      transition: opacity .32s ease, transform .42s cubic-bezier(.22,1,.36,1); }
+    .pv.on .pv-panel { opacity: 1; transform: none; }
+    .pv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 26px 28px 20px; border-bottom: 1px solid var(--color-line); }
+    .pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
+      border-radius: 999px; color: var(--color-text-muted);
+      transition: background .22s, color .22s; }
+    .pv-x svg { width: 20px; height: 20px; }
+    .pv-x:hover { background: var(--color-bg); color: var(--color-text); }
+    /* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
+       overflow-y:auto가 동작하지 않고 패널 밖으로 내용이 넘쳐 잘린다. */
+    .pv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+      padding: 24px 28px 0; -webkit-overflow-scrolling: touch; }
+    .pv-sec { margin-top: 26px; }
+    .pv-sec--last { padding-bottom: 8px; }
+    .pv-h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 11px;
+      font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-text); }
+    .pv-tag { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+    .pv-tag--req { background: var(--color-primary); color: #fff; }
+    .pv-tag--opt { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .pv-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6;
+      border-top: 1px solid var(--color-line); }
+    .pv-tbl th, .pv-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--color-line);
+      text-align: left; vertical-align: top; }
+    .pv-tbl th { width: 34%; background: var(--color-bg); font-weight: 700; color: var(--color-text); white-space: nowrap; }
+    .pv-tbl td { color: var(--color-text-muted); }
+    .pv-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .pv-list { margin: 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
+    .pv-list li { position: relative; padding-left: 14px; }
+    .pv-list li + li { margin-top: 7px; }
+    .pv-list li::before { content: ''; position: absolute; left: 0; top: .62em;
+      width: 4px; height: 4px; border-radius: 999px; background: var(--color-mint); }
+    .pv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 18px 28px 22px; border-top: 1px solid var(--color-line); }
+    .pv-ok { padding: 12px 30px; border-radius: 999px; background: var(--color-primary); color: #fff;
+      font-size: 14px; font-weight: 700; transition: background .25s, transform .3s; }
+    .pv-ok:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+    @media (max-width: 640px) {
+      .pv { padding: 14px; }
+      .pv-head { padding: 20px 18px 16px; }
+      .pv-body { padding: 18px 18px 4px; }
+      .pv-foot { padding: 14px 18px 18px; }
+      .pv-tbl { font-size: 12.5px; }
+      .pv-tbl th, .pv-tbl td { padding: 9px 10px; }
+      .pv-tbl th { width: 38%; white-space: normal; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pv-back, .pv-panel { transition: none; }
+    }
+
+    /* ===== 도시컨셉 허브 다이어그램 (Figma 71:355 / 75:50) ===== */
+    /* 데스크톱은 Figma 1320×510 좌표를 그대로 쓰고, 좁아지면 JS가 --cn-s로 축소한다 */
+    .cn-dia { position: relative; width: 1320px; height: 510px;
+      transform: scale(var(--cn-s, 1)); transform-origin: top center; }
+    .cn-dia-wrap { width: 100%; overflow: hidden; }
+
+    .cn-orbit { position: absolute; left: 278.4px; top: 13.12px;
+      width: 749.54px; height: 457.95px; overflow: visible; }
+    .cn-ring, .cn-conn { stroke-dashoffset: 1; stroke-dasharray: 1;
+      transition: stroke-dashoffset 1.6s cubic-bezier(.33,1,.68,1); }
+    .cn-dia.in .cn-ring { stroke-dashoffset: 0; }
+    .cn-conn { transition-duration: .85s; transition-delay: .95s; }
+    .cn-dia.in .cn-conn { stroke-dashoffset: 0; }
+    .cn-dot { opacity: 0; transform: scale(.35); transform-box: fill-box; transform-origin: center;
+      transition: opacity .5s ease, transform .65s cubic-bezier(.34,1.56,.64,1); }
+    .cn-dia.in .cn-dot { opacity: 1; transform: none; }
+    .cn-dia.in .cn-dot:nth-of-type(1) { transition-delay: .70s; }
+    .cn-dia.in .cn-dot:nth-of-type(2) { transition-delay: .80s; }
+    .cn-dia.in .cn-dot:nth-of-type(3) { transition-delay: .90s; }
+    .cn-dia.in .cn-dot:nth-of-type(4) { transition-delay: 1.00s; }
+
+    /* 중앙 허브 배지 */
+    .cn-hub { position: absolute; left: 548.9px; top: 141.54px; width: 222.75px; height: 222.75px;
+      opacity: 0; transform: scale(.72);
+      transition: opacity .6s ease, transform .85s cubic-bezier(.34,1.4,.64,1); transition-delay: .2s; }
+    .cn-dia.in .cn-hub { opacity: 1; transform: none; }
+    .cn-hub svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .cn-hub-txt { position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1px;
+      font-family: var(--font-display); text-align: center; line-height: 1; }
+    .cn-hub-txt b { font-size: 41px; font-weight: 800; color: #fff; }
+    .cn-hub-txt i { font-size: 26px; font-weight: 800; font-style: normal; color: #fff; }
+    .cn-hub-txt span { font-size: 25px; font-weight: 600; color: #d7e2fa; line-height: 1.1; }
+    /* 허브 맥동 */
+    .cn-hub::after { content: ''; position: absolute; inset: 0; border-radius: 999px;
+      border: 1.5px solid var(--color-primary); opacity: 0; pointer-events: none; }
+    .cn-dia.in .cn-hub::after { animation: cnPulse 3.2s cubic-bezier(.22,1,.36,1) 1.7s infinite; }
+    @keyframes cnPulse {
+      0%   { opacity: .45; transform: scale(1); }
+      70%  { opacity: 0;   transform: scale(1.28); }
+      100% { opacity: 0;   transform: scale(1.28); }
+    }
+
+    /* 4방향 카드 */
+    .cn-card { position: absolute; display: flex; align-items: center; gap: 20px;
+      padding: 21px 24px; background: #fff;   /* Figma pr-59는 텍스트 그룹이 넘치던 값 → 2줄 유지되도록 24px */
+      border: 1.3px solid #e2eaf6; border-radius: 16px;
+      box-shadow: 0 4px 3px rgba(0,0,0,.15);
+      text-align: left;   /* 섹션의 text-center 상속 차단 */
+      opacity: 0; transition: opacity .7s ease, transform .9s cubic-bezier(.22,1,.36,1); }
+    /* 아이콘 배지 + 텍스트 블록을 카드 높이 기준 상하 가운데 */
+    .cn-card > div { flex: 1 1 auto; min-width: 0; }
+    .cn-dia.in .cn-card { opacity: 1; transform: none; }
+    /* 높이는 auto — Figma의 6px 편차 대신 4장 높이를 맞춘다 */
+    .cn-card--n { left: 470.44px; top: 0;        width: 401.78px; transform: translateY(-26px); transition-delay: 1.05s; }
+    .cn-card--w { left: 99.79px;  top: 184.25px; width: 380.19px; transform: translateX(-32px); transition-delay: 1.18s; }
+    .cn-card--e { left: 840.85px; top: 183.83px; width: 380.19px; transform: translateX(32px);  transition-delay: 1.31s; }
+    .cn-card--s { left: 470.44px; top: 377.40px; width: 380.19px; transform: translateY(26px);  transition-delay: 1.44s; }
+    .cn-ic { flex-shrink: 0; width: 82.5px; height: 82.5px; border-radius: 999px;
+      display: grid; place-items: center;
+      background: linear-gradient(35deg, #4a78f2 14.1%, #27359e 85.9%);
+      opacity: 0; transform: scale(.6);
+      transition: opacity .5s ease, transform .7s cubic-bezier(.34,1.5,.64,1); }
+    .cn-dia.in .cn-ic { opacity: 1; transform: none; }
+    .cn-card--n .cn-ic { transition-delay: 1.22s; }
+    .cn-card--w .cn-ic { transition-delay: 1.35s; }
+    .cn-card--e .cn-ic { transition-delay: 1.48s; }
+    .cn-card--s .cn-ic { transition-delay: 1.61s; }
+    .cn-tt { font-family: var(--font-display); font-size: 21px; font-weight: 700;
+      color: var(--color-primary); letter-spacing: -.01em; }
+    .cn-ds { margin-top: 7px; font-size: 13px; line-height: 1.15; color: #405d72; }
+
+    /* 태블릿 이하: 오비트 숨기고 세로 스택 */
+    @media (max-width: 1023px) {
+      .cn-dia { width: 100%; height: auto; transform: none;
+        display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .cn-orbit { display: none; }
+      .cn-hub { position: static; margin-bottom: 6px; }
+      .cn-card { position: static; width: 100%; max-width: 460px; height: auto;
+        padding: 18px 20px; gap: 16px; text-align: left; }
+      .cn-card--n, .cn-card--w, .cn-card--e, .cn-card--s { left: auto; top: auto; }
+      /* 아이콘은 고유 크기 유지(최대 35×33) — 64px 배지 안에 그대로 들어간다 */
+      .cn-ic { width: 64px; height: 64px; }
+    }
+
+    /* ===== 스크럽 시네마 (영상 페이징) ===== */
+    .cine { position: relative; }
+    .cine-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .cine-stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .cine-scrim { position: absolute; inset: 0; }
+    /* 스크럽 진행에 따라 전환되는 카피 페이지 */
+    .cine-page { position: absolute; inset: 0; opacity: 0; visibility: hidden;
+      transition: opacity .55s ease, visibility .55s; }
+    .cine-page.on { opacity: 1; visibility: visible; }
+    .cine-page .cp-el { opacity: 0; transform: translateY(22px);
+      transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+    .cine-page.on .cp-el { opacity: 1; transform: none; }
+    .cine-page.on .cp-el:nth-child(1) { transition-delay: .1s; }
+    .cine-page.on .cp-el:nth-child(2) { transition-delay: .22s; }
+    .cine-page.on .cp-el:nth-child(3) { transition-delay: .34s; }
+    .cine-page.on .cp-el:nth-child(4) { transition-delay: .46s; }
+    /* 진행 인디케이터 */
+    .cine-dots { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 10px; z-index: 5; }
+    .cine-dots i { display: block; width: 10px; height: 10px; border-radius: 999px;
+      background: rgba(255,255,255,.35); transition: all .3s; }
+    .cine-dots i.on { width: 30px; background: #fff; }
+    .cine-prog { position: absolute; left: 0; bottom: 0; height: 3px; z-index: 5;
+      background: var(--color-mint); width: 0; }
+
+    /* ===== 플로팅 버튼 (문의하기 / TOP) ===== */
+    /* 배지가 커졌으므로 여유를 두고, 확대(scale)해도 잘리지 않게 한다 */
+    #floatDock { position: fixed; right: 34px; bottom: 34px; z-index: 70;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      overflow: visible; pointer-events: none; }
+    #floatDock > * { pointer-events: auto; }
+    .fd-btn { display: flex; height: 52px; align-items: center; justify-content: center;
+      border-radius: 999px; box-shadow: 0 10px 28px rgba(0,10,30,.22);
+      transition: background .25s, color .25s, border-color .25s, transform .3s, opacity .3s, visibility .3s; }
+    .fd-btn svg { flex-shrink: 0; }
+    /* 문의하기: 페이지 버튼 컬러(primary) 원형 버튼 */
+    #fdContact { position: relative; display: grid; place-items: center; overflow: hidden;
+      width: 116px; height: 116px; border-radius: 999px;
+      background: var(--color-primary); color: #fff;
+      box-shadow: 0 14px 34px rgba(0,10,30,.24);
+      transition: transform .5s cubic-bezier(.22,1,.36,1), box-shadow .35s; }
+    /* 호버 ①: 아래에서 원형 컬러가 차오르는 필 스윕 */
+    #fdContact::before { content: ''; position: absolute; inset: 0; border-radius: 999px;
+      background: var(--color-navy); transform: scale(0); transform-origin: 50% 100%;
+      transition: transform .55s cubic-bezier(.22,1,.36,1); pointer-events: none; }
+    #fdContact:hover::before { transform: scale(1); }
+    #fdContact:hover { transform: translateY(-5px); box-shadow: 0 22px 44px rgba(0,10,30,.34); }
+    /* 중앙: 말풍선 아이콘 + '문의하기' (필 위로 올라오도록 z-index) */
+    #fdContact .fdc-core { position: relative; z-index: 1; display: grid; place-items: center;
+      width: 100%; height: 100%; }
+    #fdContact .fdc-face { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+    #fdContact .fdc-bubble { width: 30px; height: 30px; overflow: visible; }
+    #fdContact .fdc-txt { font-size: 14px; font-weight: 700; white-space: nowrap; letter-spacing: -.01em; }
+    /* 호버 ②: 말풍선 점 3개가 입력 중처럼 순차 반동 */
+    #fdContact .fdc-bubble circle { opacity: .7; }
+    #fdContact:hover .fdc-bubble .d1 { animation: fdcType 1s ease-in-out infinite; }
+    #fdContact:hover .fdc-bubble .d2 { animation: fdcType 1s ease-in-out .16s infinite; }
+    #fdContact:hover .fdc-bubble .d3 { animation: fdcType 1s ease-in-out .32s infinite; }
+    @keyframes fdcType {
+      0%, 62%, 100% { transform: translateY(0);    opacity: .7; }
+      31%           { transform: translateY(-2px); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #fdContact::before { transition: none; }
+      #fdContact:hover .fdc-bubble circle { animation: none; }
+    }
+    /* TOP: 스크롤 시 등장 */
+    #fdTop { width: 52px; background: var(--color-surface); color: var(--color-primary);
+      border: 1px solid var(--color-line); flex-direction: column; gap: 1px;
+      opacity: 0; visibility: hidden; transform: translateY(10px); }
+    #fdTop.on { opacity: 1; visibility: visible; transform: none; }
+    #fdTop:hover { background: var(--color-primary); color: #fff; border-color: var(--color-primary); transform: translateY(-2px); }
+    #fdTop span { font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+    @media (max-width: 767px) {
+      #floatDock { right: 16px; bottom: 20px; gap: 10px; }
+      #fdContact { width: 88px; height: 88px; }
+      #fdContact .fdc-bubble { width: 24px; height: 24px; }
+      #fdContact .fdc-txt { font-size: 12px; }
+      .fd-btn { height: 46px; }
+      #fdTop { width: 46px; }
+    }
+
+
+    /* ===== 파트너 마퀴 (흐르는 로고) ===== */
+    .marquee { position: relative; overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); }
+    .marquee-track { display: flex; width: max-content; gap: 16px;
+      animation: marq 34s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marq { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 8px)); } }
+    /* 배경·라인 없이 로고만 흐르도록 */
+    .pt-item { display: flex; height: 84px; flex-shrink: 0; align-items: center;
+      justify-content: center; padding: 0 34px; opacity: .78;
+      transition: opacity .25s ease, transform .25s ease; }
+    .pt-item:hover { opacity: 1; transform: scale(1.06); }
+    /* 크기는 JS가 시각 면적 기준으로 정규화해 인라인 지정 */
+    .pt-item img { object-fit: contain; display: block; }
+    .pt-item .pt-name { font-size: 15px; font-weight: 700; color: var(--color-text-muted); white-space: nowrap; }
+    /* 한 줄에 다 들어가면 흐름을 멈추고 가운데 정렬 */
+    .marquee.is-static { mask-image: none; -webkit-mask-image: none; }
+    .marquee.is-static .marquee-track { animation: none; width: 100%; justify-content: center; }
+
+    /* ===== 우측 도트 내비 ===== */
+    #dotNav { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 60;
+      display: flex; flex-direction: column; gap: 13px; }
+    #dotNav button { position: relative; width: 10px; height: 10px; border-radius: 999px;
+      background: rgba(91,107,130,.35); box-shadow: 0 0 0 1.5px rgba(255,255,255,.65);
+      transition: transform .3s, background .3s; }
+    #dotNav button:hover { transform: scale(1.4); }
+    #dotNav button.on { background: var(--color-primary); transform: scale(1.45); }
+    #dotNav button .dn-label { position: absolute; right: 22px; top: 50%;
+      transform: translateY(-50%) translateX(6px); white-space: nowrap; font-size: 12px; font-weight: 600;
+      color: #fff; background: var(--color-navy); padding: 4px 10px; border-radius: 6px;
+      opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; }
+    #dotNav button:hover .dn-label { opacity: 1; transform: translateY(-50%) translateX(0); }
+    @media (max-width: 767px) { #dotNav { display: none; } }
+
+    /* ===== 구역소개: 2단 풀스크린 + 스크롤 슬라이드 ===== */
+    .dz { position: relative; }
+    .dz-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    .dz-grid { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+    /* 좌측 정보 패널 — 화면 높이를 꽉 채우고 3구역으로 분배 */
+    .dz-left { position: relative; display: flex; flex-direction: column;
+      justify-content: space-between; overflow: hidden;
+      background: var(--color-bg);
+      padding-top: clamp(60px, 7vh, 104px); padding-bottom: clamp(28px, 4vh, 56px);
+      /* 위쪽 섹션들의 콘텐츠 시작선(가운데 1320px 컨테이너 + 좌우 24px)과 동일하게 */
+      padding-left: max(24px, calc((100vw - 1320px) / 2 + 24px));
+      padding-right: clamp(28px, 3vw, 56px); }
+    /* 우측 이미지 */
+    .dz-right { position: relative; overflow: hidden; background: var(--color-navy); }
+    .dz-imgs { position: absolute; inset: 0; }
+    .dz-imgs .dz-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      transform: translateY(100%);                      /* 대기: 아래쪽 */
+      transition: transform .95s cubic-bezier(.22,1,.36,1); will-change: transform;
+      background: var(--color-navy); }
+    .dz-imgs .dz-vid.above { transform: translateY(-100%); } /* 지나감: 위쪽 */
+    .dz-imgs .dz-vid.on { transform: translateY(0); }
+    .dz-shade { position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to top, rgba(0,39,66,.92) 0%, rgba(0,39,66,.35) 42%, rgba(0,39,66,.05) 72%); }
+    .dz-overlay { position: absolute; inset-inline: 0; bottom: 0;
+      padding: clamp(28px, 4vh, 56px) clamp(32px, 4vw, 64px) clamp(44px, 7vh, 76px); }
+    /* 내용 교체 시 페이드 */
+    .dz-fade { transition: opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1); }
+    .dz-swap .dz-fade { opacity: 0; transform: translateY(14px); }
+    /* 좌측 아코디언 — 기본(.za) 크기를 그대로 사용.
+       세로가 부족한 화면에서는 패널만 내부 스크롤되도록 안전장치를 둔다. */
+    .dz-left { overflow-y: auto; scrollbar-width: none; }
+    .dz-left::-webkit-scrollbar { display: none; }
+
+    /* 우측 도트 내비 */
+    .dz-dots { display: none; }   /* 우측 상세 인디케이터 숨김 */
+    .dz-dots--legacy { position: absolute; right: clamp(14px, 1.6vw, 26px); top: 50%; transform: translateY(-50%);
+      z-index: 6; display: flex; flex-direction: column; align-items: flex-end; gap: 13px; }
+    .dz-dots button { display: flex; align-items: center; gap: 9px; }
+    .dz-dots .dd-label { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap;
+      opacity: 0; transform: translateX(6px); transition: opacity .3s, transform .3s;
+      text-shadow: 0 1px 8px rgba(0,10,30,.6); }
+    .dz-dots button.on .dd-label, .dz-dots button:hover .dd-label { opacity: 1; transform: none; }
+    .dz-dots .dd-dot { width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.4);
+      box-shadow: 0 0 0 1.5px rgba(255,255,255,.35); transition: all .3s; flex-shrink: 0; }
+    .dz-dots button.on .dd-dot { height: 26px; background: #fff; }
+    /* 좁은 화면: 이미지를 배경으로 깔고 콘텐츠를 겹쳐 단일 컬럼으로 (좌측 패널 넘침 방지) */
+    @media (max-width: 1023px) {
+      .dz-grid { grid-template-columns: 1fr; }
+      .dz-right { position: absolute; inset: 0; z-index: 0; }
+      .dz-left { position: relative; z-index: 1; background: transparent;
+        padding: 76px 20px 30px; gap: 14px; }
+      .dz-left::before { content: ""; position: absolute; inset: 0; z-index: -1;
+        background: linear-gradient(to bottom, rgba(244,248,254,.97) 0%, rgba(244,248,254,.93) 52%, rgba(0,39,66,.28) 100%); }
+      .dz-left h2 { font-size: 30px; }
+      .dz-overlay { display: none; }
+      .dz-left .za-head { padding: 9px 14px; }
+      .dz-left .za-name { font-size: 14px; }
+      .dz-left .za-num { width: 30px; height: 30px; }
+      .dz-left .za.open .za-body { max-height: 300px; }
+      .dz-dots { right: 10px; }
+    }
+
+    /* ===== 구역 아코디언 ===== */
+    .za { border: 1px solid var(--color-line); border-radius: 14px; background: var(--color-surface);
+      overflow: hidden; transition: box-shadow .3s, border-color .3s; }
+    .za.open { border-color: var(--zc, var(--color-primary)); box-shadow: 0 10px 30px rgba(0,10,30,.08); }
+    .za-head { display: flex; width: 100%; align-items: center; gap: 14px; padding: 20px 22px;
+      cursor: pointer; text-align: left; }
+    .za-num { display: flex; width: 40px; height: 40px; flex-shrink: 0; align-items: center;
+      justify-content: center; border-radius: 999px; font-size: 14px; font-weight: 700;
+      color: var(--zni, #fff);
+      background: var(--zn, var(--zc, var(--color-primary))); transition: transform .3s; }
+    .za.open .za-num { transform: scale(1.1); }
+    .za-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--color-text); }
+    .za-sub { margin-top: 3px; font-size: 12px; color: var(--color-text-muted); }
+    .za-area { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--zc, var(--color-primary));
+      white-space: nowrap; }
+    .za-caret { flex-shrink: 0; color: var(--color-text-muted); transition: transform .35s ease; }
+    .za.open .za-caret { transform: rotate(180deg); }
+    .za-body { max-height: 0; overflow: hidden; transition: max-height .45s cubic-bezier(.22,1,.36,1); }
+    .za.open .za-body { max-height: 720px; }
+    .za-inner { border-top: 1px solid var(--color-line); padding: 20px 22px 22px; }
+
+    #zoneImgs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transform: scale(1.06); transition: opacity .7s ease, transform 1.4s ease; }
+    #zoneImgs img.on { opacity: 1; transform: scale(1); }
+
+    /* 히어로 스크롤 시 미세 줌아웃 (스크롤에 반응하는 느낌)
+       확대 배율이 크면 실효 해상도가 떨어져 흐려지므로 최소로 유지 */
+    #hero video { transform: scale(var(--hz, 1.02)); transition: transform .2s linear;
+      image-rendering: -webkit-optimize-contrast; }
+    .cine-stage video { image-rendering: -webkit-optimize-contrast; }
+    /* 8대 권역 조감도 배경 */
+    #zonesBg { transform: scale(1.05); transition: transform .25s linear; will-change: transform; }
+    .az-card { opacity: 0; transform: translateY(30px) scale(.97); }
+    .az-card.in { opacity: 1; transform: none;
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim { animation: none; opacity: 1; }
+      .reveal, .lr .lr-inner, .cine-page .cp-el { opacity: 1; transform: none; transition: none; }
+      .cn-hub, .cn-card, .cn-ic, .cn-dot { opacity: 1; transform: none; transition: none; }
+      .cn-ring, .cn-conn { stroke-dashoffset: 0; transition: none; }
+      .cn-dia.in .cn-hub::after { animation: none; }
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+
+  <!-- ===== 도트 내비게이션 ===== -->
+  <nav id="dotNav" aria-label="섹션 이동"></nav>
+
+  <!-- ===== 플로팅 버튼 (문의하기 / TOP) ===== -->
+  <div id="floatDock">
+    <!-- 사업 문의: 원형 회전 배지 -->
+    <a id="fdContact" href="#contact" aria-label="문의하기">
+      <span class="fdc-core">
+        <span class="fdc-face">
+          <svg class="fdc-bubble" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4c-1.4 0-2.7-.3-3.9-.9L3.5 21l1.6-4.4A8.2 8.2 0 0 1 4 11.5C4 6.9 7.8 3.1 12.5 3.1S21 6.9 21 11.5Z"/>
+            <circle class="d1" cx="8.6" cy="11.5" r="1" fill="currentColor" stroke="none"/>
+            <circle class="d2" cx="12.5" cy="11.5" r="1" fill="currentColor" stroke="none"/>
+            <circle class="d3" cx="16.4" cy="11.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span class="fdc-txt">문의하기</span>
+        </span>
+      </span>
+    </a>
+    <button id="fdTop" class="fd-btn" aria-label="맨 위로">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 14l6-6 6 6"/>
+      </svg>
+      <span>TOP</span>
+    </button>
+  </div>
+
+  <!-- ===== GNB (슬라이드 4) ===== -->
+  <header id="gnb" class="fixed top-0 z-50 w-full border-b transition-colors duration-300">
+    <nav class="mx-auto flex max-w-[1320px] items-start justify-between px-6">
+      <a href="#hero" class="gnb-logo flex h-16 items-center transition-colors" aria-label="B·CITY 홈">
+        <svg class="bcity-logo" viewBox="0 0 2518 421" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="B·CITY">
+          <g fill="currentColor">
+            <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
+            <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
+            <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
+            <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
+            <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
+          </g>
+          <path fill="#3DBFA8" d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
+          <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
+        </svg>
+      </a>
+      <ul id="gnbMenu" class="hidden items-start text-sm font-medium md:flex"></ul>
+      <div class="flex h-16 items-center gap-4">
+        <div class="gnb-lang hidden items-center gap-1 text-xs font-semibold transition-colors sm:flex">
+          <button class="rounded px-1.5 py-0.5 font-bold">KO</button>
+          <span class="opacity-40">|</span>
+          <button class="rounded px-1.5 py-0.5 opacity-70 transition hover:opacity-100">EN</button>
+        </div>
+        <div class="gnb-sns flex items-center gap-2 transition-colors">
+          <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube" class="transition hover:opacity-80">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/biotec-iv/" target="_blank" rel="noopener" aria-label="LinkedIn" class="transition hover:opacity-80">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.07 1.4-2.07 2.85V21h-4V9Z"/></svg>
+          </a>
+        </div>
+        <button id="hamburger" class="gnb-burger md:hidden" aria-label="메뉴 열기" aria-expanded="false">
+          <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+    <div class="gnb-divider"></div>
+  </header>
+
+  <!-- ===== 모바일 메뉴 ===== -->
+  <div id="mobileNav" class="hidden-nav fixed inset-0 z-[70] md:hidden">
+    <div class="m-overlay absolute inset-0 bg-navy/50"></div>
+    <div class="m-panel absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col bg-surface shadow-2xl">
+      <div class="flex h-16 items-center justify-between border-b border-line px-6">
+        <svg class="bcity-logo" style="color:#2C3E91" viewBox="0 0 2518 421" fill="none" role="img" aria-label="B·CITY">
+          <g fill="currentColor">
+            <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
+            <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
+            <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
+            <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
+            <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
+          </g>
+          <path fill="#3DBFA8" d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
+          <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
+        </svg>
+        <button id="mClose" aria-label="메뉴 닫기" class="text-text-muted">
+          <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <nav id="mAccordion" class="flex-1 overflow-y-auto px-2 py-2"></nav>
+      <!-- 독립 CTA -->
+      <div class="grid grid-cols-2 gap-2.5 border-t border-line px-4 py-4">
+        <a href="#" class="flex items-center justify-center rounded-full border border-line px-4 py-3 text-[13px] font-bold text-primary">DIGITAL TWIN</a>
+        <a href="#contact" class="flex items-center justify-center rounded-full bg-primary px-4 py-3 text-[13px] font-bold text-white">사업 문의</a>
+      </div>
+      <div class="flex items-center justify-between border-t border-line px-6 py-4 text-sm text-text-muted">
+        <div class="flex items-center gap-1 font-semibold">
+          <button class="text-primary">KO</button><span class="opacity-40">|</span><button class="opacity-70">EN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 1. 히어로 (슬라이드 4) ============ -->
+  <section id="hero" class="page relative flex min-h-screen items-center overflow-hidden bg-navy">
+    <!-- 대문영상: 주간 도시(2~11초) → 크로스페이드 → 야간 전경(51~54.8초)
+         HEVC(2560) 우선, 미지원 브라우저는 H.264(1920)로 폴백 -->
+    <video class="absolute inset-0 h-full w-full object-cover" autoplay muted loop playsinline
+           preload="auto" poster="assets/still/hero.jpg?v=hd2">
+      <source src="assets/vid/hero-hevc.mp4?v=hd2" type='video/mp4; codecs="hvc1"' />
+      <source src="assets/vid/hero.mp4?v=hd2" type="video/mp4" />
+    </video>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/50 via-black/20 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/55 via-navy/20 to-transparent"></div>
+
+    <div class="relative mx-auto w-full max-w-[1320px] px-6 pt-24">
+      <p class="anim hero-shadow text-sm font-semibold uppercase tracking-[0.2em] text-light-blue" style="animation-delay:.1s">
+        B-CITY 춘천기업혁신파크
+      </p>
+      <h1 class="anim hero-shadow font-display mt-5 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-white md:text-hero" style="animation-delay:.25s">
+        서부개척 시대의 골드러시가<br />21세기 데이터 러시로
+      </h1>
+      <p class="anim hero-shadow mt-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg" style="animation-delay:.45s">
+        AI 데이터를 중심으로 한 새로운 기회의 도시가 춘천에 탄생합니다
+      </p>
+      <a href="#location" class="anim mt-9 inline-flex h-[54px] items-center gap-2 rounded-full border border-line bg-transparent px-7 text-base font-semibold text-white transition hover:bg-white hover:text-navy" style="animation-delay:.65s">
+        도시 살펴보기 <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ 2. 입지 (슬라이드 5·6·7) — 경로 모션그래픽 3페이지 ============ -->
+  <section id="location" class="page cine ov ov--light" data-cine="loc" style="height:480vh">
+    <div class="cine-stage bg-bg">
+      <p class="ov-eyebrow"><i class="ov-rule" aria-hidden="true"></i><b>01</b><span>LOCATION · 입지</span></p>
+      <a href="#business" class="ov-more">입지 · 교통환경 자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
+      <div class="ov-vrail" aria-hidden="true">
+        <span class="ov-vrail-txt">LOCATION</span>
+        <span class="cine-dots" data-dots="loc"></span>
+      </div>
+
+      <div class="lo-grid">
+        <!-- 지도 · 경로 모션그래픽 (좌측 유지)
+             배경 지도 이미지를 받으면 아래 <img>의 주석을 풀고 파일명을 넣는다.
+             노드 좌표·경로는 JS의 locRoutes(600×460 좌표계)에서 관리한다. -->
+        <div class="lo-mapcol">
+          <div id="locMap" class="lm">
+            <!-- 배경 지도: 스텝별로 JS가 src를 바꾼다 (locRoutes[].bg) -->
+            <img class="lm-bg" alt="" hidden />
+            <!-- 전경 레이어: 받침대·지점명·소요시간 배지 등 지도 위 요소 (locRoutes[].fg) -->
+            <img class="lm-fg" alt="" hidden />
+            <svg class="lm-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+          </div>
+          <p class="lo-note">* 교통량 및 도로사정에 따라 차이가 발생할 수 있습니다</p>
+        </div>
+
+        <!-- 카피 3페이지 -->
+        <div class="lo-copy">
+          <div class="cine-page on" data-i="0">
+            <p class="cp-el lo-no">01</p>
+            <h3 class="cp-el lo-title">
+              <span class="ov-line"><span>서울 잠실에서 40분,</span></span>
+              <span class="ov-line"><span>남춘천 IC 3분</span></span>
+            </h3>
+            <p class="cp-el lo-desc">제2경춘고속화도로와 GTX-B로 완성되는 수도권 생활권</p>
+            <div class="cp-el lo-pills">
+              <span class="lo-pill">잠실 · 서울양양고속도로 <b>40분</b></span>
+              <span class="lo-pill">중랑IC · 제2경춘국도(예정) <b>45분</b></span>
+              <span class="lo-pill">서울역 · GTX-B(예정) <b>50분</b></span>
+              <span class="lo-pill">청량리 · ITX <b>55분</b></span>
+            </div>
+          </div>
+          <div class="cine-page" data-i="1">
+            <p class="cp-el lo-no">02</p>
+            <h3 class="cp-el lo-title">
+              <span class="ov-line"><span>&lsquo;강원형 바이오·헬스</span></span>
+              <span class="ov-line"><span>초광역 경제권&rsquo; 구축</span></span>
+            </h3>
+            <p class="cp-el lo-desc">원주, 강릉, 평창의 인프라와 연계해 정밀의료 분야 융복합 기술개발<br />및 시너지 창출을 위한 거점화를 추진합니다</p>
+            <div class="cp-el lo-pills">
+              <span class="lo-pill lo-pill--on">#춘천_AI바이오</span>
+              <span class="lo-pill">#원주_의료기기</span>
+              <span class="lo-pill">#강릉_천연물바이오</span>
+              <span class="lo-pill">#평창_그린바이오</span>
+            </div>
+          </div>
+          <div class="cine-page" data-i="2">
+            <p class="cp-el lo-no">03</p>
+            <h3 class="cp-el lo-title">
+              <span class="ov-line"><span>글로벌 비즈니스의</span></span>
+              <span class="ov-line"><span>새로운 거점, B-CITY</span></span>
+            </h3>
+            <p class="cp-el lo-desc">한국과 세계를 잇는 첨단 바이오 비즈니스의 글로벌 게이트웨이</p>
+            <div class="cp-el lo-pills">
+              <span class="lo-pill">양양국제공항 <b>60분</b></span>
+              <span class="lo-pill">김포공항 <b>80분</b></span>
+              <span class="lo-pill">속초항 <b>90분</b></span>
+              <span class="lo-pill">동해항 <b>120분</b></span>
+            </div>
+          </div>
+
+          <!-- 하단 페이지 탭 -->
+          <nav class="lo-tabs" aria-label="입지 소개 단계">
+            <button type="button" class="lo-tab is-on" data-loc-tab="0"><b>01</b> 수도권 생활권</button>
+            <button type="button" class="lo-tab" data-loc-tab="1"><b>02</b> 초광역 경제권</button>
+            <button type="button" class="lo-tab" data-loc-tab="2"><b>03</b> 글로벌 게이트웨이</button>
+          </nav>
+        </div>
+      </div>
+      <div class="cine-prog" data-prog="loc"></div>
+    </div>
+  </section>
+
+  <!-- ============ 3. 사업개요 (슬라이드 8·9) — 스크럽 영상 2페이지 ============ -->
+  <section id="business" class="page cine ov" data-cine="biz" data-clip="assets/vid/business.mp4?v=bio1" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio1" style="height:400vh">
+    <div class="cine-stage bg-navy">
+      <video muted playsinline preload="auto" data-scrub="biz"></video>
+      <img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" />
+      <!-- 참고 디자인의 어두운 톤: 전체 톤다운 + 상·하단 강화 그라데이션 -->
+      <div class="cine-scrim" style="background:rgba(0,17,34,.46)"></div>
+      <div class="cine-scrim" style="background:linear-gradient(180deg,rgba(0,17,34,.62) 0%,rgba(0,17,34,.30) 38%,rgba(0,17,34,.44) 68%,rgba(0,17,34,.86) 100%)"></div>
+
+      <!-- 상단 좌: 섹션 라벨 -->
+      <p class="ov-eyebrow"><i class="ov-rule" aria-hidden="true"></i><b>02</b><span>OVERVIEW · 사업개요</span></p>
+      <!-- 상단 우: 자세히 보기 -->
+      <a href="#zones" class="ov-more">사업개요 자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
+      <!-- 우측 세로 라벨 -->
+      <p class="ov-vlabel" aria-hidden="true">OVERVIEW <i></i></p>
+
+      <!-- 중앙 카피 2페이지 -->
+      <div class="ov-center">
+        <div class="cine-page on" data-i="0">
+          <h2 class="cp-el ov-title">
+            <span class="ov-line"><span>총 사업비 약 <em>1.1조원</em>의</span></span>
+            <span class="ov-line"><span>대규모 국가도시개발 프로젝트</span></span>
+          </h2>
+          <p class="cp-el ov-desc">
+            국토교통부 주관의 민간기업 중심 도시개발 사업으로, 총 면적 약 110만평(여의도 면적 1.25배 규모)의 부지 위에 혁신 생태계가 만들어집니다.
+          </p>
+        </div>
+        <div class="cine-page" data-i="1">
+          <h2 class="cp-el ov-title">
+            <span class="ov-line"><span>바이오 분야</span></span>
+            <span class="ov-line"><span class="ov-em">국가첨단전략산업 특화단지 지정</span></span>
+          </h2>
+          <p class="cp-el ov-desc">
+            정부가 보증하고 전폭적으로 지원하는 범국가적 프로젝트입니다. 인허가 패스트트랙부터 최대 규모 세제 혜택까지, 성공적 비즈니스를 위한 전방위적 특구 지원이 제공됩니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- 페이지 인디케이터 -->
+      <div class="cine-dots" data-dots="biz"></div>
+
+      <!-- 하단 지표 4열 -->
+      <dl class="ov-stats">
+        <div class="ov-stat"><dt><b data-count="1.1" data-dec="1">0</b><span>조원</span></dt><dd>총 사업비</dd></div>
+        <div class="ov-stat"><dt><b data-count="110">0</b><span>만평</span></dt><dd>총 사업 면적 · 여의도 1.25배</dd></div>
+        <div class="ov-stat"><dt><b data-count="8">0</b><span>개 권역</span></dt><dd>4대 클러스터 + 4대 콤플렉스</dd></div>
+        <div class="ov-stat"><dt><b data-count="330">0</b><span>MW</span></dt><dd>AI 데이터센터 최대 용량</dd></div>
+      </dl>
+
+      <div class="cine-prog" data-prog="biz"></div>
+    </div>
+  </section>
+
+  <!-- ============ 4. 도시 컨셉 (슬라이드 10) — 허브 다이어그램 ============ -->
+  <section id="concept" class="page relative overflow-hidden bg-bg">
+    <!-- 배경: 그리드 패턴 + 아이소메트릭 도시 일러스트 -->
+    <div class="absolute inset-0" aria-hidden="true">
+      <img src="assets/img/concept-grid.png" alt="" class="absolute inset-0 h-full w-full object-cover opacity-20" />
+      <img src="assets/img/concept-city.png" alt="" class="absolute inset-0 h-full w-full object-cover" />
+    </div>
+
+    <div class="relative mx-auto flex min-h-screen max-w-[1320px] flex-col items-center justify-center px-6 py-20 text-center">
+      <h2 class="lr font-display leading-tight">
+        <span class="block text-2xl font-bold text-navy md:text-[38px]">AI를 기반으로 BIO‧로보틱스 산업이 성장하는</span><br /><span class="block text-3xl font-extrabold text-primary md:text-h2">AI Living Lab, B-CITY</span>
+      </h2>
+      <p class="reveal mt-4 text-base text-[#66707e] md:text-[21px]">데이터 · 바이오 · PHYSICAL AI · 식품이 연결된 미래산업 혁신 허브</p>
+
+      <!-- 허브 & 스포크 다이어그램 -->
+      <div class="cn-dia-wrap mt-12">
+        <div id="cnDia" class="cn-dia mx-auto">
+          <!-- 오비트 링 + 커넥터 (Figma hub/orbit-container) -->
+          <svg class="cn-orbit" viewBox="0 0 749.54 457.947" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cnDotG" x1="0" y1="0" x2="0" y2="1">
+                <stop stop-color="#A6C1D4" /><stop offset=".48" stop-color="#80A6C2" /><stop offset="1" stop-color="#B2CADA" />
+              </linearGradient>
+            </defs>
+            <path class="cn-ring" pathLength="1" d="M374.77 0.849609C478.129 0.849609 571.663 26.4481 639.329 67.79C707.01 109.141 748.689 166.153 748.689 228.974C748.689 291.795 707.01 348.806 639.329 390.157C571.663 431.499 478.129 457.098 374.77 457.098C271.41 457.098 177.877 431.499 110.211 390.157C42.5304 348.806 0.849623 291.795 0.849609 228.974C0.849609 166.153 42.5304 109.141 110.211 67.79C177.877 26.4482 271.41 0.84965 374.77 0.849609Z" stroke="#A9BEEC" stroke-opacity=".795" stroke-width="1.7" />
+            <path class="cn-conn" pathLength="1" d="M173.522 239.585H598.678" stroke="#BBCCF0" stroke-width="2" />
+            <path class="cn-conn" pathLength="1" d="M384.782 93.4241L386.17 388.105" stroke="#BBCCF0" stroke-width="2" />
+            <path class="cn-dot" d="M88.1504 91.3868C88.1504 96.5922 83.9306 100.812 78.7252 100.812C73.5198 100.812 69.3 96.5922 69.3 91.3868C69.3 86.1814 73.5198 81.9616 78.7252 81.9616C83.9306 81.9616 88.1504 86.1814 88.1504 91.3868ZM76.3689 91.3868C76.3689 92.6882 77.4239 93.7431 78.7252 93.7431C80.0266 93.7431 81.0815 92.6882 81.0815 91.3868C81.0815 90.0855 80.0266 89.0305 78.7252 89.0305C77.4239 89.0305 76.3689 90.0855 76.3689 91.3868Z" fill="url(#cnDotG)" />
+            <path class="cn-dot" d="M680.022 91.3869C680.022 96.5923 675.802 100.812 670.597 100.812C665.392 100.812 661.172 96.5923 661.172 91.3869C661.172 86.1815 665.392 81.9617 670.597 81.9617C675.802 81.9617 680.022 86.1815 680.022 91.3869ZM668.241 91.3869C668.241 92.6882 669.296 93.7432 670.597 93.7432C671.898 93.7432 672.953 92.6882 672.953 91.3869C672.953 90.0855 671.898 89.0306 670.597 89.0306C669.296 89.0306 668.241 90.0855 668.241 91.3869Z" fill="url(#cnDotG)" />
+            <path class="cn-dot" d="M88.1504 366.56C88.1504 371.766 83.9306 375.986 78.7252 375.986C73.5198 375.986 69.3 371.766 69.3 366.56C69.3 361.355 73.5198 357.135 78.7252 357.135C83.9306 357.135 88.1504 361.355 88.1504 366.56ZM76.3689 366.56C76.3689 367.862 77.4239 368.917 78.7252 368.917C80.0266 368.917 81.0815 367.862 81.0815 366.56C81.0815 365.259 80.0266 364.204 78.7252 364.204C77.4239 364.204 76.3689 365.259 76.3689 366.56Z" fill="url(#cnDotG)" />
+            <path class="cn-dot" d="M680.022 366.56C680.022 371.766 675.802 375.986 670.597 375.986C665.392 375.986 661.172 371.766 661.172 366.56C661.172 361.355 665.392 357.135 670.597 357.135C675.802 357.135 680.022 361.355 680.022 366.56ZM668.241 366.56C668.241 367.862 669.296 368.917 670.597 368.917C671.898 368.917 672.953 367.862 672.953 366.56C672.953 365.259 671.898 364.204 670.597 364.204C669.296 364.204 668.241 365.259 668.241 366.56Z" fill="url(#cnDotG)" />
+          </svg>
+
+          <!-- 중앙 허브 (Figma hub/badge) -->
+          <div class="cn-hub">
+            <svg viewBox="0 0 222.75 222.75" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="cnHubG" x1="111.375" y1="210.375" x2="111.375" y2="12.375" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#4A78F2" /><stop offset="1" stop-color="#222F8E" />
+                </linearGradient>
+              </defs>
+              <rect x=".65" y=".65" width="221.45" height="221.45" rx="110.725" fill="#A4D9FF" stroke="#C7D6F5" stroke-width="1.3" />
+              <circle cx="111.375" cy="111.375" r="97.5" fill="url(#cnHubG)" stroke="#fff" stroke-width="3" />
+            </svg>
+            <span class="cn-hub-txt"><b>AI</b><i>Living Lab</i><span>B-CITY</span></span>
+          </div>
+
+          <article class="cn-card cn-card--n">
+            <span class="cn-ic"><img src="assets/icon/concept-aidata.svg?v=2" alt="" width="31.9" height="29.55" /></span>
+            <div><p class="cn-tt">AI DATA</p><p class="cn-ds">최대 330MW 하이퍼스케일 데이터센터를<br />기반으로 한 컴퓨팅 인프라</p></div>
+          </article>
+          <article class="cn-card cn-card--w">
+            <span class="cn-ic"><img src="assets/icon/concept-bio.svg?v=2" alt="" width="16.04" height="32.57" /></span>
+            <div><p class="cn-tt">BIO INDUSTRY</p><p class="cn-ds">BIT 융합·CDMO·정밀의료로 이어지는 첨단<br />바이오 산업 거점</p></div>
+          </article>
+          <article class="cn-card cn-card--e">
+            <span class="cn-ic"><img src="assets/icon/concept-physical.svg?v=2" alt="" width="26.63" height="26.59" /></span>
+            <div><p class="cn-tt">PHYSICAL AI</p><p class="cn-ds">로보틱스 · 스마트 모빌리티 · AI자동화 실증<br />및 구현</p></div>
+          </article>
+          <article class="cn-card cn-card--s">
+            <span class="cn-ic"><img src="assets/icon/concept-food.svg?v=2" alt="" width="35.12" height="31.91" /></span>
+            <div><p class="cn-tt">FOOD CLUSTER</p><p class="cn-ds">콜드체인 물류 허브 기반 스마트팜·푸드테크<br />융합 식품 산업 거점</p></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. 구역소개 개요 (슬라이드 11) — 조감도 배경 ============ -->
+  <section id="zones" class="page relative overflow-hidden bg-navy">
+    <!-- 조감도 배경 (스크롤에 따라 서서히 확대) -->
+    <img id="zonesBg" src="assets/slide-day.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-b from-navy/92 via-navy/78 to-navy/94"></div>
+    <div class="absolute inset-0" style="background-image:radial-gradient(circle at 82% 18%, rgba(61,191,168,.22) 0, transparent 45%)"></div>
+
+    <div class="relative mx-auto max-w-[1320px] px-6 py-28">
+      <div class="reveal relative mb-14">
+        <p class="text-base font-bold uppercase tracking-[0.18em] text-mint">Zone Overview</p>
+        <!-- 54px에서 937px 필요 → 여유가 생기는 lg(1024px) 이상에서만 한 줄 고정 -->
+        <h2 class="lr font-display mt-3 max-w-none text-3xl font-bold leading-tight tracking-tight text-white md:text-h2 lg:whitespace-nowrap">8개 권역이 하나의 도시 생태계를 완성합니다</h2>
+        <p class="mt-5 max-w-4xl text-lg leading-relaxed text-light-blue md:text-xl">
+          AI·BIO·FOOD·MICE 4대 클러스터 + 주거·교육·업무·레저 4대 콤플렉스, 총 110만평
+        </p>
+      </div>
+      <div class="az-grid">
+        <!-- 좌: 권역 카드 -->
+        <div>
+          <p class="reveal mb-5 text-sm font-bold uppercase tracking-wider text-white/70">권역별 면적 구성</p>
+          <div id="areaGrid" class="grid grid-cols-2 gap-3.5 lg:grid-cols-4"></div>
+          <div class="reveal mt-6 flex flex-wrap items-end justify-between gap-4 rounded-lg border border-white/20 bg-navy/55 px-7 py-6 backdrop-blur">
+            <div>
+              <p class="text-sm font-semibold text-light-blue">합계</p>
+              <p class="font-display mt-1.5 text-3xl font-bold text-white">권역부지 <span class="text-mint">62.1만평</span> <span class="text-white/50">/ 110만평</span></p>
+            </div>
+            <p class="text-xs text-white/45">* 하천, 공원, 녹지 등 47.9만 평 제외</p>
+          </div>
+          <p class="az-note reveal">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
+        </div>
+
+        <!-- 우: 토지이용계획도 — 베이스 위에 권역별 레이어를 겹쳐 호버 시 표시 -->
+        <div class="az-map reveal" aria-hidden="true">
+          <!-- 흰 바탕판: 같은 베이스 SVG를 brightness(0) invert(1)로 흰 실루엣으로 만들어
+               지도 형태 그대로 뒤에 깐다 (어두운 조감도가 비치는 문제 해결) -->
+          <img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" />
+          <img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" />
+          <img class="az-map-hl" data-zone="1" src="assets/landuse/zone-01.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="4" src="assets/landuse/zone-04.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="5" src="assets/landuse/zone-05.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="6" src="assets/landuse/zone-06.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="7" src="assets/landuse/zone-07.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="8" src="assets/landuse/zone-08.svg?v=4" loading="lazy" decoding="async" alt="" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. 구역소개 상세 (슬라이드 12~19) ============ -->
+  <!-- 활성 탭 4구역 × 60vh 스크롤 + 고정 스테이지 100vh -->
+  <section id="districts" class="dz" style="height:340vh">
+    <div class="dz-stage">
+      <div class="dz-grid">
+        <!-- 좌: 정보 패널 -->
+        <div class="dz-left">
+          <!-- 헤더: 제목 좌 / 탭 우 -->
+          <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+            <div>
+              <p class="text-base font-bold uppercase tracking-[0.18em] text-azure">City Districts</p>
+              <h2 class="font-display mt-2 text-4xl font-bold tracking-tight text-text md:text-h2">구역소개</h2>
+            </div>
+            <div class="inline-flex shrink-0 rounded-full border border-line bg-surface p-1.5 text-lg font-bold shadow-sm">
+              <button data-tab="cluster" class="tab-btn rounded-full px-9 py-3.5 transition">클러스터</button>
+              <button data-tab="complex" class="tab-btn rounded-full px-9 py-3.5 transition">콤플렉스</button>
+            </div>
+          </div>
+
+          <!-- 상세 구역 아코디언 (펼치면 부지개요) -->
+          <div id="dzAcc" class="flex flex-col gap-3"></div>
+
+          <p id="dzIndex" class="font-display text-xs font-bold text-text-muted"></p>
+        </div>
+
+        <!-- 우: 풀블리드 이미지 (스크롤 시 위아래 슬라이드) -->
+        <div class="dz-right">
+          <div id="dzImgs" class="dz-imgs"></div>
+          <div class="dz-shade"></div>
+          <div class="dz-overlay">
+            <p id="dzHead" class="dz-fade text-sm font-bold text-mint"></p>
+            <h3 id="dzTitle" class="dz-fade font-display mt-2.5 text-3xl font-bold text-white md:text-[42px]"></h3>
+            <!-- 폭 470px: max-w-xl(576) 에서는 8개 카피 중 5개가 끝줄이 5~13%만 차서
+                 한두 단어만 떨어져 보였다. 470 이면 끝줄 채움 19~37% 로 두 줄이 자연스럽다. -->
+            <p id="dzDesc" class="dz-fade mt-4 max-w-[470px] text-sm leading-relaxed text-white/85 md:text-base"></p>
+            <a id="dzArea" href="#contact" class="dz-fade mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white hover:text-navy">
+              자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h14m0 0-5-5m5 5-5 5"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우측 세로 도트 내비 -->
+      <nav id="dzDots" class="dz-dots" aria-label="구역 선택"></nav>
+    </div>
+  </section>
+
+  <!-- ============ 7. 홍보센터 (슬라이드 20) ============ -->
+  <section id="pr" class="page bg-surface">
+    <div class="relative mx-auto max-w-[1320px] px-6 py-24">
+      <div class="reveal relative mb-10 max-w-2xl">
+        <p class="text-base font-bold uppercase tracking-[0.18em] text-azure">PR Center</p>
+        <h2 class="lr font-display mt-2 text-4xl font-bold tracking-tight text-text md:text-h2">홍보센터</h2>
+      </div>
+      <!-- 아이콘 카드 (사진 대신 우측 상단 아이콘) -->
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg">
+          <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
+            <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2Z"/>
+              <path stroke-linecap="round" d="M7 9h6M7 13h10M7 17h10"/>
+            </svg>
+          </span>
+          <p class="text-sm font-bold text-azure">01</p>
+          <div>
+            <h3 class="font-display text-card font-bold text-text">언론보도</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-muted">B-CITY의 최신 소식을 언론 기사로 만나보세요.</p>
+            <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">바로가기 <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
+          </div>
+        </a>
+
+        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.09s">
+          <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
+            <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+              <rect x="2.5" y="5" width="19" height="14" rx="3"/>
+              <path d="M10.5 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <p class="text-sm font-bold text-azure">02</p>
+          <div>
+            <h3 class="font-display text-card font-bold text-text">홍보영상</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-muted">도시의 비전을 담은 영상 콘텐츠.</p>
+            <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">바로가기 <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
+          </div>
+        </a>
+
+        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.18s">
+          <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
+            <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+              <rect x="3" y="4.5" width="18" height="15" rx="3"/>
+              <circle cx="8.5" cy="10" r="1.6"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4 17 4.5-4.5 3.5 3.5 3-3L20 16.5"/>
+            </svg>
+          </span>
+          <p class="text-sm font-bold text-azure">03</p>
+          <div>
+            <h3 class="font-display text-card font-bold text-text">갤러리</h3>
+            <p class="mt-2 text-sm leading-relaxed text-text-muted">B-CITY의 조감도와 현장 이미지.</p>
+            <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">바로가기 <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </div>
+      <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <a href="#" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
+          <span class="font-display font-bold text-text">공지사항</span><span class="text-primary" aria-hidden="true">→</span>
+        </a>
+        <a href="#" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
+          <span class="font-display font-bold text-text">B-CITY 발행물</span><span class="text-primary" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. 파트너 + 푸터 (슬라이드 21) — 밝은 톤 ============ -->
+  <section id="footer" class="page border-t border-line bg-bg">
+    <div class="mx-auto max-w-[1320px] px-6 py-24">
+      <div class="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
+        <h2 class="font-display max-w-3xl text-3xl font-bold leading-snug tracking-tight text-text md:text-h3">
+          대한민국 AI·바이오 산업의 중심에서<br />글로벌 경쟁력을 갖춘 혁신 생태계를 완성합니다
+        </h2>
+        <a href="#" class="inline-flex shrink-0 items-center gap-2 rounded-md bg-primary px-7 py-4 text-base font-bold text-white transition hover:bg-primary-hover">
+          파트너 보기 <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="reveal mb-4 text-xs font-bold uppercase tracking-widest text-text-muted">참여기관 &amp; 파트너</p>
+      <!-- 흐르는 로고 (마퀴) — 호버 시 일시정지 -->
+      <div class="reveal marquee -mx-6 px-6">
+        <div id="partnerTrack" class="marquee-track"></div>
+      </div>
+
+      <div class="mt-16 grid gap-10 border-t border-line pt-10 lg:grid-cols-2">
+        <div id="company">
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <span class="flex items-center gap-3">
+              <svg class="bcity-logo bcity-logo-lg" style="color:#2C3E91" viewBox="0 0 2518 421" fill="none" role="img" aria-label="B·CITY">
+                <g fill="currentColor">
+                  <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
+                  <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
+                  <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
+                  <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
+                  <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
+                </g>
+                <path fill="#3DBFA8" d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
+                <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
+              </svg>
+            </span>
+          </div>
+          <p class="mt-5 text-sm leading-relaxed text-text-muted">
+            <span class="font-semibold text-text">바이오테크 이노밸리 PFV</span><br />
+            주소 : 서울특별시 광진구 자양로58 태림빌딩 3층<br />
+            사업자등록번호 : 883-81-03982
+          </p>
+        </div>
+        <p class="text-xs leading-relaxed text-text-muted/80">
+          * 본 홈페이지에 사용된 영상, 사진 및 이미지 등은 소비자의 이해를 돕기 위한 것으로 변경될 수 있음<br />
+          * 본 홈페이지에서 제공되는 정보는 향후 사업추진 상황에 따라 변경될 수 있음
+        </p>
+      </div>
+      <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-xs text-text-muted sm:flex-row">
+        <span>© 2026 B-CITY. All rights reserved.</span>
+        <!-- 푸터 메뉴 -->
+        <nav class="flex items-center gap-4 font-semibold text-text" aria-label="푸터 메뉴">
+          <a href="#company" class="transition hover:text-primary">회사소개</a>
+          <span class="h-3 w-px bg-line" aria-hidden="true"></span>
+          <a href="#privacy" class="transition hover:text-primary">개인정보이용약관</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 문의하기 모달 (관심고객등록) ============ -->
+  <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-azure">Contact</p>
+          <h2 id="ctTitle" class="font-display mt-1.5 text-2xl font-bold text-text md:text-3xl">문의하기</h2>
+          <p class="mt-2 text-sm leading-relaxed text-text-muted">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+      <div class="pv-body">
+        <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <form id="contactForm" class="ct-form" novalidate>
+          <!-- 관심분야 -->
+          <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
+            <p class="ct-label" id="ctInterestLabel">관심분야 <span class="ct-req" aria-hidden="true">*</span></p>
+            <div class="ct-chips">
+              <label class="ct-chip"><input type="checkbox" name="interest" value="기업입주문의" /><span>기업입주문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="투자문의" /><span>투자문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="사업문의" /><span>사업문의</span></label>
+            </div>
+            <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
+          </div>
+
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div class="ct-row">
+              <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
+              <p class="ct-err" data-err="name">회사명 또는 이름을 입력해 주세요.</p>
+            </div>
+            <div class="ct-row">
+              <label class="ct-label" for="ctTel">휴대전화 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctTel" name="tel" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" />
+              <p class="ct-err" data-err="tel">휴대전화번호를 정확히 입력해 주세요.</p>
+            </div>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctEmail">이메일 <span class="ct-req" aria-hidden="true">*</span></label>
+            <input class="ct-input" id="ctEmail" name="email" type="email" autocomplete="email" placeholder="name@company.com" />
+            <p class="ct-err" data-err="email">이메일 주소를 정확히 입력해 주세요.</p>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctMsg">문의 내용 <span class="ct-req" aria-hidden="true">*</span></label>
+            <textarea class="ct-input ct-area" id="ctMsg" name="message" rows="4" placeholder="문의하실 내용을 입력해 주세요."></textarea>
+            <p class="ct-err" data-err="message">문의 내용을 입력해 주세요.</p>
+          </div>
+
+          <!-- 동의 -->
+          <div class="ct-agree">
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeReq" name="agreeRequired" />
+              <span>
+                <b class="ct-tag ct-tag--req">필수</b>
+                개인정보 수집 · 이용에 모두 동의합니다
+                <a href="#privacy" class="ct-view">약관 보기</a>
+              </span>
+            </label>
+            <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeOpt" name="agreeMarketing" />
+              <span>
+                <b class="ct-tag ct-tag--opt">선택</b>
+                마케팅 활용 동의에 동의합니다
+                <a href="#privacy" class="ct-view">약관 보기</a>
+              </span>
+            </label>
+          </div>
+
+        </form>
+
+        <!-- 안내 -->
+        <aside class="ct-side">
+          <div class="ct-card">
+            <p class="ct-card-h">담당자 연락처</p>
+            <a class="ct-card-a" href="mailto:invest@b-city.kr">invest@b-city.kr</a>
+            <p class="ct-card-p">평일 09:00 – 18:00 (주말 · 공휴일 제외)</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">사업 주관</p>
+            <p class="ct-card-p"><span class="font-semibold text-text">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">처리 절차</p>
+            <ol class="ct-steps">
+              <li>문의 접수</li>
+              <li>담당자 배정 · 내용 검토</li>
+              <li>유선 또는 이메일 회신</li>
+            </ol>
+          </div>
+          <p class="ct-card-note">
+            수집된 개인정보는 &lsquo;개인정보 보호법&rsquo;에 따라 안전하게 보관되며, 입주/이주 완료 후 자동 파기됩니다.
+          </p>
+          <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
+          <div class="ct-actions">
+            <button type="submit" form="contactForm" class="ct-submit">등록하기</button>
+            <button type="reset" form="contactForm" class="ct-reset">다시쓰기</button>
+            <p id="ctStatus" class="ct-status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 개인정보 수집·이용약관 (문의하기 동의 항목) ============ -->
+  <div id="privacy" class="pv" role="dialog" aria-modal="true" aria-labelledby="pvTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-azure">Privacy</p>
+          <h2 id="pvTitle" class="font-display mt-1.5 text-2xl font-bold text-text md:text-3xl">개인정보 수집 · 이용약관</h2>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="pv-body">
+        <p class="text-sm leading-relaxed text-text-muted">
+          바이오테크 이노밸리 PFV(이하 &lsquo;회사&rsquo;)는 춘천기업혁신파크 B-CITY 문의 접수를 위해 아래와 같이 개인정보를 수집·이용합니다.
+          내용을 확인하신 후 동의 여부를 결정해 주시기 바랍니다.
+        </p>
+
+        <!-- 필수 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">개인정보 수집 · 이용 동의 <span class="pv-tag pv-tag--req">필수</span></h3>
+          <table class="pv-tbl">
+            <caption class="sr-only">필수 개인정보 수집·이용 항목</caption>
+            <tbody>
+              <tr><th scope="row">수집 · 이용 목적</th><td>문의 접수 및 회신, 홍보 및 모집정보 안내(전화, 문자, 이메일, 우편)</td></tr>
+              <tr><th scope="row">수집 항목</th><td>관심분야, 회사명/이름, 휴대전화번호, 이메일, 문의 내용</td></tr>
+              <tr><th scope="row">보유 · 이용 기간</th><td>입주/분양 완료 시까지<br /><span class="text-text-muted">단, 관계 법령에 보존 의무가 규정된 경우 해당 기간 동안 별도 보관 후 파기</span></td></tr>
+            </tbody>
+          </table>
+          <p class="pv-note">
+            귀하는 개인정보 수집 · 이용에 동의하지 않을 권리가 있습니다. 다만 필수 항목에 동의하지 않으실 경우 문의 접수 및 회신이 제한됩니다.
+          </p>
+        </section>
+
+        <!-- 선택 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">마케팅 활용 동의 <span class="pv-tag pv-tag--opt">선택</span></h3>
+          <table class="pv-tbl">
+            <caption class="sr-only">선택 마케팅 활용 항목</caption>
+            <tbody>
+              <tr><th scope="row">활용 목적</th><td>춘천기업혁신파크 관련 각종 안내(SMS, 전화, 우편 등)</td></tr>
+              <tr><th scope="row">활용 항목</th><td>성명, 성별, 연령대, 연락처, 주소(동 단위)</td></tr>
+              <tr><th scope="row">보유 기간</th><td>입주/분양 완료 시 또는 <strong class="font-semibold text-text">철회 요청 시 즉시 파기</strong></td></tr>
+            </tbody>
+          </table>
+          <p class="pv-note">
+            선택 항목에 동의하지 않으셔도 문의 접수는 정상적으로 가능하며, 동의 후에도 언제든지 철회하실 수 있습니다.
+          </p>
+        </section>
+
+        <!-- 안내 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">개인정보의 보호 및 파기</h3>
+          <ul class="pv-list">
+            <li>수집된 개인정보는 &lsquo;개인정보 보호법&rsquo; 및 &lsquo;정보통신망 이용촉진 및 정보보호 등에 관한 법률&rsquo;에 따라 안전하게 보관되며, 입주/이주 완료 후 자동 파기됩니다.</li>
+            <li>수집 목적이 달성되거나 보유 기간이 경과한 개인정보는 지체 없이 복구·재생이 불가능한 방법으로 파기합니다.</li>
+            <li>회사는 정보주체의 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 단, 법령에 근거한 요청이 있는 경우는 예외로 합니다.</li>
+            <li>정보주체는 개인정보의 열람 · 정정 · 삭제 · 처리정지 및 동의 철회를 언제든지 요구할 수 있습니다.</li>
+          </ul>
+        </section>
+
+        <!-- 문의처 -->
+        <section class="pv-sec pv-sec--last">
+          <h3 class="pv-h3">개인정보 보호 문의</h3>
+          <table class="pv-tbl">
+            <tbody>
+              <tr><th scope="row">처리 주체</th><td>바이오테크 이노밸리 PFV</td></tr>
+              <tr><th scope="row">주소</th><td>서울특별시 광진구 자양로58 태림빌딩 3층</td></tr>
+              <tr><th scope="row">이메일</th><td><a class="text-primary underline decoration-line underline-offset-2 hover:decoration-primary" href="mailto:invest@b-city.kr">invest@b-city.kr</a></td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <footer class="pv-foot">
+        <p class="text-xs text-text-muted">시행일 : 2026년 7월 30일</p>
+        <button type="button" class="pv-ok" data-pv-close>확인</button>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- 사이트맵 ---------- */
+    /* 사이트맵 (IA) — 4개 대분류 + 독립 CTA.
+       items 세 번째 값이 1이면 3단(하위의 하위) 항목으로 들여쓴다. */
+    const siteMap = [
+      { no:'01', title:'사업소개', href:'#business', items:[
+        ['사업개요','#business'],
+        ['입지','#location'],
+        ['추진일정','#business'],
+        ['기대효과','#business'],
+        ['사업주체','#company'],
+      ]},
+      { no:'02', title:'도시소개', href:'#concept', items:[
+        ['브랜드','#concept'],
+        ['컨셉','#concept'],
+        ['구역 소개','#districts'],
+        ['정주환경','#districts'],
+      ]},
+      { no:'03', title:'투자·입주', href:'#business', items:[
+        ['토지확보 현황','#zones'],
+        ['특구별 혜택','#business'],
+        ['주요 혜택','#business'],
+        ['문의하기','#contact'],
+      ]},
+      { no:'04', title:'홍보센터', href:'#pr', items:[
+        ['공지사항','#pr'],
+        ['언론보도','#pr'],
+        ['홍보 갤러리','#pr'],
+        ['자료실','#pr'],
+      ]},
+    ];
+
+    // 데스크탑 메가메뉴
+    document.getElementById('gnbMenu').innerHTML = siteMap.map(m =>
+      '<li class="gnb-item">'+
+        '<a href="'+m.href+'" class="gnb-link flex h-16 items-center text-base font-semibold transition-colors">'+m.title+'</a>'+
+        '<div class="gnb-sub">'+
+          m.items.map(it=>'<a href="'+it[1]+'"'+(it[2]?' class="gnb-sub2"':'')+'>'+
+            (it[2] ? '<span class="gnb-tick"></span>' : '')+it[0]+'</a>').join('')+
+        '</div>'+
+      '</li>'
+    ).join('');
+
+    // 모바일 아코디언 (번호 표기 포함)
+    const mAcc = document.getElementById('mAccordion');
+    mAcc.innerHTML = siteMap.map(m =>
+      '<div class="m-acc border-b border-line/70">'+
+        '<button class="m-acc-btn flex w-full items-center justify-between px-4 py-4 text-left font-display text-base font-bold text-text">'+
+          '<span class="flex items-baseline gap-2.5">'+
+            '<span class="text-xs font-bold text-azure">'+m.no+'</span>'+m.title+
+          '</span>'+
+          '<svg class="m-caret h-5 w-5 text-text-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 9l6 6 6-6"/></svg></button>'+
+        '<div class="m-sub"><div class="flex flex-col gap-0.5 px-4 pb-3">'+
+          m.items.map(it=>'<a href="'+it[1]+'" class="m-link block rounded px-3 py-2.5 text-sm text-text-muted transition hover:bg-bg hover:text-primary'+
+            (it[2] ? ' ml-4 border-l border-line pl-3.5' : '')+'">'+it[0]+'</a>').join('')+
+        '</div></div></div>'
+    ).join('');
+    mAcc.querySelectorAll('.m-acc-btn').forEach(btn=>btn.addEventListener('click',()=>{
+      const cur=btn.parentElement;
+      mAcc.querySelectorAll('.m-acc').forEach(a=>{ if(a!==cur) a.classList.remove('open'); });
+      cur.classList.toggle('open');
+    }));
+
+    /* ---------- GNB 상태 ---------- */
+    const gnb = document.getElementById('gnb');
+    let menuOpen = false;
+    const syncGnb = () => {
+      const overDark = isOverDarkSection();
+      gnb.classList.toggle('solid', (!overDark && window.scrollY > 40) || menuOpen);
+    };
+    function isOverDarkSection(){
+      const y = 40;
+      const el = document.elementFromPoint(Math.round(innerWidth/2), y);
+      const sec = el ? el.closest('section') : null;
+      return sec ? ['hero','business','zones'].includes(sec.id) : false;
+    }
+    gnb.addEventListener('mouseenter', ()=>{ menuOpen=true; gnb.classList.add('open'); syncGnb(); });
+    gnb.addEventListener('mouseleave', ()=>{ menuOpen=false; gnb.classList.remove('open'); syncGnb(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ menuOpen=false; gnb.classList.remove('open'); syncGnb(); } });
+    window.addEventListener('scroll', syncGnb, { passive:true });
+    syncGnb();
+
+    const mobileNav=document.getElementById('mobileNav'), hamburger=document.getElementById('hamburger');
+    const closeMobile=()=>{ mobileNav.classList.add('hidden-nav'); hamburger.setAttribute('aria-expanded','false'); document.body.style.overflow=''; };
+    hamburger.addEventListener('click',()=>{ mobileNav.classList.remove('hidden-nav'); hamburger.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; });
+    document.getElementById('mClose').addEventListener('click', closeMobile);
+    mobileNav.querySelector('.m-overlay').addEventListener('click', closeMobile);
+    mAcc.querySelectorAll('.m-link').forEach(a=>a.addEventListener('click', closeMobile));
+
+    /* ---------- 권역별 면적 (슬라이드 11) ---------- */
+    /* 지도 권역 면 색은 밝은 것이 많아 흰 숫자가 안 읽힌다.
+       임계값으로 나누면 주황·초록처럼 중간 밝기에서 대비가 무너지므로(2.3:1)
+       네이비와 흰색 중 '실제 대비가 높은 쪽'을 고른다. */
+    const zoneInk = hex => {
+      const v = hex.replace('#','');
+      const f = i => { let c = parseInt(v.substr(i,2),16)/255;
+        return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); };
+      const L = 0.2126*f(0) + 0.7152*f(2) + 0.0722*f(4);
+      const cr = l2 => (Math.max(L,l2) + 0.05) / (Math.min(L,l2) + 0.05);
+      return cr(0.0175) >= cr(1) ? '#002742' : '#ffffff';   // 0.0175 = #002742 의 휘도
+    };
+    const zoneHex = key => getComputedStyle(document.documentElement)
+      .getPropertyValue('--color-zone-' + key).trim();
+
+    const areas = [
+      ['1','AI 데이터','6.9만평','district-ai'], ['2','바이오','8.2만평','district-bio'],
+      ['3','푸드','4.2만평','district-food'], ['4','바이오 MICE','3.9만평','district-mice'],
+      ['5','주거','9.1만평','district-housing'], ['6','교육','2.7만평','district-edu'],
+      ['7','비즈니스','1.7만평','district-biz'], ['8','골프·레저','28.5만평','district-golf'],
+    ];
+    document.getElementById('areaGrid').innerHTML = areas.map(([n,name,area,c],i)=>{
+      const zk = c.replace('district-','');
+      return       '<div class="az-card reveal rounded-lg border border-white/20 bg-navy/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:bg-navy/70" data-zone="'+n+'" tabindex="0"'+
+        ' style="border-top:3px solid var(--color-'+c+');transition-delay:'+(i*0.07)+'s">'+
+        '<div class="flex items-center gap-2.5">'+
+          '<span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-bold" style="background:var(--color-zone-'+zk+');color:'+zoneInk(zoneHex(zk))+'">'+n+'</span>'+
+          '<span class="text-sm font-semibold text-light-blue">'+name+'</span>'+
+        '</div>'+
+        '<p class="font-display mt-3 text-[26px] font-bold text-white"><span class="cnt" data-to="'+parseFloat(area)+'">0.0</span>만평</p>'+
+      '</div>';
+    }).join('');
+
+    /* 권역 카드 ↔ 토지이용계획도 연동 (호버·포커스·터치) */
+    (function(){
+      const map = document.querySelector('.az-map');
+      if (!map) return;
+      const layers = [...map.querySelectorAll('.az-map-hl')];
+      const cards = [...document.querySelectorAll('#areaGrid .az-card')];
+      const show = z => {
+        let hit = false;
+        layers.forEach(l => {
+          const on = l.dataset.zone === z;
+          l.classList.toggle('on', on);
+          if (on) hit = true;
+        });
+        cards.forEach(c => c.classList.toggle('is-on', c.dataset.zone === z));
+        // 해당 권역 레이어가 있을 때만 베이스를 누른다.
+        // (레이어가 없는 권역에서 베이스만 어두워지면 고장난 것처럼 보인다)
+        map.classList.toggle('is-on', hit);
+      };
+      cards.forEach(card => {
+        const z = card.dataset.zone;
+        ['mouseenter','focus'].forEach(ev => card.addEventListener(ev, ()=>show(z)));
+        ['mouseleave','blur'].forEach(ev => card.addEventListener(ev, ()=>show(null)));
+        // 터치: 탭하면 유지, 다시 탭하면 해제
+        card.addEventListener('click', ()=>show(card.classList.contains('is-on') ? null : z));
+      });
+      document.getElementById('areaGrid').addEventListener('mouseleave', ()=>show(null));
+
+      // 섹션이 가까워지면 오버레이를 미리 받아둔다 (lazy라 첫 호버가 늦는 것 방지)
+      new IntersectionObserver((es, ob)=>{
+        es.forEach(e=>{
+          if (!e.isIntersecting) return;
+          layers.forEach(l=>{ l.removeAttribute('loading');
+            if (l.decode) l.decode().catch(()=>{}); });
+          ob.disconnect();
+        });
+      }, { rootMargin: '600px 0px' }).observe(map);
+    })();
+
+    /* 면적 숫자 카운트업 */
+    function countUp(el){
+      if (el.dataset.done) return; el.dataset.done='1';
+      const to=parseFloat(el.dataset.to)||0, dur=1200, t0=performance.now();
+      (function tick(now){
+        const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,3);
+        el.textContent=(to*e).toFixed(1);
+        if(p<1) requestAnimationFrame(tick);
+      })(t0);
+    }
+    const cntIO=new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ countUp(e.target); cntIO.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('#areaGrid .cnt').forEach(el=>cntIO.observe(el));
+
+    /* 조감도 배경 미세 확대 (스크롤 반응) */
+    const zonesSec=document.getElementById('zones'), zonesBg=document.getElementById('zonesBg');
+    function zonesParallax(){
+      const r=zonesSec.getBoundingClientRect();
+      const p=Math.min(Math.max((innerHeight-r.top)/(innerHeight+r.height),0),1);
+      zonesBg.style.transform='scale('+(1.05+p*0.12).toFixed(3)+') translateY('+((p-0.5)*-24).toFixed(1)+'px)';
+    }
+    zonesParallax();
+    window.addEventListener('scroll', zonesParallax, { passive:true });
+
+    /* ---------- 구역 상세 (슬라이드 12~19) ---------- */
+    const zones = {
+      cluster: [
+        { n:'01', vid:'assets/vid/district/d01.mp4', poster:'assets/still/district/d01.jpg', c:'district-ai', t:'AI데이터 클러스터', img:'assets/slide-datarush.jpg', area:'약 6.9만평',
+          head:'국가대표급 하이퍼스케일',
+          desc:'최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축',
+          specs:[['부지 면적','약 6.9만평','226,643㎡ (68,559평)'],['구성','DC1~DC5','총 5개 블럭'],['전력','330MW','IT Load 240MW'],['용도지역','준공업지역','건폐율 70% · 용적률 400% / 목표 PUE 1.2']] },
+        { n:'02', vid:'assets/vid/district/d02.mp4', poster:'assets/still/district/d02.jpg', c:'district-bio', t:'첨단 바이오 클러스터', img:'assets/img-bio.jpg', area:'약 8.2만평',
+          head:'AI 기반 신약 R&D 및 중소형 CDMO 거점',
+          desc:'미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축',
+          specs:[['부지 면적','약 8.2만평','270,910㎡ (81,950평)'],['구성','HT1~HT2','총 2개 구역'],['산업 연계','국가첨단전략산업','특화단지'],['용도지역','일반공업지역','건폐율 70% · 용적률 350%']] },
+        { n:'03', vid:'assets/vid/district/d03.mp4', poster:'assets/still/district/d03.jpg', c:'district-food', t:'푸드 물류 클러스터', img:'assets/img-logistics.jpg', area:'약 4.2만평',
+          head:'AI 콜드체인 허브이자 군 급식 수요 대응 거점',
+          desc:'AI데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응',
+          specs:[['부지 면적','약 4.2만평','138,860㎡ (42,254평)'],['구성','FU1~FU4','총 4개 구역'],['접근성','남춘천IC 3분','서울양양고속도로'],['용도지역','준공업지역','건폐율 70% · 용적률 400%']] },
+        { n:'04', vid:'assets/vid/district/d04.mp4', poster:'assets/still/district/d04.jpg', c:'district-mice', t:'바이오MICE 클러스터', img:'assets/img-shuttle.jpg', area:'약 3.9만평',
+          head:'지속가능한 바이오·헬스 산업 커뮤니티 조성',
+          desc:'일회성·정기성을 넘어, 의료+바이오+헬스+투자가 상시 교류하는 산업 네트워크 완성',
+          specs:[['부지 면적','약 3.9만평','128,634㎡ (38,912평)'],['구성','BIO1~BIO4','4개 구역'],['특구','AI 헬스케어','국가첨단전략산업'],['용도지역','복합용지','MICE·의료시설 등']] },
+      ],
+      complex: [
+        { n:'05', vid:'assets/vid/district/d05.mp4', poster:'assets/still/district/d05.jpg', c:'district-biz', t:'비즈니스 콤플렉스', img:'assets/img-street.jpg', area:'약 1.7만평',
+          head:'상업‧업무‧문화가 융합된 강원 관문',
+          desc:'도시를 넘어 광역 유동인구까지 흡수하는 직·주·락 중심 주민친화적 단핵 복합 상권 조성',
+          specs:[['부지 면적','약 1.7만평','55,703㎡ (16,850평)'],['핵심시설','업무시설','8,949평 (29,583㎡)'],['핵심시설','상업시설','7,901평 (26,120㎡)'],['용도지역','일반상업지역','건폐율 80% · 용적률 600%']] },
+        { n:'06', vid:'assets/vid/district/d06.mp4', poster:'assets/still/district/d06.jpg', c:'district-housing', t:'하우징 콤플렉스', img:'assets/img-mirror.jpg', area:'약 9.1만평',
+          head:'첨단 기술과 자연을 누리는 하우징 / 시니어',
+          desc:'AI·로보틱스·자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징',
+          specs:[['부지 면적','약 9.1만평','301,387㎡ (91,169평)'],['계획 세대','6,366세대','공동주택 4,000 · 시니어 2,000'],['계획 인구','15,917명',''],['주택 유형','공동주택','시니어하우징']] },
+        { n:'07', vid:'assets/vid/district/d07.mp4', poster:'assets/still/district/d07.jpg', c:'district-edu', t:'에듀 콤플렉스', img:'assets/img-family.jpg', area:'약 2.7만평',
+          head:'생애 전주기 교육하는 ‘생각하는 도시’ 글로벌',
+          desc:'춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성·유입',
+          specs:[['부지 면적','약 2.7만평','90,147㎡ (27,269평)'],['도입시설','유·초·중·고','외국교육기관'],['연계','교육발전특구','(시범사업)'],['외국인교육기관','약 1.2만평','40,539㎡']] },
+        { n:'08', vid:'assets/vid/district/d08.mp4', poster:'assets/still/district/d08.jpg', c:'district-golf', t:'골프레저 콤플렉스', img:'assets/img-park.jpg', area:'약 28.5만평',
+          head:'바이오 스마트·피지컬 AI 기반 웰니스',
+          desc:'친환경 그린 인프라에서 경험하는 로봇 캐디·메디컬 케어 등 미래형 라이프스타일 플랫폼 완성',
+          specs:[['부지 면적','약 28.5만평','942,975㎡ (285,250평)'],['코스','대중형·18홀','PAR 72'],['코스연장','6,570m',''],['부대시설','4대 시설','클럽하우스·그늘집·관리동·연습시설']] },
+      ]
+    };
+    /* ---------- 구역소개: 활성 탭의 4개를 스크롤로 전환 (이미지 세로 슬라이드) ----------
+       콤플렉스는 탭으로 전환한다. 스크롤 분량 = 4개 × 60vh (섹션 340vh) */
+    const dzSec   = document.getElementById('districts');
+    const dzStage = dzSec.querySelector('.dz-stage');
+    const dzImgs  = document.getElementById('dzImgs');
+    const dzDots  = document.getElementById('dzDots');
+    const dzAcc   = document.getElementById('dzAcc');
+    const TAB_BASE = 'tab-btn rounded-full px-9 py-3.5 transition';
+
+    let dzGroup = 'cluster';
+    let dzCur = -1;
+    const dzItems = () => zones[dzGroup];
+
+    function dzRenderGroup(){
+      const items = dzItems();
+      // 이미지 스택 (대기=아래 / 지나감=위)
+      dzImgs.innerHTML = items.map(z=>
+        '<video class="dz-vid" muted loop playsinline preload="none" '+
+          'poster="'+z.poster+'" data-src="'+z.vid+'"></video>'
+      ).join('');
+      // 좌측 아코디언 (예전 형식: 펼치면 서브카피 + 부지개요)
+      dzAcc.innerHTML = items.map((z,i)=>
+        '<div class="za" data-i="'+i+'" style="--zc:var(--color-'+z.c+');'+
+            '--zn:var(--color-zone-'+z.c.replace('district-','')+');'+
+            '--zni:'+zoneInk(zoneHex(z.c.replace('district-','')))+'">'+
+          '<button type="button" class="za-head">'+
+            '<span class="za-num">'+z.n+'</span>'+
+            '<span>'+
+              '<span class="za-name block">'+z.t+'</span>'+
+              '<span class="za-sub block">'+z.head+'</span>'+
+            '</span>'+
+            '<span class="za-area">'+z.area+'</span>'+
+            '<svg class="za-caret h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">'+
+              '<path stroke-linecap="round" d="M6 9l6 6 6-6"/></svg>'+
+          '</button>'+
+          '<div class="za-body"><div class="za-inner">'+
+            '<p class="text-sm leading-relaxed text-text-muted">'+z.desc+'</p>'+
+            '<p class="mt-4 mb-2.5 text-xs font-bold uppercase tracking-wider text-text">부지 개요</p>'+
+            '<div class="grid grid-cols-2 gap-2.5">'+
+              z.specs.map(([label,v1,v2])=>
+                '<div class="rounded-md border border-line bg-bg p-3">'+
+                  '<p class="text-[11px] font-semibold text-text-muted">'+label+'</p>'+
+                  '<p class="font-display mt-1 text-sm font-bold text-text">'+v1+'</p>'+
+                  (v2 ? '<p class="mt-0.5 text-[11px] leading-relaxed text-text-muted">'+v2+'</p>' : '')+
+                '</div>'
+              ).join('')+
+            '</div>'+
+          '</div></div>'+
+        '</div>'
+      ).join('');
+      dzAcc.querySelectorAll('.za-head').forEach(h=>
+        h.addEventListener('click', ()=>dzScrollTo(+h.parentElement.dataset.i)));
+      // 도트 (4개)
+      dzDots.innerHTML = items.map((z,i)=>
+        '<button type="button" data-i="'+i+'" aria-label="'+z.t+'">'+
+          '<span class="dd-label">'+z.t+'</span><span class="dd-dot"></span>'+
+        '</button>'
+      ).join('');
+      dzDots.querySelectorAll('button').forEach(b=>
+        b.addEventListener('click', ()=>dzScrollTo(+b.dataset.i)));
+      // 탭 상태
+      document.querySelectorAll('.tab-btn').forEach(b=>{
+        const on = b.dataset.tab === dzGroup;
+        b.className = TAB_BASE + (on ? ' bg-primary text-white shadow' : ' text-text-muted');
+      });
+      dzCur = -1;
+    }
+
+    /* 활성 구역 영상: 볼 때만 내려받고, 재생이 막히면 재시도한다 */
+    function dzPlay(v){
+      if (!v) return;
+      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'auto'; }
+      v.muted = true;
+      const go = () => { const pr = v.play(); if (pr && pr.catch) pr.catch(()=>{}); };
+      go();
+      if (v.readyState < 3) v.addEventListener('canplay', go, { once: true });
+      v.addEventListener('pause', () => {
+        if (v.classList.contains('on') && !document.hidden) setTimeout(go, 150);
+      }, { once: true });
+    }
+    // 사용자 입력·탭 복귀 시 활성 영상 재생 재시도
+    ['click','touchstart','keydown','wheel'].forEach(ev=>
+      window.addEventListener(ev, ()=>dzPlay(document.querySelector('#dzImgs .dz-vid.on')), { once:true, passive:true }));
+    document.addEventListener('visibilitychange', ()=>{
+      if (!document.hidden) dzPlay(document.querySelector('#dzImgs .dz-vid.on'));
+    });
+
+    function dzRender(i){
+      const z = dzItems()[i];
+      if (!z) return;
+      [...dzImgs.children].forEach((v,k)=>{
+        v.classList.toggle('on', k === i);
+        v.classList.toggle('above', k < i);
+        if (k === i) {
+          dzPlay(v);
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+      [...dzDots.children].forEach((b,k)=>b.classList.toggle('on', k === i));
+      dzAcc.querySelectorAll('.za').forEach((c,k)=>c.classList.toggle('open', k === i));
+
+      dzStage.classList.add('dz-swap');
+      setTimeout(()=>{
+        document.getElementById('dzHead').textContent  = z.n + ' · ' + z.head;
+        document.getElementById('dzTitle').textContent = z.t;
+        document.getElementById('dzDesc').textContent  = z.desc;
+        document.getElementById('dzIndex').textContent =
+          z.n + ' · ' + (dzGroup === 'cluster' ? 'CLUSTER' : 'COMPLEX') + ' ' + (i+1) + '/' + dzItems().length;
+        dzStage.classList.remove('dz-swap');
+      }, 200);
+      dzCur = i;
+    }
+
+    function dzUpdate(){
+      const r = dzSec.getBoundingClientRect();
+      const total = dzSec.offsetHeight - innerHeight;
+      if (total <= 0) return;
+      const n = dzItems().length;
+      const p = Math.min(Math.max(-r.top / total, 0), 1);
+      const i = Math.min(Math.floor(p * n), n - 1);
+      if (i !== dzCur) dzRender(i);
+    }
+    function dzScrollTo(i){
+      const total = dzSec.offsetHeight - innerHeight;
+      const n = dzItems().length;
+      window.scrollTo({ top: dzSec.offsetTop + total * ((i + 0.5) / n), behavior: 'smooth' });
+    }
+
+    // 탭 전환: 그룹 교체 후 현재 스크롤 위치에 맞는 항목 표시
+    document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+      if (b.dataset.tab === dzGroup) return;
+      dzGroup = b.dataset.tab;
+      dzRenderGroup();
+      dzUpdate();
+      if (dzCur < 0) dzRender(0);
+    }));
+
+    dzRenderGroup();
+    dzRender(0);
+    dzUpdate();
+    window.addEventListener('scroll', dzUpdate, { passive: true });
+    window.addEventListener('resize', dzUpdate);
+
+    /* ---------- 스크럽 시네마 엔진 ---------- */
+    /* HEVC(H.265) 재생 가능하면 2560 고화질을, 아니면 1920 H.264를 쓴다 */
+    const CAN_HEVC = (()=>{
+      const v = document.createElement('video');
+      return v.canPlayType('video/mp4; codecs="hvc1"') !== '' ||
+             v.canPlayType('video/mp4; codecs="hev1"') !== '';
+    })();
+
+    const cines = [...document.querySelectorAll('.cine')].map(sec=>{
+      const key = sec.dataset.cine;
+      const pages = [...sec.querySelectorAll('.cine-page')];
+      const dots = sec.querySelector('[data-dots="'+key+'"]');
+      if (dots && pages.length > 1) {
+        dots.innerHTML = pages.map((_,i)=>'<i'+(i===0?' class="on"':'')+'></i>').join('');
+      }
+      return {
+        sec, key, pages, dots,
+        prog: sec.querySelector('[data-prog="'+key+'"]'),
+        video: sec.querySelector('video[data-scrub="'+key+'"]'),
+        poster: sec.querySelector('[data-poster="'+key+'"]'),
+        clip: (CAN_HEVC && sec.dataset.clipHevc) ? sec.dataset.clipHevc : (sec.dataset.clip || null),
+        cur: 0, loaded: false, seeking: false, target: 0
+      };
+    });
+
+    // 클립 로딩: blob(탐색 보장) → 실패 시 직접 src (file:// 등에서 fetch가 막힐 때)
+    async function loadClip(c){
+      if (c.loaded || !c.clip || !c.video) return;
+      c.loaded = true;
+      const ready = () => new Promise(r=>{
+        if (c.video.readyState >= 2) return r();
+        c.video.addEventListener('loadeddata', r, { once:true });
+        setTimeout(r, 8000);
+      });
+      try {
+        const res = await fetch(c.clip);
+        if (!res.ok) throw new Error('http ' + res.status);
+        c.video.src = URL.createObjectURL(await res.blob());
+      } catch (e) {
+        c.video.src = c.clip;            // fetch 불가 환경 폴백
+      }
+      await ready();
+      if (c.video.readyState >= 2 && c.poster) c.poster.style.opacity = '0';
+    }
+    const loadIO = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ const c=cines.find(x=>x.sec===e.target); if(c) loadClip(c); } });
+    }, { rootMargin: '100% 0px' });
+    cines.forEach(c=>{ if(c.clip) loadIO.observe(c.sec); });
+
+    /* linger: 각 카피 페이지 중앙에서 영상이 느려지고(읽는 동안 카메라가 머묾),
+       페이지 경계로 갈수록 빨라진다. f(0)=0, f(1)=1 유지 → 이음새 프레임은 그대로. */
+    function linger(p, pages, k){
+      const n = Math.max(pages || 1, 1);
+      const amt = (k == null) ? 0.72 : k;
+      const seg = 1 / n;
+      const i = Math.min(Math.floor(p / seg), n - 1);
+      const local = Math.min(Math.max((p - i * seg) / seg, 0), 1);
+      const eased = local + amt * Math.sin(2 * Math.PI * local) / (2 * Math.PI);
+      return (i + eased) * seg;
+    }
+
+    // 스크롤 → 목표 시간(즉시 계산) / rAF → 표시 시간(보간) : 영상처럼 흐르게
+    function measure(){
+      cines.forEach(c=>{
+        const r = c.sec.getBoundingClientRect();
+        const total = r.height - innerHeight;
+        c.visible = r.bottom > -200 && r.top < innerHeight + 200;
+        c.p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0;
+      });
+      // 히어로 미세 줌 (스크롤 반응)
+      const hero = document.getElementById('hero');
+      const hr = hero.getBoundingClientRect();
+      const hp = Math.min(Math.max(-hr.top / Math.max(hr.height, 1), 0), 1);
+      hero.style.setProperty('--hz', (1.02 + hp * 0.06).toFixed(3));
+    }
+
+    function tick(){
+      cines.forEach(c=>{
+        if (c.prog) c.prog.style.width = (c.p*100).toFixed(1) + '%';
+
+        // 영상: 목표 시간으로 부드럽게 수렴 (스크롤이 멈춘 뒤에도 잔여 이동 → 영상 느낌)
+        const v = c.video;
+        if (v && v.duration && c.visible) {
+          const target = Math.min(linger(c.p, c.pages.length) * v.duration, v.duration - 0.05);
+          c.shown = (c.shown == null) ? target : c.shown + (target - c.shown) * 0.18;
+          if (!v.seeking && Math.abs(v.currentTime - c.shown) > 0.016) {
+            try { v.currentTime = c.shown; } catch(e){}
+          }
+        }
+
+        // 카피 페이지 전환
+        if (c.pages.length > 1) {
+          const idx = Math.min(Math.floor(c.p * c.pages.length), c.pages.length - 1);
+          if (idx !== c.cur) {
+            c.pages[c.cur].classList.remove('on');
+            c.pages[idx].classList.add('on');
+            if (c.dots) {
+              c.dots.children[c.cur]?.classList.remove('on');
+              c.dots.children[idx]?.classList.add('on');
+            }
+            if (c.key === 'loc') {
+              if (window.locMapShow) window.locMapShow(idx);   // 경로 모션 전환
+              c.sec.querySelectorAll('.lo-tab').forEach((b,k)=>
+                b.classList.toggle('is-on', k === idx));       // 하단 탭 동기화
+            }
+            c.cur = idx;
+          }
+        }
+      });
+      requestAnimationFrame(tick);
+    }
+    measure();
+    tick();
+    window.addEventListener('scroll', measure, { passive:true });
+    window.addEventListener('resize', measure);
+
+    /* ---------- 히어로 자동재생 보장 ---------- */
+    const heroVid = document.querySelector('#hero video');
+    function ensureHeroPlay(){
+      if (!heroVid) return;
+      heroVid.muted = true;
+      const pr = heroVid.play();
+      if (pr && pr.catch) pr.catch(()=>{});
+    }
+    ensureHeroPlay();
+    heroVid?.addEventListener('loadeddata', ensureHeroPlay);
+    heroVid?.addEventListener('pause', ()=>{ if (!document.hidden) setTimeout(ensureHeroPlay, 120); });
+    document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) ensureHeroPlay(); });
+    ['click','touchstart','keydown','wheel'].forEach(ev=>
+      window.addEventListener(ev, ensureHeroPlay, { once:true, passive:true }));
+    new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting) ensureHeroPlay(); else heroVid?.pause(); });
+    }, { threshold: 0.1 }).observe(document.getElementById('hero'));
+
+    /* ---------- 라인 리빌 + 스크롤 등장 ---------- */
+    document.querySelectorAll('.lr').forEach(el=>{
+      const lines = el.innerHTML.split(/<br\s*\/?\s*>/i);
+      el.innerHTML = lines.map((l,i)=>'<span class="lr-line"><span class="lr-inner" style="transition-delay:'+(i*0.13)+'s">'+l+'</span></span>').join('');
+    });
+    const io = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal, .lr, .cn-dia').forEach(el=>io.observe(el));
+
+    /* ---------- 문의하기 폼 ----------
+       서버가 없으므로 기본 동작은 메일 클라이언트로 내용을 넘기는 방식이다.
+       백엔드가 준비되면 CT_ENDPOINT에 URL을 넣으면 fetch POST로 전송된다. */
+    const CT_ENDPOINT = '';   // 예: 'https://api.b-city.kr/inquiry'
+    (function(){
+      const form = document.getElementById('contactForm');
+      if (!form) return;
+      const status = document.getElementById('ctStatus');
+      const showErr = (key, on) => {
+        const el = form.querySelector('[data-err="'+key+'"]');
+        if (el) el.classList.toggle('on', on);
+      };
+      const setBad = (el, on) => el && el.classList.toggle('bad', on);
+
+      // 휴대전화 자동 하이픈
+      const tel = form.elements.tel;
+      tel.addEventListener('input', () => {
+        const d = tel.value.replace(/\D/g,'').slice(0,11);
+        tel.value = d.length < 4 ? d
+          : d.length < 8 ? d.slice(0,3)+'-'+d.slice(3)
+          : d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);
+      });
+
+      const checks = {
+        interest: () => [...form.querySelectorAll('input[name="interest"]')].some(c=>c.checked),
+        name:     () => form.elements.name.value.trim().length > 0,
+        tel:      () => /^01[016789]-?\d{3,4}-?\d{4}$/.test(form.elements.tel.value.replace(/\s/g,'')),
+        email:    () => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.elements.email.value.trim()),
+        message:  () => form.elements.message.value.trim().length > 0,
+        agreeRequired: () => form.elements.agreeRequired.checked,
+      };
+
+      // 입력 중 에러 해제
+      ['name','tel','email','message'].forEach(k=>{
+        form.elements[k].addEventListener('input', ()=>{
+          if (checks[k]()) { showErr(k,false); setBad(form.elements[k],false); }
+        });
+      });
+      form.querySelectorAll('input[name="interest"]').forEach(c=>
+        c.addEventListener('change', ()=>{ if(checks.interest()) showErr('interest',false); }));
+      form.elements.agreeRequired.addEventListener('change', ()=>{
+        if (checks.agreeRequired()) showErr('agreeRequired',false); });
+
+      form.addEventListener('submit', e=>{
+        e.preventDefault();
+        status.className = 'ct-status';
+        let firstBad = null;
+        for (const key of Object.keys(checks)) {
+          const ok = checks[key]();
+          showErr(key, !ok);
+          // name이 여러 개인 필드(interest)는 RadioNodeList가 오므로 focus 가능한 요소로 바꾼다
+          let field = form.elements[key];
+          if (!field || typeof field.focus !== 'function') field = form.querySelector('[name="'+key+'"]');
+          if (field && field.classList.contains('ct-input')) setBad(field, !ok);
+          if (!ok && !firstBad) firstBad = field;
+        }
+        if (firstBad) {
+          firstBad.focus({ preventScroll:false });
+          status.textContent = '입력하지 않은 필수 항목이 있습니다.';
+          status.className = 'ct-status on ng';
+          return;
+        }
+
+        const data = {
+          관심분야: [...form.querySelectorAll('input[name="interest"]:checked')].map(c=>c.value).join(', '),
+          '회사명/이름': form.elements.name.value.trim(),
+          휴대전화: form.elements.tel.value.trim(),
+          이메일: form.elements.email.value.trim(),
+          문의내용: form.elements.message.value.trim(),
+          마케팅활용동의: form.elements.agreeMarketing.checked ? '동의' : '미동의',
+        };
+
+        if (CT_ENDPOINT) {
+          const btn = document.querySelector('#contact .ct-submit');
+          btn.disabled = true;
+          status.textContent = '전송 중입니다…';
+          status.className = 'ct-status on';
+          fetch(CT_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'},
+                               body: JSON.stringify(data) })
+            .then(r=>{ if(!r.ok) throw new Error(r.status); form.reset();
+              status.textContent = '문의가 정상적으로 접수되었습니다. 담당자가 확인 후 연락드립니다.';
+              status.className = 'ct-status on ok';
+              setTimeout(()=>{ if (window.bcityCloseModal) window.bcityCloseModal(document.getElementById('contact')); }, 1800); })
+            .catch(()=>{ status.textContent = '전송에 실패했습니다. invest@b-city.kr 로 직접 보내주세요.';
+              status.className = 'ct-status on ng'; })
+            .finally(()=>{ btn.disabled = false; });
+          return;
+        }
+
+        // 백엔드 미연결: 메일 본문으로 넘긴다
+        const body = Object.entries(data).map(([k,v])=>k+' : '+v).join('\n');
+        const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
+        location.href = 'mailto:invest@b-city.kr?subject=' + encodeURIComponent(subject)
+                      + '&body=' + encodeURIComponent(body);
+        status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 invest@b-city.kr 로 보내주세요.';
+        status.className = 'ct-status on ok';
+      });
+
+      form.addEventListener('reset', ()=>{
+        form.querySelectorAll('.ct-err.on').forEach(el=>el.classList.remove('on'));
+        form.querySelectorAll('.ct-input.bad').forEach(el=>el.classList.remove('bad'));
+        status.className = 'ct-status';
+      });
+    })();
+
+    /* ---------- 입지: 경로 모션그래픽 ----------
+       좌표계 = 배경 지도 이미지의 픽셀 공간(viewBox 1600×900 · 16:9).
+       이미지를 assets/img/ 에 넣고 bg 경로만 지정하면 되고,
+       지점 위치는 이미지 위 픽셀 좌표를 x/y에 그대로 적으면 된다.
+       mode: 'spoke' = 허브에서 방사형 / 'ring' = 지점들을 순환 연결 */
+    /* clear = 마커를 감싸는 타원 + 라인이 붙을 바닥점.
+       라인이 받침대 위 아이콘을 가리지 않도록, 이 타원 바깥에서만 선이 보이게 잘라낸다.
+         cy   : 노드 좌표 → 마커(받침대+아이콘) 전체의 세로 중심까지 오프셋
+         rx/ry: 그 타원의 반지름
+         base : 라인이 향하는 바닥점(마커 최하단) 오프셋 — 선이 바닥면에서 드나든다
+       값은 map02/map03 원본을 10단위 격자로 크롭해 실측했다. */
+    const locRoutes = [
+      { // 01 수도권 연결 — 지형(bg)과 지도 위 요소(fg)를 분리해 받았다.
+        //    fg 에 받침대·지점명·소요시간 배지·경로선이 들어 있어 그 위로 잠실 노선만
+        //    '이동'을 표시한다(travel). 경로가 많아 전부 그리면 산만해진다.
+        //    d 는 fg 레이어의 40분(서울양양고속도로) 선을 픽셀 추적해 3차 다항식으로
+        //    맞춘 것이다(최대오차 2.5px / 평균 0.7px, 1600×900 기준).
+        mode: 'path', bg: 'assets/img/location-metro.png?v=2',
+        fg: 'assets/img/location-metro-fg.png?v=2',
+        bakedNodes: true, travel: true, dur: 2400, nodes: [],
+        // 노선 위에 얹힌 「40분」·「10분」 배지 자리를 가려 하이라이트가 배지 뒤로 지나가게 한다
+        //   배지 실측 bbox: 40분 635,608,98×44 / 10분 955,500,98×45.
+        //   r 을 높이 절반으로 주면 큰 모서리 원이 배지 자체 모서리를 덜 덮는다 → r 은 작게, 패딩 7.
+        maskRects: [{ x: 628, y: 601, w: 112, h: 58, r: 12 },
+                    { x: 948, y: 493, w: 112, h: 59, r: 12 }],
+        paths: [{ name: '잠실 → B-CITY',
+          d: 'M392.0 669.6'
+           + ' C404.7 667.2 442.7 659.5 468.0 655.5'
+           + ' C493.3 651.5 518.7 648.7 544.0 645.6'
+           + ' C569.3 642.5 594.7 640.1 620.0 637.0'
+           + ' C645.3 633.9 670.7 631.0 696.0 626.9'
+           + ' C721.3 622.7 746.7 618.4 772.0 612.3'
+           + ' C797.3 606.2 822.7 599.4 848.0 590.4'
+           + ' C873.3 581.4 898.7 571.1 924.0 558.2'
+           + ' C949.3 545.3 977.7 519.6 1000.0 513.0'
+           + ' C1022.3 506.5 1048.3 518.0 1058.0 519.0' }]
+      },
+      { // 02 강원 초광역 경제권 — 순환 링.
+        //    이미지에 지형·받침대·도시명이 있고 경로선은 없다 → 링만 코드가 그린다.
+        //    좌표는 map02 이미지의 받침대 중심(1600×900 기준)에서 읽었다.
+        mode: 'ring', bg: 'assets/img/location-belt.png?v=3', bakedNodes: true,
+        clear: { rx: 76, ry: 72, cy: -37, base: 34 },
+        nodes: [
+          { x: 450,  y: 318, name: '춘천' },
+          { x: 1160, y: 338, name: '강릉' },
+          // 평창은 라벨이 마커 위로 올라가 가로 여유가 필요 없다(선이 그만큼 길어진다).
+          // 원주는 라벨이 여전히 우측에 있고 선이 그쪽에서 들어와 가로만 넓힌다.
+          { x: 872,  y: 490, name: '평창' },
+          { x: 426,  y: 620, name: '원주', clear: { rx: 112 } },
+        ],
+        segs: [[0,1,-0.20], [1,2,0.10], [2,3,0.06], [3,0,0.16]]
+      },
+      { // 03 글로벌 게이트웨이 — 이미지에는 지형·받침대만 있고 경로선·지점명이 없다.
+        //    → 지점명은 이미지에 구워져 있고(사용자가 위치를 직접 잡음) 코드는 경로선·배지만 그린다.
+        //    좌표는 잘림을 고친 map_03 을 16:9 로 재프레이밍한 뒤 받침대별로 실측했다.
+        mode: 'spoke', bg: 'assets/img/location-gateway.png?v=4',
+        bakedNodes: true,
+        clear: { rx: 72, ry: 62, cy: -14, base: 52 },
+        // 허브 타원은 '받침대 원반'에만 맞춘다(건물까지 감싸면 도착점이 옥상에 얹힌다).
+        // base = cy → 앵커가 타원 중심이 되고, 도착점은 아래 hubArc/hubT 로 못 박는다.
+        hub: { x: 792, y: 364, label: 'B-CITY',
+               clear: { rx: 118, ry: 60, cy: -8, base: -8 },
+               // 동쪽 3개는 호길이 기준으로 균등 분할한다.
+               // 각도를 균등하게 주면 세로로 눌린 타원의 우측에서 간격이 좁아진다.
+               hubArc: { from: -34, to: 78, order: ['속초항', '양양국제공항', '동해항'] } },
+        nodes: [
+          // bx: 바닥 앵커의 가로 오프셋 — 김포는 받침대 우측 바닥 끝에서 출발한다
+          { x: 350,  y: 436, name: '김포공항',     tag: '80분',  bow: 0.09,  hubT: 172,
+            clear: { rx: 80, ry: 68, cy: -6, base: 62, bx: 54 },
+          },
+          { x: 1154, y: 142, name: '속초항',       tag: '90분',  bow: -0.11,
+            clear: { rx: 72, ry: 55, cy: -5, base: 50 },
+          },
+          { x: 1260, y: 392, name: '양양국제공항', tag: '60분',  bow: 0.05,
+            clear: { rx: 63, ry: 66, cy: -19, base: 47 },
+          },
+          { x: 1216, y: 648, name: '동해항',       tag: '120분', bow: -0.09,
+            clear: { rx: 75, ry: 68, cy: -13, base: 55 },
+          },
+        ]
+      },
+    ];
+
+    (function(){
+      const wrap = document.getElementById('locMap');
+      if (!wrap) return;
+      const svg = wrap.querySelector('.lm-svg');
+      const bgImg = wrap.querySelector('.lm-bg');
+      bgImg.addEventListener('error', ()=>{ bgImg.hidden = true; });   // 파일 업로드 전에는 숨김
+      const fgImg = wrap.querySelector('.lm-fg');
+      if (fgImg) fgImg.addEventListener('error', ()=>{ fgImg.hidden = true; });
+      const NS = 'http://www.w3.org/2000/svg';
+      const el = (n, a) => { const e = document.createElementNS(NS, n);
+        for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+      // 두 점을 잇는 완만한 2차 베지어. k>0 이면 진행방향 왼쪽으로 부풀린다.
+      const quad = (a, b, k) => {
+        const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+        const bow = len * (k == null ? 0.12 : k);
+        return { p0: { x: a.x, y: a.y },
+                 p1: { x: mx - dy / len * bow, y: my + dx / len * bow },
+                 p2: { x: b.x, y: b.y } };
+      };
+      const mix  = (p, q, t) => ({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t });
+      const ptAt = (q, t) => mix(mix(q.p0, q.p1, t), mix(q.p1, q.p2, t), t);
+      // de Casteljau — [t0,t1] 구간만 남긴다. 2차 베지어는 분할해도 2차라 형태가 정확히 보존된다.
+      const slice = (q, t0, t1) => {
+        let A = mix(q.p0, q.p1, t0), B = mix(q.p1, q.p2, t0);
+        const s = { p0: mix(A, B, t0), p1: B, p2: q.p2 };
+        const u = t0 < 1 ? (t1 - t0) / (1 - t0) : 0;
+        A = mix(s.p0, s.p1, u); B = mix(s.p1, s.p2, u);
+        return { p0: s.p0, p1: A, p2: mix(A, B, u) };
+      };
+      const dOf = q => 'M' + q.p0.x.toFixed(1) + ' ' + q.p0.y.toFixed(1)
+                     + ' Q' + q.p1.x.toFixed(1) + ' ' + q.p1.y.toFixed(1)
+                     + ' '  + q.p2.x.toFixed(1) + ' ' + q.p2.y.toFixed(1);
+
+      /* 마커 가리기 방지 — 받침대+아이콘을 감싸는 타원 밖으로 선 끝을 물러나게 한다.
+         곡선은 바닥점(base)을 향해 뻗지만 실제로 보이는 구간은 타원 바깥뿐이라,
+         선이 아이콘을 덮지 않고 바닥면 쪽에서 드나드는 것처럼 보인다. */
+      const GAP = 1.02;                                  // 받침대 테두리에 살짝 걸치는 정도
+      const clearOf = (route, n) => {
+        const c = Object.assign({ rx: 26, ry: 26, cy: 0, base: 0, bx: 0 },
+                                route.clear || {}, n.clear || {});
+        return { x: n.x, y: n.y + c.cy, rx: c.rx, ry: c.ry, base: c.base, bx: c.bx };
+      };
+      const outside = (P, c) =>
+        Math.pow((P.x - c.x) / (c.rx * GAP), 2) + Math.pow((P.y - c.y) / (c.ry * GAP), 2) >= 1;
+      const exitT = (q, c, fromStart) => {
+        const N = 200;
+        for (let i = 0; i <= N; i++) {
+          const t = fromStart ? i / N : 1 - i / N;
+          if (outside(ptAt(q, t), c)) return t;
+        }
+        return fromStart ? 0.4 : 0.6;                    // 타원이 겹칠 만큼 가까우면 최소 구간만
+      };
+
+      /* 허브 도착 각도.
+         hubArc 가 있으면 그 호를 '호길이' 기준으로 균등 분할해 순서대로 배정한다.
+         (매개각을 균등 분할하면 rx≫ry 인 타원의 좌우 끝에서 점들이 몰린다) */
+      const arcCache = new Map();
+      function hubAngles(route){
+        const h = route.hub, a = h.hubArc;
+        if (arcCache.has(route)) return arcCache.get(route);
+        const c = clearOf(route, h), N = a.order.length;
+        const A = a.from * Math.PI / 180, B = a.to * Math.PI / 180;
+        const STEPS = 720;
+        let len = 0; const cum = [0];
+        const pt = t => ({ x: c.rx * Math.cos(t), y: c.ry * Math.sin(t) });
+        let prev = pt(A);
+        for (let i = 1; i <= STEPS; i++) {
+          const cu = pt(A + (B - A) * i / STEPS);
+          len += Math.hypot(cu.x - prev.x, cu.y - prev.y);
+          cum.push(len); prev = cu;
+        }
+        const out = {};
+        a.order.forEach((name, k) => {
+          const target = N > 1 ? len * k / (N - 1) : len / 2;
+          let i = cum.findIndex(v => v >= target); if (i < 0) i = STEPS;
+          out[name] = (A + (B - A) * i / STEPS) * 180 / Math.PI;
+        });
+        arcCache.set(route, out);
+        return out;
+      }
+      function hubAngle(route, n){
+        if (n.hubT != null) return n.hubT;
+        if (route.hub && route.hub.hubArc && route.hub.hubArc.order.indexOf(n.name) >= 0)
+          return hubAngles(route)[n.name];
+        return null;
+      }
+
+      const strokes = [];
+      const groups = [];
+      let uid = 0;
+
+      // 소요시간 배지 — 해당 경로 곡선의 45% 지점에 놓는다
+      function addTag(g, route, n, i, ri){
+        if (!n.tag || route.mode !== 'spoke') return;
+        const paths = [...g.querySelectorAll('.lm-path')];
+        const pth = paths[i];
+        if (!pth) return;
+        const pt = pth.getPointAtLength(pth.getTotalLength() * 0.45);
+        const w = n.tag.length * 20 + 34;
+        const tg = el('g', { class: 'lm-tag' });
+        tg.style.transitionDelay = (1.3 + i * 0.3).toFixed(2) + 's';
+        tg.appendChild(el('rect', { x: pt.x - w/2, y: pt.y - 24, width: w, height: 48, rx: 24 }));
+        const tt = el('text', { x: pt.x, y: pt.y + 9, 'text-anchor': 'middle' });
+        tt.textContent = n.tag;
+        tg.appendChild(tt);
+        g.appendChild(tg);
+      }
+
+      locRoutes.forEach((route, ri) => {
+        const g = el('g', { class: 'lm-g', 'data-route': ri });
+        svg.appendChild(g);                 // getTotalLength()는 문서에 붙은 뒤 동작
+        const accent = route.accent || null;   // null이면 CSS(.lm-path)가 색을 정한다
+
+        /* 배경 이미지에 이미 그려진 라벨 뒤로 지나가게 하는 마스크 */
+        let maskId = null;
+        if (route.maskRects) {
+          maskId = 'lmMask' + ri;
+          const defs = el('defs', {});
+          const mk = el('mask', { id: maskId, maskUnits: 'userSpaceOnUse',
+                                  x: 0, y: 0, width: 1600, height: 900 });
+          mk.appendChild(el('rect', { x: 0, y: 0, width: 1600, height: 900, fill: '#fff' }));
+          route.maskRects.forEach(r => mk.appendChild(el('rect', {
+            x: r.x, y: r.y, width: r.w, height: r.h, rx: r.r || 0, fill: '#000' })));
+          defs.appendChild(mk);
+          g.appendChild(defs);
+        }
+
+        /* --- 경로 --- */
+        const segs = route.mode === 'ring'
+          ? route.segs.map(([i, j, k]) => ({ a: route.nodes[i], b: route.nodes[j], k: k, color: accent }))
+          : route.mode === 'path'
+          ? route.paths.map(pp => ({ d: pp.d, color: pp.color || accent }))
+          : route.nodes.map(n => {
+              const sg = { a: n, b: route.hub, k: n.bow, color: n.color || accent, rail: n.rail };
+              // 허브 도착점을 못 박는다. 기하학적 교차점에 맡기면 방위각이 비슷한
+              // 경로끼리 도착점이 뭉치므로, hubT(단일 각) 또는 hubArc(호길이 균등)로 배치한다.
+              const th = hubAngle(route, n);
+              if (th != null) {
+                const c = clearOf(route, route.hub), r = th * Math.PI / 180;
+                sg.bAt = { x: c.x + c.rx * GAP * Math.cos(r),
+                           y: c.y + c.ry * GAP * Math.sin(r) };
+              }
+              return sg;
+            });
+
+        segs.forEach((sg, i) => {
+          const pid = 'lmp' + (uid++);
+          let d, ends = null;
+          if (sg.d) {
+            d = sg.d;                        // 이미지의 선을 그대로 따라가는 명시 경로
+          } else {
+            // 바닥점끼리 잇고 → 양쪽 마커 타원 밖만 남긴다
+            const ca = clearOf(route, sg.a), cb = clearOf(route, sg.b);
+            let q = quad({ x: sg.a.x + ca.bx, y: sg.a.y + ca.base },
+                         sg.bAt || { x: sg.b.x + cb.bx, y: sg.b.y + cb.base }, sg.k);
+            // 도착점을 못 박은 경우(bAt)에는 그쪽을 자르지 않는다
+            const t0 = exitT(q, ca, true), t1 = sg.bAt ? 1 : exitT(q, cb, false);
+            if (t1 - t0 > 0.08) q = slice(q, t0, t1);
+            d = dOf(q);
+            ends = [q.p0, q.p2];
+          }
+          // travel 경로는 선이 이미지에 이미 있으므로 밑선을 깔지 않는다
+          if (!route.travel) g.appendChild(el('path', { class: 'lm-base', d: d }));
+          const pAttr = { id: pid, d: d,
+                          class: 'lm-path' + (sg.rail ? ' lm-path--rail' : '')
+                                           + (route.travel ? ' lm-path--comet' : '') };
+          if (sg.color) pAttr.style = 'stroke:' + sg.color + ';color:' + sg.color;
+          if (maskId) pAttr.mask = 'url(#' + maskId + ')';
+          const p = el('path', pAttr);
+          g.appendChild(p);
+          // 양 끝 접점 — 받침대에 살짝 걸치게 놓는다.
+          // 처음부터 진하게 있으면 어색하므로 출발·도착 순간에 켜진다(아래 step 에서 제어).
+          const dots = [];
+          if (ends) ends.forEach(pt => {
+            const dot = { class: 'lm-cap-dot', cx: pt.x.toFixed(1), cy: pt.y.toFixed(1), r: 9 };
+            if (sg.color) dot.style = 'fill:' + sg.color;
+            const c = el('circle', dot);
+            g.appendChild(c); dots.push(c);
+          });
+          const glow = el('circle', sg.color ? { class: 'lm-glow', r: 24, style: 'fill:' + sg.color }
+                                             : { class: 'lm-glow', r: 24 });
+          const head = el('circle', sg.color ? { class: 'lm-head', r: 11, style: 'stroke:' + sg.color }
+                                             : { class: 'lm-head', r: 11 });
+          // 마커도 같은 마스크를 쓴다 — 하이라이트만 배지 뒤로 가고 마커는 위로 지나가면 어색하다
+          if (maskId) { glow.setAttribute('mask', 'url(#' + maskId + ')');
+                        head.setAttribute('mask', 'url(#' + maskId + ')'); }
+          g.appendChild(glow); g.appendChild(head);
+          strokes.push({ ri: ri, p: p, head: head, glow: glow, order: i,
+                         comet: !!route.travel, dotA: dots[0] || null, dotB: dots[1] || null });
+
+        });
+
+        /* --- 지점 --- */
+        const center = route.hub || { x: 835, y: 474 };
+        // 이미지에 지점명이 없는 지도는 라벨만 코드가 얹는다
+        const addLabel = (host, x, y, text, spec, delay) => {
+          const nd = el('g', { class: 'lm-node' });
+          nd.style.transitionDelay = delay.toFixed(2) + 's';
+          const t = el('text', { class: 'lm-name', x: x + (spec.dx || 0), y: y + (spec.dy || 0),
+                                 'text-anchor': spec.anchor || 'middle' });
+          t.textContent = text;
+          nd.appendChild(t);
+          host.appendChild(nd);
+        };
+
+        route.nodes.forEach((n, i) => {
+          // 받침대가 이미지에 있으면 링은 생략하고 배지(+요청 시 라벨)만 얹는다
+          if (route.bakedNodes) {
+            addTag(g, route, n, i, ri);
+            if (route.showLabels && n.label) addLabel(g, n.x, n.y, n.name, n.label, 1.05 + i * 0.3);
+            return;
+          }
+          const nd = el('g', { class: 'lm-node' });
+          nd.style.transitionDelay = (1.05 + i * 0.3).toFixed(2) + 's';
+          const col = n.color || accent;
+          const ringA = { class: 'lm-ring', cx: n.x, cy: n.y, r: 17 };
+          const coreA = { class: 'lm-core', cx: n.x, cy: n.y, r: 6.5 };
+          if (col) { ringA.style = 'stroke:' + col; coreA.style = 'fill:' + col; }
+          nd.appendChild(el('circle', ringA));
+          nd.appendChild(el('circle', coreA));
+
+          const nw = n.name.length * 26 + 8;
+          let left = n.x < center.x;
+          if (!left && n.x + 26 + nw > 1584) left = true;
+          if (left && n.x - 26 - nw < 16)   left = false;
+          const t = el('text', { class: 'lm-name', x: n.x + (left ? -26 : 26), y: n.y + 9,
+                                 'text-anchor': left ? 'end' : 'start' });
+          t.textContent = n.name;
+          nd.appendChild(t);
+          g.appendChild(nd);
+
+          addTag(g, route, n, i, ri);
+        });
+
+        /* --- 허브 라벨만 (받침대는 이미지에 있고 지점명은 없는 경우) --- */
+        if (route.hub && route.bakedNodes && route.showLabels && route.hub.label2) {
+          addLabel(g, route.hub.x, route.hub.y, route.hub.label, route.hub.label2, 0.9);
+        }
+        /* --- 허브 (방사형에만, 이미지에 라벨이 있으면 생략) --- */
+        if (route.hub && !route.bakedNodes) {
+          const H = route.hub;
+          const hub = el('g', { class: 'lm-hub' });
+          hub.appendChild(el('circle', { class: 'h1', cx: H.x, cy: H.y, r: 26 }));
+          hub.appendChild(el('circle', { class: 'h2', cx: H.x, cy: H.y, r: 13 }));
+          const ht = el('text', { x: H.x, y: H.y - 42, 'text-anchor': 'middle' });
+          ht.textContent = H.label; hub.appendChild(ht);
+          g.appendChild(hub);
+        }
+        groups.push(g);
+      });
+
+      /* ===== 경로 그리기 =====
+         라운드 마커가 지나가면서 그 뒤로 진한 선이 이어진다.
+         진입 시 1회만이 아니라 순환 재생해 언제 봐도 그려지는 중이다. */
+      const DUR = 1500, STAGGER = 280, HOLD = 1500;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+      let raf = null;
+      strokes.forEach(s => { s.len = s.p.getTotalLength(); });
+
+      const COMET = 130;                                 // 이동 표시용 밝은 구간 길이
+      const forR = ri => strokes.filter(s => s.ri === ri);
+      // comet: 짧은 밝은 구간이 [e·len-COMET, e·len] 을 차지하도록 dash 를 이동시킨다
+      const setAt = (s, e) => {
+        if (s.comet) {
+          s.p.style.strokeDasharray = COMET + ' ' + (s.len + COMET);
+          s.p.style.strokeDashoffset = COMET - s.len * e;
+        } else {
+          s.p.style.strokeDasharray = s.len;
+          s.p.style.strokeDashoffset = s.len * (1 - e);
+        }
+      };
+      const dots = (s, a, b) => {
+        if (s.dotA) s.dotA.style.opacity = a;
+        if (s.dotB) s.dotB.style.opacity = b;
+      };
+      const hide = ri => forR(ri).forEach(s => {
+        setAt(s, 0); s.p.style.opacity = '1';
+        s.head.style.opacity = '0'; s.glow.style.opacity = '0';
+        dots(s, 0, 0);
+      });
+      const full = ri => forR(ri).forEach(s => {
+        // travel 경로는 '완성 상태'가 없으므로(선은 이미지에 있다) 하이라이트만 감춘다
+        setAt(s, s.comet ? 0 : 1); s.p.style.opacity = '1';
+        s.head.style.opacity = '0'; s.glow.style.opacity = '0';
+        dots(s, 1, 1);
+      });
+
+      function play(ri){
+        if (raf) cancelAnimationFrame(raf);
+        const list = forR(ri);
+        if (!list.length) return;
+        if (reduce.matches) { full(ri); return; }
+        hide(ri);
+        const travel = !!(locRoutes[ri] && locRoutes[ri].travel);
+        const dur = (locRoutes[ri] && locRoutes[ri].dur) || DUR;
+        const cycle = dur + STAGGER * Math.max(list.length - 1, 0) + HOLD;
+        const t0 = performance.now();
+        // travel 은 등속에 가깝게(달리는 느낌), 선 그리기는 감속으로 마무리
+        const ease = travel ? (t => t) : (t => 1 - Math.pow(1 - t, 3));
+        const FADE = 480;                               // 순환 직전 페이드아웃
+        const step = now => {
+          const el = (now - t0) % cycle;                 // 순환
+          // travel: 도착하면 그 자리에서 사라진다(HOLD 동안 끝에 박혀 있지 않게)
+          const out = travel ? Math.max(0, Math.min(1, 1 - (el - dur) / 420))
+                             : (el > cycle - FADE ? (cycle - el) / FADE : 1);
+          const DOT = 220;                               // 접점이 켜지는 시간
+          list.forEach(s => {
+            const t = el - s.order * STAGGER;             // 이 구간의 경과 시간
+            const local = Math.min(Math.max(t / dur, 0), 1);
+            const e = ease(local);
+            s.p.style.opacity = out;                     // 다시 그리기 전 부드럽게 사라진다
+            setAt(s, e);
+            // 출발점은 선이 나가기 시작할 때, 도착점은 선이 닿을 때 켜진다
+            const cl = v => Math.max(0, Math.min(1, v));
+            dots(s, cl(t / DOT) * out, cl((t - dur) / DOT) * out);
+            if (local > 0 && local < 1) {
+              const pt = s.p.getPointAtLength(s.len * e);
+              s.head.setAttribute('cx', pt.x); s.head.setAttribute('cy', pt.y);
+              s.glow.setAttribute('cx', pt.x); s.glow.setAttribute('cy', pt.y);
+              s.head.style.opacity = '1'; s.glow.style.opacity = '0.30';
+            } else { s.head.style.opacity = '0'; s.glow.style.opacity = '0'; }
+          });
+          raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+        // rAF가 묶인 환경에서는 최소한 완성된 선을 보여준다 (travel 은 완성 상태가 없어 제외)
+        if (!travel) setTimeout(()=>{
+          if (list[0] && +list[0].p.style.strokeDashoffset > 0.5 && !raf) full(ri);
+        }, cycle + 800);
+      }
+
+      /* ===== 스텝 전환 ===== */
+      let cur = -1, armed = false;
+      window.locMapShow = (i, force) => {
+        groups.forEach((g,k)=>g.classList.toggle('on', k === i));
+        const bg = locRoutes[i] && locRoutes[i].bg;      // 스텝별 배경 지도
+        if (bg) { bgImg.src = bg; bgImg.hidden = false; }
+        else { bgImg.removeAttribute('src'); bgImg.hidden = true; }
+        const fg = locRoutes[i] && locRoutes[i].fg;      // 지도 위 요소 레이어
+        if (fgImg) {
+          if (fg) { fgImg.src = fg; fgImg.hidden = false; }
+          else { fgImg.removeAttribute('src'); fgImg.hidden = true; }
+        }
+        if (i === cur && !force) return;
+        cur = i;
+        if (armed || force) { armed = true; play(i); } else hide(i);
+      };
+      window.locMapShow(0);
+
+      // 하단 탭 클릭 → 해당 페이지 구간으로 스크롤
+      const sec = document.getElementById('location');
+      sec.querySelectorAll('.lo-tab').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const i = +btn.dataset.locTab;
+          const n = sec.querySelectorAll('.cine-page').length;
+          const runway = sec.offsetHeight - innerHeight;
+          scrollTo({ top: sec.offsetTop + runway * ((i + 0.5) / n), behavior: 'smooth' });
+        });
+      });
+
+      // 섹션 진입 시 처음 그린다.
+      // ※ threshold는 반드시 0 — 이 섹션은 480vh라 교차 비율이 최대 100/480 ≒ 0.21밖에
+      //   안 된다. 0.25 같은 값을 주면 영원히 발화하지 않아 armed가 false로 남고
+      //   locMapShow()가 play() 대신 hide()를 타면서 경로가 아예 그려지지 않는다.
+      new IntersectionObserver((es, ob)=>{
+        es.forEach(e=>{ if (!e.isIntersecting) return;
+          armed = true; play(cur < 0 ? 0 : cur); ob.unobserve(e.target); });
+      }, { threshold: 0 }).observe(sec);
+    })();
+
+    /* ---------- 사업개요: 진입 트리거 + 지표 카운트업 ---------- */
+    (function(){
+      const sec = document.getElementById('business');
+      if (!sec) return;
+      const nums = [...sec.querySelectorAll('.ov-stat b[data-count]')];
+      const countUp = el => {
+        const to  = parseFloat(el.dataset.count);
+        const dec = parseInt(el.dataset.dec || '0', 10);
+        const dur = 1400, t0 = performance.now();
+        const step = now => {
+          const p = Math.min((now - t0) / dur, 1);
+          const e = 1 - Math.pow(1 - p, 3);            // easeOutCubic
+          el.textContent = (to * e).toFixed(dec);
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = to.toFixed(dec);
+        };
+        requestAnimationFrame(step);
+        setTimeout(()=>{ el.textContent = to.toFixed(dec); }, dur + 400);  // rAF가 느린 환경 보정
+      };
+      new IntersectionObserver((es, io)=>{
+        es.forEach(e=>{
+          if (!e.isIntersecting) return;
+          sec.classList.add('in');
+          nums.forEach((el,i)=> setTimeout(()=>countUp(el), 350 + i*120));
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.15 }).observe(sec);
+    })();
+
+    /* ---------- 모달 (문의하기 · 개인정보 약관) ----------
+       #contact 안에서 #privacy를 열 수 있으므로 스택으로 관리한다. */
+    (function(){
+      const stack = [];
+      const modals = [...document.querySelectorAll('.pv')];
+      if (!modals.length) return;
+
+      const lock   = () => { document.body.style.overflow = 'hidden'; };
+      const unlock = () => { if (!stack.length) document.body.style.overflow = ''; };
+
+      function open(el, trigger){
+        if (!el || stack.includes(el)) return;
+        el.__return = trigger || document.activeElement;
+        el.style.zIndex = 120 + stack.length * 10;   // 위에 열리는 모달이 항상 앞
+        el.hidden = false;
+        lock();
+        void el.offsetWidth;                          // 리플로우 강제 → rAF 없이 전환 시작
+        el.classList.add('on');
+        stack.push(el);
+        (el.querySelector('.pv-x') || el.querySelector('.pv-panel')).focus({ preventScroll:true });
+      }
+
+      function close(el){
+        const i = stack.indexOf(el);
+        if (i === -1) return;
+        stack.splice(i, 1);
+        el.classList.remove('on');
+        const panel = el.querySelector('.pv-panel');
+        let fired = false;
+        const done = () => { if (fired) return; fired = true; el.hidden = true; unlock(); };
+        // 트랜지션이 없거나 끝나지 않는 환경에서도 확실히 닫히도록
+        panel.addEventListener('transitionend', done, { once:true });
+        setTimeout(done, 420);
+        if (el.__return && el.__return.focus) el.__return.focus({ preventScroll:true });
+      }
+
+      modals.forEach(el=>{
+        el.querySelector('.pv-panel').setAttribute('tabindex','-1');
+        el.querySelectorAll('[data-pv-close]').forEach(b=>b.addEventListener('click', ()=>close(el)));
+        el.addEventListener('keydown', e=>{                       // 패널 안 포커스 순환
+          if (e.key !== 'Tab') return;
+          const f = [...el.querySelectorAll('.pv-panel a[href],.pv-panel button,.pv-panel input,.pv-panel textarea,.pv-panel [tabindex]:not([tabindex="-1"])')]
+            .filter(n=>n.offsetParent !== null && !n.disabled);
+          if (!f.length) return;
+          const first = f[0], last = f[f.length-1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        });
+      });
+
+      // 해당 id를 가리키는 모든 링크가 모달을 연다
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        const el = document.getElementById(a.getAttribute('href').slice(1));
+        if (!el || !el.classList.contains('pv')) return;
+        a.addEventListener('click', e=>{ e.preventDefault(); open(el, a); });
+      });
+
+      // ESC → 가장 위 모달만 닫기
+      document.addEventListener('keydown', e=>{
+        if (e.key === 'Escape' && stack.length) close(stack[stack.length - 1]);
+      });
+
+      window.bcityCloseModal = close;   // 폼 전송 완료 후 닫기용
+    })();
+
+    /* ---------- 도시컨셉 다이어그램: Figma 1320px 좌표를 컨테이너 폭에 맞춰 축소 ---------- */
+    (function(){
+      const dia = document.getElementById('cnDia');
+      if (!dia) return;
+      const wrap = dia.parentElement;
+      const BASE_W = 1320, BASE_H = 510;
+      // CSS의 @media(max-width:1023px)와 같은 엔진으로 판정해 분기 불일치를 막는다
+      const desktop = matchMedia('(min-width: 1024px)');
+      const fit = () => {
+        const w = wrap.clientWidth;
+        if (!desktop.matches || !w) { wrap.style.height = ''; dia.style.removeProperty('--cn-s'); return; }
+        const s = Math.min(1, w / BASE_W);
+        dia.style.setProperty('--cn-s', s);
+        wrap.style.height = Math.round(BASE_H * s) + 'px';   // 축소된 만큼 여백도 줄인다
+      };
+      fit();
+      addEventListener('resize', fit, { passive:true });
+      desktop.addEventListener('change', fit);
+      if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    })();
+
+    /* ---------- 참여기관 · 파트너 마퀴 ----------
+       img 경로를 넣으면 로고 이미지로, 없으면 기관명 텍스트로 표시된다. */
+    const partners = [
+      { name: '국토교통부',          img: 'assets/logo/partner-molit.png' },
+      { name: '강원특별자치도',       img: 'assets/logo/partner-gangwon.png' },
+      { name: '춘천시',             img: 'assets/logo/partner-chuncheon-city.svg' },
+      { name: 'IBK투자증권',        img: 'assets/logo/partner-ibk.png' },
+      { name: '삼성증권',           img: 'assets/logo/partner-samsung.png' },
+    ];
+    const partnerTrack = document.getElementById('partnerTrack');
+    const marqueeEl = partnerTrack.parentElement;
+    const ptItem = p => p.img
+      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" /></div>'
+      : '<div class="pt-item"><span class="pt-name">'+p.name+'</span></div>';
+
+    /* 로고 시각 크기 정규화: 가로세로 비율이 달라도 '보이는 면적'을 맞춘다.
+       (와이드 로고는 낮게, 정사각형에 가까운 로고는 높게) */
+    function normalizeLogos(){
+      const AREA = 6000, MAX_H = 58, MAX_W = 190;
+      partnerTrack.querySelectorAll('img').forEach(img=>{
+        if (!img.naturalWidth || !img.naturalHeight) return;
+        const r = img.naturalWidth / img.naturalHeight;
+        let h = Math.sqrt(AREA / r), w = h * r;
+        if (h > MAX_H) { h = MAX_H; w = h * r; }
+        if (w > MAX_W) { w = MAX_W; h = w / r; }
+        img.style.height = h.toFixed(1) + 'px';
+        img.style.width  = w.toFixed(1) + 'px';
+      });
+    }
+
+    /* 한 세트가 가로 폭에 들어가면 정지(가운데 정렬), 넘치면 2세트 복제 후 흐름 */
+    function layoutPartners(){
+      // 측정 전 정지 상태를 해제해야 한다.
+      // is-static이 걸린 채로는 트랙 폭이 100%로 고정돼 scrollWidth가 컨테이너로 잘리고,
+      // 항상 "가로에 들어간다"고 오판해 상태가 고착된다.
+      marqueeEl.classList.remove('is-static');
+      partnerTrack.innerHTML = partners.map(ptItem).join('');
+      const imgs = [...partnerTrack.querySelectorAll('img')];
+      Promise.all(imgs.map(i => i.complete
+        ? Promise.resolve()
+        : new Promise(res => { i.onload = res; i.onerror = res; setTimeout(res, 5000); })
+      )).then(()=>{
+        normalizeLogos();
+        const setW = partnerTrack.scrollWidth;
+        const boxW = marqueeEl.clientWidth;
+        if (setW <= boxW) {
+          marqueeEl.classList.add('is-static');          // 넘치지 않음 → 정지
+        } else {
+          marqueeEl.classList.remove('is-static');
+          partnerTrack.innerHTML += partners.map(ptItem).join('');  // 이음새 없는 무한 흐름
+          const more = [...partnerTrack.querySelectorAll('img')];
+          Promise.all(more.map(i => i.complete
+            ? Promise.resolve()
+            : new Promise(res => { i.onload = res; i.onerror = res; setTimeout(res, 5000); })
+          )).then(normalizeLogos);
+        }
+      });
+    }
+    layoutPartners();
+    // 컨테이너 폭 변화를 직접 감지 (window resize보다 확실함)
+    let ptResize, lastBoxW = marqueeEl.clientWidth;
+    const relayout = () => { clearTimeout(ptResize); ptResize = setTimeout(layoutPartners, 200); };
+    if (window.ResizeObserver) {
+      new ResizeObserver(entries=>{
+        const w = Math.round(entries[0].contentRect.width);
+        if (Math.abs(w - lastBoxW) > 8) { lastBoxW = w; relayout(); }
+      }).observe(marqueeEl);
+    }
+    window.addEventListener('resize', relayout);
+    window.addEventListener('load', layoutPartners);
+
+    /* ---------- 플로팅 TOP 버튼 ---------- */
+    const fdTop = document.getElementById('fdTop');
+    const syncTopBtn = () => fdTop.classList.toggle('on', window.scrollY > innerHeight * 0.8);
+    syncTopBtn();
+    window.addEventListener('scroll', syncTopBtn, { passive: true });
+    fdTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ---------- 도트 내비 ---------- */
+    const scenes = [['hero','메인'],['location','입지'],['business','사업개요'],['concept','도시 컨셉'],['zones','구역 개요'],['districts','구역소개'],['pr','홍보센터'],['footer','회사정보']];
+    const dotNav = document.getElementById('dotNav');
+    scenes.forEach(([id,label])=>{
+      const b=document.createElement('button');
+      b.dataset.target=id; b.setAttribute('aria-label',label);
+      b.innerHTML='<span class="dn-label">'+label+'</span>';
+      b.addEventListener('click',()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'}));
+      dotNav.appendChild(b);
+    });
+    const dnIO = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){
+        dotNav.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.target===e.target.id));
+      }});
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    scenes.forEach(([id])=>{ const s=document.getElementById(id); if(s) dnIO.observe(s); });
+  </script>
+</body>
+</html>

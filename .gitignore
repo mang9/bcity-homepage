@@ -1,0 +1,21 @@
+.DS_Store
+capture.html
+
+# Figma 재캡처용 임시 파일
+_filetest*.html
+_t.html
+
+# index.html 이 참조하지 않는 예비 자산 (약 30MB)
+assets/map_02.png
+assets/map03.png
+assets/vid/districts.mp4
+assets/vid/districts-hevc.mp4
+assets/vid/concept.mp4
+assets/vid/concept-hevc.mp4
+
+# ── 공개 저장소에서 제외 (내부 문서) ────────────────────────
+# CLAUDE.md  : Figma 파일 키·노드 ID·내부 작업 절차가 들어 있다
+# CONTENT.md : "기획서 내부 수치 불일치" 등 미확정 내부 검토 내용이 있다
+# 로컬에는 그대로 남아 있고, 공개 저장소에만 올라가지 않는다.
+CLAUDE.md
+CONTENT.md
