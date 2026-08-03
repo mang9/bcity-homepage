@@ -196,14 +196,6 @@
     .ov--light .ov-more:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
     /* 우측 세로 라벨 + 페이지 점 */
-    .ov-vrail { position: absolute; right: 30px; top: 50%; z-index: 4;
-      display: flex; flex-direction: column; align-items: center; gap: 16px;
-      transform: translateY(-50%); }
-    .ov-vrail-txt { font-size: 11.5px; letter-spacing: .2em; color: var(--color-text-muted); }
-    .ov-vrail .cine-dots { position: static; transform: none; flex-direction: column; gap: 10px; }
-    .ov-vrail .cine-dots i { width: 6px; height: 6px; border-radius: 999px;
-      background: rgba(17,17,17,.18); transition: background .35s, transform .35s; }
-    .ov-vrail .cine-dots i.on { width: 6px; background: var(--color-primary); transform: scale(1.55); }
 
     /* 2단 그리드 — 지도 좌측 / 카피 우측 */
     /* 지도는 좌측 끝까지 붙이고(풀블리드) 우측 카피만 컨테이너 라인을 지킨다.
@@ -258,7 +250,6 @@
       font-size: 11.5px; line-height: 1.5; color: var(--color-text-muted); }
 
     @media (max-width: 1023px) {
-      .ov-vrail { display: none; }
       .lo-grid { position: relative; inset: auto; grid-template-columns: 1fr;
         width: calc(100vw - 44px); padding: 108px 0 96px; gap: 28px; }
       .lo-copy .cine-page { position: absolute; top: 0; transform: none; }
@@ -370,10 +361,6 @@
     .ov-more:hover { border-color: #fff; }
     .ov-more:hover svg { transform: translateX(5px); }
     /* 우측 세로 라벨 */
-    .ov-vlabel { position: absolute; right: 30px; top: 50%; z-index: 4;
-      display: flex; align-items: center; gap: 12px; transform: translateY(-50%);
-      font-size: 11.5px; letter-spacing: .2em; color: rgba(255,255,255,.5); }
-    .ov-vlabel i { width: 7px; height: 7px; border-radius: 999px; background: var(--color-azure); }
     /* 중앙 카피 */
     .ov-center { position: absolute; left: 0; right: 0; top: 30%; z-index: 3;
       padding: 0 24px; text-align: center; }
@@ -390,8 +377,9 @@
     .cine-page.on .ov-line:nth-child(2) > span { transition-delay: .2s; }
     .ov-title em { font-style: normal; color: var(--color-light-blue); }
     .ov-em { color: var(--color-light-blue); }
-    .ov-desc { max-width: 760px; margin: 26px auto 0; font-size: clamp(14px, 1.05vw, 17px);
-      line-height: 1.95; color: rgba(255,255,255,.86); }
+    /* 720px — 강제 개행한 1행(최대 697px @17px)이 다시 접히지 않을 최소치보다 여유를 뒀다 */
+    .ov-desc { max-width: 720px; margin: 26px auto 0; font-size: clamp(14px, 1.05vw, 17px);
+      line-height: 1.95; color: rgba(255,255,255,.86); word-break: keep-all; }
     /* 페이지 인디케이터 — 가는 대시 */
     .ov .cine-dots { bottom: auto; top: 66%; flex-direction: row; gap: 14px; }
     .ov .cine-dots i { width: 26px; height: 2px; border-radius: 2px; background: rgba(255,255,255,.32);
@@ -416,7 +404,6 @@
     .ov-stat dd { margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,.62); }
 
     @media (max-width: 1023px) {
-      .ov-vlabel { display: none; }
       .ov-eyebrow { left: 22px; top: 84px; }
       .ov-more { right: 22px; top: 80px; font-size: 13px; }
       .ov-center { top: 24%; }
@@ -691,7 +678,13 @@
     .cine-dots { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
       display: flex; gap: 10px; z-index: 5; }
     .cine-dots i { display: block; width: 10px; height: 10px; border-radius: 999px;
-      background: rgba(255,255,255,.35); transition: all .3s; }
+      background: rgba(255,255,255,.35); transition: all .3s;
+      cursor: pointer; }
+    /* 점이 작아 클릭 표적이 좁다 → 보이는 크기는 두고 히트 영역만 넓힌다 */
+    .cine-dots i { position: relative; }
+    .cine-dots i::after { content: ''; position: absolute; inset: -12px -7px; }
+    .cine-dots i:hover { background: rgba(255,255,255,.75); }
+    .cine-dots i:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
     .cine-dots i.on { width: 30px; background: #fff; }
     .cine-prog { position: absolute; left: 0; bottom: 0; height: 3px; z-index: 5;
       background: var(--color-mint); width: 0; }
@@ -1031,12 +1024,7 @@
   <section id="location" class="page cine ov ov--light" data-cine="loc" style="height:480vh">
     <div class="cine-stage bg-bg">
       <p class="ov-eyebrow"><i class="ov-rule" aria-hidden="true"></i><b>01</b><span>LOCATION · 입지</span></p>
-      <a href="#business" class="ov-more">입지 · 교통환경 자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
-      <div class="ov-vrail" aria-hidden="true">
-        <span class="ov-vrail-txt">LOCATION</span>
-        <span class="cine-dots" data-dots="loc"></span>
-      </div>
-
+      <a href="#business" class="ov-more">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
       <div class="lo-grid">
         <!-- 지도 · 경로 모션그래픽 (좌측 유지)
              배경 지도 이미지를 받으면 아래 <img>의 주석을 풀고 파일명을 넣는다.
@@ -1121,24 +1109,27 @@
       <!-- 상단 좌: 섹션 라벨 -->
       <p class="ov-eyebrow"><i class="ov-rule" aria-hidden="true"></i><b>02</b><span>OVERVIEW · 사업개요</span></p>
       <!-- 상단 우: 자세히 보기 -->
-      <a href="#zones" class="ov-more">사업개요 자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
+      <a href="#zones" class="ov-more">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
       <!-- 우측 세로 라벨 -->
-      <p class="ov-vlabel" aria-hidden="true">OVERVIEW <i></i></p>
 
       <!-- 중앙 카피 2페이지 -->
       <div class="ov-center">
         <div class="cine-page on" data-i="0">
           <h2 class="cp-el ov-title">
-            <span class="ov-line"><span>총 사업비 약 <em>1.1조원</em>의</span></span>
-            <span class="ov-line"><span>대규모 국가도시개발 프로젝트</span></span>
+            <span class="ov-line"><span>국토교통부 주관의</span></span>
+            <span class="ov-line"><span class="ov-em">민간기업 중심 도시개발 사업</span></span>
           </h2>
+          <!-- '부지' 앞에서 끊는다. .ov-desc 글자크기가 clamp(14,1.05vw,17)로 유동이라
+               폭만으로는 해상도별 유효구간이 어긋난다(1440:630~650 / 1600:690~720 / 1920:700~730).
+               md 이상에서만 명시적 개행을 넣어 어느 폭에서든 같은 지점에서 끊기게 한다. -->
           <p class="cp-el ov-desc">
-            국토교통부 주관의 민간기업 중심 도시개발 사업으로, 총 면적 약 110만평(여의도 면적 1.25배 규모)의 부지 위에 혁신 생태계가 만들어집니다.
+            총 사업비 약 1.1조원의 대규모 국가도시개발 프로젝트로, 총 면적 약 110만평(여의도 면적 1.25배 규모)의<br class="hidden md:inline" />
+            부지 위에 혁신 생태계가 만들어집니다
           </p>
         </div>
         <div class="cine-page" data-i="1">
           <h2 class="cp-el ov-title">
-            <span class="ov-line"><span>바이오 분야</span></span>
+            <span class="ov-line"><span>2025년 바이오 분야</span></span>
             <span class="ov-line"><span class="ov-em">국가첨단전략산업 특화단지 지정</span></span>
           </h2>
           <p class="cp-el ov-desc">
@@ -1312,9 +1303,12 @@
           <div class="dz-overlay">
             <p id="dzHead" class="dz-fade text-sm font-bold text-mint"></p>
             <h3 id="dzTitle" class="dz-fade font-display mt-2.5 text-3xl font-bold text-white md:text-[42px]"></h3>
-            <!-- 폭 470px: max-w-xl(576) 에서는 8개 카피 중 5개가 끝줄이 5~13%만 차서
-                 한두 단어만 떨어져 보였다. 470 이면 끝줄 채움 19~37% 로 두 줄이 자연스럽다. -->
-            <p id="dzDesc" class="dz-fade mt-4 max-w-[470px] text-sm leading-relaxed text-white/85 md:text-base"></p>
+            <!-- 폭 440px — 푸드 물류 클러스터 카피 기준으로 잡았다.
+                 「…달하는 군」 에서 '군' 이 1행 끝에 홀로 남지 않고 2행으로 넘어가는 구간이
+                 430~447px 이고, 경계에서 충분히 떨어진 440 을 골랐다.
+                 이 폭에서 8개 카피 모두 2줄 이내이고 끝줄 채움 20~47% 로 고르다.
+                 break-keep(word-break:keep-all): 한국어는 기본값에서 어절 중간이 잘린다. -->
+            <p id="dzDesc" class="dz-fade mt-4 max-w-[440px] break-keep text-sm leading-relaxed text-white/85 md:text-base"></p>
             <a id="dzArea" href="#contact" class="dz-fade mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white hover:text-navy">
               자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h14m0 0-5-5m5 5-5 5"/></svg>
             </a>
@@ -1761,11 +1755,14 @@
       const zk = c.replace('district-','');
       return       '<div class="az-card reveal rounded-lg border border-white/20 bg-navy/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:bg-navy/70" data-zone="'+n+'" tabindex="0"'+
         ' style="border-top:3px solid var(--color-'+c+');transition-delay:'+(i*0.07)+'s">'+
-        '<div class="flex items-center gap-2.5">'+
-          '<span class="inline-flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-bold" style="background:var(--color-zone-'+zk+');color:'+zoneInk(zoneHex(zk))+'">'+n+'</span>'+
-          '<span class="text-sm font-semibold text-light-blue">'+name+'</span>'+
+        // 번호는 좌측에 고정하고, 타이틀·평형은 같은 열에 둬서 좌측 정렬을 맞춘다
+        '<div class="flex items-start gap-2.5">'+
+          '<span class="mt-px inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" style="background:var(--color-zone-'+zk+');color:'+zoneInk(zoneHex(zk))+'">'+n+'</span>'+
+          '<div class="min-w-0">'+
+            '<p class="font-display text-[19px] font-bold leading-tight text-white" style="word-break:keep-all">'+name+'</p>'+
+            '<p class="mt-1.5 text-sm font-semibold text-light-blue"><span class="cnt" data-to="'+parseFloat(area)+'">0.0</span>만평</p>'+
+          '</div>'+
         '</div>'+
-        '<p class="font-display mt-3 text-[26px] font-bold text-white"><span class="cnt" data-to="'+parseFloat(area)+'">0.0</span>만평</p>'+
       '</div>';
     }).join('');
 
@@ -2028,7 +2025,24 @@
       const pages = [...sec.querySelectorAll('.cine-page')];
       const dots = sec.querySelector('[data-dots="'+key+'"]');
       if (dots && pages.length > 1) {
-        dots.innerHTML = pages.map((_,i)=>'<i'+(i===0?' class="on"':'')+'></i>').join('');
+        // 인디케이터는 표시 전용이 아니라 조작 가능해야 한다.
+        // 페이지 전환은 스크롤 진행률(c.p)이 구동하므로, 클릭하면 해당 구간으로 스크롤한다
+        // (입지 하단 탭과 같은 방식). 그러면 tick() 이 나머지를 알아서 맞춘다.
+        dots.innerHTML = pages.map((_,i)=>
+          '<i role="button" tabindex="0" aria-label="'+(i+1)+'페이지로 이동"'
+          + (i===0 ? ' class="on"' : '') + '></i>').join('');
+        const go = i => {
+          const runway = sec.offsetHeight - innerHeight;
+          if (runway <= 0) return;
+          scrollTo({ top: sec.offsetTop + runway * ((i + 0.5) / pages.length),
+                     behavior: 'smooth' });
+        };
+        [...dots.children].forEach((el, i) => {
+          el.addEventListener('click', ()=>go(i));
+          el.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(i); }
+          });
+        });
       }
       return {
         sec, key, pages, dots,
@@ -2840,8 +2854,8 @@
       { name: '국토교통부',          img: 'assets/logo/partner-molit.png' },
       { name: '강원특별자치도',       img: 'assets/logo/partner-gangwon.png' },
       { name: '춘천시',             img: 'assets/logo/partner-chuncheon-city.svg' },
+      { name: '더존비즈온',          img: 'assets/logo/partner-douzone.png' },
       { name: 'IBK투자증권',        img: 'assets/logo/partner-ibk.png' },
-      { name: '삼성증권',           img: 'assets/logo/partner-samsung.png' },
     ];
     const partnerTrack = document.getElementById('partnerTrack');
     const marqueeEl = partnerTrack.parentElement;
