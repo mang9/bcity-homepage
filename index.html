@@ -457,16 +457,43 @@
     .ov-stat dt b { font-size: clamp(30px, 2.6vw, 42px); font-weight: 700; letter-spacing: -.02em; color: #fff; }
     .ov-stat dt span { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.9); }
     .ov-stat dd { margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,.62); }
+    /* PC 에서는 래퍼가 박스를 만들지 않아 인디케이터·지표가 각자 절대배치를 유지한다 */
+    .ov-bottom { display: contents; }
 
     @media (max-width: 1023px) {
       .ov-eyebrow { left: 22px; top: 84px; }
       .ov-more { right: 22px; top: 80px; font-size: 13px; }
       .ov-center { top: 24%; }
-      .ov-stats { bottom: 40px; width: calc(100vw - 36px); grid-template-columns: repeat(2, 1fr);
-        border-top: 0; gap: 0; }
+      /* 인디케이터를 지표 위에 세로로 쌓는다. 지표 높이(2열 2행 = 222px)가 바뀌어도 겹치지 않는다 */
+      .ov-bottom { display: flex; flex-direction: column; align-items: center; gap: 20px;
+        position: absolute; left: 50%; bottom: 40px; z-index: 4;
+        width: calc(100vw - 36px); transform: translateX(-50%); }
+      .ov .cine-dots { position: static; left: auto; top: auto; bottom: auto; transform: none; }
+      .ov-stats { position: static; left: auto; bottom: auto; transform: none;
+        width: 100%; grid-template-columns: repeat(2, 1fr); border-top: 0; gap: 0; }
       .ov-stat { padding: 18px 10px 18px 18px; border-top: 1px solid rgba(255,255,255,.18); }
       .ov-stat:nth-child(odd) { border-left: 0; }
-      .ov .cine-dots { top: auto; bottom: 236px; }
+    }
+    /* 낮은 화면: 카피(위)와 인디케이터+지표(아래)가 같은 높이를 다툰다.
+       카피 위치는 그대로 두고 하단 스택만 조여서 인디케이터가 항상 텍스트 아래에 남게 한다.
+       (.ov-center 를 위로 올리면 상단 섹션 라벨과 부딪힌다 — 최소 여백이 그쪽이 더 빡빡하다) */
+    @media (max-width: 1023px) and (max-height: 800px) {
+      .ov-bottom { gap: 14px; bottom: 30px; }
+      .ov-stat { padding: 13px 10px 13px 16px; }
+    }
+    @media (max-width: 1023px) and (max-height: 680px) {
+      .ov-bottom { gap: 12px; bottom: 22px; }
+      .ov-stat { padding: 11px 8px 11px 14px; }
+      .ov-stat dt b { font-size: 26px; }
+      .ov-stat dd { margin-top: 6px; font-size: 11.5px; }
+    }
+    /* 가로 모드 수준의 극단적 저높이 — 여기서는 지표 설명을 접어야 카피가 산다 */
+    @media (max-width: 1023px) and (max-height: 520px) {
+      .ov-desc { margin-top: 14px; line-height: 1.7; }
+      .ov-bottom { gap: 10px; bottom: 16px; }
+      .ov-stat { padding: 8px 8px 8px 12px; }
+      .ov-stat dt b { font-size: 22px; }
+      .ov-stat dd { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       .ov-rule { width: 42px; transition: none; }
@@ -1258,16 +1285,22 @@
         </div>
       </div>
 
-      <!-- 페이지 인디케이터 -->
-      <div class="cine-dots" data-dots="biz"></div>
+      <!-- 인디케이터 + 하단 지표.
+           좁은 화면에서는 지표가 2열 2행(222px)으로 자라 인디케이터를 고정 offset 으로 피할 수 없다.
+           래퍼로 묶어 세로 흐름에 태우면 지표 높이가 어떻게 변해도 인디케이터가 항상 그 위에 남는다.
+           1024px 이상에서는 .ov-bottom 이 display:contents 라 기존 절대배치가 그대로 유지된다. -->
+      <div class="ov-bottom">
+        <!-- 페이지 인디케이터 -->
+        <div class="cine-dots" data-dots="biz"></div>
 
-      <!-- 하단 지표 4열 -->
-      <dl class="ov-stats">
-        <div class="ov-stat"><dt><b data-count="1.1" data-dec="1">0</b><span>조원</span></dt><dd>총 사업비</dd></div>
-        <div class="ov-stat"><dt><b data-count="110">0</b><span>만평</span></dt><dd>총 사업 면적 · 여의도 1.25배</dd></div>
-        <div class="ov-stat"><dt><b data-count="8">0</b><span>개 권역</span></dt><dd>4대 클러스터 + 4대 콤플렉스</dd></div>
-        <div class="ov-stat"><dt><b data-count="330">0</b><span>MW</span></dt><dd>AI 데이터센터 최대 용량</dd></div>
-      </dl>
+        <!-- 하단 지표 4열 -->
+        <dl class="ov-stats">
+          <div class="ov-stat"><dt><b data-count="1.1" data-dec="1">0</b><span>조원</span></dt><dd>총 사업비</dd></div>
+          <div class="ov-stat"><dt><b data-count="110">0</b><span>만평</span></dt><dd>총 사업 면적 · 여의도 1.25배</dd></div>
+          <div class="ov-stat"><dt><b data-count="8">0</b><span>개 권역</span></dt><dd>4대 클러스터 + 4대 콤플렉스</dd></div>
+          <div class="ov-stat"><dt><b data-count="330">0</b><span>MW</span></dt><dd>AI 데이터센터 최대 용량</dd></div>
+        </dl>
+      </div>
 
       <div class="cine-prog" data-prog="biz"></div>
     </div>
@@ -1365,9 +1398,9 @@
           <div class="reveal mt-6 flex flex-wrap items-end justify-between gap-4 rounded-lg border border-white/20 bg-navy/55 px-7 py-6 backdrop-blur">
             <div>
               <p class="text-sm font-semibold text-light-blue">합계</p>
-              <p class="font-display mt-1.5 text-3xl font-bold text-white">권역부지 <span class="text-mint">62.1만평</span> <span class="text-white/50">/ 110만평</span></p>
+              <p class="font-display mt-1.5 text-3xl font-bold text-white">권역부지 <span class="text-mint">65만평</span> <span class="text-white/50">/ 110만평</span></p>
             </div>
-            <p class="text-xs text-white/45">* 하천, 공원, 녹지 등 47.9만 평 제외</p>
+            <p class="text-xs text-white/45">* 하천, 공원, 녹지 등 45만 평 제외</p>
           </div>
           <p class="az-note reveal">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
         </div>
@@ -1379,10 +1412,10 @@
           <img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" />
           <img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" />
           <img class="az-map-hl" data-zone="1" src="assets/landuse/zone-01.svg?v=4" loading="lazy" decoding="async" alt="" />
-          <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=5" loading="lazy" decoding="async" alt="" />
-          <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=6" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=7" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="4" src="assets/landuse/zone-04.svg?v=4" loading="lazy" decoding="async" alt="" />
-          <img class="az-map-hl" data-zone="5" src="assets/landuse/zone-05.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="5" src="assets/landuse/zone-05.svg?v=5" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="6" src="assets/landuse/zone-06.svg?v=4" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="7" src="assets/landuse/zone-07.svg?v=4" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="8" src="assets/landuse/zone-08.svg?v=4" loading="lazy" decoding="async" alt="" />
@@ -1867,9 +1900,9 @@
          zone-05.svg=하우징 · zone-06.svg=에듀 · zone-07.svg=비즈니스 다.
          n 을 그대로 data-zone 에 쓰면 5(비즈니스) 호버 시 하우징 구역이 켜진다. */
     const areas = [
-      ['1','AI 데이터','6.9만평','district-ai','1'],   ['2','바이오','8.2만평','district-bio','2'],
+      ['1','AI 데이터','6.1만평','district-ai','1'],   ['2','바이오','8.2만평','district-bio','2'],
       ['3','푸드','4.2만평','district-food','3'],      ['4','바이오 MICE','3.9만평','district-mice','4'],
-      ['5','비즈니스','1.7만평','district-biz','7'],   ['6','하우징','9.1만평','district-housing','5'],
+      ['5','비즈니스','1.7만평','district-biz','7'],   ['6','하우징','9.7만평','district-housing','5'],
       ['7','에듀','2.7만평','district-edu','6'],       ['8','골프레저','28.5만평','district-golf','8'],
     ];
     document.getElementById('areaGrid').innerHTML = areas.map(([n,name,area,c,m],i)=>{
@@ -1953,10 +1986,10 @@
     /* ---------- 구역 상세 (슬라이드 12~19) ---------- */
     const zones = {
       cluster: [
-        { n:'01', vid:'assets/vid/district/d01.mp4', poster:'assets/still/district/d01.jpg', c:'district-ai', t:'AI데이터 클러스터', img:'assets/slide-datarush.jpg', area:'약 6.9만평',
+        { n:'01', vid:'assets/vid/district/d01.mp4', poster:'assets/still/district/d01.jpg', c:'district-ai', t:'AI데이터 클러스터', img:'assets/slide-datarush.jpg', area:'약 6.1만평',
           head:'국가대표급 하이퍼스케일',
           desc:'최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축',
-          specs:[['부지 면적','약 6.9만평','226,643㎡ (68,559평)'],['구성','DC1~DC5','총 5개 블럭'],['전력','330MW','IT Load 240MW'],['용도지역','준공업지역','건폐율 70% · 용적률 400% / 목표 PUE 1.2']] },
+          specs:[['부지 면적','약 6.1만평','207,486㎡ (61,264평)'],['구성','DC1~DC5','총 5개 블럭'],['전력','330MW','IT Load 240MW'],['용도지역','준공업지역','건폐율 70% · 용적률 400% / 목표 PUE 1.2']] },
         { n:'02', vid:'assets/vid/district/d02.mp4', poster:'assets/still/district/d02.jpg', c:'district-bio', t:'첨단 바이오 클러스터', img:'assets/img-bio.jpg', area:'약 8.2만평',
           head:'AI 기반 신약 R&D 및 중소형 CDMO 거점',
           desc:'미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축',
@@ -1964,7 +1997,7 @@
         { n:'03', vid:'assets/vid/district/d03.mp4', poster:'assets/still/district/d03.jpg', c:'district-food', t:'푸드 물류 클러스터', img:'assets/img-logistics.jpg', area:'약 4.2만평',
           head:'AI 콜드체인 허브이자 군 급식 수요 대응 거점',
           desc:'AI데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응',
-          specs:[['부지 면적','약 4.2만평','138,860㎡ (42,254평)'],['구성','FU1~FU4','총 4개 구역'],['접근성','남춘천IC 3분','서울양양고속도로'],['용도지역','준공업지역','건폐율 70% · 용적률 400%']] },
+          specs:[['부지 면적','약 4.2만평','138,860㎡ (42,254평)'],['구성','FL1~FL4','총 4개 구역'],['접근성','남춘천IC 3분','서울양양고속도로'],['용도지역','준공업지역','건폐율 70% · 용적률 400%']] },
         { n:'04', vid:'assets/vid/district/d04.mp4', poster:'assets/still/district/d04.jpg', c:'district-mice', t:'바이오MICE 클러스터', img:'assets/img-shuttle.jpg', area:'약 3.9만평',
           head:'지속가능한 바이오·헬스 산업 커뮤니티 조성',
           desc:'일회성·정기성을 넘어, 의료+바이오+헬스+투자가 상시 교류하는 산업 네트워크 완성',
@@ -1975,10 +2008,10 @@
           head:'상업‧업무‧문화가 융합된 강원 관문',
           desc:'도시를 넘어 광역 유동인구까지 흡수하는 직·주·락 중심 주민친화적 단핵 복합 상권 조성',
           specs:[['부지 면적','약 1.7만평','55,703㎡ (16,850평)'],['핵심시설','업무시설','8,949평 (29,583㎡)'],['핵심시설','상업시설','7,901평 (26,120㎡)'],['용도지역','일반상업지역','건폐율 80% · 용적률 600%']] },
-        { n:'06', vid:'assets/vid/district/d06.mp4', poster:'assets/still/district/d06.jpg', c:'district-housing', t:'하우징 콤플렉스', img:'assets/img-mirror.jpg', area:'약 9.1만평',
+        { n:'06', vid:'assets/vid/district/d06.mp4', poster:'assets/still/district/d06.jpg', c:'district-housing', t:'하우징 콤플렉스', img:'assets/img-mirror.jpg', area:'약 9.7만평',
           head:'첨단 기술과 자연을 누리는 하우징 / 시니어',
           desc:'AI·로보틱스·자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징',
-          specs:[['부지 면적','약 9.1만평','301,387㎡ (91,169평)'],['계획 세대','6,366세대','공동주택 4,000 · 시니어 2,000'],['계획 인구','15,917명',''],['주택 유형','공동주택','시니어하우징']] },
+          specs:[['부지 면적','약 9.7만평','321,307㎡ (97,195평)'],['계획 세대','6,366세대','공동주택 4,000 · 시니어 2,000'],['계획 인구','15,917명',''],['주택 유형','공동주택','시니어하우징']] },
         { n:'07', vid:'assets/vid/district/d07.mp4', poster:'assets/still/district/d07.jpg', c:'district-edu', t:'에듀 콤플렉스', img:'assets/img-family.jpg', area:'약 2.7만평',
           head:'생애 전주기 교육하는 ‘생각하는 도시’ 글로벌',
           desc:'춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성·유입',
