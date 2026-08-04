@@ -6,10 +6,26 @@
 | 파일 | 원본 출처 |
 |---|---|
 | `tailwind-browser-4.js` | `https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4` |
+| `paperlogy/Paperlogy-{6SemiBold,7Bold,8ExtraBold}.woff2` | `https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/` |
+| `paperlogy/paperlogy.local.css` | 위 CDN 의 `Paperlogy.css` 에서 **사용 굵기 3종만** 남기고 `src` 를 로컬 woff2 로 교체 |
 | `pretendard/Pretendard-{Regular,Medium,SemiBold,Bold,ExtraBold}.woff2` | `https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2/` |
 | `pretendard/pretendard.local.css` | 위 CDN 의 `pretendard.min.css` 에서 **사용 굵기 5종만** 남기고 `src` 를 로컬 woff2 로 교체 |
 | `inter/*.woff2` | `https://fonts.gstatic.com/...` (Google Fonts) |
 | `inter/inter.local.css` | `https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap` 의 `gstatic` URL 을 로컬 파일명으로 교체 |
+
+## Paperlogy — 3종만 받은 이유
+
+원본 CSS 는 9종(100~900) × woff2/woff/otf/ttf 를 모두 선언하지만, `--font-display` 를 쓰는
+규칙을 전수 조사한 결과 이 페이지가 쓰는 굵기는 **600 / 700 / 800** 세 개뿐이다.
+
+| 굵기 | 쓰이는 곳 |
+|---|---|
+| 600 | `.cn-hub-txt span` (AI Living Lab 허브의 B-CITY) |
+| 700 | 대부분 — 히어로 H1, 섹션 제목, `.lo-title`, `.ov-title`, `.za-name`, `.lo-pill b` 등 |
+| 800 | `.cn-hub-txt b` / `i` (허브의 AI · Living Lab) |
+
+woff2 는 굵기당 약 160KB 다(Pretendard 는 750KB — Paperlogy 파일이 이미 서브셋이다).
+글리프 커버리지는 페이지가 실제로 쓰는 195자 전부 확인했다(누락 0).
 
 ## 굵기를 5종만 받은 이유
 

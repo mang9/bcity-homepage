@@ -13,13 +13,29 @@ colors:
   text-muted: "#5B6B82"
   line: "#D8E3F2"
   district-ai: "#344198"
-  district-bio: "#21B9A5"
-  district-food: "#E19A32"
-  district-mice: "#5AA6E8"
-  district-housing: "#C9A56A"
-  district-edu: "#A2BE52"
-  district-biz: "#6D5FA8"
-  district-golf: "#50A86F"
+  district-bio: "#288074"
+  district-food: "#A1662B"
+  district-mice: "#337AA3"
+  district-housing: "#877240"
+  district-edu: "#667D31"
+  district-biz: "#7758AD"
+  district-golf: "#378152"
+  zone-ai: "#B6BDEC"
+  zone-bio: "#B5EEE6"
+  zone-food: "#F0D1B2"
+  zone-mice: "#B5D9EE"
+  zone-biz: "#CFC1E7"
+  zone-housing: "#E8DCC0"
+  zone-edu: "#DBEAB8"
+  zone-golf: "#BAE8CB"
+  zone-line-ai: "#22308C"
+  zone-line-bio: "#197165"
+  zone-line-food: "#93571A"
+  zone-line-mice: "#216B97"
+  zone-line-biz: "#653EA8"
+  zone-line-housing: "#7D642C"
+  zone-line-edu: "#576F1F"
+  zone-line-golf: "#257442"
 typography:
   hero-h1:
     fontFamily: "Paperlogy, Pretendard, 'Noto Sans KR', sans-serif"
@@ -97,9 +113,20 @@ White/Blue White 20~30%, Point Mint 5~10%를 기준으로 한다.
 - **line (#D8E3F2):** 카드 경계, 표 라인, 구획선.
 
 **District Map Colors** — 지도 8개 권역 구분 전용. 색상만으로 구분하지 않고 번호 마커·외곽선·라벨·범례를 함께 쓴다.
-`district-ai` #344198(AI 데이터), `district-bio` #21B9A5(첨단바이오), `district-food` #E19A32(푸드물류),
-`district-mice` #5AA6E8(바이오 MICE), `district-housing` #C9A56A(하우징), `district-edu` #A2BE52(에듀),
-`district-biz` #6D5FA8(비즈니스), `district-golf` #50A86F(골프·웰니스).
+권역 색은 **권역당 색상(Hue) 하나에서 세 티어를 파생**시킨다. 티어마다 요구조건이 다르다.
+
+| 티어 | 쓰임 | 요구조건 |
+|---|---|---|
+| `district-*` | 번호 배지 배경(흰 번호) · 평형 텍스트 · 카드 보더 | **흰색 대비 ≥ 4.5** (WCAG AA) — 최소 4.62 |
+| `zone-*` | 토지이용계획도 면색 (`assets/landuse/zone-0N.svg`, fill-opacity 0.85) | 밝은 톤 L 82~83% 로 통일 |
+| `zone-line-*` | 지도 외곽선 | 같은 Hue 의 짙은 톤 |
+
+`district-ai` #344198(AI 데이터), `district-bio` #288074(첨단바이오), `district-food` #A1662B(푸드물류),
+`district-mice` #337AA3(바이오 MICE), `district-biz` #7758AD(비즈니스), `district-housing` #877240(하우징),
+`district-edu` #667D31(에듀), `district-golf` #378152(골프레저).
+
+> 이전 값(#21B9A5 · #E19A32 등)은 장식으로는 예뻤지만 흰 배경 위 13px 평형 텍스트로 쓰기에
+> **8개 중 6개가 AA 미달**이었다(에듀 2.10 최악). 그래서 티어 전체를 어둡게 재설계했다.
 
 ## Typography
 

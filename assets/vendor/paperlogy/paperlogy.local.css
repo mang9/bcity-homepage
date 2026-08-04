@@ -1,0 +1,10 @@
+/* Paperlogy — 로컬 사본 (오프라인 시연 대응)
+   출처: https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css
+   원본 CSS 는 9종(100~900) × woff2/woff/otf/ttf 를 모두 선언하지만,
+   이 페이지가 실제로 쓰는 굵기는 600/700/800 세 개뿐이라 woff2 만 받아 남겼다.
+   (--font-display 를 쓰는 규칙 전수 조사 결과: .cn-hub-txt span=600, 대부분 700, .cn-hub-txt b/i=800)
+   굵기를 새로 쓰면 해당 woff2 를 추가로 받고 여기에 @font-face 를 넣어야 한다.
+   넣지 않으면 브라우저가 합성해 글자가 뭉개진다. */
+@font-face{font-family:Paperlogy;font-style:normal;font-weight:600;font-display:swap;src:url('./Paperlogy-6SemiBold.woff2') format('woff2');}
+@font-face{font-family:Paperlogy;font-style:normal;font-weight:700;font-display:swap;src:url('./Paperlogy-7Bold.woff2') format('woff2');}
+@font-face{font-family:Paperlogy;font-style:normal;font-weight:800;font-display:swap;src:url('./Paperlogy-8ExtraBold.woff2') format('woff2');}
