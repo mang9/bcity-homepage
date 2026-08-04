@@ -495,6 +495,24 @@
       .ov-stat dt b { font-size: 22px; }
       .ov-stat dd { display: none; }
     }
+    /* 휴대폰 가로 모드(높이 400px 미만). 헤더 80px 를 빼면 250px 남짓에
+       라벨·카피·인디케이터·지표를 모두 넣어야 한다.
+       지표를 2열 2행에서 4열 1행으로 되돌려 높이를 절반으로 줄이고 설명을 살린다 */
+    @media (max-width: 1023px) and (max-height: 400px) {
+      .ov-eyebrow { top: 62px; letter-spacing: .16em; }
+      .ov-more { top: 58px; font-size: 12px; }
+      .ov-center { top: 94px; }
+      .ov-title { font-size: 20px; }
+      /* 12px 이면 문장 전체가 한 줄(675px)로 붙어 화면 폭에 꽉 차 보인다 — 2줄로 나눈다 */
+      .ov-desc { max-width: 520px; margin-top: 8px; font-size: 12px; line-height: 1.55; }
+      .ov-bottom { gap: 11px; bottom: 8px; }
+      .ov-stats { grid-template-columns: repeat(4, 1fr); }
+      .ov-stat { padding: 6px 6px 6px 9px; }
+      .ov-stat dt { gap: 4px; }
+      .ov-stat dt b { font-size: 16px; }
+      .ov-stat dt span { font-size: 10.5px; }
+      .ov-stat dd { display: block; margin-top: 3px; font-size: 9.5px; line-height: 1.35; }
+    }
     @media (prefers-reduced-motion: reduce) {
       .ov-rule { width: 42px; transition: none; }
       .ov-stat { opacity: 1; transform: none; transition: none; }
@@ -1016,7 +1034,9 @@
 
     @media (min-width: 1800px) {
       .ov-title  { font-size: clamp(56px, 3.5vw, 72px); }
-      .ov-desc   { max-width: 800px; font-size: clamp(17px, 1.05vw, 20px); }
+      /* 800px 이면 글자가 20px 상한(폭 1905px 이상)에 닿는 순간 1행이 814px 로 넘쳐
+         '규모)의' 만 떨어진 3줄이 된다. 강제 개행 1행이 들어가는 폭으로 맞춘다 */
+      .ov-desc   { max-width: 860px; font-size: clamp(17px, 1.05vw, 20px); }
       .lo-title  { font-size: clamp(44px, 3.2vw, 62px); }
       .lo-no     { font-size: clamp(60px, 5.4vw, 116px); }
       .za-name   { font-size: 19px; }
@@ -1030,6 +1050,12 @@
       .lo-title  { font-size: clamp(52px, 2.9vw, 70px); }
       .lo-no     { font-size: clamp(80px, 5vw, 128px); }
       .az-grid   { grid-template-columns: minmax(0, 1fr) clamp(420px, 21vw, 560px); }
+    }
+    /* 넓지만 낮은 창(울트라와이드·창 축소). 1800px 이상에서 커진 타이포가
+       top:30% 기준선에서 아래로 자라 66% 에 있는 인디케이터를 덮는다.
+       5K(2560×1440) 등 정상 비율에서는 이 규칙이 걸리지 않아 기존 배치가 유지된다 */
+    @media (min-width: 1800px) and (max-height: 940px) {
+      .ov-center { top: 21%; }
     }
 
   </style>
@@ -1415,7 +1441,7 @@
           <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=6" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=7" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="4" src="assets/landuse/zone-04.svg?v=4" loading="lazy" decoding="async" alt="" />
-          <img class="az-map-hl" data-zone="5" src="assets/landuse/zone-05.svg?v=5" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="5" src="assets/landuse/zone-05.svg?v=7" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="6" src="assets/landuse/zone-06.svg?v=4" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="7" src="assets/landuse/zone-07.svg?v=4" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="8" src="assets/landuse/zone-08.svg?v=4" loading="lazy" decoding="async" alt="" />
