@@ -2032,7 +2032,10 @@
     const partnerTrack = document.getElementById('partnerTrack');
     const marqueeEl = partnerTrack.parentElement;
     const ptItem = p => p.img
-      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" loading="lazy" decoding="async" /></div>'
+      // ⚠ loading="lazy" 를 넣지 말 것 — layoutPartners() 가 이미지 로드를 기다려
+      //   normalizeLogos() 로 면적 정규화를 하는데, lazy 면 화면 밖이라 로드가 시작되지 않아
+      //   naturalWidth 가 0 이고 정규화가 건너뛰어져 로고가 원본 크기로 그려진다(실제 발생)
+      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" decoding="async" /></div>'
       : '<div class="pt-item"><span class="pt-name">'+p.name+'</span></div>';
 
     /* 로고 시각 크기 정규화: 가로세로 비율이 달라도 '보이는 면적'을 맞춘다.
