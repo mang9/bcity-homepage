@@ -8,6 +8,12 @@
 
   <!-- 오프라인 시연용: Tailwind·폰트를 CDN 대신 assets/vendor 의 로컬 파일로 쓴다.
        외부 네트워크 없이 동작한다. 원본 출처는 assets/vendor/README.md 참고. -->
+  <!-- 임계 폰트 preload — 없으면 CSS 파싱 후에야 폰트 요청이 시작된다(실측 121→234ms).
+       본문(Pretendard Regular)과 제목(Paperlogy 7 Bold)만 올린다. 나머지는 필요 시 자연 로드. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="assets/vendor/pretendard/Pretendard-Regular.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="assets/vendor/paperlogy/Paperlogy-7Bold.woff2" />
   <link href="assets/vendor/inter/inter.local.css" rel="stylesheet" />
   <link href="assets/vendor/pretendard/pretendard.local.css" rel="stylesheet" />
   <!-- Paperlogy — --font-display 의 1순위. 이 링크가 없으면 스택이 Pretendard 로 폴백한다. -->
@@ -164,9 +170,9 @@
         <div class="lo-mapcol">
           <div id="locMap" class="lm">
             <!-- 배경 지도: 스텝별로 JS가 src를 바꾼다 (locRoutes[].bg) -->
-            <img class="lm-bg" alt="" hidden />
+            <picture><source class="lm-bg-av" type="image/avif" /><img class="lm-bg" alt="" hidden /></picture>
             <!-- 전경 레이어: 받침대·지점명·소요시간 배지 등 지도 위 요소 (locRoutes[].fg) -->
-            <img class="lm-fg" alt="" hidden />
+            <picture><source class="lm-fg-av" type="image/avif" /><img class="lm-fg" alt="" hidden /></picture>
             <svg class="lm-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
           </div>
           <p class="lo-note">* 교통량 및 도로사정에 따라 차이가 발생할 수 있습니다</p>
@@ -233,7 +239,7 @@
   <section id="business" class="page cine ov" data-cine="biz" data-clip="assets/vid/business.mp4?v=bio1" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio1" style="height:400vh">
     <div class="cine-stage bg-navy">
       <video muted playsinline preload="auto" data-scrub="biz"></video>
-      <img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" />
+      <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/still/seg05@m.avif" /><source type="image/avif" srcset="assets/still/seg05.avif" /><img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" /></picture>
       <!-- 참고 디자인의 어두운 톤: 전체 톤다운 + 상·하단 강화 그라데이션 -->
       <div class="cine-scrim" style="background:rgba(0,17,34,.46)"></div>
       <div class="cine-scrim" style="background:linear-gradient(180deg,rgba(0,17,34,.62) 0%,rgba(0,17,34,.30) 38%,rgba(0,17,34,.44) 68%,rgba(0,17,34,.86) 100%)"></div>
@@ -296,7 +302,7 @@
     <!-- 배경: 그리드 패턴 + 아이소메트릭 도시 일러스트 -->
     <div class="absolute inset-0" aria-hidden="true">
       <img src="assets/img/concept-grid.png" alt="" class="absolute inset-0 h-full w-full object-cover opacity-20" />
-      <img src="assets/img/concept-city.png" alt="" class="absolute inset-0 h-full w-full object-cover" />
+      <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/img/concept-city@m.avif" /><source type="image/avif" srcset="assets/img/concept-city.avif" /><img src="assets/img/concept-city.png" alt="" class="absolute inset-0 h-full w-full object-cover" /></picture>
     </div>
 
     <div class="relative mx-auto flex min-h-screen wrap-x flex-col items-center justify-center px-6 py-20 text-center">
@@ -362,7 +368,7 @@
   <!-- ============ 5. 구역소개 개요 (슬라이드 11) — 조감도 배경 ============ -->
   <section id="zones" class="page relative overflow-hidden bg-navy">
     <!-- 조감도 배경 (스크롤에 따라 서서히 확대) -->
-    <img id="zonesBg" src="assets/slide-day.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" />
+    <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/slide-day@m.avif" /><source type="image/avif" srcset="assets/slide-day.avif" /><img id="zonesBg" src="assets/slide-day.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" /></picture>
     <div class="absolute inset-0 bg-gradient-to-b from-navy/92 via-navy/78 to-navy/94"></div>
     <div class="absolute inset-0" style="background-image:radial-gradient(circle at 82% 18%, rgba(61,191,168,.22) 0, transparent 45%)"></div>
 
@@ -394,8 +400,8 @@
         <div class="az-map reveal" aria-hidden="true">
           <!-- 흰 바탕판: 같은 베이스 SVG를 brightness(0) invert(1)로 흰 실루엣으로 만들어
                지도 형태 그대로 뒤에 깐다 (어두운 조감도가 비치는 문제 해결) -->
-          <img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" />
-          <img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" />
+          <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/landuse/zone-base@m.avif" /><source type="image/avif" srcset="assets/landuse/zone-base.avif" /><img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" loading="lazy" /></picture>
+          <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/landuse/zone-base@m.avif" /><source type="image/avif" srcset="assets/landuse/zone-base.avif" /><img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" loading="lazy" /></picture>
           <img class="az-map-hl" data-zone="1" src="assets/landuse/zone-01.svg?v=4" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=6" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=7" loading="lazy" decoding="async" alt="" />
@@ -892,7 +898,6 @@
       ['7','에듀','2.7만평','district-edu','6'],       ['8','골프레저','28.5만평','district-golf','8'],
     ];
     document.getElementById('areaGrid').innerHTML = areas.map(([n,name,area,c,m],i)=>{
-      const zk = c.replace('district-','');
       return       '<div class="az-card reveal rounded-lg border border-white/20 bg-navy/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:bg-navy/70" data-zone="'+m+'" tabindex="0"'+
         ' style="border-top:3px solid var(--color-'+c+');transition-delay:'+(i*0.07)+'s">'+
         // 번호는 좌측에 고정하고, 타이틀·평형은 같은 열에 둬서 좌측 정렬을 맞춘다
@@ -1078,7 +1083,7 @@
     /* 활성 구역 영상: 볼 때만 내려받고, 재생이 막히면 재시도한다 */
     function dzPlay(v){
       if (!v) return;
-      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'auto'; }
+      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'metadata'; }
       v.muted = true;
       const go = () => { const pr = v.play(); if (pr && pr.catch) pr.catch(()=>{}); };
       go();
@@ -1505,6 +1510,10 @@
       if (!wrap) return;
       const svg = wrap.querySelector('.lm-svg');
       const bgImg = wrap.querySelector('.lm-bg');
+      // AVIF <source> 를 함께 갱신한다. 확장자만 바꾼 같은 이름 규칙(assets/img/<name>.avif)
+      const bgAv  = wrap.querySelector('.lm-bg-av');
+      const fgAv  = wrap.querySelector('.lm-fg-av');
+      const toAvif = u => u ? u.replace(/\.(png|jpe?g)(\?.*)?$/, '.avif$2') : '';
       bgImg.addEventListener('error', ()=>{ bgImg.hidden = true; });   // 파일 업로드 전에는 숨김
       const fgImg = wrap.querySelector('.lm-fg');
       if (fgImg) fgImg.addEventListener('error', ()=>{ fgImg.hidden = true; });
@@ -1838,11 +1847,11 @@
       window.locMapShow = (i, force) => {
         groups.forEach((g,k)=>g.classList.toggle('on', k === i));
         const bg = locRoutes[i] && locRoutes[i].bg;      // 스텝별 배경 지도
-        if (bg) { bgImg.src = bg; bgImg.hidden = false; }
+        if (bg) { if (bgAv) bgAv.srcset = toAvif(bg); bgImg.src = bg; bgImg.hidden = false; }
         else { bgImg.removeAttribute('src'); bgImg.hidden = true; }
         const fg = locRoutes[i] && locRoutes[i].fg;      // 지도 위 요소 레이어
         if (fgImg) {
-          if (fg) { fgImg.src = fg; fgImg.hidden = false; }
+          if (fg) { if (fgAv) fgAv.srcset = toAvif(fg); fgImg.src = fg; fgImg.hidden = false; }
           else { fgImg.removeAttribute('src'); fgImg.hidden = true; }
         }
         if (i === cur && !force) return;
@@ -1999,7 +2008,7 @@
     const partnerTrack = document.getElementById('partnerTrack');
     const marqueeEl = partnerTrack.parentElement;
     const ptItem = p => p.img
-      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" /></div>'
+      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" loading="lazy" decoding="async" /></div>'
       : '<div class="pt-item"><span class="pt-name">'+p.name+'</span></div>';
 
     /* 로고 시각 크기 정규화: 가로세로 비율이 달라도 '보이는 면적'을 맞춘다.
