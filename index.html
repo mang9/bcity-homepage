@@ -169,10 +169,14 @@
              노드 좌표·경로는 JS의 locRoutes(600×460 좌표계)에서 관리한다. -->
         <div class="lo-mapcol">
           <div id="locMap" class="lm">
-            <!-- 배경 지도: 스텝별로 JS가 src를 바꾼다 (locRoutes[].bg) -->
-            <picture><source class="lm-bg-av" type="image/avif" /><img class="lm-bg" alt="" hidden /></picture>
+            <!-- 배경 지도: 스텝별로 JS가 src를 바꾼다 (locRoutes[].bg)
+                 ⚠ <picture> 로 감싸지 말 것 — <picture> 는 display:inline 으로 정상 흐름에
+                   들어가서, absolute 인 .lm-bg/.lm-fg 가 흐름에서 빠져 있다는 전제가 깨진다.
+                   .lm-svg 는 position:relative; height:100% 로 .lm 의 유일한 흐름 자식이어야
+                   경로 오버레이가 지도와 정합한다(2026-08-05 라이브 회귀로 확인). -->
+            <img class="lm-bg" alt="" hidden />
             <!-- 전경 레이어: 받침대·지점명·소요시간 배지 등 지도 위 요소 (locRoutes[].fg) -->
-            <picture><source class="lm-fg-av" type="image/avif" /><img class="lm-fg" alt="" hidden /></picture>
+            <img class="lm-fg" alt="" hidden />
             <svg class="lm-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
           </div>
           <p class="lo-note">* 교통량 및 도로사정에 따라 차이가 발생할 수 있습니다</p>
@@ -1534,10 +1538,6 @@
       if (!wrap) return;
       const svg = wrap.querySelector('.lm-svg');
       const bgImg = wrap.querySelector('.lm-bg');
-      // AVIF <source> 를 함께 갱신한다. 확장자만 바꾼 같은 이름 규칙(assets/img/<name>.avif)
-      const bgAv  = wrap.querySelector('.lm-bg-av');
-      const fgAv  = wrap.querySelector('.lm-fg-av');
-      const toAvif = u => u ? u.replace(/\.(png|jpe?g)(\?.*)?$/, '.avif$2') : '';
       bgImg.addEventListener('error', ()=>{ bgImg.hidden = true; });   // 파일 업로드 전에는 숨김
       const fgImg = wrap.querySelector('.lm-fg');
       if (fgImg) fgImg.addEventListener('error', ()=>{ fgImg.hidden = true; });
@@ -1871,11 +1871,11 @@
       window.locMapShow = (i, force) => {
         groups.forEach((g,k)=>g.classList.toggle('on', k === i));
         const bg = locRoutes[i] && locRoutes[i].bg;      // 스텝별 배경 지도
-        if (bg) { if (bgAv) bgAv.srcset = toAvif(bg); bgImg.src = bg; bgImg.hidden = false; }
+        if (bg) { bgImg.src = bg; bgImg.hidden = false; }
         else { bgImg.removeAttribute('src'); bgImg.hidden = true; }
         const fg = locRoutes[i] && locRoutes[i].fg;      // 지도 위 요소 레이어
         if (fgImg) {
-          if (fg) { if (fgAv) fgAv.srcset = toAvif(fg); fgImg.src = fg; fgImg.hidden = false; }
+          if (fg) { fgImg.src = fg; fgImg.hidden = false; }
           else { fgImg.removeAttribute('src'); fgImg.hidden = true; }
         }
         if (i === cur && !force) return;
