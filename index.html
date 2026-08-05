@@ -1080,10 +1080,34 @@
       dzCur = -1;
     }
 
+    /* 구역 영상 선로드 게이트 (2026-08-05)
+       dzRender(0) 이 초기화 시 첫 영상을 활성화하므로, 게이트가 없으면 #districts 가
+       3,400px 아래인데도 d01.mp4 2.05MB 가 첫 로드에 섞여 들어온다.
+       섹션 1,000px 전에 게이트가 열리고, 열린 뒤 동작은 기존과 완전히 동일하다.
+       로딩 중 화면은 <video poster> 가 그대로 채우므로 빈 화면·레이아웃 점프가 없다. */
+    let dzNear = false;
+    function dzOpenGate(){
+      if (dzNear) return;
+      dzNear = true;
+      const v = document.querySelector('#dzImgs .dz-vid.on');
+      if (v) dzPlay(v);                       // 활성 영상만 로드 — 나머지는 기존대로 지연
+    }
+    (function(){
+      const sec = document.getElementById('districts');
+      if (!sec) { dzNear = true; return; }     // 섹션이 없으면 게이트를 열어 둔다(안전)
+      if (!('IntersectionObserver' in window)) { dzNear = true; return; }
+      const io = new IntersectionObserver(es=>{
+        if (es.some(e=>e.isIntersecting)) { io.disconnect(); dzOpenGate(); }
+      }, { rootMargin: '1000px 0px' });        // 약 1,000px 전에 미리 시작
+      io.observe(sec);
+    })();
+
     /* 활성 구역 영상: 볼 때만 내려받고, 재생이 막히면 재시도한다 */
     function dzPlay(v){
       if (!v) return;
-      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'metadata'; }
+      // 게이트가 열리기 전에는 src 를 주입하지 않는다(첫 로드 2MB 회피)
+      if (dzNear && !v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'metadata'; }
+      if (!v.src) return;                     // 아직 소스가 없으면 재생 시도도 하지 않는다
       v.muted = true;
       const go = () => { const pr = v.play(); if (pr && pr.catch) pr.catch(()=>{}); };
       go();
