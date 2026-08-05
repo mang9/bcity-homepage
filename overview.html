@@ -233,9 +233,12 @@
     /* 리더 라인 — 강원 패널에서 말풍선과 시·군을 잇는다 */
     .bc-lead { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     /* 강원 지도가 흰색이라 흰 선은 안 보인다 — navy 를 옅게 쓴다.
-       끝점 원은 파랑·민트 시군 위에 놓이므로 흰색을 유지한다 */
+       도트는 파랑·민트 시군 위에 놓이므로 흰색을 유지한다 (Figma 마커와 같은 규격) */
     .bc-lead polyline { fill: none; stroke: rgb(var(--navy-rgb) / .3); stroke-width: 1.4; }
-    .bc-lead circle { fill: #fff; }
+    .bc-dot { filter: drop-shadow(0 1px 3px rgb(var(--navy-rgb) / .38)); }
+    .bc-dot circle:first-child { fill: none; stroke: #fff; stroke-width: 1;
+      vector-effect: non-scaling-stroke; }
+    .bc-dot circle:last-child { fill: #fff; }
 
     /* 지도 위에 겹쳐 띄우는 배치 — 1280px 이상에서만.
        1200~1279 에서는 칼럼이 좁아 오른쪽 말풍선이 섹션 밖으로 11px 삐져나온다(실측) */
@@ -256,9 +259,8 @@
     @media (max-width: 1279px) {
       .bc-frame { width: auto; }
       .bc-call { max-width: 48%; }
-      .bc-call-in { padding: 6px 10px; border-radius: 6px;
-        box-shadow: 0 4px 12px rgb(var(--navy-rgb) / .14); }
-      .bc-call b { font-size: clamp(10.5px, 2.3vw, 13px); letter-spacing: -.02em; white-space: nowrap; }
+      .bc-call-in { padding: 6px 10px; box-shadow: 0 4px 12px rgb(var(--navy-rgb) / .14); }
+      .bc-call b { font-size: clamp(12px, 2.3vw, 13px); letter-spacing: -.02em; white-space: nowrap; }
       .bc-call span { display: none; }
     }
     /* 768px 이하 — 지역명을 짧게 바꿔 지도를 덜 가린다.
@@ -266,7 +268,7 @@
     @media (max-width: 767px) {
       .bc-call-in { padding: 5px 9px; }
       .bc-call b[data-short] { font-size: 0; }
-      .bc-call b[data-short]::after { content: attr(data-short); font-size: 11px; }
+      .bc-call b[data-short]::after { content: attr(data-short); font-size: 12px; }
     }
 
     .cl-detail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -494,13 +496,19 @@
             <figure class="bc-panel bc-panel--gw rv">
               <div class="bc-frame">
                 <img src="assets/img/bio-cluster-gw.png" alt="춘천시와 홍천군이 표시된 강원특별자치도" />
-                <!-- 리더 라인. viewBox 가 0~100 이라 좌표가 곧 지도 박스 기준 % 다.
-                     끝점은 춘천시(34,39) · 홍천군(48,52) 실측 위치에 맞췄다 -->
-                <svg class="bc-lead" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                  <polyline points="58,24 58,30 34.5,30 34.5,36.4" vector-effect="non-scaling-stroke" />
-                  <circle cx="34.5" cy="37.9" r="1" />
-                  <polyline points="44,84 44,66 50,66 50,56" vector-effect="non-scaling-stroke" />
-                  <circle cx="50" cy="54.5" r="1" />
+                <!-- 리더 라인 + 도트.
+                     viewBox 를 지도 원본 비율(610×458)로 두면 x·y 배율이 같아 도트가 원형을 지킨다.
+                     0~100 viewBox + preserveAspectRatio="none" 은 원을 타원으로 눌러버린다.
+                     도트 위치는 Figma 마커: 춘천 35.3%/37.9% → (215,174) · 홍천 45.1%/48.5% → (275,222)
+                     두 선 모두 말풍선의 '세로 중앙'에서 출발한다(춘천 y65 · 홍천 y393).
+                     --y 가 세로 중앙 앵커라 말풍선 높이가 breakpoint 마다 달라져도
+                     출발점이 항상 말풍선 안에 남아 선이 끊겨 보이지 않는다.
+                     가로도 앵커 변(춘천 좌단 342 / 홍천 우단 268) 기준 안쪽으로 잡았다 -->
+                <svg class="bc-lead" viewBox="0 0 610 458" aria-hidden="true">
+                  <polyline points="354,65 354,112 215,112 215,166" vector-effect="non-scaling-stroke" />
+                  <polyline points="252,393 252,279 275,279 275,230" vector-effect="non-scaling-stroke" />
+                  <g class="bc-dot"><circle cx="215" cy="174" r="7" /><circle cx="215" cy="174" r="3" /></g>
+                  <g class="bc-dot"><circle cx="275" cy="222" r="7" /><circle cx="275" cy="222" r="3" /></g>
                 </svg>
                 <div class="bc-call bc-call--cc" style="--x:56.1%; --y:14.1%; --d:.70s">
                   <div class="bc-call-in"><b data-short="춘천">춘천(예방 · 진단)</b><span>기업혁신파크, 강원대학교, 거두농공단지 등</span></div>
