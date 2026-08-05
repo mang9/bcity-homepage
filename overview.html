@@ -31,6 +31,7 @@
       --color-logo: #2c3e91;
       --scrim-rgb: 0 17 34;
       --navy-rgb: 0 39 66;
+      --primary-rgb: 52 65 152;
 
       /* DESIGN.md rounded 스케일 */
       --radius-sm: 8px;
@@ -143,27 +144,24 @@
 
     /* ===== 공통 섹션 ===== */
     .sec { padding: clamp(58px, 6.4vw, 112px) 0; }
-    .sec--navy { background: var(--color-navy); color: #fff; }
+    /* 밝은 변형 — 지도의 부드러운 그림자가 어두운 배경에서는 뭉개져 보인다.
+       #summary 는 페이지 배경(#F4F8FE)이므로 여기는 흰 면으로 구분한다 */
+    .sec--surface { background: var(--color-surface); border-block: 1px solid var(--color-line); }
     .eyebrow { display: flex; align-items: center; gap: 13px; font-size: 12.5px;
       letter-spacing: .2em; color: var(--color-text-muted); }
     .eyebrow i { display: block; width: 34px; height: 1px; background: var(--color-primary); opacity: .55; }
     .eyebrow b { font-weight: 700; color: var(--color-primary); }
-    .sec--navy .eyebrow { color: rgba(255,255,255,.7); }
-    .sec--navy .eyebrow i { background: rgba(255,255,255,.6); opacity: 1; }
-    .sec--navy .eyebrow b { color: #fff; }
     .h2 { margin: 20px 0 0; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(26px, 2.5vw, 42px); line-height: 1.32; letter-spacing: -.022em; }
     .h2 em { font-style: normal; color: var(--color-primary); }
-    .sec--navy .h2 em { color: var(--color-light-blue); }
     .lede { margin: 14px 0 0; font-size: clamp(15px, 1.05vw, 18px); color: var(--color-text-muted); }
-    .sec--navy .lede { color: rgba(255,255,255,.78); }
 
     /* ===== 사업개요 표 ===== */
     .spec { width: 100%; margin-top: clamp(34px, 3.4vw, 54px); border-top: 2px solid var(--color-primary);
       font-size: clamp(14.5px, 1vw, 16px); }
     .spec th, .spec td { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.4vw, 24px);
       text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
-    .spec thead th { padding-block: 13px; background: #e9f0fb; font-size: 13.5px;
+    .spec thead th { padding-block: 13px; background: rgb(var(--primary-rgb) / .08); font-size: 13.5px;
       font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
     .spec tbody th { width: clamp(104px, 13vw, 188px); font-weight: 600; color: var(--color-text-muted);
       background: rgba(255,255,255,.6); }
@@ -191,9 +189,9 @@
     .bc { margin-top: clamp(30px, 3.2vw, 52px); display: grid; gap: clamp(26px, 3vw, 46px);
       grid-template-columns: minmax(0, 1fr); }
     /* 첨부 시안의 좌측 세로 룰. 카드 액센트가 아니라 라벨 구분선이다 */
-    .bc-label { margin: 0; padding-left: 13px; border-left: 2px solid var(--color-light-blue);
+    .bc-label { margin: 0; padding-left: 13px; border-left: 2px solid var(--color-primary);
       font-family: var(--font-display); font-size: clamp(15px, 1.15vw, 19px); font-weight: 700;
-      line-height: 1.45; color: #fff; }
+      line-height: 1.45; color: var(--color-text); }
     .bc-maps { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(30px, 3.4vw, 52px); }
 
     .bc-panel { margin: 0; }
@@ -201,65 +199,79 @@
        패널을 기준으로 삼으면 퍼센트가 지도 밖으로 밀린다 → 프레임을 따로 둔다 */
     .bc-frame { position: relative; width: fit-content; margin-inline: auto; }
     .bc-frame img { width: 100%; height: auto; }
-    .bc-panel--kr .bc-frame { max-width: 430px; }
-    .bc-panel--gw .bc-frame { max-width: 560px; }
+    .bc-panel--kr .bc-frame { max-width: 500px; }
+    .bc-panel--gw .bc-frame { max-width: 610px; }
 
     /* 말풍선 */
     .bc-call { --x: 50%; --y: 50%; --d: 0s; }
     .bc-call-in { display: block; padding: 11px 15px; border-radius: var(--radius-sm);
       background: var(--color-surface); color: var(--color-text);
-      box-shadow: 0 10px 26px rgb(var(--scrim-rgb) / .34); }
+      border: 1px solid var(--color-line);
+      box-shadow: 0 8px 20px rgb(var(--navy-rgb) / .1); }
     .bc-call b { display: block; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(13.5px, 1vw, 15px); letter-spacing: -.01em; }
     .bc-call span { display: block; margin-top: 4px; font-size: clamp(12.5px, .9vw, 13.5px);
       line-height: 1.5; color: var(--color-text-muted); }
     /* 강조 말풍선 3종 */
-    .bc-call--key .bc-call-in, .bc-call--cc .bc-call-in { background: var(--color-primary); }
+    .bc-call--key .bc-call-in, .bc-call--cc .bc-call-in { background: var(--color-primary);
+      border-color: var(--color-primary); }
     .bc-call--key b, .bc-call--cc b { color: #fff; }
     .bc-call--key span, .bc-call--cc span { color: rgba(255,255,255,.84); }
-    .bc-call--hc .bc-call-in { background: var(--color-mint); }
+    .bc-call--hc .bc-call-in { background: var(--color-mint); border-color: var(--color-mint); }
     .bc-call--hc b { color: var(--color-navy); }
     .bc-call--hc span { color: rgb(var(--navy-rgb) / .82); }
+
+    /* 말풍선은 전 구간 지도 위에 겹쳐 띄운다.
+       좁은 화면에서는 설명을 접고 지역명만 남긴다(아래 1279px 블록) */
+    .bc-call { position: absolute; left: var(--x); top: var(--y); width: max-content;
+      max-width: 238px; z-index: 2;
+      opacity: 0; transform: translate(var(--tx, 0), calc(-50% + 14px)) scale(.97);
+      transition: opacity .6s ease var(--d), transform .7s cubic-bezier(.22,1,.36,1) var(--d); }
+    .bc-call--l { --tx: -100%; }
+    .in .bc-call { opacity: 1; transform: translate(var(--tx, 0), -50%) scale(1); }
 
     /* 리더 라인 — 강원 패널에서 말풍선과 시·군을 잇는다 */
     .bc-lead { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     /* 강원 지도가 흰색이라 흰 선은 안 보인다 — navy 를 옅게 쓴다.
        끝점 원은 파랑·민트 시군 위에 놓이므로 흰색을 유지한다 */
-    .bc-lead polyline { fill: none; stroke: rgb(var(--navy-rgb) / .4); stroke-width: 1.4; }
+    .bc-lead polyline { fill: none; stroke: rgb(var(--navy-rgb) / .3); stroke-width: 1.4; }
     .bc-lead circle { fill: #fff; }
 
     /* 지도 위에 겹쳐 띄우는 배치 — 1280px 이상에서만.
        1200~1279 에서는 칼럼이 좁아 오른쪽 말풍선이 섹션 밖으로 11px 삐져나온다(실측) */
     @media (min-width: 1280px) {
-      .bc { grid-template-columns: minmax(0, 168px) minmax(0, 1fr); gap: clamp(24px, 2.4vw, 44px);
+      .bc { grid-template-columns: minmax(0, 150px) minmax(0, 1fr); gap: clamp(20px, 2vw, 36px);
         align-items: start; }
-      .bc-maps { grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); align-items: center; }
-      .bc-panel--kr { padding: 0 clamp(36px, 4.2vw, 96px); }
-      .bc-call { position: absolute; left: var(--x); top: var(--y); width: max-content;
-        max-width: 238px; z-index: 2;
-        opacity: 0; transform: translate(var(--tx, 0), calc(-50% + 16px)) scale(.96);
-        transition: opacity .6s ease var(--d), transform .7s cubic-bezier(.22,1,.36,1) var(--d); }
-      .bc-call--l { --tx: -100%; }
-      .in .bc-call { opacity: 1; transform: translate(var(--tx, 0), -50%) scale(1); }
+      .bc-maps { grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); gap: clamp(24px, 2.8vw, 44px);
+        align-items: center; }
+      /* 이 패딩이 1280~1799 구간의 지도 크기를 결정한다(max-width 가 아니라).
+         말풍선은 지도 위로 겹치므로 좌우 예약 폭을 넉넉히 둘 필요가 없다 */
+      .bc-panel--kr { padding: 0 clamp(28px, 3.4vw, 84px); }
       /* 등장이 끝나면 아주 약하게 부유한다. transform 만 건드려 레이아웃을 다시 계산하지 않는다 */
       .in .bc-call-in { animation: bcFloat 5.5s ease-in-out infinite; animation-delay: calc(var(--d) + .9s); }
       @keyframes bcFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     }
-    /* 1279px 이하 — 겹치면 읽을 수 없으므로 지도 아래 목록으로 내린다 */
+    /* 1279px 이하 — 겹침은 유지하고 설명을 접어 지역명만 남긴다.
+       칼럼이 좁아 두 줄 설명까지 얹으면 지도를 다 덮는다 */
     @media (max-width: 1279px) {
-      .bc-lead { display: none; }
-      .bc-panel { display: grid; gap: 12px; }
       .bc-frame { width: auto; }
-      .bc-call { opacity: 0; transform: translateY(16px);
-        transition: opacity .6s ease var(--d), transform .7s cubic-bezier(.22,1,.36,1) var(--d); }
-      .in .bc-call { opacity: 1; transform: none; }
-      .bc-call-in { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-      .bc-call span { margin-top: 0; }
+      .bc-call { max-width: 48%; }
+      .bc-call-in { padding: 6px 10px; border-radius: 6px;
+        box-shadow: 0 4px 12px rgb(var(--navy-rgb) / .14); }
+      .bc-call b { font-size: clamp(10.5px, 2.3vw, 13px); letter-spacing: -.02em; white-space: nowrap; }
+      .bc-call span { display: none; }
+    }
+    /* 768px 이하 — 지역명을 짧게 바꿔 지도를 덜 가린다.
+       b 안의 원문은 남겨 두므로 스크린리더에는 전체 이름이 읽힌다 */
+    @media (max-width: 767px) {
+      .bc-call-in { padding: 5px 9px; }
+      .bc-call b[data-short] { font-size: 0; }
+      .bc-call b[data-short]::after { content: attr(data-short); font-size: 11px; }
     }
 
     .cl-detail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: clamp(12px, 1.2vw, 20px); margin-top: clamp(20px, 2vw, 30px); }
-    .cl-note { margin: clamp(22px, 2.2vw, 32px) 0 0; font-size: 12px; color: rgba(255,255,255,.5); }
+    .cl-note { margin: clamp(22px, 2.2vw, 32px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
     /* ===== 푸터 ===== */
     .foot { border-top: 1px solid var(--color-line); background: var(--color-bg);
@@ -447,7 +459,7 @@
     </section>
 
     <!-- ===== 2. 국가첨단전략산업 특화단지 ===== -->
-    <section class="sec sec--navy" id="cluster">
+    <section class="sec sec--surface" id="cluster">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>NATIONAL STRATEGY</b><span>특화단지 지정</span></p>
         <h2 class="h2 rv">정부가 보증하고 전폭적으로 지원하는 범국가적 프로젝트로<br /><em>2025년 바이오 분야 국가첨단전략산업 특화단지 지정</em></h2>
@@ -460,20 +472,20 @@
             <figure class="bc-panel bc-panel--kr rv">
               <div class="bc-frame">
                 <img src="assets/img/bio-cluster-kr.png" alt="바이오 분야 국가첨단전략산업 특화단지 5개 권역 위치" />
-                <div class="bc-call bc-call--key" style="--x:62%; --y:20.5%; --d:.05s">
-                  <div class="bc-call-in"><b>강원(춘천 · 홍천)</b><span>AI기반 신약개발 및 중소형 CDMO</span></div>
+                <div class="bc-call bc-call--key" style="--x:66.0%; --y:21.4%; --d:.05s">
+                  <div class="bc-call-in"><b data-short="강원">강원(춘천 · 홍천)</b><span>AI기반 신약개발 및 중소형 CDMO</span></div>
                 </div>
-                <div class="bc-call bc-call--l" style="--x:34%; --y:26%; --d:.18s">
-                  <div class="bc-call-in"><b>인천 · 경기 시흥</b><span>세계1위 바이오 메가 클러스터</span></div>
+                <div class="bc-call bc-call--l" style="--x:34.4%; --y:26.1%; --d:.18s">
+                  <div class="bc-call-in"><b data-short="인천 · 경기">인천 · 경기 시흥</b><span>세계1위 바이오 메가 클러스터</span></div>
                 </div>
-                <div class="bc-call bc-call--l" style="--x:41%; --y:46%; --d:.31s">
-                  <div class="bc-call-in"><b>대전(유성)</b><span>혁신 신약 오픈 이노베이션 거점</span></div>
+                <div class="bc-call bc-call--l" style="--x:40.4%; --y:47.6%; --d:.31s">
+                  <div class="bc-call-in"><b data-short="대전">대전(유성)</b><span>혁신 신약 오픈 이노베이션 거점</span></div>
                 </div>
-                <div class="bc-call" style="--x:72%; --y:45.5%; --d:.44s">
-                  <div class="bc-call-in"><b>경북(안동 · 포항)</b><span>국가 백신거점, 글로벌 백신허브</span></div>
+                <div class="bc-call" style="--x:74.8%; --y:46.8%; --d:.44s">
+                  <div class="bc-call-in"><b data-short="경북">경북(안동 · 포항)</b><span>국가 백신거점, 글로벌 백신허브</span></div>
                 </div>
-                <div class="bc-call bc-call--l" style="--x:32%; --y:69.5%; --d:.57s">
-                  <div class="bc-call-in"><b>전남(화순)</b><span>국가 백신 거점, 글로벌 백신 허브</span></div>
+                <div class="bc-call bc-call--l" style="--x:32.6%; --y:69.1%; --d:.57s">
+                  <div class="bc-call-in"><b data-short="전남">전남(화순)</b><span>국가 백신 거점, 글로벌 백신 허브</span></div>
                 </div>
               </div>
             </figure>
@@ -485,16 +497,16 @@
                 <!-- 리더 라인. viewBox 가 0~100 이라 좌표가 곧 지도 박스 기준 % 다.
                      끝점은 춘천시(34,39) · 홍천군(48,52) 실측 위치에 맞췄다 -->
                 <svg class="bc-lead" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                  <polyline points="56,18 56,30 34,30 34,36" vector-effect="non-scaling-stroke" />
-                  <circle cx="34" cy="37.5" r="1" />
+                  <polyline points="58,24 58,30 34.5,30 34.5,36.4" vector-effect="non-scaling-stroke" />
+                  <circle cx="34.5" cy="37.9" r="1" />
                   <polyline points="44,84 44,66 50,66 50,56" vector-effect="non-scaling-stroke" />
                   <circle cx="50" cy="54.5" r="1" />
                 </svg>
-                <div class="bc-call bc-call--cc" style="--x:56%; --y:14%; --d:.70s">
-                  <div class="bc-call-in"><b>춘천(예방 · 진단)</b><span>기업혁신파크, 강원대학교, 거두농공단지 등</span></div>
+                <div class="bc-call bc-call--cc" style="--x:56.1%; --y:14.1%; --d:.70s">
+                  <div class="bc-call-in"><b data-short="춘천">춘천(예방 · 진단)</b><span>기업혁신파크, 강원대학교, 거두농공단지 등</span></div>
                 </div>
-                <div class="bc-call bc-call--hc bc-call--l" style="--x:44%; --y:86%; --d:.83s">
-                  <div class="bc-call-in"><b>홍천(항체)</b><span>홍천 국가항체클러스터, 북방농공단지</span></div>
+                <div class="bc-call bc-call--hc bc-call--l" style="--x:43.9%; --y:85.9%; --d:.83s">
+                  <div class="bc-call-in"><b data-short="홍천">홍천(항체)</b><span>홍천 국가항체클러스터, 북방농공단지</span></div>
                 </div>
               </div>
             </figure>
