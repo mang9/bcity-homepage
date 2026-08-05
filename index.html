@@ -8,1057 +8,22 @@
 
   <!-- 오프라인 시연용: Tailwind·폰트를 CDN 대신 assets/vendor 의 로컬 파일로 쓴다.
        외부 네트워크 없이 동작한다. 원본 출처는 assets/vendor/README.md 참고. -->
+  <!-- 임계 폰트 preload — 없으면 CSS 파싱 후에야 폰트 요청이 시작된다(실측 121→234ms).
+       본문(Pretendard Regular)과 제목(Paperlogy 7 Bold)만 올린다. 나머지는 필요 시 자연 로드. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="assets/vendor/pretendard/Pretendard-Regular.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+        href="assets/vendor/paperlogy/Paperlogy-7Bold.woff2" />
   <link href="assets/vendor/inter/inter.local.css" rel="stylesheet" />
   <link href="assets/vendor/pretendard/pretendard.local.css" rel="stylesheet" />
   <!-- Paperlogy — --font-display 의 1순위. 이 링크가 없으면 스택이 Pretendard 로 폴백한다. -->
   <link href="assets/vendor/paperlogy/paperlogy.local.css" rel="stylesheet" />
-
-  <script src="assets/vendor/tailwind-browser-4.js"></script>
-
-  <!-- DESIGN.md 토큰을 일반 CSS로도 고정 선언.
-       Tailwind @theme 변수는 유틸리티 클래스로 쓰이지 않으면 제거되므로,
-       인라인 style의 var(--color-district-*) 참조가 무효화되는 것을 막는다. -->
-  <style>
-    :root {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
-      --color-navy: #002742;
-      --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
-      --color-light-blue: #bbccf0;
-      --color-bg: #f4f8fe;
-      --color-surface: #ffffff;
-      --color-text: #111111;
-      --color-text-muted: #5b6b82;
-      --color-line: #d8e3f2;
-      --color-district-ai: #344198;
-      --color-district-bio: #288074;
-      --color-district-food: #a1662b;
-      --color-district-mice: #337aa3;
-      --color-district-biz: #7758ad;
-      --color-district-housing: #877240;
-      --color-district-edu: #667d31;
-      --color-district-golf: #378152;
-
-      /* 토지이용계획도 면색 — assets/landuse/zone-0N.svg 의 fill 과 동일한 정본.
-         권역당 색상(Hue) 하나에서 파생한 밝은 톤(L 82~83%)이며 SVG 는 fill-opacity 0.85 로 얹는다.
-         ※ 번호 배지는 흰 번호 가독성(WCAG AA) 때문에 district(어두운 톤)를 쓴다 —
-           이 값들은 지도 정합용 참조 토큰이다. */
-      --color-zone-ai: #b6bdec;
-      --color-zone-bio: #b5eee6;
-      --color-zone-food: #f0d1b2;
-      --color-zone-mice: #b5d9ee;
-      --color-zone-housing: #e8dcc0;
-      --color-zone-edu: #dbeab8;
-      --color-zone-biz: #cfc1e7;
-      --color-zone-golf: #bae8cb;
-
-      /* 콘텐츠 컨테이너 폭 — 큰 화면에서 함께 커진다(§반응형) */
-      --wrap: 1320px;
-
-      /* 풀블리드 섹션의 좌우 여백 — 1320 컨테이너 라인에 맞춘다.
-         뷰포트가 컨테이너보다 좁아지면 calc 가 음수가 되어 하한(28px)에 붙어버렸다.
-         1024~1360 구간에서 여백이 28px 로 급락해 카피가 화면 끝에 붙던 문제(입지 섹션)를
-         막기 위해 하한 자체를 4.4vw 로 유동화한다 — 1024→45px, 1280→56px, 1440부터는 calc 승. */
-      --gut: max(clamp(28px, 4.4vw, 72px), calc((100vw - var(--wrap)) / 2 + 24px));
-    }
-
-    /* ===== 반응형: 큰 화면의 커스텀 프로퍼티 =====
-       ※ 이 미디어쿼리는 반드시 '평문 <style>' 안에 있어야 한다.
-         Tailwind 브라우저 빌드는 text/tailwindcss 블록을 캐스케이드 레이어로 출력하는데,
-         레이어 없는 선언(위 :root)이 레이어 안의 선언을 항상 이긴다. 그래서 이 블록을
-         tailwindcss 쪽에 두면 --wrap 이 영원히 1320px 로 남는다(실측 확인).
-         반대로 클래스 규칙(.ov-title 등)은 소스 순서를 따르므로 tailwindcss 블록 끝에 둔다. */
-    @media (min-width: 1800px) {
-      :root { --wrap: 1560px;
-        --text-hero: 82px; --text-h2: 64px; --text-h3: 44px; --text-card: 24px; }
-    }
-    @media (min-width: 2300px) {
-      :root { --wrap: 1720px;
-        --text-hero: 96px; --text-h2: 74px; --text-h3: 50px; --text-card: 26px; }
-    }
-  </style>
+  <!-- 스타일: src/css/app.css 를 고치고 `npm run build` 로 컴파일한다.
+       여기에 <style> 을 되살리지 말 것 — 토큰 캐스케이드가 깨진다. -->
+  <link rel="stylesheet" href="assets/css/app.css" />
 
   <!-- Design tokens: DESIGN.md -->
-  <style type="text/tailwindcss">
-    @theme {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
-      --color-navy: #002742;
-      --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
-      --color-light-blue: #bbccf0;
-      --color-bg: #f4f8fe;
-      --color-surface: #ffffff;
-      --color-text: #111111;
-      --color-text-muted: #5b6b82;
-      --color-line: #d8e3f2;
-      --color-district-ai: #344198;
-      --color-district-bio: #288074;
-      --color-district-food: #a1662b;
-      --color-district-mice: #337aa3;
-      --color-district-biz: #7758ad;
-      --color-district-housing: #877240;
-      --color-district-edu: #667d31;
-      --color-district-golf: #378152;
-
-      /* 토지이용계획도 면색 — assets/landuse/zone-0N.svg 의 fill 과 동일한 정본.
-         권역당 색상(Hue) 하나에서 파생한 밝은 톤(L 82~83%)이며 SVG 는 fill-opacity 0.85 로 얹는다.
-         ※ 번호 배지는 흰 번호 가독성(WCAG AA) 때문에 district(어두운 톤)를 쓴다 —
-           이 값들은 지도 정합용 참조 토큰이다. */
-      --color-zone-ai: #b6bdec;
-      --color-zone-bio: #b5eee6;
-      --color-zone-food: #f0d1b2;
-      --color-zone-mice: #b5d9ee;
-      --color-zone-housing: #e8dcc0;
-      --color-zone-edu: #dbeab8;
-      --color-zone-biz: #cfc1e7;
-      --color-zone-golf: #bae8cb;
-
-      --font-display: "Paperlogy", "Pretendard", "Noto Sans KR", sans-serif;
-      --font-body: "Inter", "Pretendard", sans-serif;
-
-      --text-hero: 68px;
-      --text-hero--line-height: 1.15;
-      --text-hero--letter-spacing: -0.025em;
-      --text-h2: 54px;
-      --text-h2--line-height: 1.2;
-      --text-h2--letter-spacing: -0.02em;
-      --text-h3: 38px;
-      --text-h3--line-height: 1.28;
-      --text-h3--letter-spacing: -0.015em;
-      --text-card: 22px;
-
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-    }
-    body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); }
-    .font-display { font-family: var(--font-display); }
-
-    /* ===== 페이징 스크롤 =====
-       주의: CSS scroll-snap은 시네마 섹션(sticky+스크럽)의 중간 스크롤을 건너뛰게 만들어
-       영상이 멈춘 것처럼 보이게 함. 페이징 느낌은 sticky 고정 + 도트 내비로 구현한다. */
-    html { scroll-behavior: smooth; }
-
-    /* ===== 로고 ===== */
-    .bcity-logo { height: 20px; width: auto; display: block; flex-shrink: 0; }
-    .bcity-logo-lg { height: 24px; }
-    /* 투명 헤더(영상 위)에서는 흰색 + 그림자, 흰 헤더에서는 브랜드 네이비 */
-    #gnb:not(.solid) .bcity-logo { color: #fff; filter: drop-shadow(0 1px 10px rgba(0,10,30,.55)); }
-    #gnb.solid .bcity-logo { color: #2C3E91; filter: none; }
-
-    /* ===== GNB ===== */
-    :root { --gnb-pad-top: 20px; }          /* GNB 상단 여백 */
-    #gnb nav { padding-top: var(--gnb-pad-top); }
-    #gnb { background: transparent; border-color: transparent; }
-    #gnb .gnb-logo, #gnb .gnb-link, #gnb .gnb-lang, #gnb .gnb-sns { color: #fff; }
-    #gnb .gnb-link:hover { color: var(--color-light-blue); }
-    /* 스크롤해도 배경은 넣지 않는다 (투명 유지) — 글자 색만 바뀐다.
-       배경은 메가메뉴를 펼칠 때만 깔린다. */
-    #gnb.solid { background: rgba(244,248,254,.97); backdrop-filter: blur(10px);
-      border-color: var(--color-line); box-shadow: 0 2px 24px rgba(0,10,30,.06); }
-    #gnb.open { background: rgba(255,255,255,.97); backdrop-filter: blur(10px); border-color: var(--color-line); }
-    #gnb.solid .gnb-logo { color: var(--color-primary); }
-    #gnb.solid .gnb-link { color: var(--color-text); }
-    #gnb.solid .gnb-link:hover { color: var(--color-primary); }
-    #gnb.solid .gnb-lang, #gnb.solid .gnb-sns { color: var(--color-text-muted); }
-    #gnb.solid .gnb-burger { color: var(--color-text); }
-    #gnb:not(.solid) .gnb-logo, #gnb:not(.solid) .gnb-link,
-    #gnb:not(.solid) .gnb-lang, #gnb:not(.solid) .gnb-sns { text-shadow: 0 1px 10px rgba(0,10,30,.55); }
-    #gnb .gnb-burger { color: #fff; }
-    #gnb nav { align-items: flex-start; }
-    #gnb .gnb-item { display: flex; flex-direction: column; width: 168px; }
-    /* 3단(하위의 하위) 항목 들여쓰기 */
-    #gnb .gnb-sub a.gnb-sub2 { display: flex; align-items: center; gap: 7px; padding-left: 10px; font-size: 13px; }
-    #gnb .gnb-tick { display: inline-block; width: 7px; height: 1px; background: currentColor; opacity: .5; flex-shrink: 0; }
-
-    /* 독립 CTA (헤더) */
-    .cta-ghost, .cta-solid { display: inline-flex; align-items: center; white-space: nowrap;
-      border-radius: 999px; font-size: 13px; font-weight: 700; padding: 9px 17px;
-      transition: background .25s, color .25s, border-color .25s, transform .25s; }
-    .cta-ghost { border: 1px solid rgba(255,255,255,.55); color: #fff; }
-    .cta-ghost:hover { background: rgba(255,255,255,.16); transform: translateY(-1px); }
-    .cta-solid { background: var(--color-mint); color: var(--color-navy); }
-    .cta-solid:hover { filter: brightness(.95); transform: translateY(-1px); }
-    #gnb.solid .cta-ghost { border-color: var(--color-line); color: var(--color-primary); }
-    #gnb.solid .cta-ghost:hover { background: var(--color-bg); border-color: var(--color-primary); }
-    #gnb.solid .cta-solid { background: var(--color-primary); color: #fff; }
-    #gnb .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
-      transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
-    #gnb.open .gnb-sub { max-height: 460px; opacity: 1; padding-top: 24px; padding-bottom: 30px; }
-    #gnb .gnb-sub a { display: block; padding: 6px 0; white-space: nowrap; font-weight: 400;
-      color: var(--color-text-muted); transition: color .15s; }
-    #gnb .gnb-sub a:hover { color: var(--color-primary); }
-    #gnb .gnb-divider { position: absolute; left: 0; right: 0; top: calc(64px + var(--gnb-pad-top, 20px)); height: 1px;
-      background: var(--color-line); opacity: 0; transition: opacity .28s ease; }
-    #gnb.open .gnb-divider { opacity: 1; }
-
-    /* ===== 모바일 메뉴 ===== */
-    #mobileNav { transition: opacity .3s ease, visibility .3s ease; }
-    #mobileNav.hidden-nav { opacity: 0; visibility: hidden; pointer-events: none; }
-    #mobileNav .m-panel { transition: transform .3s cubic-bezier(.22,1,.36,1); }
-    #mobileNav.hidden-nav .m-panel { transform: translateX(100%); }
-    .m-sub { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-    .m-acc.open .m-sub { max-height: 520px; }
-    .m-acc.open .m-caret { transform: rotate(180deg); }
-    .m-caret { transition: transform .3s ease; }
-
-    /* ===== 타이포 연출 ===== */
-    .hero-shadow { text-shadow: 0 2px 18px rgba(0,10,30,.5), 0 1px 3px rgba(0,10,30,.35); }
-    @keyframes heroUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
-    .anim { opacity: 0; animation: heroUp .9s cubic-bezier(.22,1,.36,1) forwards; }
-    .reveal { opacity: 0; transform: translateY(28px);
-      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
-    .reveal.in { opacity: 1; transform: none; }
-    .lr .lr-line { display: block; overflow: hidden; }
-    .lr .lr-inner { display: inline-block; transform: translateY(112%);
-      transition: transform .85s cubic-bezier(.22,1,.36,1); }
-    .lr.in .lr-inner { transform: none; }
-
-    /* ===== 입지 (LOCATION) — 밝은 배경 변형 ===== */
-    /* .ov 프레임(아이브로우·자세히보기·세로라벨)을 밝은 배경용 색으로 덮는다 */
-    .ov--light .cine-stage { color: var(--color-text); }
-    .ov--light .ov-eyebrow { color: var(--color-text-muted); }
-    .ov--light .ov-eyebrow b { color: var(--color-primary); }
-    .ov--light .ov-rule { background: var(--color-primary); opacity: .5; }
-    .ov--light .ov-more { color: var(--color-text); border-color: var(--color-line); }
-    .ov--light .ov-more:hover { border-color: var(--color-primary); color: var(--color-primary); }
-
-    /* 우측 세로 라벨 + 페이지 점 */
-
-    /* 2단 그리드 — 지도 좌측 / 카피 우측 */
-    /* 지도는 좌측 끝까지 붙이고(풀블리드) 우측 카피만 컨테이너 라인을 지킨다.
-       지도 폭을 세로 예산에서 직접 계산해 그리드 auto의 순환 의존을 피한다. */
-    .lo-grid { position: absolute; inset: 0; z-index: 3;
-      --lo-pad-t: 128px; --lo-pad-b: 112px; --lo-cap: 30px;   /* 상·하 패딩 + 각주 */
-      --lo-map-h: calc(100vh - var(--lo-pad-t) - var(--lo-pad-b) - var(--lo-cap));
-      display: grid; align-items: center; gap: clamp(28px, 3.2vw, 60px);
-      /* 우측 카피가 좁아지지 않게 지도 폭을 50vw로 제한한다 */
-      grid-template-columns: minmax(0, min(calc(var(--lo-map-h) * 16 / 9), 50vw)) minmax(0, 1fr);
-      width: 100%; margin: 0;
-      padding: var(--lo-pad-t) var(--gut) var(--lo-pad-b) 0; }
-    .lo-copy { position: relative; height: 100%; display: flex; flex-direction: column;
-      justify-content: center; }
-    .lo-copy .cine-page { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); }
-    .lo-copy .cine-page.on { position: relative; top: auto; transform: none; }
-
-    /* 큰 고스트 번호 */
-    .lo-no { font-family: var(--font-display); font-size: clamp(44px, 4.4vw, 68px);
-      font-weight: 700; line-height: 1; letter-spacing: -.03em; color: #b9c0e0; }
-    .lo-title { margin-top: 18px; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(30px, 3.5vw, 54px); line-height: 1.24; letter-spacing: -.025em;
-      color: var(--color-text); }
-    .lo-desc { margin-top: 22px; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.7;
-      color: var(--color-text-muted); }
-    /* 값 배지 */
-    .lo-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
-    .lo-pill { display: inline-flex; align-items: baseline; gap: 7px;
-      padding: 10px 20px; border: 1px solid var(--color-line); border-radius: 999px;
-      background: var(--color-surface); font-size: 13px; color: var(--color-text-muted);
-      transition: border-color .25s, color .25s; }
-    .lo-pill b { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--color-primary); }
-    .lo-pill:hover { border-color: var(--color-primary); color: var(--color-text); }
-    .lo-pill--on { border-color: var(--color-primary); background: var(--color-primary); color: #fff; font-weight: 700; }
-
-    /* 하단 페이지 탭 */
-    .lo-tabs { position: absolute; left: 0; bottom: -18px; display: flex; flex-wrap: wrap; gap: 26px; }
-    .lo-tab { position: relative; display: inline-flex; align-items: baseline; gap: 8px;
-      padding-bottom: 12px; font-size: 13.5px; letter-spacing: .01em;
-      color: var(--color-text-muted); transition: color .25s; }
-    .lo-tab b { font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; }
-    .lo-tab::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
-      background: var(--color-line); }
-    .lo-tab::before { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
-      background: var(--color-primary); transition: width .45s cubic-bezier(.22,1,.36,1); z-index: 1; }
-    .lo-tab:hover { color: var(--color-text); }
-    .lo-tab.is-on { color: var(--color-primary); font-weight: 700; }
-    .lo-tab.is-on::before { width: 100%; }
-    /* 지도 컬럼 — 각주가 지도 바로 아래 붙는다 */
-    .lo-mapcol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-    .lo-note { align-self: stretch; text-align: right;
-      font-size: 11.5px; line-height: 1.5; color: var(--color-text-muted); }
-
-    @media (max-width: 1023px) {
-      /* width:calc(100vw-44px) + padding 0 이면 여백 44px 가 전부 우측으로 가고
-         카피가 화면 왼쪽 끝에 붙는다(.lo-title x=0). 폭은 100% 로 두고 좌우
-         패딩을 --gut 으로 대칭 확보한다. */
-      .lo-grid { position: relative; inset: auto; grid-template-columns: 1fr;
-        width: 100%; padding: 88px var(--gut) 72px; gap: 24px; }
-      /* ⚠ .cine-stage 는 height:100vh + overflow:hidden 이고 모바일 분기가 없다.
-         지도는 aspect-ratio 16/9 · width 100% 라 폭에 비례해 커져서(1023px 에서 554px)
-         패딩+카피+탭을 더하면 100vh 를 넘고 카피가 통째로 잘렸다(1023×713 에서 411px 초과).
-         100vh 예산에서 나머지를 뺀 값으로 상한을 둔다. max-height 만 주면 폭은 100% 를
-         유지하지만 .lm-bg/.lm-fg 의 object-fit:contain 과 .lm-svg 의 xMidYMid meet 이
-         똑같이 레터박싱하므로 경로 오버레이 정합은 그대로 유지된다. */
-      .lm { max-height: calc(100vh - 588px); min-height: 148px; }
-      .lo-copy .cine-page { position: absolute; top: 0; transform: none; }
-      .lo-copy .cine-page.on { position: relative; }
-      .lo-tabs { position: relative; bottom: auto; margin-top: 26px; gap: 18px; }
-    }
-    /* 세로가 짧은 창(노트북 창을 줄인 경우 등) — 지도가 이미 min-height 148px 라
-       더 줄일 수 없으므로 패딩·간격에서 58px 를 회수한다. */
-    @media (max-width: 1023px) and (max-height: 720px) {
-      .lo-grid { padding: 64px var(--gut) 52px; gap: 18px; }
-      .lo-tabs { margin-top: 18px; }
-    }
-    /* 아이폰 SE 급(가용 높이 ~613px) — 각주를 접고 고스트 번호·제목을 한 단 줄인다.
-       지도는 min-height 에 걸려 있어 여기서 더 회수할 곳이 카피뿐이다. */
-    @media (max-width: 1023px) and (max-height: 640px) {
-      .lo-grid { padding: 48px var(--gut) 40px; gap: 14px; }
-      .lo-note { display: none; }
-      .lo-no { font-size: 32px; }
-      .lo-title { font-size: 26px; margin-top: 10px; }
-      .lo-tabs { margin-top: 14px; }
-    }
-
-    /* ===== 입지 지도 · 경로 모션그래픽 =====
-       좌표계는 배경 이미지 픽셀 공간(1671×949)이라 선/글자 크기도 그 기준이다. */
-    .lm { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; }
-    .lm-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-    /* 전경 레이어 — 배경과 같은 프레임에 정렬돼 있어 같은 규칙을 쓴다 */
-    .lm-fg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
-      pointer-events: none; }
-    .lm-svg { position: relative; display: block; width: 100%; height: 100%; }
-
-    .lm-g { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility .45s; }
-    .lm-g.on { opacity: 1; visibility: visible; }
-    /* 경로 — 옅은 밑선 위로 마커가 지나가며 진한 선이 이어진다.
-       dash 애니메이션에는 filter를 쓰지 않는다(매 프레임 재필터 = 깜빡임·부하). */
-    .lm-base { fill: none; stroke: #BBD0EE; stroke-width: 6; stroke-linecap: round; }
-    .lm-path { fill: none; stroke: #2B6DEF; stroke-width: 7; stroke-linecap: round; }
-    .lm-path--rail { stroke: var(--color-mint); }
-    /* travel — 이미지에 이미 그려진 노선 위를 밝은 구간이 지나가며 '이동'을 나타낸다 */
-    .lm-path--comet { stroke: #EAF3FF; stroke-width: 9; stroke-linecap: round; }
-    /* 선을 끌고 가는 라운드 마커 — 외곽 글로우 + 흰 코어 */
-    .lm-glow { fill: #2B6DEF; opacity: 0; }
-    .lm-head { fill: #fff; stroke: #2B6DEF; stroke-width: 5; opacity: 0; }
-    /* 경로 끝점 — 받침대에 살짝 걸치는 작은 라운드 점. 선이 끊겨 보이지 않게 접점을 만든다. */
-    .lm-cap-dot { fill: #2B6DEF; }
-    /* 지점 */
-    .lm-node { opacity: 0; transform: scale(.4); transform-box: fill-box; transform-origin: center;
-      transition: opacity .45s ease, transform .6s cubic-bezier(.34,1.5,.64,1); }
-    .lm-g.on .lm-node { opacity: 1; transform: none; }
-    .lm-ring { fill: var(--color-surface); stroke: var(--color-primary); stroke-width: 5; }
-    .lm-core { fill: var(--color-primary); }
-    .lm-name { font-family: var(--font-body); font-size: 32px; font-weight: 700;
-      fill: var(--color-text); }
-    /* 소요시간 배지 — 경로 위 (예전 방식) */
-    .lm-tag { opacity: 0; transition: opacity .5s ease; }
-    .lm-g.on .lm-tag { opacity: 1; }
-    .lm-tag rect { fill: var(--color-primary); }
-    .lm-tag text { font-family: var(--font-display); font-size: 26px; font-weight: 700; fill: #fff; }
-    /* 허브 */
-    .lm-hub circle.h1 { fill: var(--color-mint); opacity: .2;
-      animation: lmHub 2.8s cubic-bezier(.22,1,.36,1) infinite;
-      transform-box: fill-box; transform-origin: center; }
-    .lm-hub circle.h2 { fill: var(--color-primary); }
-    .lm-hub text { font-family: var(--font-display); font-size: 30px; font-weight: 700;
-      fill: var(--color-primary); }
-    @keyframes lmHub { 0% { transform: scale(1); opacity: .32; } 70%,100% { transform: scale(2.1); opacity: 0; } }
-
-    @media (prefers-reduced-motion: reduce) {
-      .lm-path, .lm-node, .lm-tag, .lm-g { transition: none; }
-      .lm-path { stroke-dashoffset: 0; }
-      .lm-hub circle.h1 { animation: none; }
-    }
-
-    /* ===== 존 오버뷰 · 토지이용계획도 ===== */
-    .az-grid { display: grid; align-items: start; gap: clamp(28px, 3vw, 56px);
-      grid-template-columns: minmax(0, 1fr); }
-    @media (min-width: 1024px) {
-      /* 카드는 좁게 좌측, 지도는 우측 고정 폭 */
-      .az-grid { grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 420px); }
-    }
-    /* 지도: 베이스 + 권역 레이어를 같은 박스에 겹친다 */
-    .az-map { position: relative; aspect-ratio: 462 / 577; width: 100%; }
-    .az-map img { position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: contain; pointer-events: none; }
-    /* 베이스 래스터는 원본 SVG가 preserveAspectRatio="none" 으로 깔던 것이라 그대로 늘린다 */
-    .az-map-plate, .az-map-base { object-fit: fill; }
-    /* 흰 바탕판 — 알파는 그대로 두고 모든 색을 흰색으로 (지도 실루엣) */
-    .az-map-plate { filter: brightness(0) invert(1)
-      drop-shadow(0 18px 40px rgba(0,10,30,.5)); }
-    .az-map-hl { opacity: 0; transition: opacity .3s ease; }
-    .az-map-hl.on { opacity: 1; }
-    /* 권역이 선택되면 베이스는 살짝 눌러 강조를 살린다 */
-    .az-map.is-on .az-map-base { opacity: .55; transition: opacity .3s ease; }
-    /* 면책 문구 — 좌측 권역부지 합계 박스 아래 */
-    .az-note { margin-top: 14px; font-size: 12px; line-height: 1.65;
-      color: rgba(255,255,255,.45); text-indent: -1em; padding-left: 1em; }
-    /* 선택된 카드 강조 */
-    .az-card { cursor: pointer; outline: none; }
-    .az-card.is-on { background: rgba(0,39,66,.82); border-color: rgba(255,255,255,.45);
-      transform: translateY(-6px); }
-    @media (max-width: 1023px) {
-      .az-map { max-width: 340px; margin: 8px auto 0; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .az-map-hl, .az-map.is-on .az-map-base { transition: none; }
-    }
-
-    /* ===== 사업개요 (OVERVIEW) ===== */
-    .ov .cine-stage { color: #fff; }
-    /* 상단 좌 라벨 */
-    .ov-eyebrow { position: absolute; left: var(--gut); top: 74px; z-index: 4;
-      display: flex; align-items: center; gap: 14px;
-      font-size: 12.5px; letter-spacing: .22em; color: rgba(255,255,255,.72); }
-    .ov-eyebrow b { font-weight: 700; color: #fff; }
-    .ov-rule { display: block; width: 0; height: 1px; background: rgba(255,255,255,.55);
-      transition: width .9s cubic-bezier(.22,1,.36,1) .2s; }
-    .ov.in .ov-rule { width: 42px; }
-    /* 상단 우 링크 */
-    .ov-more { position: absolute; right: var(--gut); top: 70px; z-index: 4;
-      display: inline-flex; align-items: center; gap: 12px; padding-bottom: 7px;
-      font-size: 14px; font-weight: 700; color: #fff;
-      border-bottom: 1px solid rgba(255,255,255,.45); transition: border-color .25s, gap .3s; }
-    .ov-more svg { width: 19px; height: 19px; transition: transform .4s cubic-bezier(.22,1,.36,1); }
-    .ov-more:hover { border-color: #fff; }
-    .ov-more:hover svg { transform: translateX(5px); }
-    /* 우측 세로 라벨 */
-    /* 중앙 카피 */
-    .ov-center { position: absolute; left: 0; right: 0; top: 30%; z-index: 3;
-      padding: 0 24px; text-align: center; }
-    .ov-center .cine-page { position: absolute; left: 0; right: 0; top: 0; }
-    .ov-center .cine-page.on { position: relative; }
-    .ov-title { font-family: var(--font-display); font-weight: 700; line-height: 1.22;
-      letter-spacing: -.025em; font-size: clamp(30px, 3.6vw, 56px); }
-    /* 줄 단위 마스크 리빌 — 페이지가 바뀔 때마다 다시 재생된다 */
-    .ov-line { display: block; overflow: hidden; }
-    .ov-line > span { display: inline-block; transform: translateY(106%);
-      transition: transform .95s cubic-bezier(.22,1,.36,1); }
-    .cine-page.on .ov-line > span { transform: none; }
-    .cine-page.on .ov-line:nth-child(1) > span { transition-delay: .06s; }
-    .cine-page.on .ov-line:nth-child(2) > span { transition-delay: .2s; }
-    .ov-title em { font-style: normal; color: var(--color-light-blue); }
-    .ov-em { color: var(--color-light-blue); }
-    /* 720px — 강제 개행한 1행(최대 697px @17px)이 다시 접히지 않을 최소치보다 여유를 뒀다 */
-    .ov-desc { max-width: 720px; margin: 26px auto 0; font-size: clamp(14px, 1.05vw, 17px);
-      line-height: 1.95; color: rgba(255,255,255,.86); word-break: keep-all; }
-    /* 페이지 인디케이터 — 가는 대시 */
-    .ov .cine-dots { bottom: auto; top: 66%; flex-direction: row; gap: 14px; }
-    .ov .cine-dots i { width: 26px; height: 2px; border-radius: 2px; background: rgba(255,255,255,.32);
-      transition: width .5s cubic-bezier(.22,1,.36,1), background .4s; }
-    .ov .cine-dots i.on { width: 54px; background: #fff; }
-    /* 하단 지표 */
-    .ov-stats { position: absolute; left: 50%; bottom: 78px; z-index: 4; margin: 0;
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      width: min(1272px, calc(100vw - 56px)); transform: translateX(-50%);
-      border-top: 1px solid rgba(255,255,255,.18); }
-    .ov-stat { padding: 30px 12px 0 34px; opacity: 0; transform: translateY(18px);
-      transition: opacity .8s ease, transform .9s cubic-bezier(.22,1,.36,1); }
-    .ov-stat + .ov-stat { border-left: 1px solid rgba(255,255,255,.18); }
-    .ov.in .ov-stat { opacity: 1; transform: none; }
-    .ov.in .ov-stat:nth-child(1) { transition-delay: .35s; }
-    .ov.in .ov-stat:nth-child(2) { transition-delay: .47s; }
-    .ov.in .ov-stat:nth-child(3) { transition-delay: .59s; }
-    .ov.in .ov-stat:nth-child(4) { transition-delay: .71s; }
-    .ov-stat dt { display: flex; align-items: baseline; gap: 7px; font-family: var(--font-display); }
-    .ov-stat dt b { font-size: clamp(30px, 2.6vw, 42px); font-weight: 700; letter-spacing: -.02em; color: #fff; }
-    .ov-stat dt span { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.9); }
-    .ov-stat dd { margin: 10px 0 0; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,.62); }
-    /* PC 에서는 래퍼가 박스를 만들지 않아 인디케이터·지표가 각자 절대배치를 유지한다 */
-    .ov-bottom { display: contents; }
-
-    @media (max-width: 1023px) {
-      .ov-eyebrow { left: 22px; top: 84px; }
-      .ov-more { right: 22px; top: 80px; font-size: 13px; }
-      .ov-center { top: 24%; }
-      /* 인디케이터를 지표 위에 세로로 쌓는다. 지표 높이(2열 2행 = 222px)가 바뀌어도 겹치지 않는다 */
-      .ov-bottom { display: flex; flex-direction: column; align-items: center; gap: 20px;
-        position: absolute; left: 50%; bottom: 40px; z-index: 4;
-        width: calc(100vw - 36px); transform: translateX(-50%); }
-      .ov .cine-dots { position: static; left: auto; top: auto; bottom: auto; transform: none; }
-      .ov-stats { position: static; left: auto; bottom: auto; transform: none;
-        width: 100%; grid-template-columns: repeat(2, 1fr); border-top: 0; gap: 0; }
-      .ov-stat { padding: 18px 10px 18px 18px; border-top: 1px solid rgba(255,255,255,.18); }
-      .ov-stat:nth-child(odd) { border-left: 0; }
-    }
-    /* 낮은 화면: 카피(위)와 인디케이터+지표(아래)가 같은 높이를 다툰다.
-       카피 위치는 그대로 두고 하단 스택만 조여서 인디케이터가 항상 텍스트 아래에 남게 한다.
-       (.ov-center 를 위로 올리면 상단 섹션 라벨과 부딪힌다 — 최소 여백이 그쪽이 더 빡빡하다) */
-    @media (max-width: 1023px) and (max-height: 800px) {
-      .ov-bottom { gap: 14px; bottom: 30px; }
-      .ov-stat { padding: 13px 10px 13px 16px; }
-    }
-    @media (max-width: 1023px) and (max-height: 680px) {
-      .ov-bottom { gap: 12px; bottom: 22px; }
-      .ov-stat { padding: 11px 8px 11px 14px; }
-      .ov-stat dt b { font-size: 26px; }
-      .ov-stat dd { margin-top: 6px; font-size: 11.5px; }
-    }
-    /* 가로 모드 수준의 극단적 저높이 — 여기서는 지표 설명을 접어야 카피가 산다 */
-    @media (max-width: 1023px) and (max-height: 520px) {
-      .ov-desc { margin-top: 14px; line-height: 1.7; }
-      .ov-bottom { gap: 10px; bottom: 16px; }
-      .ov-stat { padding: 8px 8px 8px 12px; }
-      .ov-stat dt b { font-size: 22px; }
-      .ov-stat dd { display: none; }
-    }
-    /* 휴대폰 가로 모드(높이 400px 미만). 헤더 80px 를 빼면 250px 남짓에
-       라벨·카피·인디케이터·지표를 모두 넣어야 한다.
-       지표를 2열 2행에서 4열 1행으로 되돌려 높이를 절반으로 줄이고 설명을 살린다 */
-    @media (max-width: 1023px) and (max-height: 400px) {
-      .ov-eyebrow { top: 62px; letter-spacing: .16em; }
-      .ov-more { top: 58px; font-size: 12px; }
-      .ov-center { top: 94px; }
-      .ov-title { font-size: 20px; }
-      /* 12px 이면 문장 전체가 한 줄(675px)로 붙어 화면 폭에 꽉 차 보인다 — 2줄로 나눈다 */
-      .ov-desc { max-width: 520px; margin-top: 8px; font-size: 12px; line-height: 1.55; }
-      .ov-bottom { gap: 11px; bottom: 8px; }
-      .ov-stats { grid-template-columns: repeat(4, 1fr); }
-      .ov-stat { padding: 6px 6px 6px 9px; }
-      .ov-stat dt { gap: 4px; }
-      .ov-stat dt b { font-size: 16px; }
-      .ov-stat dt span { font-size: 10.5px; }
-      .ov-stat dd { display: block; margin-top: 3px; font-size: 9.5px; line-height: 1.35; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .ov-rule { width: 42px; transition: none; }
-      .ov-stat { opacity: 1; transform: none; transition: none; }
-      .ov-line > span { transform: none; transition: none; }
-    }
-
-    /* ===== 문의하기 폼 ===== */
-    .ct-form { display: flex; flex-direction: column; gap: 22px; padding-bottom: 32px; }
-    .ct-row { display: block; }
-    .ct-label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; color: var(--color-text); }
-    /* 관심분야: 라벨 옆에 선택 버튼을 한 줄로 → 세로 공간 절약
-       (.ct-row 와 명시도가 같으므로 반드시 뒤에 와야 display:flex 가 적용된다) */
-    .ct-row--inline { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
-    .ct-row--inline .ct-label { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; }
-    .ct-row--inline .ct-chips { flex: 1 1 auto; }
-    .ct-row--inline .ct-err { flex: 1 1 100%; margin-top: 0; }
-    .ct-req { color: var(--color-mint); }
-    .ct-input { width: 100%; padding: 14px 16px; font-size: 15px; color: var(--color-text);
-      background: var(--color-surface); border: 1px solid var(--color-line);
-      border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
-    .ct-input::placeholder { color: #9aa8bb; }
-    .ct-input:focus { outline: none; border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(52,65,152,.12); }
-    .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
-    /* 관심분야 칩 */
-    .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
-    .ct-chip { position: relative; cursor: pointer; }
-    .ct-chip input { position: absolute; opacity: 0; width: 0; height: 0; }
-    .ct-chip span { display: inline-flex; align-items: center; padding: 10px 18px;
-      font-size: 14px; font-weight: 600; color: var(--color-text-muted);
-      background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 999px;
-      transition: background .22s, color .22s, border-color .22s; }
-    .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
-    .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(52,65,152,.18); }
-    /* 동의 */
-    .ct-agree { display: flex; flex-direction: column; gap: 10px;
-      padding: 18px 22px; background: var(--color-bg);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
-    .ct-check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer;
-      font-size: 14px; line-height: 1.55; color: var(--color-text); }
-    .ct-check input { flex-shrink: 0; width: 19px; height: 19px; margin-top: 1px;
-      accent-color: var(--color-primary); cursor: pointer; }
-    .ct-tag { margin-right: 6px; padding: 2px 8px; border-radius: 999px;
-      font-size: 11px; font-weight: 700; vertical-align: 1.5px; }
-    .ct-tag--req { background: var(--color-primary); color: #fff; }
-    .ct-tag--opt { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
-    .ct-view { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-muted);
-      text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 2px; }
-    .ct-view:hover { color: var(--color-primary); text-decoration-color: currentColor; }
-    /* 에러 */
-    .ct-err { display: none; margin-top: 8px; font-size: 13px; font-weight: 600; color: #d8564f; }
-    .ct-err.on { display: block; }
-    .ct-input.bad { border-color: #d8564f; box-shadow: 0 0 0 3px rgba(216,86,79,.12); }
-    /* 버튼 — 우측 안내 컬럼 하단.
-       컬럼이 그리드 행 높이만큼 늘어나므로 sticky로 스크롤 내내 붙어 있는다. */
-    .ct-actions { position: sticky; bottom: 0; margin-top: auto;
-      display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 32px;   /* 좌측 폼과 동일한 32px */
-      background: linear-gradient(180deg, rgba(255,255,255,0) 0, var(--color-surface) 14px); }
-    .ct-actions .ct-submit, .ct-actions .ct-reset { flex: 1 1 0; min-width: 116px;
-      padding: 15px 18px; }
-    .ct-actions .ct-status { flex: 1 1 100%; margin: 0; }
-    .ct-submit, .ct-reset { padding: 16px 40px; border-radius: 999px;
-      font-size: 15px; font-weight: 700; transition: background .25s, color .25s, border-color .25s, transform .3s; }
-    .ct-submit { background: var(--color-primary); color: #fff; }
-    .ct-submit:hover { background: var(--color-primary-hover); transform: translateY(-2px); }
-    .ct-submit[disabled] { opacity: .6; pointer-events: none; }
-    .ct-reset { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
-    .ct-reset:hover { border-color: var(--color-primary); color: var(--color-primary); }
-    .ct-status { display: none; font-size: 14px; font-weight: 600; }
-    .ct-status.on { display: block; }
-    .ct-status.ok { color: #1a8f74; }
-    .ct-status.ng { color: #d8564f; }
-    /* 우측 안내 */
-    .ct-side { display: flex; flex-direction: column; gap: 14px; }  /* 그리드 기본 stretch로 행 전체 높이 */
-    .ct-card { padding: 22px 24px; background: var(--color-bg);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
-    .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--color-azure); }
-    .ct-card-a { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--color-primary); }
-    .ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
-    .ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
-    .ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
-      font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
-    .ct-steps li { counter-increment: s; position: relative; padding-left: 26px; }
-    .ct-steps li + li { margin-top: 9px; }
-    .ct-steps li::before { content: counter(s); position: absolute; left: 0; top: 0;
-      display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
-      background: var(--color-primary); color: #fff; font-size: 10.5px; font-weight: 700; }
-    .ct-card-note { padding: 0 4px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
-    /* 모바일: 1단으로 스택되면 컬럼 높이가 콘텐츠에 딱 맞아 sticky가 의미 없다 */
-    @media (max-width: 1023px) {
-      .ct-actions { position: static; margin-top: 8px; padding-bottom: 0; background: none; }
-    }
-
-    /* ===== 개인정보 수집·이용약관 모달 ===== */
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-    .pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
-    .pv[hidden] { display: none; }
-    .pv-back { position: absolute; inset: 0; background: rgba(0,39,66,.55); backdrop-filter: blur(4px);
-      opacity: 0; transition: opacity .3s ease; }
-    .pv.on .pv-back { opacity: 1; }
-    .pv--wide .pv-panel { max-width: 1040px; }
-    .pv-panel { position: relative; display: flex; flex-direction: column; overflow: hidden;
-      width: 100%; max-width: 720px; max-height: min(86vh, 860px);
-      max-height: min(86dvh, 860px);          /* 모바일 주소창 높이 변화 대응 */
-      background: var(--color-surface); border: 1px solid var(--color-line);
-      border-radius: var(--radius-lg, 16px); box-shadow: 0 30px 80px rgba(0,10,30,.3);
-      opacity: 0; transform: translateY(18px) scale(.98);
-      transition: opacity .32s ease, transform .42s cubic-bezier(.22,1,.36,1); }
-    .pv.on .pv-panel { opacity: 1; transform: none; }
-    .pv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
-      padding: 26px 28px 20px; border-bottom: 1px solid var(--color-line); }
-    .pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
-      border-radius: 999px; color: var(--color-text-muted);
-      transition: background .22s, color .22s; }
-    .pv-x svg { width: 20px; height: 20px; }
-    .pv-x:hover { background: var(--color-bg); color: var(--color-text); }
-    /* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
-       overflow-y:auto가 동작하지 않고 패널 밖으로 내용이 넘쳐 잘린다. */
-    .pv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
-      padding: 24px 28px 0; -webkit-overflow-scrolling: touch; }
-    .pv-sec { margin-top: 26px; }
-    .pv-sec--last { padding-bottom: 8px; }
-    .pv-h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 11px;
-      font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-text); }
-    .pv-tag { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
-    .pv-tag--req { background: var(--color-primary); color: #fff; }
-    .pv-tag--opt { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-line); }
-    .pv-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6;
-      border-top: 1px solid var(--color-line); }
-    .pv-tbl th, .pv-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--color-line);
-      text-align: left; vertical-align: top; }
-    .pv-tbl th { width: 34%; background: var(--color-bg); font-weight: 700; color: var(--color-text); white-space: nowrap; }
-    .pv-tbl td { color: var(--color-text-muted); }
-    .pv-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
-    .pv-list { margin: 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
-    .pv-list li { position: relative; padding-left: 14px; }
-    .pv-list li + li { margin-top: 7px; }
-    .pv-list li::before { content: ''; position: absolute; left: 0; top: .62em;
-      width: 4px; height: 4px; border-radius: 999px; background: var(--color-mint); }
-    .pv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 18px 28px 22px; border-top: 1px solid var(--color-line); }
-    .pv-ok { padding: 12px 30px; border-radius: 999px; background: var(--color-primary); color: #fff;
-      font-size: 14px; font-weight: 700; transition: background .25s, transform .3s; }
-    .pv-ok:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
-    @media (max-width: 640px) {
-      .pv { padding: 14px; }
-      .pv-head { padding: 20px 18px 16px; }
-      .pv-body { padding: 18px 18px 4px; }
-      .pv-foot { padding: 14px 18px 18px; }
-      .pv-tbl { font-size: 12.5px; }
-      .pv-tbl th, .pv-tbl td { padding: 9px 10px; }
-      .pv-tbl th { width: 38%; white-space: normal; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .pv-back, .pv-panel { transition: none; }
-    }
-
-    /* ===== 도시컨셉 허브 다이어그램 (Figma 71:355 / 75:50) ===== */
-    /* 데스크톱은 Figma 1320×510 좌표를 그대로 쓰고, 좁아지면 JS가 --cn-s로 축소한다 */
-    /* left:50% + translateX(-50%) 로 래퍼 기준 중앙에 놓은 뒤 스케일한다.
-       (width:1320px 박스에 transform-origin:top center 만 주면 래퍼보다 넓을 때
-        중심이 래퍼 밖이라 우측이 잘린다 — 1024~1280 구간에서 20~148px 삐져나갔다) */
-    /* ※ margin-inline:0 필수 — mx-auto 와 left:50% 를 같이 쓰면 래퍼가 1320보다 넓을 때
-       auto 마진이 먼저 (래퍼폭-1320)/2 만큼 밀고 left:50% 가 또 밀어 두 번 이동한다.
-       2560px 에서 176px 우측으로 치우쳐 PHYSICAL AI 카드가 overflow:hidden 에 잘렸다. */
-    .cn-dia { position: relative; left: 50%; width: 1320px; height: 510px; margin-inline: 0;
-      transform: translateX(-50%) scale(var(--cn-s, 1)); transform-origin: center top; }
-    .cn-dia-wrap { width: 100%; overflow: hidden; }
-
-    .cn-orbit { position: absolute; left: 278.4px; top: 13.12px;
-      width: 749.54px; height: 457.95px; overflow: visible; }
-    .cn-ring, .cn-conn { stroke-dashoffset: 1; stroke-dasharray: 1;
-      transition: stroke-dashoffset 1.6s cubic-bezier(.33,1,.68,1); }
-    .cn-dia.in .cn-ring { stroke-dashoffset: 0; }
-    .cn-conn { transition-duration: .85s; transition-delay: .95s; }
-    .cn-dia.in .cn-conn { stroke-dashoffset: 0; }
-    .cn-dot { opacity: 0; transform: scale(.35); transform-box: fill-box; transform-origin: center;
-      transition: opacity .5s ease, transform .65s cubic-bezier(.34,1.56,.64,1); }
-    .cn-dia.in .cn-dot { opacity: 1; transform: none; }
-    .cn-dia.in .cn-dot:nth-of-type(1) { transition-delay: .70s; }
-    .cn-dia.in .cn-dot:nth-of-type(2) { transition-delay: .80s; }
-    .cn-dia.in .cn-dot:nth-of-type(3) { transition-delay: .90s; }
-    .cn-dia.in .cn-dot:nth-of-type(4) { transition-delay: 1.00s; }
-
-    /* 중앙 허브 배지 */
-    .cn-hub { position: absolute; left: 548.9px; top: 141.54px; width: 222.75px; height: 222.75px;
-      opacity: 0; transform: scale(.72);
-      transition: opacity .6s ease, transform .85s cubic-bezier(.34,1.4,.64,1); transition-delay: .2s; }
-    .cn-dia.in .cn-hub { opacity: 1; transform: none; }
-    .cn-hub svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .cn-hub-txt { position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 1px;
-      font-family: var(--font-display); text-align: center; line-height: 1; }
-    .cn-hub-txt b { font-size: 41px; font-weight: 800; color: #fff; }
-    .cn-hub-txt i { font-size: 26px; font-weight: 800; font-style: normal; color: #fff; }
-    .cn-hub-txt span { font-size: 25px; font-weight: 600; color: #d7e2fa; line-height: 1.1; }
-    /* 허브 맥동 */
-    .cn-hub::after { content: ''; position: absolute; inset: 0; border-radius: 999px;
-      border: 1.5px solid var(--color-primary); opacity: 0; pointer-events: none; }
-    .cn-dia.in .cn-hub::after { animation: cnPulse 3.2s cubic-bezier(.22,1,.36,1) 1.7s infinite; }
-    @keyframes cnPulse {
-      0%   { opacity: .45; transform: scale(1); }
-      70%  { opacity: 0;   transform: scale(1.28); }
-      100% { opacity: 0;   transform: scale(1.28); }
-    }
-
-    /* 4방향 카드 */
-    .cn-card { position: absolute; display: flex; align-items: center; gap: 20px;
-      padding: 21px 24px; background: #fff;   /* Figma pr-59는 텍스트 그룹이 넘치던 값 → 2줄 유지되도록 24px */
-      border: 1.3px solid #e2eaf6; border-radius: 16px;
-      box-shadow: 0 4px 3px rgba(0,0,0,.15);
-      text-align: left;   /* 섹션의 text-center 상속 차단 */
-      opacity: 0; transition: opacity .7s ease, transform .9s cubic-bezier(.22,1,.36,1); }
-    /* 아이콘 배지 + 텍스트 블록을 카드 높이 기준 상하 가운데 */
-    .cn-card > div { flex: 1 1 auto; min-width: 0; }
-    .cn-dia.in .cn-card { opacity: 1; transform: none; }
-    /* 높이는 auto — Figma의 6px 편차 대신 4장 높이를 맞춘다 */
-    .cn-card--n { left: 470.44px; top: 0;        width: 401.78px; transform: translateY(-26px); transition-delay: 1.05s; }
-    .cn-card--w { left: 99.79px;  top: 184.25px; width: 380.19px; transform: translateX(-32px); transition-delay: 1.18s; }
-    .cn-card--e { left: 840.85px; top: 183.83px; width: 380.19px; transform: translateX(32px);  transition-delay: 1.31s; }
-    .cn-card--s { left: 470.44px; top: 377.40px; width: 380.19px; transform: translateY(26px);  transition-delay: 1.44s; }
-    .cn-ic { flex-shrink: 0; width: 82.5px; height: 82.5px; border-radius: 999px;
-      display: grid; place-items: center;
-      background: linear-gradient(35deg, #4a78f2 14.1%, #27359e 85.9%);
-      opacity: 0; transform: scale(.6);
-      transition: opacity .5s ease, transform .7s cubic-bezier(.34,1.5,.64,1); }
-    .cn-dia.in .cn-ic { opacity: 1; transform: none; }
-    .cn-card--n .cn-ic { transition-delay: 1.22s; }
-    .cn-card--w .cn-ic { transition-delay: 1.35s; }
-    .cn-card--e .cn-ic { transition-delay: 1.48s; }
-    .cn-card--s .cn-ic { transition-delay: 1.61s; }
-    .cn-tt { font-family: var(--font-display); font-size: 21px; font-weight: 700;
-      color: var(--color-primary); letter-spacing: -.01em; }
-    .cn-ds { margin-top: 7px; font-size: 13px; line-height: 1.15; color: #405d72; }
-
-    /* 태블릿 이하: 오비트를 숨기고 2열 그리드로 접는다.
-       ※ 예전에는 1열 세로 스택이라 1024px(377px)에서 1023px(718px)로 높이가 거의 2배로
-         뛰었다. 900px 창에서 섹션 1113px 중 718px을 다이어그램이 차지해 아래 콘텐츠가
-         화면 밖으로 밀렸다. 허브도 222.75px 고정이라 함께 줄인다. */
-    @media (max-width: 1023px) {
-      .cn-dia { width: 100%; height: auto; left: auto; transform: none;
-        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-        justify-items: center; align-items: start; gap: 14px; }
-      .cn-orbit { display: none; }
-      /* ⚠ 진입 연출의 scale(.72)→1 을 여기서 없앤다. 2열 그리드에서 허브가 두 열을
-         차지하므로 커질 때 행 높이가 바뀌어 스크롤하는 순간 레이아웃이 흔들린다
-         (95px → 132px). 페이드(opacity)만 남긴다. */
-      /* ⚠ position: relative + left/top: auto 를 함께 줘야 한다. 둘 중 하나만 틀리면 깨진다.
-         · static 이면 `.cn-hub svg`(absolute; inset:0) 의 컨테이닝 블록이 허브가 아니라
-           #cnDia(relative) 가 되어 허브 원이 다이어그램 전체 크기(720×349)로 그려진다.
-           허브는 .in 전까지 opacity:0 이라 스크롤 순간 그 거대한 원이 나타났다(= 이 버그).
-         · relative 로만 바꾸면 데스크톱의 left:548.9px / top:141.54px 가 '오프셋'으로
-           살아나 허브가 x=867 로 화면 밖으로 나간다. 그래서 auto 로 함께 지운다. */
-      .cn-hub { position: relative; left: auto; top: auto; grid-column: 1 / -1;
-        width: 132px; height: 132px; margin-bottom: 2px; transform: none; }
-      /* 맥동 링도 끈다 — 1.28배까지 무한 확장하는 연출이라 132px 허브에서는
-         스크롤 직후 허브가 계속 커지는 것처럼 보인다. */
-      .cn-dia.in .cn-hub::after { animation: none; }
-      /* 허브 텍스트도 132/222.75 = 0.59 비율로 축소 */
-      .cn-hub-txt b { font-size: 24px; }
-      .cn-hub-txt i { font-size: 15px; }
-      .cn-hub-txt span { font-size: 15px; }
-      .cn-card { position: static; width: 100%; max-width: 460px; height: auto;
-        padding: 16px 18px; gap: 14px; text-align: left; }
-      /* 데스크톱의 방향별 오프셋(translateY(-26px) / translateX(±32px))은 그리드에서
-         열을 밀치므로, 방향 없는 동일한 짧은 상승으로 통일한다. */
-      .cn-card--n, .cn-card--w, .cn-card--e, .cn-card--s {
-        left: auto; top: auto; transform: translateY(14px); }
-      .cn-ic { width: 56px; height: 56px; }
-      .cn-tt { font-size: 18px; }
-      .cn-ds { margin-top: 5px; font-size: 12px; }
-    }
-    /* 폰: 2열이 좁아 카드 카피가 4줄로 터지므로 1열로 되돌린다 */
-    @media (max-width: 639px) {
-      .cn-dia { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-      .cn-hub { width: 120px; height: 120px; }
-      .cn-hub-txt b { font-size: 22px; }
-      .cn-hub-txt i { font-size: 14px; }
-      .cn-hub-txt span { font-size: 13.5px; }
-    }
-
-    /* ===== 스크럽 시네마 (영상 페이징) ===== */
-    .cine { position: relative; }
-    .cine-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-    .cine-stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .cine-scrim { position: absolute; inset: 0; }
-    /* 스크럽 진행에 따라 전환되는 카피 페이지 */
-    .cine-page { position: absolute; inset: 0; opacity: 0; visibility: hidden;
-      transition: opacity .55s ease, visibility .55s; }
-    .cine-page.on { opacity: 1; visibility: visible; }
-    .cine-page .cp-el { opacity: 0; transform: translateY(22px);
-      transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
-    .cine-page.on .cp-el { opacity: 1; transform: none; }
-    .cine-page.on .cp-el:nth-child(1) { transition-delay: .1s; }
-    .cine-page.on .cp-el:nth-child(2) { transition-delay: .22s; }
-    .cine-page.on .cp-el:nth-child(3) { transition-delay: .34s; }
-    .cine-page.on .cp-el:nth-child(4) { transition-delay: .46s; }
-    /* 진행 인디케이터 */
-    .cine-dots { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 10px; z-index: 5; }
-    .cine-dots i { display: block; width: 10px; height: 10px; border-radius: 999px;
-      background: rgba(255,255,255,.35); transition: all .3s;
-      cursor: pointer; }
-    /* 점이 작아 클릭 표적이 좁다 → 보이는 크기는 두고 히트 영역만 넓힌다 */
-    .cine-dots i { position: relative; }
-    .cine-dots i::after { content: ''; position: absolute; inset: -12px -7px; }
-    .cine-dots i:hover { background: rgba(255,255,255,.75); }
-    .cine-dots i:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
-    .cine-dots i.on { width: 30px; background: #fff; }
-    .cine-prog { position: absolute; left: 0; bottom: 0; height: 3px; z-index: 5;
-      background: var(--color-mint); width: 0; }
-
-    /* ===== 플로팅 버튼 (문의하기 / TOP) ===== */
-    /* 배지가 커졌으므로 여유를 두고, 확대(scale)해도 잘리지 않게 한다 */
-    #floatDock { position: fixed; right: 34px; bottom: 34px; z-index: 70;
-      display: flex; flex-direction: column; align-items: center; gap: 14px;
-      overflow: visible; pointer-events: none; }
-    #floatDock > * { pointer-events: auto; }
-    .fd-btn { display: flex; height: 52px; align-items: center; justify-content: center;
-      border-radius: 999px; box-shadow: 0 10px 28px rgba(0,10,30,.22);
-      transition: background .25s, color .25s, border-color .25s, transform .3s, opacity .3s, visibility .3s; }
-    .fd-btn svg { flex-shrink: 0; }
-    /* 문의하기: 페이지 버튼 컬러(primary) 원형 버튼 */
-    #fdContact { position: relative; display: grid; place-items: center; overflow: hidden;
-      width: 116px; height: 116px; border-radius: 999px;
-      background: var(--color-primary); color: #fff;
-      box-shadow: 0 14px 34px rgba(0,10,30,.24);
-      transition: transform .5s cubic-bezier(.22,1,.36,1), box-shadow .35s; }
-    /* 호버 ①: 아래에서 원형 컬러가 차오르는 필 스윕 */
-    #fdContact::before { content: ''; position: absolute; inset: 0; border-radius: 999px;
-      background: var(--color-navy); transform: scale(0); transform-origin: 50% 100%;
-      transition: transform .55s cubic-bezier(.22,1,.36,1); pointer-events: none; }
-    #fdContact:hover::before { transform: scale(1); }
-    #fdContact:hover { transform: translateY(-5px); box-shadow: 0 22px 44px rgba(0,10,30,.34); }
-    /* 중앙: 말풍선 아이콘 + '문의하기' (필 위로 올라오도록 z-index) */
-    #fdContact .fdc-core { position: relative; z-index: 1; display: grid; place-items: center;
-      width: 100%; height: 100%; }
-    #fdContact .fdc-face { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-    #fdContact .fdc-bubble { width: 30px; height: 30px; overflow: visible; }
-    #fdContact .fdc-txt { font-size: 14px; font-weight: 700; white-space: nowrap; letter-spacing: -.01em; }
-    /* 호버 ②: 말풍선 점 3개가 입력 중처럼 순차 반동 */
-    #fdContact .fdc-bubble circle { opacity: .7; }
-    #fdContact:hover .fdc-bubble .d1 { animation: fdcType 1s ease-in-out infinite; }
-    #fdContact:hover .fdc-bubble .d2 { animation: fdcType 1s ease-in-out .16s infinite; }
-    #fdContact:hover .fdc-bubble .d3 { animation: fdcType 1s ease-in-out .32s infinite; }
-    @keyframes fdcType {
-      0%, 62%, 100% { transform: translateY(0);    opacity: .7; }
-      31%           { transform: translateY(-2px); opacity: 1; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      #fdContact::before { transition: none; }
-      #fdContact:hover .fdc-bubble circle { animation: none; }
-    }
-    /* TOP: 스크롤 시 등장 */
-    #fdTop { width: 52px; background: var(--color-surface); color: var(--color-primary);
-      border: 1px solid var(--color-line); flex-direction: column; gap: 1px;
-      opacity: 0; visibility: hidden; transform: translateY(10px); }
-    #fdTop.on { opacity: 1; visibility: visible; transform: none; }
-    #fdTop:hover { background: var(--color-primary); color: #fff; border-color: var(--color-primary); transform: translateY(-2px); }
-    #fdTop span { font-size: 10px; font-weight: 700; letter-spacing: .06em; }
-    @media (max-width: 767px) {
-      #floatDock { right: 16px; bottom: 20px; gap: 10px; }
-      #fdContact { width: 88px; height: 88px; }
-      #fdContact .fdc-bubble { width: 24px; height: 24px; }
-      #fdContact .fdc-txt { font-size: 12px; }
-      .fd-btn { height: 46px; }
-      #fdTop { width: 46px; }
-    }
-
-
-    /* ===== 파트너 마퀴 (흐르는 로고) ===== */
-    .marquee { position: relative; overflow: hidden;
-      mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-      -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); }
-    .marquee-track { display: flex; width: max-content; gap: 16px;
-      animation: marq 34s linear infinite; }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
-    @keyframes marq { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 8px)); } }
-    /* 배경·라인 없이 로고만 흐르도록 */
-    .pt-item { display: flex; height: 84px; flex-shrink: 0; align-items: center;
-      justify-content: center; padding: 0 34px; opacity: .78;
-      transition: opacity .25s ease, transform .25s ease; }
-    .pt-item:hover { opacity: 1; transform: scale(1.06); }
-    /* 크기는 JS가 시각 면적 기준으로 정규화해 인라인 지정 */
-    .pt-item img { object-fit: contain; display: block; }
-    .pt-item .pt-name { font-size: 15px; font-weight: 700; color: var(--color-text-muted); white-space: nowrap; }
-    /* 한 줄에 다 들어가면 흐름을 멈추고 가운데 정렬 */
-    .marquee.is-static { mask-image: none; -webkit-mask-image: none; }
-    .marquee.is-static .marquee-track { animation: none; width: 100%; justify-content: center; }
-
-    /* ===== 우측 도트 내비 ===== */
-    #dotNav { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 60;
-      display: flex; flex-direction: column; gap: 13px; }
-    #dotNav button { position: relative; width: 10px; height: 10px; border-radius: 999px;
-      background: rgba(91,107,130,.35); box-shadow: 0 0 0 1.5px rgba(255,255,255,.65);
-      transition: transform .3s, background .3s; }
-    #dotNav button:hover { transform: scale(1.4); }
-    #dotNav button.on { background: var(--color-primary); transform: scale(1.45); }
-    #dotNav button .dn-label { position: absolute; right: 22px; top: 50%;
-      transform: translateY(-50%) translateX(6px); white-space: nowrap; font-size: 12px; font-weight: 600;
-      color: #fff; background: var(--color-navy); padding: 4px 10px; border-radius: 6px;
-      opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; }
-    #dotNav button:hover .dn-label { opacity: 1; transform: translateY(-50%) translateX(0); }
-    @media (max-width: 767px) { #dotNav { display: none; } }
-
-    /* ===== 구역소개: 2단 풀스크린 + 스크롤 슬라이드 ===== */
-    .dz { position: relative; }
-    .dz-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-    .dz-grid { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
-    /* 좌측 정보 패널 — 화면 높이를 꽉 채우고 3구역으로 분배 */
-    .dz-left { position: relative; display: flex; flex-direction: column;
-      justify-content: space-between; overflow: hidden;
-      background: var(--color-bg);
-      padding-top: clamp(60px, 7vh, 104px); padding-bottom: clamp(28px, 4vh, 56px);
-      /* 위쪽 섹션들의 콘텐츠 시작선(가운데 1320px 컨테이너 + 좌우 24px)과 동일하게 */
-      padding-left: var(--gut);
-      padding-right: clamp(28px, 3vw, 56px); }
-    /* 우측 이미지 */
-    .dz-right { position: relative; overflow: hidden; background: var(--color-navy); }
-    .dz-imgs { position: absolute; inset: 0; }
-    .dz-imgs .dz-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-      transform: translateY(100%);                      /* 대기: 아래쪽 */
-      transition: transform .95s cubic-bezier(.22,1,.36,1); will-change: transform;
-      background: var(--color-navy); }
-    .dz-imgs .dz-vid.above { transform: translateY(-100%); } /* 지나감: 위쪽 */
-    .dz-imgs .dz-vid.on { transform: translateY(0); }
-    .dz-shade { position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(to top, rgba(0,39,66,.92) 0%, rgba(0,39,66,.35) 42%, rgba(0,39,66,.05) 72%); }
-    .dz-overlay { position: absolute; inset-inline: 0; bottom: 0;
-      padding: clamp(28px, 4vh, 56px) clamp(32px, 4vw, 64px) clamp(44px, 7vh, 76px); }
-    /* 내용 교체 시 페이드 */
-    .dz-fade { transition: opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1); }
-    .dz-swap .dz-fade { opacity: 0; transform: translateY(14px); }
-    /* 좌측 아코디언 — 기본(.za) 크기를 그대로 사용.
-       세로가 부족한 화면에서는 패널만 내부 스크롤되도록 안전장치를 둔다. */
-    .dz-left { overflow-y: auto; scrollbar-width: none; }
-    .dz-left::-webkit-scrollbar { display: none; }
-
-    /* 우측 도트 내비 */
-    .dz-dots { display: none; }   /* 우측 상세 인디케이터 숨김 */
-    .dz-dots--legacy { position: absolute; right: clamp(14px, 1.6vw, 26px); top: 50%; transform: translateY(-50%);
-      z-index: 6; display: flex; flex-direction: column; align-items: flex-end; gap: 13px; }
-    .dz-dots button { display: flex; align-items: center; gap: 9px; }
-    .dz-dots .dd-label { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap;
-      opacity: 0; transform: translateX(6px); transition: opacity .3s, transform .3s;
-      text-shadow: 0 1px 8px rgba(0,10,30,.6); }
-    .dz-dots button.on .dd-label, .dz-dots button:hover .dd-label { opacity: 1; transform: none; }
-    .dz-dots .dd-dot { width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.4);
-      box-shadow: 0 0 0 1.5px rgba(255,255,255,.35); transition: all .3s; flex-shrink: 0; }
-    .dz-dots button.on .dd-dot { height: 26px; background: #fff; }
-    /* 좁은 화면: 이미지를 배경으로 깔고 콘텐츠를 겹쳐 단일 컬럼으로 (좌측 패널 넘침 방지) */
-    @media (max-width: 1023px) {
-      .dz-grid { grid-template-columns: 1fr; }
-      .dz-right { position: absolute; inset: 0; z-index: 0; }
-      .dz-left { position: relative; z-index: 1; background: transparent;
-        padding: 76px 20px 30px; gap: 14px; }
-      .dz-left::before { content: ""; position: absolute; inset: 0; z-index: -1;
-        background: linear-gradient(to bottom, rgba(244,248,254,.97) 0%, rgba(244,248,254,.93) 52%, rgba(0,39,66,.28) 100%); }
-      .dz-left h2 { font-size: 30px; }
-      .dz-overlay { display: none; }
-      .dz-left .za-head { padding: 9px 14px; }
-      .dz-left .za-name { font-size: 14px; }
-      .dz-left .za-num { width: 30px; height: 30px; }
-      .dz-left .za.open .za-body { max-height: 300px; }
-      .dz-dots { right: 10px; }
-    }
-
-    /* ===== 구역 아코디언 ===== */
-    .za { border: 1px solid var(--color-line); border-radius: 14px; background: var(--color-surface);
-      overflow: hidden; transition: box-shadow .3s, border-color .3s; }
-    .za.open { border-color: var(--zc, var(--color-primary)); box-shadow: 0 10px 30px rgba(0,10,30,.08); }
-    .za-head { display: flex; width: 100%; align-items: center; gap: 14px; padding: 20px 22px;
-      cursor: pointer; text-align: left; }
-    .za-num { display: flex; width: 40px; height: 40px; flex-shrink: 0; align-items: center;
-      justify-content: center; border-radius: 999px; font-size: 14px; font-weight: 700;
-      color: var(--zni, #fff);
-      background: var(--zn, var(--zc, var(--color-primary))); transition: transform .3s; }
-    .za.open .za-num { transform: scale(1.1); }
-    .za-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--color-text); }
-    .za-sub { margin-top: 3px; font-size: 12px; color: var(--color-text-muted); }
-    .za-area { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--zc, var(--color-primary));
-      white-space: nowrap; }
-    .za-caret { flex-shrink: 0; color: var(--color-text-muted); transition: transform .35s ease; }
-    .za.open .za-caret { transform: rotate(180deg); }
-    .za-body { max-height: 0; overflow: hidden; transition: max-height .45s cubic-bezier(.22,1,.36,1); }
-    .za.open .za-body { max-height: 720px; }
-    .za-inner { border-top: 1px solid var(--color-line); padding: 20px 22px 22px; }
-
-    #zoneImgs img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-      opacity: 0; transform: scale(1.06); transition: opacity .7s ease, transform 1.4s ease; }
-    #zoneImgs img.on { opacity: 1; transform: scale(1); }
-
-    /* 히어로 스크롤 시 미세 줌아웃 (스크롤에 반응하는 느낌)
-       확대 배율이 크면 실효 해상도가 떨어져 흐려지므로 최소로 유지 */
-    #hero video { transform: scale(var(--hz, 1.02)); transition: transform .2s linear;
-      image-rendering: -webkit-optimize-contrast; }
-    .cine-stage video { image-rendering: -webkit-optimize-contrast; }
-    /* 8대 권역 조감도 배경 */
-    #zonesBg { transform: scale(1.05); transition: transform .25s linear; will-change: transform; }
-    .az-card { opacity: 0; transform: translateY(30px) scale(.97); }
-    .az-card.in { opacity: 1; transform: none;
-      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
-
-    @media (prefers-reduced-motion: reduce) {
-      .anim { animation: none; opacity: 1; }
-      .reveal, .lr .lr-inner, .cine-page .cp-el { opacity: 1; transform: none; transition: none; }
-      .cn-hub, .cn-card, .cn-ic, .cn-dot { opacity: 1; transform: none; transition: none; }
-      .cn-ring, .cn-conn { stroke-dashoffset: 0; transition: none; }
-      .cn-dia.in .cn-hub::after { animation: none; }
-    }
-    /* ===== 반응형: 큰 화면 대응 =====
-       기존 clamp 상한이 1440~1700px 에서 최대치에 닿아, 2560px(5K iMac 논리해상도)에서는
-       1440 노트북과 '같은 절대 크기'로 렌더돼 작아 보였다. 컨테이너 폭 52% 점유.
-       1440~1700 의 튜닝된 비율은 건드리지 않고, 그보다 넓을 때만 단계적으로 키운다. */
-    .wrap-x { max-width: var(--wrap); }
-
-    @media (min-width: 1800px) {
-      .ov-title  { font-size: clamp(56px, 3.5vw, 72px); }
-      /* 800px 이면 글자가 20px 상한(폭 1905px 이상)에 닿는 순간 1행이 814px 로 넘쳐
-         '규모)의' 만 떨어진 3줄이 된다. 강제 개행 1행이 들어가는 폭으로 맞춘다 */
-      .ov-desc   { max-width: 860px; font-size: clamp(17px, 1.05vw, 20px); }
-      .lo-title  { font-size: clamp(44px, 3.2vw, 62px); }
-      .lo-no     { font-size: clamp(60px, 5.4vw, 116px); }
-      .za-name   { font-size: 19px; }
-      .za-sub    { font-size: 13px; }
-      /* 토지이용계획도가 420px 상한에 걸려 카드 열만 커지고 지도는 그대로였다 */
-      .az-grid   { grid-template-columns: minmax(0, 1fr) clamp(360px, 22vw, 500px); }
-    }
-    @media (min-width: 2300px) {
-      .ov-title  { font-size: clamp(64px, 3.2vw, 84px); }
-      .ov-desc   { max-width: 880px; font-size: 21px; }
-      .lo-title  { font-size: clamp(52px, 2.9vw, 70px); }
-      .lo-no     { font-size: clamp(80px, 5vw, 128px); }
-      .az-grid   { grid-template-columns: minmax(0, 1fr) clamp(420px, 21vw, 560px); }
-    }
-    /* 넓지만 낮은 창(울트라와이드·창 축소). 1800px 이상에서 커진 타이포가
-       top:30% 기준선에서 아래로 자라 66% 에 있는 인디케이터를 덮는다.
-       5K(2560×1440) 등 정상 비율에서는 이 규칙이 걸리지 않아 기존 배치가 유지된다 */
-    @media (min-width: 1800px) and (max-height: 940px) {
-      .ov-center { top: 21%; }
-    }
-
-  </style>
+  
 </head>
 
 <body class="antialiased">
@@ -1205,9 +170,9 @@
         <div class="lo-mapcol">
           <div id="locMap" class="lm">
             <!-- 배경 지도: 스텝별로 JS가 src를 바꾼다 (locRoutes[].bg) -->
-            <img class="lm-bg" alt="" hidden />
+            <picture><source class="lm-bg-av" type="image/avif" /><img class="lm-bg" alt="" hidden /></picture>
             <!-- 전경 레이어: 받침대·지점명·소요시간 배지 등 지도 위 요소 (locRoutes[].fg) -->
-            <img class="lm-fg" alt="" hidden />
+            <picture><source class="lm-fg-av" type="image/avif" /><img class="lm-fg" alt="" hidden /></picture>
             <svg class="lm-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
           </div>
           <p class="lo-note">* 교통량 및 도로사정에 따라 차이가 발생할 수 있습니다</p>
@@ -1274,7 +239,7 @@
   <section id="business" class="page cine ov" data-cine="biz" data-clip="assets/vid/business.mp4?v=bio1" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio1" style="height:400vh">
     <div class="cine-stage bg-navy">
       <video muted playsinline preload="auto" data-scrub="biz"></video>
-      <img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" />
+      <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/still/seg05@m.avif" /><source type="image/avif" srcset="assets/still/seg05.avif" /><img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" /></picture>
       <!-- 참고 디자인의 어두운 톤: 전체 톤다운 + 상·하단 강화 그라데이션 -->
       <div class="cine-scrim" style="background:rgba(0,17,34,.46)"></div>
       <div class="cine-scrim" style="background:linear-gradient(180deg,rgba(0,17,34,.62) 0%,rgba(0,17,34,.30) 38%,rgba(0,17,34,.44) 68%,rgba(0,17,34,.86) 100%)"></div>
@@ -1337,7 +302,7 @@
     <!-- 배경: 그리드 패턴 + 아이소메트릭 도시 일러스트 -->
     <div class="absolute inset-0" aria-hidden="true">
       <img src="assets/img/concept-grid.png" alt="" class="absolute inset-0 h-full w-full object-cover opacity-20" />
-      <img src="assets/img/concept-city.png" alt="" class="absolute inset-0 h-full w-full object-cover" />
+      <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/img/concept-city@m.avif" /><source type="image/avif" srcset="assets/img/concept-city.avif" /><img src="assets/img/concept-city.png" alt="" class="absolute inset-0 h-full w-full object-cover" /></picture>
     </div>
 
     <div class="relative mx-auto flex min-h-screen wrap-x flex-col items-center justify-center px-6 py-20 text-center">
@@ -1403,7 +368,7 @@
   <!-- ============ 5. 구역소개 개요 (슬라이드 11) — 조감도 배경 ============ -->
   <section id="zones" class="page relative overflow-hidden bg-navy">
     <!-- 조감도 배경 (스크롤에 따라 서서히 확대) -->
-    <img id="zonesBg" src="assets/slide-day.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" />
+    <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/slide-day@m.avif" /><source type="image/avif" srcset="assets/slide-day.avif" /><img id="zonesBg" src="assets/slide-day.jpg" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" /></picture>
     <div class="absolute inset-0 bg-gradient-to-b from-navy/92 via-navy/78 to-navy/94"></div>
     <div class="absolute inset-0" style="background-image:radial-gradient(circle at 82% 18%, rgba(61,191,168,.22) 0, transparent 45%)"></div>
 
@@ -1435,8 +400,8 @@
         <div class="az-map reveal" aria-hidden="true">
           <!-- 흰 바탕판: 같은 베이스 SVG를 brightness(0) invert(1)로 흰 실루엣으로 만들어
                지도 형태 그대로 뒤에 깐다 (어두운 조감도가 비치는 문제 해결) -->
-          <img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" />
-          <img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" />
+          <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/landuse/zone-base@m.avif" /><source type="image/avif" srcset="assets/landuse/zone-base.avif" /><img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" loading="lazy" /></picture>
+          <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/landuse/zone-base@m.avif" /><source type="image/avif" srcset="assets/landuse/zone-base.avif" /><img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" loading="lazy" /></picture>
           <img class="az-map-hl" data-zone="1" src="assets/landuse/zone-01.svg?v=4" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=6" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=7" loading="lazy" decoding="async" alt="" />
@@ -1933,7 +898,6 @@
       ['7','에듀','2.7만평','district-edu','6'],       ['8','골프레저','28.5만평','district-golf','8'],
     ];
     document.getElementById('areaGrid').innerHTML = areas.map(([n,name,area,c,m],i)=>{
-      const zk = c.replace('district-','');
       return       '<div class="az-card reveal rounded-lg border border-white/20 bg-navy/50 p-5 backdrop-blur transition duration-300 hover:-translate-y-1.5 hover:bg-navy/70" data-zone="'+m+'" tabindex="0"'+
         ' style="border-top:3px solid var(--color-'+c+');transition-delay:'+(i*0.07)+'s">'+
         // 번호는 좌측에 고정하고, 타이틀·평형은 같은 열에 둬서 좌측 정렬을 맞춘다
@@ -2116,10 +1080,34 @@
       dzCur = -1;
     }
 
+    /* 구역 영상 선로드 게이트 (2026-08-05)
+       dzRender(0) 이 초기화 시 첫 영상을 활성화하므로, 게이트가 없으면 #districts 가
+       3,400px 아래인데도 d01.mp4 2.05MB 가 첫 로드에 섞여 들어온다.
+       섹션 1,000px 전에 게이트가 열리고, 열린 뒤 동작은 기존과 완전히 동일하다.
+       로딩 중 화면은 <video poster> 가 그대로 채우므로 빈 화면·레이아웃 점프가 없다. */
+    let dzNear = false;
+    function dzOpenGate(){
+      if (dzNear) return;
+      dzNear = true;
+      const v = document.querySelector('#dzImgs .dz-vid.on');
+      if (v) dzPlay(v);                       // 활성 영상만 로드 — 나머지는 기존대로 지연
+    }
+    (function(){
+      const sec = document.getElementById('districts');
+      if (!sec) { dzNear = true; return; }     // 섹션이 없으면 게이트를 열어 둔다(안전)
+      if (!('IntersectionObserver' in window)) { dzNear = true; return; }
+      const io = new IntersectionObserver(es=>{
+        if (es.some(e=>e.isIntersecting)) { io.disconnect(); dzOpenGate(); }
+      }, { rootMargin: '1000px 0px' });        // 약 1,000px 전에 미리 시작
+      io.observe(sec);
+    })();
+
     /* 활성 구역 영상: 볼 때만 내려받고, 재생이 막히면 재시도한다 */
     function dzPlay(v){
       if (!v) return;
-      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'auto'; }
+      // 게이트가 열리기 전에는 src 를 주입하지 않는다(첫 로드 2MB 회피)
+      if (dzNear && !v.src && v.dataset.src) { v.src = v.dataset.src; v.preload = 'metadata'; }
+      if (!v.src) return;                     // 아직 소스가 없으면 재생 시도도 하지 않는다
       v.muted = true;
       const go = () => { const pr = v.play(); if (pr && pr.catch) pr.catch(()=>{}); };
       go();
@@ -2546,6 +1534,10 @@
       if (!wrap) return;
       const svg = wrap.querySelector('.lm-svg');
       const bgImg = wrap.querySelector('.lm-bg');
+      // AVIF <source> 를 함께 갱신한다. 확장자만 바꾼 같은 이름 규칙(assets/img/<name>.avif)
+      const bgAv  = wrap.querySelector('.lm-bg-av');
+      const fgAv  = wrap.querySelector('.lm-fg-av');
+      const toAvif = u => u ? u.replace(/\.(png|jpe?g)(\?.*)?$/, '.avif$2') : '';
       bgImg.addEventListener('error', ()=>{ bgImg.hidden = true; });   // 파일 업로드 전에는 숨김
       const fgImg = wrap.querySelector('.lm-fg');
       if (fgImg) fgImg.addEventListener('error', ()=>{ fgImg.hidden = true; });
@@ -2879,11 +1871,11 @@
       window.locMapShow = (i, force) => {
         groups.forEach((g,k)=>g.classList.toggle('on', k === i));
         const bg = locRoutes[i] && locRoutes[i].bg;      // 스텝별 배경 지도
-        if (bg) { bgImg.src = bg; bgImg.hidden = false; }
+        if (bg) { if (bgAv) bgAv.srcset = toAvif(bg); bgImg.src = bg; bgImg.hidden = false; }
         else { bgImg.removeAttribute('src'); bgImg.hidden = true; }
         const fg = locRoutes[i] && locRoutes[i].fg;      // 지도 위 요소 레이어
         if (fgImg) {
-          if (fg) { fgImg.src = fg; fgImg.hidden = false; }
+          if (fg) { if (fgAv) fgAv.srcset = toAvif(fg); fgImg.src = fg; fgImg.hidden = false; }
           else { fgImg.removeAttribute('src'); fgImg.hidden = true; }
         }
         if (i === cur && !force) return;
@@ -3040,7 +2032,10 @@
     const partnerTrack = document.getElementById('partnerTrack');
     const marqueeEl = partnerTrack.parentElement;
     const ptItem = p => p.img
-      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" /></div>'
+      // ⚠ loading="lazy" 를 넣지 말 것 — layoutPartners() 가 이미지 로드를 기다려
+      //   normalizeLogos() 로 면적 정규화를 하는데, lazy 면 화면 밖이라 로드가 시작되지 않아
+      //   naturalWidth 가 0 이고 정규화가 건너뛰어져 로고가 원본 크기로 그려진다(실제 발생)
+      ? '<div class="pt-item"><img src="'+p.img+'" alt="'+p.name+'" decoding="async" /></div>'
       : '<div class="pt-item"><span class="pt-name">'+p.name+'</span></div>';
 
     /* 로고 시각 크기 정규화: 가로세로 비율이 달라도 '보이는 면적'을 맞춘다.

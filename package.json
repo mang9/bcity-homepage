@@ -1,0 +1,14 @@
+{
+  "name": "bcity-homepage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "춘천기업혁신파크 B-CITY 마케팅 홈페이지 — 번들러 없는 정적 사이트 + Tailwind CLI",
+  "scripts": {
+    "build": "tailwindcss -i src/css/app.css -o assets/css/app.css --minify",
+    "dev": "tailwindcss -i src/css/app.css -o assets/css/app.css --watch",
+    "build:pretty": "tailwindcss -i src/css/app.css -o assets/css/app.css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11"
+  }
+}
