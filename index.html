@@ -173,7 +173,9 @@
                  ⚠ <picture> 로 감싸지 말 것 — <picture> 는 display:inline 으로 정상 흐름에
                    들어가서, absolute 인 .lm-bg/.lm-fg 가 흐름에서 빠져 있다는 전제가 깨진다.
                    .lm-svg 는 position:relative; height:100% 로 .lm 의 유일한 흐름 자식이어야
-                   경로 오버레이가 지도와 정합한다(2026-08-05 라이브 회귀로 확인). -->
+                   경로 오버레이가 지도와 정합한다(2026-08-05 라이브 회귀로 확인).
+                 AVIF 는 <picture> 없이 이 <img> 의 src 로 직접 넣고 실패 시 PNG 로
+                   되돌린다(setMapSrc). 요소가 늘지 않으므로 위 전제가 깨지지 않는다. -->
             <img class="lm-bg" alt="" hidden />
             <!-- 전경 레이어: 받침대·지점명·소요시간 배지 등 지도 위 요소 (locRoutes[].fg) -->
             <img class="lm-fg" alt="" hidden />
@@ -1537,10 +1539,38 @@
       const wrap = document.getElementById('locMap');
       if (!wrap) return;
       const svg = wrap.querySelector('.lm-svg');
+
+      /* 지도 이미지는 AVIF 우선, 실패하면 PNG. 확장자만 바꾼 같은 이름 규칙
+         (assets/img/<name>.avif). <picture> 대신 같은 <img> 의 src 만 바꾸므로
+         흐름 구조가 변하지 않는다 — 마크업 주석의 회귀 조건을 건드리지 않는다.
+         AVIF 는 PNG 를 1800px 로 줄여 만든 것이라 파일이 훨씬 작다
+         (location-metro 4,635,901 → 88,033 B). 지도는 높이 제한 때문에 폭
+         500px 안팎으로 렌더되므로 1800px 로도 과분하다. */
+      const toAvif = u => u ? u.replace(/\.(png|jpe?g)(\?.*)?$/, '.avif$2') : '';
+      const setMapSrc = (img, url) => {
+        if (!img) return;
+        if (!url) { img.removeAttribute('src'); delete img.dataset.png;
+                    delete img.dataset.stage; img.hidden = true; return; }
+        // 같은 URL 에서 이미 AVIF 가 실패했다면 다시 시도하지 않는다
+        if (img.dataset.png === url && img.dataset.stage === 'png') { img.hidden = false; return; }
+        const av = toAvif(url);
+        img.dataset.png = url;
+        img.dataset.stage = (av && av !== url) ? 'avif' : 'png';
+        img.src = img.dataset.stage === 'avif' ? av : url;
+        img.hidden = false;
+      };
+      const onMapErr = img => () => {
+        if (img.dataset.stage === 'avif' && img.dataset.png) {   // AVIF 미지원·파일 누락
+          img.dataset.stage = 'png';
+          img.src = img.dataset.png;
+          return;
+        }
+        img.hidden = true;                                        // PNG 까지 없으면 숨김
+      };
       const bgImg = wrap.querySelector('.lm-bg');
-      bgImg.addEventListener('error', ()=>{ bgImg.hidden = true; });   // 파일 업로드 전에는 숨김
+      bgImg.addEventListener('error', onMapErr(bgImg));
       const fgImg = wrap.querySelector('.lm-fg');
-      if (fgImg) fgImg.addEventListener('error', ()=>{ fgImg.hidden = true; });
+      if (fgImg) fgImg.addEventListener('error', onMapErr(fgImg));
       const NS = 'http://www.w3.org/2000/svg';
       const el = (n, a) => { const e = document.createElementNS(NS, n);
         for (const k in a) e.setAttribute(k, a[k]); return e; };
@@ -1870,14 +1900,8 @@
       let cur = -1, armed = false;
       window.locMapShow = (i, force) => {
         groups.forEach((g,k)=>g.classList.toggle('on', k === i));
-        const bg = locRoutes[i] && locRoutes[i].bg;      // 스텝별 배경 지도
-        if (bg) { bgImg.src = bg; bgImg.hidden = false; }
-        else { bgImg.removeAttribute('src'); bgImg.hidden = true; }
-        const fg = locRoutes[i] && locRoutes[i].fg;      // 지도 위 요소 레이어
-        if (fgImg) {
-          if (fg) { fgImg.src = fg; fgImg.hidden = false; }
-          else { fgImg.removeAttribute('src'); fgImg.hidden = true; }
-        }
+        setMapSrc(bgImg, locRoutes[i] && locRoutes[i].bg);   // 스텝별 배경 지도
+        setMapSrc(fgImg, locRoutes[i] && locRoutes[i].fg);   // 지도 위 요소 레이어
         if (i === cur && !force) return;
         cur = i;
         if (armed || force) { armed = true; play(i); } else hide(i);
