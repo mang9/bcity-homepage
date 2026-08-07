@@ -59,9 +59,17 @@
   border-color: var(--color-primary); }
 .bc-call--key b, .bc-call--cc b { color: #fff; }
 .bc-call--key span, .bc-call--cc span { color: rgba(255,255,255,.84); }
+/* 홍천 말풍선 — 2026-08-07 사용자 요청으로 글자를 흰색으로 바꾸고 얇은 그림자를 더했다.
+   그림자는 글자 가장자리에 어두운 경계를 만들어 **체감 가독성**을 올리는 장치다.
+   ⚠ WCAG 대비값 자체는 바뀌지 않는다 — 규격이 그림자를 계산에 넣지 않기 때문이다.
+     mint(#3DBFA8) 위 흰 글자는 여전히 2.28:1 이다(이전 navy 글자는 6.73:1).
+     수치로도 통과시키려면 이 말풍선 배경을 어둡게 바꿔야 한다(district-bio #288074 = 4.74:1).
+   블러를 2px 넘기지 말 것 — 767px 이하에서 지역명이 12px 로 줄어드는데
+   그보다 퍼지면 획이 뭉개져 오히려 읽기 나빠진다. */
 .bc-call--hc .bc-call-in { background: var(--color-mint); border-color: var(--color-mint); }
-.bc-call--hc b { color: var(--color-navy); }
-.bc-call--hc span { color: rgb(var(--navy-rgb) / .82); }
+.bc-call--hc b { color: #fff; text-shadow: 0 1px 2px rgb(var(--navy-rgb) / .38); }
+.bc-call--hc span { color: rgba(255,255,255,.9);
+  text-shadow: 0 1px 2px rgb(var(--navy-rgb) / .32); }
 
 /* 말풍선은 전 구간 지도 위에 겹쳐 띄운다.
    좁은 화면에서는 설명을 접고 지역명만 남긴다(아래 1279px 블록) */
