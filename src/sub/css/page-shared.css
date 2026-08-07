@@ -1,6 +1,10 @@
 /* ===== 신규 서브페이지 4종(입지·기대효과·추진일정·사업주체) 공용 부품 =====
    overview.html 의 page-overview.css 와 겹치는 선택자는 없다. 두 파일을 같은
-   페이지에 함께 붙이는 일도 없다(front-matter 의 css 배열이 페이지마다 다르다). */
+   페이지에 함께 붙이는 일도 없다(front-matter 의 css 배열이 페이지마다 다르다).
+
+   ⚠ font-size 를 새로 쓸 때는 DESIGN.md 의 `typography.scale` 에 있는 단계에서 고른다.
+     없는 값을 쓰면 design-system-font-size 로 잡힌다. 12.5·13.5·14.5·15.5 는 허용오차로
+     통과하지만 의도된 단계가 아니다 — 12·13·14·15·16 을 쓸 것. */
 
 /* 섹션 안쪽 소제목 — 스토리보드의 "01. 철도 교통" 형식 */
 .sub-h { margin: clamp(40px, 4vw, 68px) 0 0; display: flex; align-items: baseline;

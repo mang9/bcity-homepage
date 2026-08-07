@@ -37,26 +37,87 @@ colors:
   zone-line-edu: "#576F1F"
   zone-line-golf: "#257442"
 typography:
+  # ⚠ 아래 scale 은 **설계된 램프가 아니라 현황 census** 다.
+  #   2026-08-07 실측: index.html(src/css/app.css)과 서브페이지(src/sub/css)를 합쳐
+  #   코드에 실제로 존재하는 font-size 단계가 **50개**다. 판정 허용오차 ±0.5px 로
+  #   아래 43개 정수 앵커가 그 50개를 전부 덮는다(미덮개 0 확인).
+  #
+  #   왜 census 를 적어 두는가 —
+  #   이전에는 이 블록이 7개 고정값(64/40/28/20/16/14/12)만 선언했고 코드와 전혀 맞지
+  #   않아, lint·훅 경고가 전부 소음이 되어 **진짜 드리프트를 가려버렸다**(서브페이지
+  #   리터럴 104개 중 78개가 램프 밖). 현황을 적어 두면 경고는 "새로 들어온 51번째 값"
+  #   에서만 울린다 — 즉 이 목록은 **변경 감지기**이지 디자인 가이드가 아니다.
+  #
+  #   신규 작업에서 고를 목표 램프는 아래 산문(## Typography)에 따로 있다.
+  #   50개를 그 목표 램프로 통합하는 것이 진짜 정리이며, 렌더가 바뀌므로 별건이다.
+  scale:
+    px-10:    10px
+    px-11:    11px
+    px-12:    12px
+    px-13:    13px
+    px-14:    14px
+    px-15:    15px
+    px-16:    16px
+    px-17:    17px
+    px-18:    18px
+    px-19:    19px
+    px-20:    20px
+    px-21:    21px
+    px-22:    22px
+    px-24:    24px
+    px-25:    25px
+    px-26:    26px
+    px-27:    27px
+    px-30:    30px
+    px-31:    31px
+    px-32:    32px
+    px-34:    34px
+    px-38:    38px
+    px-40:    40px
+    px-41:    41px
+    px-42:    42px
+    px-44:    44px
+    px-50:    50px
+    px-52:    52px
+    px-54:    54px
+    px-56:    56px
+    px-60:    60px
+    px-62:    62px
+    px-64:    64px
+    px-68:    68px
+    px-70:    70px
+    px-72:    72px
+    px-74:    74px
+    px-80:    80px
+    px-82:    82px
+    px-84:    84px
+    px-96:    96px
+    px-116:   116px
+    px-128:   128px
+  # 역할별 **대표 단일값**. 유동 범위는 위 scale 과 아래 산문이 담당한다.
+  # ⚠ 여기에 clamp() 를 쓰지 말 것 — impeccable 훅은 clamp 끝점을 읽지만
+  #   design.md CLI 는 "not a valid dimension" 으로 거부한다(2026-08-07 실측).
+  #   두 도구의 기대가 다르므로 교집합인 단일 px 로 적고, 값은 scale 안에서 고른다.
   hero-h1:
     fontFamily: "Paperlogy, Pretendard, 'Noto Sans KR', sans-serif"
-    fontSize: 64px
+    fontSize: 68px
     fontWeight: 700
     lineHeight: 1.1
     letterSpacing: -0.02em
   section-h2:
     fontFamily: "Paperlogy, Pretendard, 'Noto Sans KR', sans-serif"
-    fontSize: 40px
+    fontSize: 54px
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: -0.01em
   card-title:
     fontFamily: "Paperlogy, Pretendard, 'Noto Sans KR', sans-serif"
-    fontSize: 20px
+    fontSize: 22px
     fontWeight: 700
     lineHeight: 1.3
   kpi:
     fontFamily: "Inter, Pretendard, sans-serif"
-    fontSize: 28px
+    fontSize: 38px
     fontWeight: 700
     lineHeight: 1.1
   body:
@@ -133,13 +194,54 @@ White/Blue White 20~30%, Point Mint 5~10%를 기준으로 한다.
 PPT에서는 한글 제목에 페이퍼로지(Paperlogy), 영문 헤드/라벨에 Avenir Next, 본문·수치에 Inter를 쓴다.
 Web에서는 라이선스와 로딩 안정성을 고려해 동일 계열 대체 폰트(Pretendard, Noto Sans KR)를 병행한다.
 
-- **hero-h1 (56~72px, Mobile 34~42px):** 페이지 첫 메시지. Paperlogy.
-- **section-h2 (36~48px, Mobile 26~32px):** 섹션 타이틀.
-- **card-title (18~24px, Mobile 16~20px):** 카드·권역 제목.
-- **kpi (18~28px):** 숫자를 가장 먼저 읽히게 하는 핵심 지표. Inter.
-- **body (16~18px):** 웹 본문 기본. Inter.
+- **hero-h1 (34~96px):** 페이지 첫 메시지. Paperlogy.
+  메인은 `--text-hero` 68→82→96(뷰포트 1800·2300에서 단계 상승), 서브페이지는 `clamp(34px, 4.2vw, 62px)`.
+- **section-h2 (26~74px):** 섹션 타이틀. 메인 `--text-h2` 54→64→74, 서브페이지 `clamp(26px, 2.5vw, 42px)`.
+- **card-title (17~26px):** 카드·권역 제목.
+- **kpi (30~74px):** 숫자를 가장 먼저 읽히게 하는 핵심 지표. Inter.
+  기대효과 지표 `clamp(38px, 4.6vw, 74px)`, 수치 패널 `clamp(30px, 3.4vw, 52px)`.
+- **body (14~18px):** 웹 본문 기본. Inter.
 - **nav (14~16px):** GNB, LNB, 탭. Avenir Next 계열.
 - **caption (12~14px):** 주석, 출처, 면책문구.
+
+### 타입 스케일은 **유동(clamp)** 이다 — 고정 단계표가 아니다
+
+이 사이트는 두 갈래로 크기를 정한다. 둘을 하나로 합치려 하지 말 것.
+
+| 갈래 | 정의 위치 | 방식 |
+|---|---|---|
+| `index.html` | `src/css/app.css` `@theme` | `--text-hero` 등 **뷰포트 구간별 고정값**(1800·2300에서 단계 상승) |
+| 서브페이지 5종 | `src/sub/css/*.css` | **`clamp(min, vw, max)` 연속 유동** |
+
+### ⚠ 현황: 단계가 50개다 — `scale` 은 census, 아래가 목표 램프
+
+front matter 의 `typography.scale` 은 **지금 코드에 있는 것을 그대로 적은 census** 다
+(50개 값 → 43개 앵커). 디자인 가이드가 아니라 **"51번째 값이 새로 들어오면 알려주는 감지기"** 다.
+
+**신규 작업에서는 아래 12단계 안에서 고른다.** 전부 이미 쓰이는 값이라 새 드리프트를 만들지 않는다.
+
+| 역할 | px | 비고 |
+|---|---|---|
+| caption | **12** | 주석·출처·면책 |
+| micro | **14** | 라벨·배지 |
+| body | **16** | 본문 기본 |
+| lede | **18** | 도입 문단 |
+| card | **22** | 카드·권역 제목 |
+| h4 | **26** | 소제목 |
+| h3 | **34** | 블록 제목 |
+| h2 | **42** | 섹션 타이틀 |
+| display | **54** | 큰 수치 |
+| hero-sm | **68** | 히어로 기준 |
+| hero | **82** | 히어로 확대 1단 |
+| hero-lg | **96** | 히어로 확대 2단 |
+
+**정리 대상(별건 · 렌더가 바뀌므로 승인 필요).** 통합하면 50 → 12 단계가 된다.
+
+- **0.5px 변종 7종** — `9.5 · 10.5 · 11.5 · 12.5 · 13.5 · 14.5 · 15.5`.
+  판정 허용오차 ±0.5px 안이라 통과하지만 **의도된 단계가 아니다.** 정수로 흡수한다.
+- **근접 중복 쌍** — `24/25` · `26/27` · `30/31/32` · `40/41/42` · `62/64` · `70/72/74` · `80/82/84`.
+  같은 위계에 두세 값이 공존한다.
+- **초대형 2종** — `116 · 128`. `src/css/app.css` 에서만 쓰이며 목표 램프 밖이다.
 
 ## Layout & Spacing
 
