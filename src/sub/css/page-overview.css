@@ -1,0 +1,140 @@
+/* ===== 사업개요 표 ===== */
+.spec { width: 100%; margin-top: clamp(34px, 3.4vw, 54px); border-top: 2px solid var(--color-primary);
+  font-size: clamp(14.5px, 1vw, 16px); }
+.spec th, .spec td { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.4vw, 24px);
+  text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+.spec thead th { padding-block: 13px; background: rgb(var(--primary-rgb) / .08); font-size: 13.5px;
+  font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
+.spec tbody th { width: clamp(104px, 13vw, 188px); font-weight: 600; color: var(--color-text-muted);
+  background: rgba(255,255,255,.6); }
+.spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
+.spec td { background: var(--color-surface); }
+.spec .k { display: block; font-weight: 600; color: var(--color-primary); font-size: .92em;
+  letter-spacing: .02em; }
+.spec .sub { display: block; margin-top: 3px; color: var(--color-text-muted); }
+.spec b { font-weight: 700; }
+.spec .num { font-variant-numeric: tabular-nums; }
+
+/* ===== 이미지 3컷 ===== */
+.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 26px); margin-top: clamp(30px, 3vw, 46px); }
+.shot { margin: 0; }
+.shot img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-md);
+  border: 1px solid var(--color-line); }
+.shot figcaption { margin-top: 11px; font-size: 13.5px; color: var(--color-text-muted); }
+.shot figcaption b { display: block; margin-bottom: 2px; font-family: var(--font-display);
+  font-size: 15px; font-weight: 700; color: var(--color-text); }
+
+/* ===== 특화단지 — 첨부 시안 형태: 지도 + 떠 있는 말풍선 =====
+   말풍선 좌표는 --x/--y (지도 박스 기준 %) 로만 조정한다.
+   지도 이미지를 바꾸면 이 두 값만 다시 잡으면 된다. */
+.bc { margin-top: clamp(30px, 3.2vw, 52px); display: grid; gap: clamp(26px, 3vw, 46px);
+  grid-template-columns: minmax(0, 1fr); }
+/* 첨부 시안의 좌측 세로 룰. 카드 액센트가 아니라 라벨 구분선이다 */
+.bc-label { margin: 0; padding-left: 13px; border-left: 2px solid var(--color-primary);
+  font-family: var(--font-display); font-size: clamp(15px, 1.15vw, 19px); font-weight: 700;
+  line-height: 1.45; color: var(--color-text); }
+.bc-maps { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(30px, 3.4vw, 52px); }
+
+.bc-panel { margin: 0; }
+/* 말풍선 --x/--y 의 기준은 '지도 이미지 박스'다. 패널에 패딩이 있어서
+   패널을 기준으로 삼으면 퍼센트가 지도 밖으로 밀린다 → 프레임을 따로 둔다 */
+.bc-frame { position: relative; width: fit-content; margin-inline: auto; }
+.bc-frame img { width: 100%; height: auto; }
+.bc-panel--kr .bc-frame { max-width: 500px; }
+.bc-panel--gw .bc-frame { max-width: 610px; }
+
+/* 말풍선 */
+.bc-call { --x: 50%; --y: 50%; --d: 0s; }
+.bc-call-in { display: block; padding: 11px 15px; border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-text);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 8px 20px rgb(var(--navy-rgb) / .1); }
+.bc-call b { display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(13.5px, 1vw, 15px); letter-spacing: -.01em; }
+.bc-call span { display: block; margin-top: 4px; font-size: clamp(12.5px, .9vw, 13.5px);
+  line-height: 1.5; color: var(--color-text-muted); }
+/* 강조 말풍선 3종 */
+.bc-call--key .bc-call-in, .bc-call--cc .bc-call-in { background: var(--color-primary);
+  border-color: var(--color-primary); }
+.bc-call--key b, .bc-call--cc b { color: #fff; }
+.bc-call--key span, .bc-call--cc span { color: rgba(255,255,255,.84); }
+.bc-call--hc .bc-call-in { background: var(--color-mint); border-color: var(--color-mint); }
+.bc-call--hc b { color: var(--color-navy); }
+.bc-call--hc span { color: rgb(var(--navy-rgb) / .82); }
+
+/* 말풍선은 전 구간 지도 위에 겹쳐 띄운다.
+   좁은 화면에서는 설명을 접고 지역명만 남긴다(아래 1279px 블록) */
+.bc-call { position: absolute; left: var(--x); top: var(--y); width: max-content;
+  max-width: 238px; z-index: 2;
+  opacity: 0; transform: translate(var(--tx, 0), calc(-50% + 14px)) scale(.97);
+  transition: opacity .6s ease var(--d), transform .7s cubic-bezier(.22,1,.36,1) var(--d); }
+.bc-call--l { --tx: -100%; }
+.in .bc-call { opacity: 1; transform: translate(var(--tx, 0), -50%) scale(1); }
+
+/* 리더 라인 — 강원 패널에서 말풍선과 시·군을 잇는다 */
+.bc-lead { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* 강원 지도가 흰색이라 흰 선은 안 보인다 — navy 를 옅게 쓴다.
+   도트는 파랑·민트 시군 위에 놓이므로 흰색을 유지한다 (Figma 마커와 같은 규격) */
+.bc-lead polyline { fill: none; stroke: rgb(var(--navy-rgb) / .3); stroke-width: 1.4; }
+.bc-dot { filter: drop-shadow(0 1px 3px rgb(var(--navy-rgb) / .38)); }
+.bc-dot circle:first-child { fill: none; stroke: #fff; stroke-width: 1;
+  vector-effect: non-scaling-stroke; }
+.bc-dot circle:last-child { fill: #fff; }
+
+/* 지도 위에 겹쳐 띄우는 배치 — 1280px 이상에서만.
+   1200~1279 에서는 칼럼이 좁아 오른쪽 말풍선이 섹션 밖으로 11px 삐져나온다(실측) */
+@media (min-width: 1280px) {
+  .bc { grid-template-columns: minmax(0, 150px) minmax(0, 1fr); gap: clamp(20px, 2vw, 36px);
+    align-items: start; }
+  .bc-maps { grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); gap: clamp(24px, 2.8vw, 44px);
+    align-items: center; }
+  /* 이 패딩이 1280~1799 구간의 지도 크기를 결정한다(max-width 가 아니라).
+     말풍선은 지도 위로 겹치므로 좌우 예약 폭을 넉넉히 둘 필요가 없다 */
+  .bc-panel--kr { padding: 0 clamp(28px, 3.4vw, 84px); }
+  /* 등장이 끝나면 아주 약하게 부유한다. transform 만 건드려 레이아웃을 다시 계산하지 않는다 */
+  .in .bc-call-in { animation: bcFloat 5.5s ease-in-out infinite; animation-delay: calc(var(--d) + .9s); }
+  @keyframes bcFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+}
+/* 1279px 이하 — 겹침은 유지하고 설명을 접어 지역명만 남긴다.
+   칼럼이 좁아 두 줄 설명까지 얹으면 지도를 다 덮는다 */
+@media (max-width: 1279px) {
+  .bc-frame { width: auto; }
+  .bc-call { max-width: 48%; }
+  .bc-call-in { padding: 6px 10px; box-shadow: 0 4px 12px rgb(var(--navy-rgb) / .14); }
+  .bc-call b { font-size: clamp(12px, 2.3vw, 13px); letter-spacing: -.02em; white-space: nowrap; }
+  .bc-call span { display: none; }
+}
+/* 768px 이하 — 지역명을 짧게 바꿔 지도를 덜 가린다.
+   b 안의 원문은 남겨 두므로 스크린리더에는 전체 이름이 읽힌다 */
+@media (max-width: 767px) {
+  .bc-call-in { padding: 5px 9px; }
+  .bc-call b[data-short] { font-size: 0; }
+  .bc-call b[data-short]::after { content: attr(data-short); font-size: 12px; }
+}
+
+/* .cl-detail 은 현재 마크업에서 쓰이지 않는다(2단 상세 카드용으로 남겨 둔 것).
+   제거는 별건으로 다룬다 — 이 커밋은 렌더 제로디프가 목표다 */
+.cl-detail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.2vw, 20px); margin-top: clamp(20px, 2vw, 30px); }
+.cl-note { margin: clamp(22px, 2.2vw, 32px) 0 0; font-size: 12px; color: var(--color-text-muted); }
+
+/* ===== 반응형 ===== */
+@media (max-width: 1023px) {
+  .shots { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .shot figcaption b { font-size: 14px; }
+}
+@media (max-width: 767px) {
+  .shots { grid-template-columns: minmax(0, 1fr); }
+  .shot img { aspect-ratio: 16 / 9; }
+  /* 표를 행 단위 블록으로 접는다 — 좁은 화면에서 라벨 열이 본문을 압박한다 */
+  .spec thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: auto; }
+  .spec tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
+  .spec tbody th { width: auto; padding: 13px 16px 0; background: none;
+    border: 0; font-size: 12.5px; letter-spacing: .04em; color: var(--color-primary); }
+  .spec td { padding: 5px 16px 15px; border: 0; }
+  .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 0; }
+  .spec tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
+}
+@media (max-width: 400px) { .cl-detail { grid-template-columns: minmax(0, 1fr); } }

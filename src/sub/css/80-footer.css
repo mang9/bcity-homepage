@@ -1,0 +1,16 @@
+/* ===== 푸터 ===== */
+.foot { border-top: 1px solid var(--color-line); background: var(--color-bg);
+  padding: clamp(46px, 4.4vw, 72px) 0 34px; }
+.foot-top { display: grid; gap: clamp(24px, 2.6vw, 44px); }
+@media (min-width: 1024px) { .foot-top { grid-template-columns: 1fr 1fr; } }
+.foot .logo { width: 150px; color: var(--color-logo); }
+.foot-addr { margin: 18px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
+.foot-addr b { color: var(--color-text); font-weight: 600; }
+.foot-dis { margin: 0; font-size: 12px; line-height: 1.8; color: rgba(91,107,130,.85); }
+.foot-bot { display: flex; flex-direction: column; gap: 12px; align-items: center;
+  justify-content: space-between; margin-top: clamp(28px, 2.8vw, 44px);
+  padding-top: 22px; border-top: 1px solid var(--color-line);
+  font-size: 12px; color: var(--color-text-muted); }
+@media (min-width: 640px) { .foot-bot { flex-direction: row; } }
+.foot-nav { display: flex; align-items: center; gap: 14px; font-weight: 600; color: var(--color-text); }
+.foot-nav i { width: 1px; height: 12px; background: var(--color-line); }

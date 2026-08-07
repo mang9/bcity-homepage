@@ -1,0 +1,46 @@
+/* ===== GNB ===== */
+.gnb {
+  position: fixed; inset: 0 0 auto; z-index: 50; height: var(--gnb-h);
+  color: #fff; border-bottom: 1px solid transparent;
+  transition: background .3s ease, color .3s ease, border-color .3s ease;
+}
+.gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
+.gnb.is-solid { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+  color: var(--color-text); border-bottom-color: var(--color-line); }
+.logo { width: 118px; height: auto; color: currentColor; }
+.gnb.is-solid .logo { color: var(--color-logo); }
+.gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
+.gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
+.gnb-menu a:hover { opacity: 1; }
+.gnb-menu a.is-on { opacity: 1; }
+.gnb-menu a.is-on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; background: currentColor; }
+.gnb-side { display: flex; align-items: center; gap: 14px; }
+.gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
+.gnb-lang span:last-child { opacity: .6; font-weight: 600; }
+.gnb-sns { display: flex; gap: 8px; }
+.gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
+.gnb-sns a { opacity: .85; transition: opacity .2s; }
+.gnb-sns a:hover { opacity: 1; }
+.burger { display: inline-flex; padding: 6px; margin: -6px; background: none; border: 0;
+  color: inherit; cursor: pointer; }
+.burger svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; }
+@media (min-width: 1024px) {
+  .gnb-menu { display: flex; }
+  .gnb-lang { display: flex; }
+  .burger { display: none; }
+}
+
+/* 모바일 메뉴 */
+.mnav { position: fixed; inset: 0; z-index: 60; display: none; background: rgb(var(--scrim-rgb) / .55); }
+.mnav.is-open { display: block; }
+.mnav-panel { position: absolute; inset: 0 0 0 auto; width: min(320px, 84vw);
+  background: var(--color-surface); padding: 20px; overflow: auto; }
+.mnav-close { position: absolute; top: 12px; right: 12px; display: inline-flex; padding: 8px;
+  background: none; border: 0; color: var(--color-text-muted); cursor: pointer; }
+.mnav-close svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.mnav h2 { margin: 30px 0 10px; font-family: var(--font-display); font-size: 13px;
+  letter-spacing: .14em; color: var(--color-primary); }
+.mnav a { display: block; padding: 11px 4px; border-bottom: 1px solid var(--color-line);
+  font-size: 15px; color: var(--color-text); }
+.mnav a.is-on { color: var(--color-primary); font-weight: 700; }

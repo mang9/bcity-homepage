@@ -1,0 +1,46 @@
+/* ===== 추진일정 — 연도별 타임라인 =====
+   구조: .tl > .tl-year* > (.tl-y + .tl-items > .tl-item*)
+   세로 축선은 .tl-items 의 ::before 로 그린다(연도 라벨을 축 왼쪽에 두기 위해). */
+
+.tl { margin-top: clamp(30px, 3vw, 48px); display: grid; gap: 0; }
+
+.tl-year { display: grid; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 768px) {
+  /* 연도 라벨을 고정 폭 칼럼으로 빼면 항목 들여쓰기가 연도 자릿수와 무관해진다 */
+  .tl-year { grid-template-columns: clamp(84px, 9vw, 128px) minmax(0, 1fr); gap: clamp(16px, 2vw, 34px); }
+}
+
+.tl-y { margin: 0; padding-top: 2px; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(24px, 2.4vw, 38px); line-height: 1; letter-spacing: -.03em;
+  color: var(--color-primary); font-variant-numeric: tabular-nums; }
+/* 지난 연도는 톤을 낮춰 '진행 중 시점'이 눈에 먼저 들어오게 한다 */
+.tl-year--done .tl-y { color: var(--color-text-muted); opacity: .72; }
+.tl-year--now .tl-y { color: var(--color-primary); }
+
+.tl-items { position: relative; margin: 10px 0 0; padding: 0 0 clamp(26px, 2.6vw, 40px) 26px;
+  list-style: none; display: grid; gap: 11px; }
+@media (min-width: 768px) { .tl-items { margin-top: 0; } }
+/* 세로 축선. 마지막 연도는 아래로 새지 않게 잘라 준다 */
+.tl-items::before { content: ""; position: absolute; left: 5px; top: 7px; bottom: 0;
+  width: 2px; background: var(--color-line); }
+.tl-year:last-child .tl-items { padding-bottom: 0; }
+.tl-year:last-child .tl-items::before { bottom: 10px; }
+
+.tl-item { position: relative; font-size: clamp(14px, 1vw, 15.5px); line-height: 1.6; }
+/* 도트 — 축선 위에 얹는다. 축선(left:5px, width:2px)의 중심이 6px 이므로 좌표를 맞춘다 */
+.tl-item::before { content: ""; position: absolute; left: -26px; top: .52em;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--color-surface); border: 2px solid var(--color-line); }
+.tl-item--key::before { background: var(--color-primary); border-color: var(--color-primary); }
+/* 예정 항목은 '옅은 링'으로 구분한다.
+   ⚠ border-style: dashed 를 쓰지 말 것 — 지름 12px · 테두리 2px 에서는 파선 조각이
+     3~4개밖에 안 그려져 원이 아니라 알파벳 C 처럼 보인다(실측). */
+.tl-item--plan::before { border-color: var(--color-primary); opacity: .45; }
+
+.tl-d { display: inline-block; min-width: 4.6em; margin-right: 8px;
+  font-family: var(--font-display); font-weight: 700; color: var(--color-primary);
+  font-variant-numeric: tabular-nums; }
+.tl-t { color: var(--color-text); }
+.tl-t small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--color-text-muted); }
+.tl-item--plan .tl-d, .tl-item--plan .tl-t { color: var(--color-text-muted); }
+.tl-item--plan .tl-d { color: var(--color-primary); opacity: .78; }

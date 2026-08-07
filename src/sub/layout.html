@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}" />
+
+  <!-- 오프라인 시연용 로컬 폰트 (index.html 과 동일) -->
+  <link href="assets/vendor/inter/inter.local.css" rel="stylesheet" />
+  <link href="assets/vendor/pretendard/pretendard.local.css" rel="stylesheet" />
+  <link href="assets/vendor/paperlogy/paperlogy.local.css" rel="stylesheet" />
+
+  <style>
+{{css}}
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="sr">본문으로 건너뛰기</a>
+
+{{> gnb}}
+
+  <main id="main">
+{{> hero}}
+
+{{main}}
+  </main>
+
+{{> footer}}
+
+  <script>
+{{js}}
+  </script>
+</body>
+</html>

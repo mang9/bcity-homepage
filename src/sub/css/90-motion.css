@@ -1,0 +1,10 @@
+/* ===== 등장 모션 ===== */
+.rv { opacity: 0; transform: translateY(22px);
+  transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+.rv.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rv { opacity: 1; transform: none; transition: none; }
+  .hero-bg { transform: none; }
+}

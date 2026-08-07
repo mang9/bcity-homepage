@@ -1,0 +1,13 @@
+/* ===== 공통 섹션 ===== */
+.sec { padding: clamp(58px, 6.4vw, 112px) 0; }
+/* 밝은 변형 — 지도의 부드러운 그림자가 어두운 배경에서는 뭉개져 보인다.
+   #summary 는 페이지 배경(#F4F8FE)이므로 여기는 흰 면으로 구분한다 */
+.sec--surface { background: var(--color-surface); border-block: 1px solid var(--color-line); }
+.eyebrow { display: flex; align-items: center; gap: 13px; font-size: 12.5px;
+  letter-spacing: .2em; color: var(--color-text-muted); }
+.eyebrow i { display: block; width: 34px; height: 1px; background: var(--color-primary); opacity: .55; }
+.eyebrow b { font-weight: 700; color: var(--color-primary); }
+.h2 { margin: 20px 0 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(26px, 2.5vw, 42px); line-height: 1.32; letter-spacing: -.022em; }
+.h2 em { font-style: normal; color: var(--color-primary); }
+.lede { margin: 14px 0 0; font-size: clamp(15px, 1.05vw, 18px); color: var(--color-text-muted); }

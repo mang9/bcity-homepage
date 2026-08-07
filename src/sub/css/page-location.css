@@ -1,0 +1,66 @@
+/* ===== 입지 — 교통환경 · 광역 인프라 ===== */
+
+/* 서브탭 — 스토리보드 slide27·30 의 '교통환경 / 광역 인프라' 둥근 버튼 2개.
+   페이지 안 두 섹션으로 보내는 앵커이며 스크롤 위치에 따라 활성 표시가 따라간다.
+   LNB(sticky, 58px) 밑으로 파고들지 않도록 대상 섹션에 scroll-margin-top 을 준다. */
+.subtab { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  padding: clamp(26px, 2.8vw, 44px) 0 0; }
+.subtab a { padding: 9px 20px; border-radius: 999px; border: 1px solid var(--color-line);
+  background: var(--color-surface); font-size: clamp(13.5px, 1vw, 15px); font-weight: 600;
+  color: var(--color-text-muted); transition: background .2s, color .2s, border-color .2s; }
+.subtab a:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+.subtab a.is-on { background: var(--color-primary); border-color: var(--color-primary);
+  color: #fff; }
+#transit, #infra { scroll-margin-top: calc(var(--lnb-h) + 16px); }
+/* 서브탭 바로 뒤 섹션은 위 여백을 줄인다 — 탭과 아이브로우가 멀어지면 둘의 관계가 안 읽힌다 */
+.subtab-bar + .sec { padding-top: clamp(34px, 3.4vw, 56px); }
+
+/* 종합 교통 지도 — 스토리보드 slide27 은 본문 폭의 절반 이하로 중앙에 놓는다 */
+.tr-map { margin: clamp(28px, 3vw, 48px) auto 0; max-width: 760px; }
+.tr-map img { width: 100%; height: auto; border-radius: var(--radius-md);
+  background: rgb(var(--primary-rgb) / .04); }
+.tr-map figcaption { margin-top: 10px; text-align: center; font-size: 12.5px;
+  color: var(--color-text-muted); }
+/* 좁은 화면에서는 폭에 맞춰 줄이면 지점명·소요시간 배지가 읽히지 않는다(390px 실측).
+   가로 스크롤 컨테이너로 바꿔 최소 폭을 지킨다 — 스크롤은 이 박스 안에서만 일어나므로
+   문서 자체의 가로 오버플로는 생기지 않는다. */
+@media (max-width: 767px) {
+  .tr-map-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md); }
+  .tr-map-scroll img { min-width: 560px; border-radius: var(--radius-md); }
+  .tr-map figcaption::after { content: " · 좌우로 넘겨 보실 수 있습니다"; color: var(--color-primary); }
+}
+
+/* 교통 블록의 분류 라벨 — 헤드라인 **위**에 온다.
+   스토리보드의 "01. 철도 교통 / 수도권을 잇는 광역 철도망" 순서를 그대로 따른 것 —
+   아래에 두면 헤드라인이 분류를 설명하는 것처럼 거꾸로 읽힌다 */
+.tr-cat { margin: 0 0 9px; display: flex; align-items: baseline; gap: 10px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: .16em; color: var(--color-text-muted); }
+.tr-cat b { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
+  font-weight: 700; letter-spacing: 0; color: var(--color-primary);
+  font-variant-numeric: tabular-nums; }
+/* 2단 안에서는 표가 좁아지므로 여백을 조인다 */
+.zz .dtab { margin-top: clamp(14px, 1.4vw, 20px); }
+.tr-sum { margin: clamp(14px, 1.4vw, 20px) 0 0; padding-left: 14px;
+  border-left: 2px solid var(--color-mint); font-size: clamp(13.5px, .98vw, 15.5px);
+  line-height: 1.65; color: var(--color-text-muted); }
+.tr-sum b { color: var(--color-text); font-weight: 600; }
+
+/* 광역 인프라 — 4개 그룹을 2열 카드로.
+   ⚠ 스토리보드 slide30~32 는 그룹마다 사진(강원대·한림대·병원·도청·남이섬·레고랜드 등)을
+     요구하지만 해당 자산이 없다. 사진 없이도 성립하도록 '그룹 카드 + 시설명 칩' 구조로
+     짰다. 사진이 들어오면 .infra-item 안에 그림을 추가하면 되고 칩은 캡션으로 남는다. */
+.infra { display: grid; gap: clamp(12px, 1.2vw, 20px); margin-top: clamp(22px, 2.2vw, 34px);
+  grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1024px) { .infra { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.infra-item { margin: 0; padding: clamp(20px, 1.9vw, 30px) clamp(18px, 1.9vw, 30px);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  background: var(--color-surface); }
+
+/* 시설명 칩 — 스토리보드가 준 이름 그대로만 넣는다(설명을 지어내지 않는다) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: clamp(14px, 1.4vw, 20px) 0 0;
+  padding: 0; list-style: none; }
+.chip { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--color-line);
+  background: var(--color-bg); font-size: 13.5px; color: var(--color-text); }
+.chip b { font-family: var(--font-display); font-weight: 700; color: var(--color-primary);
+  font-variant-numeric: tabular-nums; }

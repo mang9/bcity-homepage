@@ -22,3 +22,7 @@ CONTENT.md
 
 # npm
 node_modules/
+
+# 로컬 개발 서버 설정 — runtimeArgs 에 머신별 절대경로가 박혀 있다.
+# 원본·미러 양쪽에 각각 두고 rsync 로는 넘기지 않는다(CLAUDE.md §11.9).
+.claude/

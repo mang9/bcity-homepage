@@ -1,0 +1,46 @@
+/* ===== 기대효과 ===== */
+
+/* 핵심 지표 3종 — 스토리보드 slide34 는 3열 카드가 아니라
+   [큰 숫자] | [라벨 + 설명] 이 세로로 3행 쌓이는 구조다(숫자 x29.5 / 라벨 x49.2).
+   숫자 열을 고정 폭으로 잡아 세 줄의 숫자 왼쪽 끝이 맞물리게 한다. */
+.kpi { margin: clamp(30px, 3vw, 50px) 0 0; padding: 0; list-style: none;
+  border-top: 1px solid var(--color-line); }
+.kpi-item { display: grid; gap: 6px clamp(24px, 3.4vw, 64px);
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(22px, 2.4vw, 38px) 0; border-bottom: 1px solid var(--color-line);
+  align-items: center; }
+@media (min-width: 768px) {
+  .kpi-item { grid-template-columns: minmax(0, clamp(220px, 26vw, 340px)) minmax(0, 1fr); }
+}
+.kpi-v { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(38px, 4.6vw, 74px); line-height: 1; letter-spacing: -.04em;
+  color: var(--color-primary); font-variant-numeric: tabular-nums; }
+/* 단위는 수치보다 작게 — 숫자 덩어리가 먼저 읽혀야 한다 */
+.kpi-v small { font-size: .34em; font-weight: 700; letter-spacing: -.01em; margin-left: 4px;
+  color: var(--color-navy); }
+.kpi-v i { display: block; font-style: normal; font-family: var(--font-body);
+  font-size: 15px; font-weight: 600; letter-spacing: 0; margin-top: 10px;
+  color: var(--color-text-muted); }
+.kpi-l { display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(16px, 1.3vw, 21px); letter-spacing: -.018em; color: var(--color-navy); }
+.kpi-d { display: block; margin-top: 7px; font-size: clamp(13.5px, 1vw, 15.5px);
+  line-height: 1.65; color: var(--color-text-muted); max-width: 56ch; }
+
+/* 01 경제적 기대효과는 좌우 2단이 아니라 지표 리스트가 본문 역할을 한다 */
+.eff-head { margin-top: clamp(38px, 4vw, 68px); }
+
+/* 기대효과 블록 — 좌우 교차 2단(.zz)의 본문 쪽 */
+.eff-cat { margin: 0 0 9px; display: flex; align-items: baseline; gap: 10px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: .16em; color: var(--color-text-muted); }
+.eff-cat b { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
+  font-weight: 700; letter-spacing: 0; color: var(--color-primary);
+  font-variant-numeric: tabular-nums; }
+.eff-t { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(20px, 1.9vw, 31px); line-height: 1.32; letter-spacing: -.022em; }
+.eff-list { margin: clamp(16px, 1.7vw, 26px) 0 0; padding: 0; list-style: none;
+  display: grid; gap: 11px; }
+.eff-list li { position: relative; padding-left: 17px;
+  font-size: clamp(14px, 1vw, 16px); line-height: 1.62; color: var(--color-text-muted); }
+/* 불릿은 ::before 로 — list-style 마커는 들여쓰기 제어가 브라우저마다 다르다 */
+.eff-list li::before { content: ""; position: absolute; left: 0; top: .62em;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--color-mint); }

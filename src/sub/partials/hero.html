@@ -1,0 +1,20 @@
+    <!-- ===== 히어로 ===== -->
+    <section class="hero">
+      <img class="hero-bg" src="{{heroImg}}" alt="" />
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="wrap">
+        <nav class="crumb" aria-label="현재 위치">
+          <a href="index.html">HOME</a><span aria-hidden="true">›</span>
+          <span>{{catLabel}}</span><span aria-hidden="true">›</span><b>{{navLabel}}</b>
+        </nav>
+        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>{{catNo}}</b><span>{{catEn}} · {{catLabel}}</span></p>
+        <h1>{{h1}}</h1>
+      </div>
+    </section>
+
+    <!-- ===== LNB ===== -->
+    <nav class="lnb" aria-label="{{catLabel}} 하위 메뉴">
+      <div class="wrap">
+{{lnbItems}}
+      </div>
+    </nav>

@@ -1,0 +1,33 @@
+  <!-- ===== GNB ===== -->
+  <header class="gnb" id="gnb">
+    <div class="wrap">
+      <a href="index.html" aria-label="B·CITY 홈">{{> logo}}</a>
+      <nav class="gnb-menu" aria-label="주 메뉴">
+{{gnbItems}}
+      </nav>
+      <div class="gnb-side">
+        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
+        <div class="gnb-sns">
+          <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/biotec-iv/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.07 1.4-2.07 2.85V21h-4V9Z"/></svg>
+          </a>
+        </div>
+        <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">
+          <svg viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== 모바일 메뉴 ===== -->
+  <div class="mnav" id="mnav" hidden>
+    <div class="mnav-panel" role="dialog" aria-label="전체 메뉴">
+      <button class="mnav-close" id="mnavClose" aria-label="메뉴 닫기">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+{{mnavItems}}
+    </div>
+  </div>

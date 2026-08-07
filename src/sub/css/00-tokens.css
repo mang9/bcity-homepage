@@ -1,0 +1,38 @@
+/* ===== DESIGN.md 토큰 (index.html 과 동일 정본) =====
+   ⚠ DESIGN.md 가 바뀌면 여기와 src/css/app.css 를 **둘 다** 고친다.
+      서브페이지는 Tailwind 를 쓰지 않으므로 @theme 트리셰이킹(§1.3)은 해당 없다. */
+:root {
+  --color-primary: #344198;
+  --color-primary-hover: #2a3680;
+  --color-navy: #002742;
+  --color-mint: #3dbfa8;
+  --color-azure: #4e7ac7;
+  --color-light-blue: #bbccf0;
+  --color-bg: #f4f8fe;
+  --color-surface: #ffffff;
+  --color-text: #111111;
+  --color-text-muted: #5b6b82;
+  --color-line: #d8e3f2;
+
+  /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
+     여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
+  --color-logo: #2c3e91;
+  --scrim-rgb: 0 17 34;
+  --navy-rgb: 0 39 66;
+  --primary-rgb: 52 65 152;
+
+  /* DESIGN.md rounded 스케일 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font-display: "Paperlogy", "Pretendard", "Noto Sans KR", sans-serif;
+  --font-body: "Inter", "Pretendard", sans-serif;
+
+  --wrap: 1320px;
+  --gnb-h: 64px;
+  --lnb-h: 58px;
+}
+/* 큰 화면: index.html 과 같은 단계로 컨테이너·타이포를 키운다 */
+@media (min-width: 1800px) { :root { --wrap: 1560px; } }
+@media (min-width: 2300px) { :root { --wrap: 1720px; } }

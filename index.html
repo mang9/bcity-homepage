@@ -590,7 +590,7 @@
         <span>© 2026 B-CITY. All rights reserved.</span>
         <!-- 푸터 메뉴 -->
         <nav class="flex items-center gap-4 font-semibold text-text" aria-label="푸터 메뉴">
-          <a href="#company" class="transition hover:text-primary">회사소개</a>
+          <a href="company.html" class="transition hover:text-primary">회사소개</a>
           <span class="h-3 w-px bg-line" aria-hidden="true"></span>
           <a href="#privacy" class="transition hover:text-primary">개인정보이용약관</a>
         </nav>
@@ -800,13 +800,17 @@
     /* 사이트맵 (IA) — 4개 대분류 + 독립 CTA.
        items 세 번째 값이 1이면 3단(하위의 하위) 항목으로 들여쓴다. */
     const siteMap = [
-      { no:'01', title:'사업소개', href:'#business', items:[
-        /* 서브페이지가 만들어진 항목만 실제 파일로 보낸다. 나머지는 메인 앵커 유지 */
+      { no:'01', title:'사업소개', href:'overview.html', items:[
+        /* 01 사업소개는 서브페이지 5개가 전부 만들어졌다(2026-08-06).
+           ⚠ 이 목록의 순서·href 는 src/sub/nav.json 의 business 카테고리와 같아야 한다.
+             한쪽만 고치면 메인 메가메뉴와 서브페이지 LNB 가 어긋난다.
+           순서는 스토리보드 v2(slide26 구분면)의 기대효과 → 추진일정 순을 따른다 —
+           이전 배열은 두 항목이 뒤바뀌어 있었다. */
         ['사업개요','overview.html'],
-        ['입지','#location'],
-        ['추진일정','#business'],
-        ['기대효과','#business'],
-        ['사업주체','#company'],
+        ['입지','location.html'],
+        ['기대효과','effect.html'],
+        ['추진일정','schedule.html'],
+        ['사업주체','company.html'],
       ]},
       { no:'02', title:'도시소개', href:'#concept', items:[
         ['브랜드','#concept'],
