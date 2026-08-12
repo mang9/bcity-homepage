@@ -200,20 +200,36 @@
   padding-top: clamp(26px, 2.8vw, 44px);
   border-top: 1px solid rgb(255 255 255 / .18); }
 
-/* 사진 자료가 없는 세 항목 — 자리표시 대신 라운드 아이콘 조합으로 낸다 */
-.inf-orbs { display: grid; gap: clamp(14px, 1.6vw, 26px);
-  margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; list-style: none;
-  grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 640px) { .inf-orbs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.inf-orb { display: flex; align-items: center; gap: clamp(12px, 1.2vw, 18px); }
-.inf-orb-ic { flex: none; display: inline-flex; align-items: center; justify-content: center;
-  width: clamp(52px, 5vw, 66px); aspect-ratio: 1; border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / .3); background: rgb(255 255 255 / .09);
-  color: var(--color-mint); }
-.inf-orb-ic svg { width: 46%; height: 46%; }
+/* 사진 자료가 없는 세 항목 — 자리표시 대신 **서로 겹치는 원 3개**로 낸다.
+   아이콘만 원에 가두지 않고 아이콘 + 이름을 한 원 안에 담는다(2026-08-13 지시).
+   겹치는 부분이 '연결된 생태계'를 그대로 말한다.
+
+   ⚠ 면을 반투명으로 둔다. 불투명하면 겹친 자리가 그냥 가려져 교차가 안 보인다.
+   ⚠ **좌우 패딩에 %를 쓰지 말 것.** flex 아이템의 퍼센트 패딩은 자기 폭이 아니라
+     **flex 컨테이너 폭**을 기준으로 풀린다. `0 11%` 로 뒀더니 컨테이너 1078px 기준
+     118px 가 되어 안쪽 폭이 2px 로 무너지고(글이 한 글자씩 쪼개짐) box-sizing 때문에
+     원 지름까지 208 → 239px 로 불었다(2026-08-13 실측). px clamp 로 준다. */
+.inf-orbs { display: flex; flex-wrap: wrap; justify-content: center;
+  margin: clamp(30px, 3.2vw, 52px) 0 0; padding: 0; list-style: none; }
+.inf-orb { flex: none; width: clamp(148px, 15.5vw, 208px); aspect-ratio: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(7px, .8vw, 11px); padding: 0 clamp(15px, 1.6vw, 23px); text-align: center;
+  border-radius: 50%; border: 1px solid rgb(255 255 255 / .34);
+  background: rgb(255 255 255 / .07); }
+/* 겹침 — 지름의 약 18% */
+.inf-orb + .inf-orb { margin-left: clamp(-38px, -3.4vw, -26px); }
+.inf-orb-ic { display: block; width: clamp(24px, 2.4vw, 32px); color: var(--color-mint); }
+.inf-orb-ic svg { width: 100%; height: 100%; display: block; }
 .inf-orb b { font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(14px, 1.1vw, 16.5px); letter-spacing: -.014em; color: #fff;
-  word-break: keep-all; }
+  font-size: clamp(12.5px, 1vw, 15px); line-height: 1.42; letter-spacing: -.016em;
+  color: #fff; word-break: keep-all; }
+
+/* 좁은 화면 — 가로로 겹치면 원이 너무 작아진다. 세로로 쌓고 위아래로 겹친다 */
+@media (max-width: 599px) {
+  .inf-orbs { flex-direction: column; align-items: center; }
+  .inf-orb { width: clamp(150px, 46vw, 190px); }
+  .inf-orb + .inf-orb { margin-left: 0; margin-top: -18px; }
+}
 
 /* 사진 출처 — 캡션 아래 한 줄. 한국관광공사 워터마크가 크롭에 잘릴 수 있어
    시설명 바로 밑에서 출처를 밝힌다(2026-08-13 지시) */

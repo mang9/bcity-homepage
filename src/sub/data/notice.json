@@ -26,7 +26,7 @@
       }
     ],
     "date": "2026-07-20",
-    "visible": false,
+    "visible": true,
     "order": 1,
     "_sample": true
   },
@@ -40,7 +40,7 @@
       "PFV 는 자본금·대출·분양수익을 통합 관리하는 명목회사로서 사업 전반을 시행하며, AMC 는 자산관리 업무를 전문 수탁합니다."
     ],
     "date": "2026-06-11",
-    "visible": false,
+    "visible": true,
     "order": 2,
     "_sample": true
   },
@@ -55,7 +55,7 @@
       "assets/img-street.jpg"
     ],
     "date": "2026-05-02",
-    "visible": false,
+    "visible": true,
     "order": 3,
     "_sample": true
   },
@@ -63,7 +63,7 @@
     "id": "notice-hidden-example",
     "title": "숨김 예시 — visible:false 라 화면에 안 나온다",
     "date": "2026-01-01",
-    "visible": false,
+    "visible": true,
     "order": 9,
     "_sample": true
   }

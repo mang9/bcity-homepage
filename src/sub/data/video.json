@@ -7,7 +7,7 @@
     "duration": "0:12",
     "url": "https://www.youtube.com/@B-CITY-KOREA",
     "date": "2026-07-28",
-    "visible": false,
+    "visible": true,
     "order": 1,
     "_sample": true
   },
@@ -19,7 +19,7 @@
     "duration": "0:34",
     "url": "https://www.youtube.com/@B-CITY-KOREA",
     "date": "2026-07-25",
-    "visible": false,
+    "visible": true,
     "order": 2,
     "_sample": true
   },
@@ -31,7 +31,7 @@
     "duration": "0:04",
     "url": "https://www.youtube.com/@B-CITY-KOREA",
     "date": "2026-06-22",
-    "visible": false,
+    "visible": true,
     "order": 3,
     "_sample": true
   },
@@ -43,7 +43,7 @@
     "duration": "0:04",
     "url": "https://www.youtube.com/@B-CITY-KOREA",
     "date": "2026-06-19",
-    "visible": false,
+    "visible": true,
     "order": 4,
     "_sample": true
   },
@@ -55,7 +55,7 @@
     "duration": "0:04",
     "url": "https://www.youtube.com/@B-CITY-KOREA",
     "date": "2026-05-16",
-    "visible": false,
+    "visible": true,
     "order": 5,
     "_sample": true
   },
@@ -67,7 +67,7 @@
     "duration": "0:04",
     "url": "https://www.youtube.com/@B-CITY-KOREA",
     "date": "2026-05-13",
-    "visible": false,
+    "visible": true,
     "order": 6,
     "_sample": true
   }

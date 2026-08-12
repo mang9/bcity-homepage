@@ -7,7 +7,7 @@
     "file": "assets/img-city.jpg",
     "image": "assets/img-bio.jpg",
     "date": "2026-07-16",
-    "visible": false,
+    "visible": true,
     "order": 1,
     "_sample": true
   },
@@ -19,7 +19,7 @@
     "file": "assets/img-city.jpg",
     "image": "assets/img-city.jpg",
     "date": "2026-06-30",
-    "visible": false,
+    "visible": true,
     "order": 2,
     "_sample": true
   },
@@ -30,7 +30,7 @@
     "url": "https://mang9.github.io/bcity-homepage/",
     "file": "assets/img-city.jpg",
     "date": "2026-06-02",
-    "visible": false,
+    "visible": true,
     "order": 3,
     "_sample": true
   },
@@ -41,7 +41,7 @@
     "url": "https://mang9.github.io/bcity-homepage/",
     "file": "assets/img-city.jpg",
     "date": "2026-05-20",
-    "visible": false,
+    "visible": true,
     "order": 4,
     "_sample": true
   },
@@ -52,7 +52,7 @@
     "url": "https://mang9.github.io/bcity-homepage/",
     "file": "assets/img-city.jpg",
     "date": "2026-04-11",
-    "visible": false,
+    "visible": true,
     "order": 5,
     "_sample": true
   }

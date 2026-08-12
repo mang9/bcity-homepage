@@ -5,7 +5,7 @@
     "category": "render",
     "image": "assets/img-wide.jpg",
     "date": "2026-07-01",
-    "visible": false,
+    "visible": true,
     "order": 1,
     "_sample": true
   },
@@ -15,7 +15,7 @@
     "category": "render",
     "image": "assets/img-street.jpg",
     "date": "2026-07-01",
-    "visible": false,
+    "visible": true,
     "order": 2,
     "_sample": true
   },
@@ -25,7 +25,7 @@
     "category": "event",
     "image": "assets/img-park.jpg",
     "date": "2026-06-20",
-    "visible": false,
+    "visible": true,
     "order": 3,
     "_sample": true
   },
@@ -35,7 +35,7 @@
     "category": "site",
     "image": "assets/img-bio.jpg",
     "date": "2026-06-12",
-    "visible": false,
+    "visible": true,
     "order": 4,
     "_sample": true
   },
@@ -45,7 +45,7 @@
     "category": "etc",
     "image": "assets/img-shuttle.jpg",
     "date": "2026-05-30",
-    "visible": false,
+    "visible": true,
     "order": 5,
     "_sample": true
   },
@@ -55,7 +55,7 @@
     "category": "render",
     "image": "assets/slide-day.jpg",
     "date": "2026-05-15",
-    "visible": false,
+    "visible": true,
     "order": 6,
     "_sample": true
   }

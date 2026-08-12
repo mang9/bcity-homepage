@@ -101,6 +101,19 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
    ⚠ 페이지네이션은 이 스위치와 무관하다. 언론보도 12건은 계속 2쪽으로 나뉜다. */
 const SHOW_LIST_FILTERS = false;
 
+/* ── 샘플 게시물 노출 스위치 ────────────────────────────────────────────
+   `_sample: true` 인 항목은 **기본적으로 빌드에서 빠진다.** 배포본에 가짜 게시물이
+   올라가는 것이 이 프로젝트에서 가장 위험한 사고이기 때문이다(실제 런칭 사이트).
+
+     node tools/build/pages.mjs                 → 샘플 제외 (배포용 · 기본)
+     SHOW_SAMPLES=1 node tools/build/pages.mjs  → 샘플 포함 (로컬 확인용)
+
+   ⚠ **로컬 확인용 빌드는 저장소가 아니라 미러에서 돌린다.** 그래야 저장소의 산출물은
+     깨끗한 상태로 남아 실수로 커밋되지 않는다(§7.3 · 아래 npm run preview:samples).
+   ⚠ `visible: false` 와 혼동하지 말 것 — visible 은 '이 글을 내릴지'이고
+     _sample 은 '이건 진짜 게시물이 아니다'라는 표시다. 둘은 독립이다. */
+const SHOW_SAMPLES = process.env.SHOW_SAMPLES === '1';
+
 const SAMPLE_WARNINGS = [];
 
 function loadContent(kind) {
@@ -145,6 +158,7 @@ function loadContent(kind) {
 
   const shown = rows
     .filter((r) => r.visible === true)
+    .filter((r) => SHOW_SAMPLES || r._sample !== true)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || String(b.date).localeCompare(String(a.date)));
 
   /* ⚠ 샘플 안전장치 — _sample:true 인 항목이 노출 상태로 남아 있으면 시끄럽게 알린다.
