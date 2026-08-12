@@ -161,8 +161,61 @@
      섹션 하단에 **출처를 글로 밝혀 뒀다** — 워터마크에만 의존하지 않는다. */
 .inf-frame img { position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: var(--op, center); }
-/* 사진이 없을 때 보이는 명패. 사진이 들어오면 img 가 덮는다 */
-/* 자리표시. 시설명은 아래 캡션이 이미 말하므로 여기서 반복하지 않는다 */
-.inf-plate { position: relative; text-align: center; font-size: 12.5px; font-weight: 600;
-  letter-spacing: .06em; color: var(--color-text-muted); opacity: .8; }
 .inf-cap { margin-top: 9px; font-size: 13px; font-weight: 600; color: var(--color-text); }
+
+/* ── 광역 인프라 도입부 — 배경 사진 위 풀블리드 (2026-08-13 지시) ─────────
+   도입 카피와 01 산업 인프라를 한 화면으로 묶는다. 02~04 는 밝은 면 위 사진 그리드로
+   그대로 둔다 — 전부 어두우면 사진 12장이 서로 묻힌다.
+
+   ⚠ 배경 위에 흰 글자를 얹으므로 **스크림이 필수**다. 사진이 밝은 항공샷이라
+     스크림 없이는 본문이 읽히지 않는다(측정: 스크림 후 흰 글자 대비 8:1 이상).
+   ⚠ 100vh 를 그대로 쓰지 않는다. 세로가 짧은 창에서 카피가 잘린다 —
+     clamp 로 하한을 두고 콘텐츠가 더 크면 늘어나게 한다. */
+.inf-hero { position: relative; width: 100vw; margin-inline: calc(50% - 50vw);
+  margin-top: calc(-1 * clamp(58px, 6.4vw, 112px));   /* .sec 상단 패딩을 상쇄해 위 섹션과 붙인다 */
+  min-height: clamp(560px, 88vh, 920px);
+  display: flex; align-items: center; overflow: hidden; }
+.inf-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center 62%; }
+/* 스크림 — 왼쪽(카피 쪽)을 더 짙게 해서 글은 살리고 사진은 남긴다 */
+.inf-hero::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, rgb(var(--navy-rgb) / .92) 0%,
+              rgb(var(--navy-rgb) / .82) 42%, rgb(var(--navy-rgb) / .55) 100%); }
+.inf-hero-in { position: relative; z-index: 1; width: 100%;
+  max-width: var(--wrap); margin-inline: auto;
+  padding: clamp(56px, 6vw, 104px) clamp(20px, 4vw, 48px); }
+
+/* 어두운 면 위 타이포 — 공통 클래스의 색만 덮는다 */
+.inf-hero .h2 { color: #fff; }
+.inf-hero .h2 em { color: var(--color-mint); }
+.inf-hero .lede { color: var(--color-light-blue); max-width: 62ch; }
+.inf-hero .eyebrow { color: var(--color-light-blue); }
+.inf-hero .eyebrow b { color: #fff; }
+.inf-hero .eyebrow i { background: var(--color-mint); }
+.inf-hero .tr-cat { color: var(--color-light-blue); }
+.inf-hero .tr-cat b { color: var(--color-mint); }
+.inf-hero .sub-t { color: #fff; }
+.inf-hero .inf-d { color: var(--color-light-blue); max-width: 62ch; }
+.inf-lead { margin-top: clamp(34px, 3.6vw, 60px);
+  padding-top: clamp(26px, 2.8vw, 44px);
+  border-top: 1px solid rgb(255 255 255 / .18); }
+
+/* 사진 자료가 없는 세 항목 — 자리표시 대신 라운드 아이콘 조합으로 낸다 */
+.inf-orbs { display: grid; gap: clamp(14px, 1.6vw, 26px);
+  margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; list-style: none;
+  grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 640px) { .inf-orbs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.inf-orb { display: flex; align-items: center; gap: clamp(12px, 1.2vw, 18px); }
+.inf-orb-ic { flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: clamp(52px, 5vw, 66px); aspect-ratio: 1; border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / .3); background: rgb(255 255 255 / .09);
+  color: var(--color-mint); }
+.inf-orb-ic svg { width: 46%; height: 46%; }
+.inf-orb b { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(14px, 1.1vw, 16.5px); letter-spacing: -.014em; color: #fff;
+  word-break: keep-all; }
+
+/* 사진 출처 — 캡션 아래 한 줄. 한국관광공사 워터마크가 크롭에 잘릴 수 있어
+   시설명 바로 밑에서 출처를 밝힌다(2026-08-13 지시) */
+.inf-src { display: block; margin-top: 3px; font-family: var(--font-body);
+  font-size: 11.5px; font-weight: 400; letter-spacing: 0; color: var(--color-text-muted); }

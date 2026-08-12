@@ -260,6 +260,14 @@
     /* 각주 */
     .note { margin: clamp(18px, 1.8vw, 26px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
+
+    /* 화면 폭으로 빼내는 블록을 담는 섹션.
+       ⚠ `width: 100vw` 는 세로 스크롤바 폭을 포함해 가로 스크롤을 만든다 → 여기서 자른다.
+         **hidden 이 아니라 clip 인 이유**는 clip 이 스크롤 컨테이너를 만들지 않아서다 —
+         hidden 이면 안쪽 sticky 가 조용히 망가진다.
+       기대효과(.zf)와 입지(.inf-hero)가 함께 쓴다. */
+    .sec--bleed { overflow-x: clip; }
+
     /* ── page-location.css ─────────────────────────────────────────── */
     /* ===== 입지 — 통합 교통지도 + 광역 인프라 ===== */
 
@@ -424,11 +432,64 @@
          섹션 하단에 **출처를 글로 밝혀 뒀다** — 워터마크에만 의존하지 않는다. */
     .inf-frame img { position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; object-position: var(--op, center); }
-    /* 사진이 없을 때 보이는 명패. 사진이 들어오면 img 가 덮는다 */
-    /* 자리표시. 시설명은 아래 캡션이 이미 말하므로 여기서 반복하지 않는다 */
-    .inf-plate { position: relative; text-align: center; font-size: 12.5px; font-weight: 600;
-      letter-spacing: .06em; color: var(--color-text-muted); opacity: .8; }
     .inf-cap { margin-top: 9px; font-size: 13px; font-weight: 600; color: var(--color-text); }
+
+    /* ── 광역 인프라 도입부 — 배경 사진 위 풀블리드 (2026-08-13 지시) ─────────
+       도입 카피와 01 산업 인프라를 한 화면으로 묶는다. 02~04 는 밝은 면 위 사진 그리드로
+       그대로 둔다 — 전부 어두우면 사진 12장이 서로 묻힌다.
+
+       ⚠ 배경 위에 흰 글자를 얹으므로 **스크림이 필수**다. 사진이 밝은 항공샷이라
+         스크림 없이는 본문이 읽히지 않는다(측정: 스크림 후 흰 글자 대비 8:1 이상).
+       ⚠ 100vh 를 그대로 쓰지 않는다. 세로가 짧은 창에서 카피가 잘린다 —
+         clamp 로 하한을 두고 콘텐츠가 더 크면 늘어나게 한다. */
+    .inf-hero { position: relative; width: 100vw; margin-inline: calc(50% - 50vw);
+      margin-top: calc(-1 * clamp(58px, 6.4vw, 112px));   /* .sec 상단 패딩을 상쇄해 위 섹션과 붙인다 */
+      min-height: clamp(560px, 88vh, 920px);
+      display: flex; align-items: center; overflow: hidden; }
+    .inf-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center 62%; }
+    /* 스크림 — 왼쪽(카피 쪽)을 더 짙게 해서 글은 살리고 사진은 남긴다 */
+    .inf-hero::after { content: ""; position: absolute; inset: 0;
+      background: linear-gradient(100deg, rgb(var(--navy-rgb) / .92) 0%,
+                  rgb(var(--navy-rgb) / .82) 42%, rgb(var(--navy-rgb) / .55) 100%); }
+    .inf-hero-in { position: relative; z-index: 1; width: 100%;
+      max-width: var(--wrap); margin-inline: auto;
+      padding: clamp(56px, 6vw, 104px) clamp(20px, 4vw, 48px); }
+
+    /* 어두운 면 위 타이포 — 공통 클래스의 색만 덮는다 */
+    .inf-hero .h2 { color: #fff; }
+    .inf-hero .h2 em { color: var(--color-mint); }
+    .inf-hero .lede { color: var(--color-light-blue); max-width: 62ch; }
+    .inf-hero .eyebrow { color: var(--color-light-blue); }
+    .inf-hero .eyebrow b { color: #fff; }
+    .inf-hero .eyebrow i { background: var(--color-mint); }
+    .inf-hero .tr-cat { color: var(--color-light-blue); }
+    .inf-hero .tr-cat b { color: var(--color-mint); }
+    .inf-hero .sub-t { color: #fff; }
+    .inf-hero .inf-d { color: var(--color-light-blue); max-width: 62ch; }
+    .inf-lead { margin-top: clamp(34px, 3.6vw, 60px);
+      padding-top: clamp(26px, 2.8vw, 44px);
+      border-top: 1px solid rgb(255 255 255 / .18); }
+
+    /* 사진 자료가 없는 세 항목 — 자리표시 대신 라운드 아이콘 조합으로 낸다 */
+    .inf-orbs { display: grid; gap: clamp(14px, 1.6vw, 26px);
+      margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; list-style: none;
+      grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 640px) { .inf-orbs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .inf-orb { display: flex; align-items: center; gap: clamp(12px, 1.2vw, 18px); }
+    .inf-orb-ic { flex: none; display: inline-flex; align-items: center; justify-content: center;
+      width: clamp(52px, 5vw, 66px); aspect-ratio: 1; border-radius: 50%;
+      border: 1px solid rgb(255 255 255 / .3); background: rgb(255 255 255 / .09);
+      color: var(--color-mint); }
+    .inf-orb-ic svg { width: 46%; height: 46%; }
+    .inf-orb b { font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14px, 1.1vw, 16.5px); letter-spacing: -.014em; color: #fff;
+      word-break: keep-all; }
+
+    /* 사진 출처 — 캡션 아래 한 줄. 한국관광공사 워터마크가 크롭에 잘릴 수 있어
+       시설명 바로 밑에서 출처를 밝힌다(2026-08-13 지시) */
+    .inf-src { display: block; margin-top: 3px; font-family: var(--font-body);
+      font-size: 11.5px; font-weight: 400; letter-spacing: 0; color: var(--color-text-muted); }
   </style>
 </head>
 
@@ -740,33 +801,43 @@
          기획서 구성대로 그룹마다 사진 그리드를 둔다.
          ⚠ 사진 자산 미확보 — 프레임 안은 현재 자리표시다(page-location.css 주석 참조).
            이전 "카드 + 칩" 구성은 src/sub/_backup/ 에 보관돼 있다. -->
-    <section class="sec sec--surface" id="infra">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>INFRASTRUCTURE</b><span>광역 인프라</span></p>
-        <h2 class="h2 rv">B-CITY를 둘러싼 <em>완성된 인프라</em></h2>
-        <p class="lede rv">대한민국 바이오 산업의 중심 춘천을 기반으로, 산업·교육·의료·관광 인프라가
-          유기적으로 연결된 미래 혁신도시의 최적 입지를 완성합니다</p>
+    <!-- ⚠ 도입부 + 01 은 화면 폭 배경 사진 위에 얹는다(2026-08-13 지시).
+         02~04 는 그대로 밝은 면 위 사진 그리드다. -->
+    <section class="sec sec--surface sec--bleed" id="infra">
+      <div class="inf-hero rv">
+        <img class="inf-hero-bg" src="assets/img-logistics.jpg" alt=""
+             loading="lazy" decoding="async" />
+        <div class="inf-hero-in">
+          <p class="eyebrow"><i aria-hidden="true"></i><b>INFRASTRUCTURE</b><span>광역 인프라</span></p>
+          <h2 class="h2">B-CITY를 둘러싼 <em>완성된 인프라</em></h2>
+          <p class="lede">대한민국 바이오 산업의 중심 춘천을 기반으로, 산업·교육·의료·관광 인프라가
+            유기적으로 연결된 미래 혁신도시의 최적 입지를 완성합니다</p>
 
-        <div class="inf-group rv">
-          <div class="inf-head">
+          <div class="inf-lead">
             <p class="tr-cat"><b>01</b>산업 인프라</p>
             <h3 class="sub-t">대한민국 바이오 혁신 생태계의 중심</h3>
             <p class="inf-d">춘천바이오산업진흥원과 강원연구개발특구를 비롯한 다양한 산업 인프라를
               기반으로 기업과 연구기관, 인재가 함께 성장하는 혁신 생태계를 형성합니다.</p>
+            <!-- 사진 자료가 없는 세 항목 — 자리표시 대신 아이콘 조합으로 낸다 -->
+            <ul class="inf-orbs">
+            <li class="inf-orb">
+              <span class="inf-orb-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M11 3v5.6L6 17.2A2 2 0 0 0 7.8 20h8.4a2 2 0 0 0 1.8-2.8L13 8.6V3"/><path d="M8 14.5h8"/></svg></span>
+              <b>춘천바이오산업진흥원</b>
+            </li>
+            <li class="inf-orb">
+              <span class="inf-orb-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6.5 20V10l4.5-2.6V20"/><path d="M15 20V7l4.5 2.4V20"/><path d="M8.8 12.4h.01M8.8 15.4h.01M17 12.6h.01M17 15.6h.01"/></svg></span>
+              <b>강원연구개발특구</b>
+            </li>
+            <li class="inf-orb">
+              <span class="inf-orb-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5.2" r="2.2"/><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="18" r="2.2"/><path d="M10.4 7 6.6 15.9M13.6 7l3.8 8.9M7.2 18h9.6"/></svg></span>
+              <b>인근 산업단지 및 네트워크</b>
+            </li>
+            </ul>
           </div>
-          <ul class="inf-shots">
-            <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
-              <figcaption class="inf-cap">춘천바이오산업진흥원</figcaption></figure></li>
-            <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
-              <figcaption class="inf-cap">강원연구개발특구</figcaption></figure></li>
-            <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
-              <figcaption class="inf-cap">인근 산업단지 및 네트워크</figcaption></figure></li>
-          </ul>
         </div>
+      </div>
 
+      <div class="wrap">
         <div class="inf-group rv">
           <div class="inf-head">
             <p class="tr-cat"><b>02</b>학술 인프라</p>
@@ -777,10 +848,10 @@
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/kangwon-univ.avif" alt="캠퍼스와 기숙사 건물이 보이는 강원대학교 춘천캠퍼스 항공 전경" style="--op:center" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강원대학교 (춘천캠퍼스)</figcaption></figure></li>
+              <figcaption class="inf-cap">강원대학교 (춘천캠퍼스)<small class="inf-src">© 공공누리</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/hallym-univ.avif" alt="설경에 둘러싸인 한림대학교 캠퍼스 건물" style="--op:center 46%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">한림대학교</figcaption></figure></li>
+              <figcaption class="inf-cap">한림대학교<small class="inf-src">© 한림대학교</small></figcaption></figure></li>
           </ul>
         </div>
 
@@ -794,13 +865,13 @@
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/kangwon-hospital.avif" alt="산을 배경으로 한 강원대학교병원 전경" style="--op:42% center" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강원대학교병원</figcaption></figure></li>
+              <figcaption class="inf-cap">강원대학교병원<small class="inf-src">© 강원대학교병원</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/hallym-hospital.avif" alt="한림대학교춘천성심병원 권역응급의료센터 입구" style="--op:center 42%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">한림대춘천성심병원</figcaption></figure></li>
+              <figcaption class="inf-cap">한림대춘천성심병원<small class="inf-src">© 한림대학교춘천성심병원</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/cityhall.avif" alt="춘천시청 청사와 광장" style="--op:center 26%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강원도청 · 춘천시청</figcaption></figure></li>
+              <figcaption class="inf-cap">강원도청 · 춘천시청<small class="inf-src">© 공공누리</small></figcaption></figure></li>
           </ul>
         </div>
 
@@ -814,22 +885,22 @@
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/namisum.avif" alt="남이섬으로 향하는 유람선과 강변 숲" style="--op:center 56%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">남이섬</figcaption></figure></li>
+              <figcaption class="inf-cap">남이섬<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/vivaldi.avif" alt="설원 슬로프가 펼쳐진 비발디파크 전경" style="--op:center" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">비발디파크</figcaption></figure></li>
+              <figcaption class="inf-cap">비발디파크<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/gangchon.avif" alt="호수와 분수가 있는 엘리시안 강촌 정원" style="--op:center 52%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강촌 (엘리시안 강촌)</figcaption></figure></li>
+              <figcaption class="inf-cap">강촌 (엘리시안 강촌)<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/uiamho.avif" alt="산으로 둘러싸인 의암호 수면" style="--op:center 46%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">의암호</figcaption></figure></li>
+              <figcaption class="inf-cap">의암호<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/soyang.avif" alt="소양강을 가로지르는 스카이워크와 다리" style="--op:center 46%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">소양강</figcaption></figure></li>
+              <figcaption class="inf-cap">소양강<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/legoland.avif" alt="레고랜드 코리아 정문 광장" style="--op:center 44%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">레고랜드</figcaption></figure></li>
+              <figcaption class="inf-cap">레고랜드<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
           </ul>
         </div>
 
@@ -838,8 +909,6 @@
           <small>B-CITY는 춘천이 가진 모든 광역 인프라가 유기적으로 연결되는 최적의 입지에 자리합니다</small>
         </div>
 
-        <p class="note">※ 사진 출처 — 남이섬 · 비발디파크 · 엘리시안 강촌 · 의암호 · 소양강 · 레고랜드: 한국관광공사 / 강원대학교 춘천캠퍼스 · 춘천시청: 공공누리 / 강원대학교병원 · 한림대춘천성심병원 · 한림대학교: 각 기관 홈페이지</p>
-        <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
       </div>
     </section>
   </main>

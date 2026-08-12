@@ -260,6 +260,14 @@
     /* 각주 */
     .note { margin: clamp(18px, 1.8vw, 26px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
+
+    /* 화면 폭으로 빼내는 블록을 담는 섹션.
+       ⚠ `width: 100vw` 는 세로 스크롤바 폭을 포함해 가로 스크롤을 만든다 → 여기서 자른다.
+         **hidden 이 아니라 clip 인 이유**는 clip 이 스크롤 컨테이너를 만들지 않아서다 —
+         hidden 이면 안쪽 sticky 가 조용히 망가진다.
+       기대효과(.zf)와 입지(.inf-hero)가 함께 쓴다. */
+    .sec--bleed { overflow-x: clip; }
+
     /* ── page-company.css ─────────────────────────────────────────── */
     /* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
 
