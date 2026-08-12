@@ -482,30 +482,30 @@
          원 지름까지 208 → 239px 로 불었다(2026-08-13 실측). px clamp 로 준다. */
     .inf-orbs { display: flex; flex-wrap: wrap; justify-content: center;
       margin: clamp(30px, 3.2vw, 52px) 0 0; padding: 0; list-style: none; }
-    .inf-orb { flex: none; width: clamp(148px, 15.5vw, 208px); aspect-ratio: 1;
+    .inf-orb { flex: none; width: clamp(176px, 18.6vw, 252px); aspect-ratio: 1;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: clamp(7px, .8vw, 11px); padding: 0 clamp(15px, 1.6vw, 23px); text-align: center;
+      gap: clamp(9px, 1vw, 14px); padding: 0 clamp(16px, 1.8vw, 26px); text-align: center;
       border-radius: 50%; border: 1px solid rgb(255 255 255 / .34);
       background: rgb(255 255 255 / .07); }
     /* 겹침 — 지름의 약 18% */
-    .inf-orb + .inf-orb { margin-left: clamp(-38px, -3.4vw, -26px); }
-    .inf-orb-ic { display: block; width: clamp(24px, 2.4vw, 32px); color: var(--color-mint); }
+    .inf-orb + .inf-orb { margin-left: clamp(-48px, -4.2vw, -32px); }
+    .inf-orb-ic { display: block; width: clamp(31px, 3.1vw, 42px); color: var(--color-mint); }
     .inf-orb-ic svg { width: 100%; height: 100%; display: block; }
     .inf-orb b { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(12.5px, 1vw, 15px); line-height: 1.42; letter-spacing: -.016em;
+      font-size: clamp(14px, 1.2vw, 17.5px); line-height: 1.4; letter-spacing: -.018em;
       color: #fff; word-break: keep-all; }
 
     /* 좁은 화면 — 가로로 겹치면 원이 너무 작아진다. 세로로 쌓고 위아래로 겹친다 */
     @media (max-width: 599px) {
       .inf-orbs { flex-direction: column; align-items: center; }
-      .inf-orb { width: clamp(150px, 46vw, 190px); }
-      .inf-orb + .inf-orb { margin-left: 0; margin-top: -18px; }
+      .inf-orb { width: clamp(176px, 52vw, 220px); }
+      .inf-orb + .inf-orb { margin-left: 0; margin-top: -22px; }
     }
 
-    /* 사진 출처 — 캡션 아래 한 줄. 한국관광공사 워터마크가 크롭에 잘릴 수 있어
-       시설명 바로 밑에서 출처를 밝힌다(2026-08-13 지시) */
-    .inf-src { display: block; margin-top: 3px; font-family: var(--font-body);
-      font-size: 11.5px; font-weight: 400; letter-spacing: 0; color: var(--color-text-muted); }
+    /* 사진 출처 — **섹션(분류)마다 한 줄**로 모은다(2026-08-13 지시).
+       사진마다 붙이면 캡션이 두 줄이 되고 같은 출처가 여섯 번 반복된다. */
+    .inf-credit { margin: clamp(12px, 1.2vw, 18px) 0 0; font-size: 12px;
+      color: var(--color-text-muted); }
   </style>
 </head>
 
@@ -864,11 +864,12 @@
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/kangwon-univ.avif" alt="캠퍼스와 기숙사 건물이 보이는 강원대학교 춘천캠퍼스 항공 전경" style="--op:center" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강원대학교 (춘천캠퍼스)<small class="inf-src">© 공공누리</small></figcaption></figure></li>
+              <figcaption class="inf-cap">강원대학교 (춘천캠퍼스)</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/hallym-univ.avif" alt="설경에 둘러싸인 한림대학교 캠퍼스 건물" style="--op:center 46%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">한림대학교<small class="inf-src">© 한림대학교</small></figcaption></figure></li>
+              <figcaption class="inf-cap">한림대학교</figcaption></figure></li>
           </ul>
+          <p class="inf-credit">※ 사진 출처 — 공공누리 · 한림대학교</p>
         </div>
 
         <div class="inf-group rv">
@@ -881,14 +882,15 @@
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/kangwon-hospital.avif" alt="산을 배경으로 한 강원대학교병원 전경" style="--op:42% center" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강원대학교병원<small class="inf-src">© 강원대학교병원</small></figcaption></figure></li>
+              <figcaption class="inf-cap">강원대학교병원</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/hallym-hospital.avif" alt="한림대학교춘천성심병원 권역응급의료센터 입구" style="--op:center 42%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">한림대춘천성심병원<small class="inf-src">© 한림대학교춘천성심병원</small></figcaption></figure></li>
+              <figcaption class="inf-cap">한림대춘천성심병원</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/cityhall.avif" alt="춘천시청 청사와 광장" style="--op:center 26%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강원도청 · 춘천시청<small class="inf-src">© 공공누리</small></figcaption></figure></li>
+              <figcaption class="inf-cap">강원도청 · 춘천시청</figcaption></figure></li>
           </ul>
+          <p class="inf-credit">※ 사진 출처 — 강원대학교병원 · 한림대학교춘천성심병원 · 공공누리</p>
         </div>
 
         <div class="inf-group rv">
@@ -901,23 +903,24 @@
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/namisum.avif" alt="남이섬으로 향하는 유람선과 강변 숲" style="--op:center 56%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">남이섬<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
+              <figcaption class="inf-cap">남이섬</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/vivaldi.avif" alt="설원 슬로프가 펼쳐진 비발디파크 전경" style="--op:center" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">비발디파크<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
+              <figcaption class="inf-cap">비발디파크</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/gangchon.avif" alt="호수와 분수가 있는 엘리시안 강촌 정원" style="--op:center 52%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">강촌 (엘리시안 강촌)<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
+              <figcaption class="inf-cap">강촌 (엘리시안 강촌)</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/uiamho.avif" alt="산으로 둘러싸인 의암호 수면" style="--op:center 46%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">의암호<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
+              <figcaption class="inf-cap">의암호</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/soyang.avif" alt="소양강을 가로지르는 스카이워크와 다리" style="--op:center 46%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">소양강<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
+              <figcaption class="inf-cap">소양강</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
               <span class="inf-frame"><img src="assets/img/infra/legoland.avif" alt="레고랜드 코리아 정문 광장" style="--op:center 44%" loading="lazy" decoding="async" /></span>
-              <figcaption class="inf-cap">레고랜드<small class="inf-src">© 한국관광공사</small></figcaption></figure></li>
+              <figcaption class="inf-cap">레고랜드</figcaption></figure></li>
           </ul>
+          <p class="inf-credit">※ 사진 출처 — 한국관광공사</p>
         </div>
 
         <div class="closer rv">
