@@ -114,10 +114,10 @@
   padding: var(--gapT) var(--pad) var(--pad);
   border-top: 1px solid var(--color-line); font-size: 12px; line-height: 1.55;
   color: var(--color-text-muted);
-  /* 요약이 1줄(항공·항만)과 2줄(철도·도로)로 갈리면 바닥은 맞아도 **구분선 높이가
-     어긋난다.** 2줄분을 최소 높이로 잡아 네 장의 선을 한 줄에 맞춘다.
-     box-sizing:border-box 라 위아래 패딩까지 더해 계산한다. */
-  min-height: calc(var(--gapT) + var(--pad) + 2 * 1.55em); }
+  /* ⚠ min-height 를 두지 않는다(2026-08-13 지시). 2줄분을 미리 잡아 두면 요약이
+     한 줄인 카드에서 글 아래에 한 줄만큼의 빈 칸이 남아 **아래 여백이 두 배로 보인다.**
+     높이는 글 줄 수 + 위아래 여백이 정하고, 줄이 늘면 높이만 늘고 여백은 그대로다. */
+}
 .tmode.is-on .tmode-sum { border-top-color: rgb(var(--primary-rgb) / .3); }
 
 /* ── 광역 인프라 — 기획서(slide30~32) 사진 구성 ──────────────────────
