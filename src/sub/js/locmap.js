@@ -73,5 +73,23 @@
         });
       });
 
+      /* 카드 바깥을 누르면 전체로 돌아온다(사용자 지시 2026-08-13).
+         '전체' 버튼이 따로 없어서, 되돌아갈 길을 카드 재클릭 하나에만 두면 좁다.
+
+         ⚠ 카드 자신의 핸들러와 부딪히지 않는다 — 둘 다 버블 단계이고 여기서는
+           e.target 이 .tmode 안인지 먼저 보므로, 카드 클릭은 여기서 걸러진다.
+         ⚠ document 에 건다. 지도(#tmap)만으로는 부족하다 —
+           "카드 밖"에는 지도도 페이지 여백도 모두 포함된다. */
+      document.addEventListener('click', function (e) {
+        if (stage.dataset.mode === 'all') return;
+        if (e.target.closest('.tmode')) return;
+        apply('all');
+      });
+
+      // 키보드에서도 빠져나갈 수 있어야 한다
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && stage.dataset.mode !== 'all') apply('all');
+      });
+
       apply('all');
     })();
