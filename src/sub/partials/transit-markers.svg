@@ -1,0 +1,29 @@
+<!-- 지점 마커. bcity(common)는 어떤 모드에서도 흐려지지 않는다 -->
+<svg class="tmap-lay tmap-markers" aria-label="교통 거점" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1672 941" role="img" aria-label="B-CITY 광역 교통망 마커">
+  <defs>
+    <filter id="marker-shadow" x="-80%" y="-80%" width="260%" height="260%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#163D72" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <g id="bcity-markers" fill="#FFFFFF" stroke-width="5" filter="url(#marker-shadow)">
+    <g id="markers-itx-cheongchun" data-route="itx-cheongchun" data-transport="rail" stroke="#1758B5">
+      <circle cx="168" cy="579" r="12"/><circle cx="264" cy="540" r="12"/><circle cx="458" cy="496" r="12"/>
+      <circle cx="579" cy="409" r="12"/><circle cx="694" cy="386" r="12"/><circle cx="752" cy="330" r="12"/>
+    </g>
+    <g id="markers-seoul-yangyang" data-route="seoul-yangyang" data-transport="road" stroke="#527EA8">
+      <circle cx="268" cy="637" r="12"/><circle cx="364" cy="581" r="12"/>
+    </g>
+    <g id="markers-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#527EA8"><circle cx="306" cy="520" r="12"/></g>
+    <g id="markers-context-access" data-route="context-access" data-transport="road" stroke="#527EA8">
+      <circle cx="615" cy="607" r="12"/><circle cx="865" cy="759" r="12"/><circle cx="780" cy="355" r="12"/>
+    </g>
+    <g id="markers-yangyang-airport" data-route="yangyang-airport" data-transport="air" stroke="#3195E8"><circle cx="1361" cy="251" r="14"/></g>
+    <g id="markers-sokcho-port" data-route="sokcho-port" data-transport="port" stroke="#13989C"><circle cx="1312" cy="161" r="14"/></g>
+    <g id="markers-donghae-port" data-route="donghae-port" data-transport="port" stroke="#13989C"><circle cx="1588" cy="649" r="14"/></g>
+  </g>
+  <g id="marker-bcity" data-route="bcity" data-transport="common" filter="url(#marker-shadow)">
+    <circle cx="710" cy="516" r="38" fill="#FFFFFF"/>
+    <circle cx="710" cy="516" r="28" fill="#0D438A"/>
+    <circle cx="710" cy="516" r="12" fill="#58D4C4"/>
+  </g>
+</svg>

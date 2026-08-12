@@ -1,13 +1,13 @@
 <!-- 생성물이다. 이 파일을 고치지 말 것.
-     소스: src/sub/pages/effect.html + src/sub/{layout.html,partials,css,js,nav.json}
+     소스: src/sub/pages/publication.html + src/sub/{layout.html,partials,css,js,nav.json}
      빌드: npm run build:pages -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>기대효과 · B-CITY 춘천기업혁신파크</title>
-  <meta name="description" content="계획인구 15,917명·6,366세대의 자족형 도시. 경제·산업·사회·지역균형·환경·글로벌 6개 축에서 B-CITY가 만들어갈 가치를 정리했습니다." />
+  <title>발행물 · B-CITY 춘천기업혁신파크</title>
+  <meta name="description" content="춘천기업혁신파크 B-CITY 의 카달로그와 IM 등 발행물입니다." />
 
   <!-- 오프라인 시연용 로컬 폰트 (index.html 과 동일) -->
   <link href="assets/vendor/inter/inter.local.css" rel="stylesheet" />
@@ -260,158 +260,316 @@
     /* 각주 */
     .note { margin: clamp(18px, 1.8vw, 26px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
-    /* ── page-effect.css ─────────────────────────────────────────── */
-    /* ===== 기대효과 ===== */
+    /* ── page-pr.css ─────────────────────────────────────────── */
+    /* ===== 홍보센터 — 목록형(공지·언론) · 카드형(영상·갤러리·발행물) =====
+       마크업은 tools/build/pages.mjs 의 renderRows / renderCards 가 만든다.
+       클래스 이름을 바꾸면 그 함수도 같이 고쳐야 한다(정적 마크업이 아니다). */
 
-    /* 핵심 지표 3종 — 스토리보드 slide34 는 3열 카드가 아니라
-       [큰 숫자] | [라벨 + 설명] 이 세로로 3행 쌓이는 구조다(숫자 x29.5 / 라벨 x49.2).
-       숫자 열을 고정 폭으로 잡아 세 줄의 숫자 왼쪽 끝이 맞물리게 한다. */
-    .kpi { margin: clamp(30px, 3vw, 50px) 0 0; padding: 0; list-style: none;
-      border-top: 1px solid var(--color-line); }
-    .kpi-item { display: grid; gap: 6px clamp(24px, 3.4vw, 64px);
-      grid-template-columns: minmax(0, 1fr);
-      padding: clamp(22px, 2.4vw, 38px) 0; border-bottom: 1px solid var(--color-line);
-      align-items: center; }
-    @media (min-width: 768px) {
-      .kpi-item { grid-template-columns: minmax(0, clamp(220px, 26vw, 340px)) minmax(0, 1fr); }
-    }
-    /* 38→74px. DESIGN.md 의 kpi 역할값(38px)이 최소, hero-xl(74px)이 최대다 */
-    .kpi-v { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(38px, 4.6vw, 74px); line-height: 1; letter-spacing: -.04em;
-      color: var(--color-primary); font-variant-numeric: tabular-nums; }
-    /* 단위는 수치보다 작게 — 숫자 덩어리가 먼저 읽혀야 한다 */
-    .kpi-v small { font-size: .34em; font-weight: 700; letter-spacing: -.01em; margin-left: 4px;
-      color: var(--color-navy); }
-    .kpi-v i { display: block; font-style: normal; font-family: var(--font-body);
-      font-size: 15px; font-weight: 600; letter-spacing: 0; margin-top: 10px;
-      color: var(--color-text-muted); }
-    .kpi-l { display: block; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(16px, 1.3vw, 21px); letter-spacing: -.018em; color: var(--color-navy); }
-    .kpi-d { display: block; margin-top: 7px; font-size: clamp(13.5px, 1vw, 15.5px);
-      line-height: 1.65; color: var(--color-text-muted); max-width: 56ch; }
+    /* ── 목록형 ─────────────────────────────────────────────────────── */
+    /* ⚠ 세 목록의 상단 여백은 같은 값이어야 한다 — 분류 탭이 꺼져 있어(SHOW_LIST_FILTERS)
+       목록이 곧바로 제목 아래 오므로, 다르면 페이지를 옮길 때마다 제목 아래가 들쭉날쭉하다. */
+    .pr-rows { margin: clamp(28px, 3vw, 46px) 0 0; padding: 0; list-style: none;
+      border-top: 2px solid var(--color-primary); }
+    .pr-row { display: flex; flex-wrap: wrap; gap: 6px clamp(16px, 2vw, 36px);
+      align-items: baseline; justify-content: space-between;
+      padding: clamp(18px, 1.8vw, 26px) 2px; border-bottom: 1px solid var(--color-line); }
+    .pr-row-main { flex: 1 1 min(100%, 42ch); min-width: 0; }
+    .pr-title { margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.15vw, 18px); line-height: 1.45; letter-spacing: -.015em;
+      color: var(--color-text); }
+    .pr-title a { transition: color .2s; }
+    .pr-title a:hover { color: var(--color-primary); }
+    .pr-sum { margin: 7px 0 0; font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
+    .pr-row-meta { flex: none; display: flex; align-items: baseline; gap: 12px; margin: 0;
+      font-size: 13px; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+    .pr-outlet { font-weight: 600; color: var(--color-primary); }
 
-    /* 01 경제적 기대효과는 좌우 2단이 아니라 지표 리스트가 본문 역할을 한다 */
-    .eff-head { margin-top: clamp(38px, 4vw, 68px); }
+    /* ── 카드형 ─────────────────────────────────────────────────────── */
+    .pr-cards { display: grid; gap: clamp(14px, 1.5vw, 26px); margin: clamp(28px, 3vw, 46px) 0 0;
+      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 768px)  { .pr-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 1200px) { .pr-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .pr-card { display: flex; flex-direction: column; }
+    .pr-thumb { position: relative; display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 16 / 9; margin-bottom: 12px; border-radius: var(--radius-md);
+      border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
+    .pr-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .pr-noimg { font-size: 12.5px; font-weight: 600; letter-spacing: .06em;
+      color: var(--color-text-muted); opacity: .8; }
+    /* 카드 전체를 링크로 덮는다 — 제목만 링크로 두면 눌리는 영역이 너무 좁다 */
+    .pr-cover { position: absolute; inset: 0; }
+    .pr-cover:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .pr-badge { position: absolute; left: 10px; top: 10px; padding: 3px 9px; border-radius: 999px;
+      background: rgb(var(--navy-rgb) / .82); color: #fff; font-size: 11.5px; font-weight: 700;
+      letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+    .pr-card .pr-title { font-size: clamp(14px, 1.05vw, 16px); }
+    .pr-card .pr-row-meta { margin-top: 7px; }
+    /* 썸네일 위 재생·확대 아이콘 — 화면 안에서 열린다는 신호 */
+    .pr-play { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px;
+      transform: translate(-50%, -50%); color: #fff; opacity: .92;
+      filter: drop-shadow(0 2px 8px rgb(var(--navy-rgb) / .5));
+      transition: transform .2s, opacity .2s; }
+    .pr-cover:hover .pr-play { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
 
-    /* 기대효과 블록 — 좌우 교차 2단(.zz)의 본문 쪽 */
-    .eff-cat { margin: 0 0 9px; display: flex; align-items: baseline; gap: 10px;
-      font-size: 12.5px; font-weight: 600; letter-spacing: .16em; color: var(--color-text-muted); }
-    .eff-cat b { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
-      font-weight: 700; letter-spacing: 0; color: var(--color-primary);
+    /* ── 발행물 — 표지 위 / 텍스트 아래 세로 카드 (첨부 와이어프레임 2026-08-10) ── */
+    /* 카드 크기 — 2026-08-10 에 두 번 줄였다(4열 → 5열 → **6열**).
+       간격(gap)은 갤러리·홍보영상(.pr-cards)과 **같은 값**을 쓴다. 한 카테고리 안에서
+       목록끼리 리듬이 다르면 페이지를 옮길 때마다 밀도가 달라 보인다.
+       표지 비율은 3:4 → **4:5** 로 낮췄다. 세로가 카드 높이를 지배하는 요소라
+       열 수만 늘리면 폭만 줄고 여전히 길어 보인다. 인쇄물 비율에서 크게 벗어나지도 않는다. */
+    .pub-list { display: grid; gap: clamp(14px, 1.5vw, 26px); margin: clamp(28px, 3vw, 46px) 0 0;
+      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 600px)  { .pub-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 900px)  { .pub-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    @media (min-width: 1120px) { .pub-list { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+    @media (min-width: 1360px) { .pub-list { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+    .pub-item { display: flex; flex-direction: column;
+      padding: clamp(9px, 0.85vw, 12px); border: 1px solid var(--color-line);
+      border-radius: var(--radius-md); background: var(--color-surface); }
+    .pub-item[hidden] { display: none; }
+    /* 표지는 세로로 긴 인쇄물 비율. **모서리를 둥글리지 않는다** — 종이는 각지다 */
+    .pub-thumb { position: relative; display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 4 / 5; margin-bottom: 11px; border-radius: 0;
+      border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
+    .pub-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+    /* 이미지가 없을 때의 기본 표지 — 로고를 얹은 책자.
+       면은 아주 옅은 그라데이션(종이), 왼쪽은 제본 등이다. */
+    .pub-blank { position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, var(--color-surface) 0%, var(--color-bg) 58%,
+                  rgb(var(--primary-rgb) / .06) 100%); }
+
+    /* 제본 등 — 그라데이션만으로는 접힌 느낌이 약해서 **선으로 끊는다**.
+       면 색이 이어지면 그냥 얼룩처럼 보인다(2026-08-10 지적).
+         · 띠 오른쪽 경계선 = 표지와 등을 가르는 접지선
+         · ::after = 등 안쪽의 두 번째 선(박음질/접힘 자국) */
+    .pub-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 14px;
+      background: linear-gradient(90deg, rgb(var(--primary-rgb) / .10) 0%,
+                  rgb(var(--primary-rgb) / .03) 70%, transparent 100%);
+      border-right: 1px solid rgb(var(--primary-rgb) / .22); }
+    .pub-spine::after { content: ""; position: absolute; left: 5px; top: 0; bottom: 0;
+      width: 1px; background: rgb(var(--primary-rgb) / .13); }
+
+    .pub-mark { display: block; width: 58%; max-width: 104px; margin-left: 14px; }
+    /* 원톤·저채도 — 표지의 워터마크처럼 깔린다. 진하면 목록에서 로고만 튄다 */
+    .pub-logo { width: 100%; height: auto; color: var(--color-primary); opacity: .22; }
+    /* 간격 배분 — 제목과 날짜는 한 덩어리로 붙이고, 남는 세로 여백은 **버튼 앞**에 몰아준다.
+       앞서 제목에 두 줄 자리(min-height)를 잡았더니 한 줄짜리 카드는 제목과 날짜 사이가
+       한 줄만큼 벌어지고 정작 날짜와 버튼은 붙어 버렸다(2026-08-10 지적).
+       제목은 두 줄에서 자르되 자리를 미리 잡지 않는다 — 대신 buttons 가 margin-top:auto 로
+       바닥에 붙으므로 **버튼 줄은 카드끼리 그대로 맞는다**(그리드가 높이를 맞춰 준다).
+       ⚠ 대신 제목 줄 수가 다르면 날짜 높이는 카드마다 달라진다 — 둘 다는 성립하지 않고,
+         이 화면에서는 버튼 정렬이 더 중요하다. */
+    .pub-item .pr-title { font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pub-item .pr-row-meta { margin-top: 5px; }
+    .pub-item .pub-acts { margin-top: auto; padding-top: clamp(16px, 1.5vw, 21px); }
+    /* 버튼 두 개가 카드 폭을 반씩 나눠 갖는다 — 카드마다 폭이 같아 줄이 맞는다 */
+    .pub-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      margin: clamp(11px, 1.1vw, 14px) 0 0; }
+    .pub-act { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 6px; border-radius: var(--radius-sm);
+      border: 1px solid var(--color-line); background: var(--color-surface);
+      font-size: 12.5px; font-weight: 700; white-space: nowrap; color: var(--color-text);
+      transition: border-color .2s, background .2s, color .2s; }
+    .pub-act:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .pub-act--solid { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .pub-act--solid:hover { background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover); color: #fff; }
+    .pr-ic { flex: none; width: 17px; height: 17px; }
+
+    /* ── 언론보도 목록 — 분류 · 검색 · 페이지네이션 ────────────────────── */
+    .pl-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      justify-content: space-between; margin: clamp(24px, 2.6vw, 40px) 0 0; }
+    .pl-modes { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pl-mode { padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
+      background: var(--color-surface); font: inherit; font-size: 13.5px; font-weight: 600;
+      color: var(--color-text-muted); cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s; }
+    .pl-mode:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+    .pl-mode.is-on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .pl-search { display: flex; gap: 0; min-width: min(100%, 340px); }
+    .pl-search input { flex: 1 1 auto; min-width: 0; padding: 10px 14px; font: inherit; font-size: 14px;
+      border: 1px solid var(--color-line); border-right: 0;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm); background: var(--color-surface);
+      color: var(--color-text); }
+    .pl-search input:focus { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+    .pl-go { flex: none; padding: 10px 20px; border: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: var(--color-navy); color: #fff; font: inherit; font-size: 13.5px; font-weight: 700;
+      cursor: pointer; transition: background .2s; }
+    .pl-go:hover { background: var(--color-primary); }
+
+    .pl-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; }
+    .pl-chips[hidden] { display: none; }
+    .pl-chip { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--color-line);
+      background: var(--color-surface); font: inherit; font-size: 13px; font-weight: 600;
+      color: var(--color-text-muted); cursor: pointer; transition: background .2s, color .2s; }
+    .pl-chip.is-on { background: rgb(var(--primary-rgb) / .1); border-color: var(--color-primary);
+      color: var(--color-primary); }
+
+    /* 언론보도 행 — 제목 아래 매체·보도일자 한 줄(첨부 와이어프레임) */
+    .pr-row--stack { display: block; }
+    .pr-row--stack[hidden] { display: none; }
+    .pr-row--stack .pr-row-meta { margin-top: 8px; }
+
+    .pl-pager { display: flex; justify-content: center; align-items: center; gap: 4px;
+      margin: clamp(28px, 3vw, 46px) 0 0; }
+    .pl-pager[hidden] { display: none; }
+    .pl-pg { min-width: 34px; height: 34px; padding: 0 9px; border: 0; border-radius: var(--radius-sm);
+      background: none; font: inherit; font-size: 14px; font-weight: 600;
+      color: var(--color-text-muted); cursor: pointer; font-variant-numeric: tabular-nums;
+      transition: background .2s, color .2s; }
+    .pl-pg:hover:not(:disabled) { background: rgb(var(--primary-rgb) / .08); color: var(--color-primary); }
+    .pl-pg.is-on { background: var(--color-primary); color: #fff; }
+    .pl-pg:disabled { opacity: .3; cursor: default; }
+
+    /* ── 확대보기 모달 (src/sub/js/lightbox.js 가 DOM 을 만든다) ───────── */
+    .lb { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center;
+      justify-content: center; padding: clamp(16px, 3vw, 48px); }
+    .lb[hidden] { display: none; }
+    .lb-back { position: absolute; inset: 0; background: rgb(var(--scrim-rgb) / .88); }
+    .lb-panel { position: relative; width: min(1100px, 100%); max-height: 100%;
+      display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .lb-media { width: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
+    .lb-media img, .lb-media video { max-width: 100%; max-height: calc(100vh - 190px);
+      width: auto; height: auto; border-radius: var(--radius-md); background: #000; }
+    /* 유튜브 iframe 은 비율 상자로 감싼다 — max-height 만으로는 16:9 가 유지되지 않는다 */
+    .lb-embed { width: 100%; aspect-ratio: 16 / 9; max-height: calc(100vh - 190px); }
+    .lb-embed iframe { width: 100%; height: 100%; border: 0; border-radius: var(--radius-md);
+      background: #000; }
+    .lb-cap { margin: 0; font-size: 14px; font-weight: 600; color: #fff; text-align: center; }
+    .lb-cap[hidden] { display: none; }
+    .lb-close { position: absolute; right: 0; top: -46px; display: inline-flex; padding: 8px;
+      border: 0; border-radius: 999px; background: rgba(255,255,255,.14); color: #fff;
+      cursor: pointer; transition: background .2s; }
+    .lb-close:hover { background: rgba(255,255,255,.26); }
+    .lb-close svg { width: 22px; height: 22px; }
+    @media (max-width: 640px) { .lb-close { top: auto; bottom: -46px; right: 50%;
+      transform: translateX(50%); } }
+
+    /* ── 갤러리 분류 탭 ─────────────────────────────────────────────── */
+    .pr-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: clamp(24px, 2.4vw, 36px) 0 0; }
+    /* 형태는 언론보도의 분류 컨트롤(.pl-mode)과 맞춘다 — 같은 홍보센터 안에서
+       페이지마다 탭 모양이 다르면 다른 기능처럼 보인다(2026-08-10 지적).
+       하나를 골라도 나머지 분류에 몇 건이 있는지 탭에서 바로 보이게 건수를 붙였다.
+       0건 분류도 탭을 지우지 않고 흐리게 남긴다 — 탭이 데이터에 따라 나타났다 사라지면
+       어떤 분류가 있는지 자체를 알 수 없다(2026-08-10 지적). */
+    .pr-filter { display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
+      background: var(--color-surface); font-size: 13.5px; font-weight: 600;
+      color: var(--color-text-muted); transition: background .2s, color .2s, border-color .2s; }
+    .pr-filter:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+    .pr-filter-n { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+      color: var(--color-text-muted); opacity: .75; }
+    .pr-filter.is-on .pr-filter-n { color: #fff; opacity: .8; }
+    /* 0건 — 누를 수 없다는 것이 보여야 한다. disabled 라 hover 도 걸리지 않는다 */
+    .pr-filter.is-empty { opacity: .45; cursor: default; }
+    .pr-filter.is-empty:hover { color: var(--color-text-muted); border-color: var(--color-line); }
+    .pr-filter.is-on { background: var(--color-primary); border-color: var(--color-primary);
+      color: #fff; }
+    /* 필터가 걸리면 JS 가 카드에 hidden 을 세운다 — display 는 CSS 가 정한다 */
+    .pr-card[hidden] { display: none; }
+
+    /* ── 비어 있을 때 ───────────────────────────────────────────────── */
+    .pr-empty { margin: clamp(28px, 3vw, 46px) 0 0; padding: clamp(44px, 5vw, 84px) 20px;
+      border: 1px dashed var(--color-line); border-radius: var(--radius-lg);
+      background: var(--color-surface); text-align: center;
+      font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted); }
+
+    /* ── 게시글 상세 ────────────────────────────────────────────────────
+       스토리보드에는 공개용 상세 화면이 없다(slide106~116 은 전부 관리자 CMS 이고
+       §11.3 에서 도입하지 않기로 한 범위다). 관리자 등록 폼(slide108)의 필드
+       — 제목 · 내용 · 첨부파일 — 을 기준으로 공개 화면을 새로 짰다.
+       마크업은 tools/build/pages.mjs 의 buildDetails() 가 만든다. */
+
+    /* 본문은 읽는 글이라 컨테이너를 좁힌다. 한 줄이 길면 눈이 다음 줄을 놓친다 */
+    .wrap--narrow { max-width: 860px; }
+
+    .post { margin: 0; }
+    .post-head { padding-bottom: clamp(20px, 2vw, 30px);
+      border-bottom: 2px solid var(--color-primary); }
+    .post-title { margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(21px, 2vw, 31px); line-height: 1.4; letter-spacing: -.022em;
+      color: var(--color-text); }
+    .post-meta { margin: 12px 0 0; font-size: 13px; color: var(--color-text-muted);
       font-variant-numeric: tabular-nums; }
-    .eff-t { margin: 0; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(20px, 1.9vw, 31px); line-height: 1.32; letter-spacing: -.022em; }
-    .eff-list { margin: clamp(16px, 1.7vw, 26px) 0 0; padding: 0; list-style: none;
-      display: grid; gap: 11px; }
-    .eff-list li { position: relative; padding-left: 17px;
-      font-size: clamp(14px, 1vw, 16px); line-height: 1.62; color: var(--color-text-muted); }
-    /* 불릿은 ::before 로 — list-style 마커는 들여쓰기 제어가 브라우저마다 다르다 */
-    .eff-list li::before { content: ""; position: absolute; left: 0; top: .62em;
-      width: 6px; height: 6px; border-radius: 50%; background: var(--color-mint); }
 
-    /* ── 꽉 찬 2단 (.zf) — 사진이 화면 끝까지 닿는 좌우 교차 블록 ────────────
-       컨테이너 안 2단(.zz)은 좌우에 여백이 남아 사진이 작아 보인다. 여기서는
-       블록을 화면 폭으로 빼내고, 본문 쪽만 컨테이너 안쪽 선에 맞춘다.
+    .post-body { padding: clamp(26px, 2.8vw, 44px) 0; }
+    .post-body p { margin: 0 0 1.1em; font-size: clamp(15px, 1.05vw, 17px); line-height: 1.85;
+      color: var(--color-text); }
+    .post-body p:last-child { margin-bottom: 0; }
+    .post-empty { padding: clamp(40px, 4vw, 64px) 0; text-align: center;
+      font-size: 14px; color: var(--color-text-muted); }
 
-       ⚠ `width: 100vw` 는 **세로 스크롤바 폭을 포함**한다(윈도우 등). 그대로 두면 가로
-         스크롤이 생기므로 섹션에 `overflow-x: clip` 을 걸어 막는다.
-         clip 을 쓰는 이유는 hidden 과 달리 **스크롤 컨테이너를 만들지 않아서**다 —
-         hidden 이면 안쪽에 sticky 를 둘 때 조용히 망가진다.
-       ⚠ --zf-gut 은 index.html 의 --gut 과 같은 계산이다(§6.3). 화면이 컨테이너보다
-         좁아지는 구간에서 본문이 화면 끝에 붙는 것을 막는다. */
-    .sec--bleed { overflow-x: clip; }
+    .post-files { margin: 0 0 clamp(26px, 2.8vw, 40px); padding: clamp(16px, 1.6vw, 22px);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md);
+      background: var(--color-bg); }
+    .post-files-h { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      color: var(--color-text-muted); }
+    .post-files-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    /* 아이콘·이름·확장자 한 줄. 이름이 길면 이름만 줄고 아이콘·확장자는 안 눌린다 */
+    .post-files-list a { display: flex; align-items: center; gap: 10px; min-width: 0;
+      padding: 9px 11px; margin: -9px -11px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600; color: var(--color-primary);
+      transition: background .2s; }
+    .post-files-list a:hover { background: rgb(var(--primary-rgb) / .07); }
+    /* 아이콘은 currentColor 를 따라간다(§5) — 링크 색이 바뀌면 함께 바뀐다 */
+    .post-file-ic { flex: none; width: 19px; height: 19px; }
+    .post-file-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .post-file-ext { flex: none; padding: 2px 7px; border-radius: 999px;
+      background: rgb(var(--primary-rgb) / .1); font-size: 11px; font-weight: 700;
+      letter-spacing: .04em; }
 
-    /* ⚠ 블록 사이 여백은 0 이다(2026-08-10 지시) — 사진이 위아래로 맞붙어 띠처럼 이어진다.
-         숨 쉴 공간은 **본문 열의 padding-block** 이 담당한다. 블록 간격을 여기서 되살리면
-         사진 사이에 배경색 띠가 생겨 의도가 깨진다. */
-    .zf { --zf-gut: max(clamp(24px, 4.4vw, 72px),
-            calc((100vw - var(--wrap)) / 2 + clamp(20px, 4vw, 48px)));
-      width: 100vw; margin-inline: calc(50% - 50vw);
-      margin-top: 0;
-      display: grid; align-items: center; gap: 0;
-      grid-template-columns: minmax(0, 1fr); }
-    /* 첫 블록만 위 지표 목록과 떨어뜨린다.
-       블록끼리는 붙지만 **01 지표와 02 이후의 사진 2단은 성격이 다른 구획**이라
-       여기서는 확실히 띄운다(2026-08-10 지시). 섹션 상하 여백(.sec)과 같은 리듬을 쓴다.
+    /* 이전·다음·목록 — 본문 끝에 카드가 또 오면 무게가 본문과 비슷해져 끝이 흐려진다.
+       얇은 구분선으로 나눈 행 목록으로 낮추고, 목록 버튼은 아래 가운데로 뺐다(2026-08-10 지적). */
+    .post-nav { margin-top: clamp(20px, 2.2vw, 32px);
+      border-top: 1px solid var(--color-line); }
+    .post-nav-item { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      align-items: center; gap: clamp(12px, 1.6vw, 26px);
+      padding: clamp(13px, 1.3vw, 17px) 6px;
+      border-bottom: 1px solid var(--color-line); transition: background .2s; }
+    a.post-nav-item:hover { background: rgb(var(--primary-rgb) / .045); }
+    .post-nav-label { display: inline-flex; align-items: center; gap: 7px; min-width: 74px;
+      font-size: 13px; font-weight: 700; color: var(--color-text-muted); }
+    .post-nav-ic { flex: none; width: 15px; height: 15px; }
+    a.post-nav-item:hover .post-nav-label { color: var(--color-primary); }
+    /* 제목이 길어도 행 높이가 변하지 않게 한 줄로 자른다 */
+    .post-nav-title { font-size: 15px; color: var(--color-text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .post-nav-item.is-off .post-nav-title { color: var(--color-text-muted); }
 
-       ⚠ `.zf:first-of-type` 을 쓰지 말 것. `:first-of-type` 은 **같은 태그 이름** 중
-         첫째를 뜻하므로, 형제에 `div.eff-head` 가 먼저 있으면 그쪽이 잡히고 첫 `.zf` 는
-         영원히 매칭되지 않는다. 실제로 그래서 이 여백이 계속 0 이었다(2026-08-10 실측).
-         클래스로 위치를 지정할 때는 인접 형제(`+`)를 쓴다. */
-    .kpi + .zf { margin-top: clamp(56px, 6.4vw, 112px); }
+    /* 목록으로 — 채운 버튼이 아니라 가운데 정렬한 외곽선 링크 */
+    /* ⚠ display 는 flex(블록 레벨)여야 한다. inline-flex 는 인라인이라
+       margin-inline:auto 로 가운데 정렬되지 않고 왼쪽에 붙는다. */
+    .post-back { display: flex; align-items: center; gap: 8px; width: max-content;
+      margin: clamp(20px, 2.2vw, 30px) auto 0;
+      padding: 11px 22px; border-radius: 999px;
+      border: 1px solid var(--color-line); background: var(--color-surface);
+      font-size: 14px; font-weight: 600; color: var(--color-text);
+      transition: border-color .2s, color .2s; }
+    .post-back:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .post-back-ic { flex: none; width: 15px; height: 15px; }
 
-    /* 좁은 화면 — 1단. 사진은 그대로 화면 폭, 본문만 여백을 준다.
-       ⚠ 배경을 흰 면으로 깐다(2026-08-10 지시). 이때 **align-self: stretch 가 반드시 필요**하다 —
-         .zf 가 align-items:center 라 본문 열이 내용 높이만큼만 잡히고, 그러면 흰 면이
-         사진 높이를 못 채워 위아래에 페이지 배경 띠가 남는다. 늘린 뒤 안에서 세로 가운데로 모은다. */
-    .zf-body { padding-inline: var(--zf-gut);
-      padding-block: clamp(30px, 4.4vw, 48px);
-      background: var(--color-surface); align-self: stretch;
-      display: flex; flex-direction: column; justify-content: center; }
+    /* ── 상세 본문 이미지 (공지사항에 이미지가 등록됐을 때) ────────────── */
+    .post-fig { margin: clamp(22px, 2.4vw, 34px) 0; }
+    .post-fig img { width: 100%; height: auto; border-radius: var(--radius-md);
+      border: 1px solid var(--color-line); }
+    .post-fig figcaption { margin-top: 10px; font-size: 13px; color: var(--color-text-muted); }
 
-    @media (min-width: 900px) {
-      .zf { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-      /* 사진 좌 / 본문 우 (기본) */
-      .zf-body { padding-inline: clamp(30px, 3.6vw, 68px) var(--zf-gut);
-        padding-block: clamp(40px, 4.4vw, 80px); }
-      /* 사진 우 / 본문 좌 — DOM 순서는 [사진 → 본문] 고정이고 order 로만 뒤집는다.
-         마크업을 실제로 바꾸면 탭 순서·낭독 순서가 블록마다 달라진다 */
-      .zf--flip > :first-child { order: 2; }
-      .zf--flip .zf-body { padding-inline: var(--zf-gut) clamp(30px, 3.6vw, 68px); }
-    }
-
-    .zf-fig { margin: 0; align-self: stretch; display: flex; flex-direction: column; }
-    .zf-fig img { width: 100%; height: 100%; object-fit: cover; display: block;
-      min-height: clamp(300px, 40vw, 660px); }
-    /* ⚠ 캡션을 사진 아래 흐름에 두면 블록이 맞붙었을 때 사진 사이에 흰 띠가 생긴다.
-         사진 위에 얹고 아래에서 옅은 그라데이션으로 읽히게 한다. */
-    .zf-fig { position: relative; }
-    .zf-fig figcaption { position: absolute; left: 0; right: 0; bottom: 0;
-      padding: clamp(26px, 3vw, 44px) var(--zf-gut) clamp(12px, 1.2vw, 18px);
-      font-size: 12.5px; color: var(--color-text-muted);
-      background: linear-gradient(transparent, rgb(var(--navy-rgb) / .05) 45%,
-                  rgb(var(--navy-rgb) / .09)); }
-    @media (min-width: 900px) {
-      .zf:not(.zf--flip) .zf-fig figcaption { padding-right: clamp(20px, 2vw, 32px); }
-      .zf--flip .zf-fig figcaption { padding-left: clamp(20px, 2vw, 32px); }
-    }
-    /* 지도류(투명 배경 일러스트) — cover 로 자르면 지점이 잘려 나간다.
-       ⚠ 배경을 네이비로 하지 말 것(§ page-shared 의 .zz-fig--plain 주석과 같은 이유) */
-    .zf-fig--plain { background: var(--color-surface); justify-content: center; }
-    .zf-fig--plain img { object-fit: contain; padding: clamp(16px, 2.2vw, 40px); }
-
-    /* ── 모션 ──────────────────────────────────────────────────────────────
-       블록 자체의 페이드는 공통 .rv 가 맡는다. 여기서는 두 가지를 더 얹는다.
-         · 사진: 살짝 확대된 상태에서 제자리로 — 정지 사진에 들어오는 느낌을 준다
-         · 본문: 요소별로 조금씩 늦게 올라온다(번호 → 제목 → 목록)
-       ⚠ 사진 확대는 부모에 overflow:hidden 이 있어야 가장자리가 새지 않는다. */
-    .zf-fig { overflow: hidden; }
-    .zf-fig img { transform: scale(1.07); transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
-    .zf.in .zf-fig img { transform: none; }
-
-    .zf-body > * { opacity: 0; transform: translateY(16px);
-      transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
-    .zf.in .zf-body > * { opacity: 1; transform: none; }
-    .zf.in .zf-body > :nth-child(2) { transition-delay: .09s; }
-    .zf.in .zf-body > :nth-child(3) { transition-delay: .18s; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .zf-fig img, .zf-body > * { transform: none !important; opacity: 1 !important;
-        transition: none !important; }
-    }
-
-    /* ── 마무리 문장 — 꽉 찬 2단 바로 아래 ─────────────────────────────────
-       06 블록과 붙이고, 구분선은 화면 끝까지 잇는다(2026-08-10 지시).
-       위 사진들이 화면 폭인데 구분선만 컨테이너 폭에서 끊기면 선이 떠 보인다.
-
-       ⚠ .closer 는 입지·추진일정도 쓰는 공용 클래스다. **여기서만** 바꾸도록
-         .sec--bleed 아래로 한정한다 — 전역으로 고치면 저 두 페이지의 리듬이 함께 바뀐다.
-       ⚠ 선만 화면 폭으로 빼고 **글은 컨테이너 안에 둔다.** 블록째 내보내면 마무리 문장이
-         화면 끝까지 퍼져 한 줄이 지나치게 길어진다. */
-    .sec--bleed .closer { margin-top: 0; padding-top: 0; border-top: 0; position: relative; }
-    .sec--bleed .closer::before { content: ""; position: absolute; top: 0;
-      left: calc(50% - 50vw); width: 100vw; height: 1px; background: var(--color-line); }
-    .sec--bleed .closer p { padding-top: clamp(46px, 5vw, 88px); }
+    /* 언론보도 상세 — 매체명 · 원문 기사 보기 */
+    .post-outlet { font-weight: 700; color: var(--color-primary); margin-right: 10px; }
+    .post-source { margin: 0 0 clamp(26px, 2.8vw, 40px); }
+    /* 본문 옆 보조 동작이다. 채운 원형 화살표 · 볼드 · 그림자를 걷었다(2026-08-10 지적).
+       아이콘은 새 창으로 나간다는 뜻의 외부링크 표시다. */
+    .src-btn { display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 17px; border-radius: 999px;
+      border: 1px solid var(--color-line); background: var(--color-surface);
+      font-size: 13px; font-weight: 500; color: var(--color-text-muted);
+      transition: border-color .2s, color .2s; }
+    .src-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+    .src-arrow { display: inline-flex; flex: none; width: 15px; height: 15px; }
+    .src-arrow svg { width: 100%; height: 100%; }
   </style>
 </head>
 
@@ -433,10 +591,10 @@
 <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
-        <a href="overview.html" class="is-on" aria-current="page">사업소개</a>
+        <a href="overview.html">사업소개</a>
         <a href="index.html#concept">도시소개</a>
         <a href="index.html#zones">투자·입주</a>
-        <a href="index.html#pr">홍보센터</a>
+        <a href="index.html#pr" class="is-on" aria-current="page">홍보센터</a>
       </nav>
       <div class="gnb-side">
         <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
@@ -464,7 +622,7 @@
       <h2>01 사업소개</h2>
       <a href="overview.html">사업개요</a>
       <a href="location.html">입지</a>
-      <a href="effect.html" class="is-on">기대효과</a>
+      <a href="effect.html">기대효과</a>
       <a href="schedule.html">추진일정</a>
       <a href="company.html">사업주체</a>
       <h2>02 도시소개</h2>
@@ -478,180 +636,42 @@
       <a href="press.html">언론보도</a>
       <a href="video.html">홍보영상</a>
       <a href="gallery.html">갤러리</a>
-      <a href="publication.html">발행물</a>
+      <a href="publication.html" class="is-on">발행물</a>
     </div>
   </div>
 
   <main id="main">
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/img-park.jpg" alt="" />
+      <img class="hero-bg" src="assets/img-bio.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
           <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>사업소개</span><span aria-hidden="true">›</span><b>기대효과</b>
+          <span>홍보센터</span><span aria-hidden="true">›</span><b>발행물</b>
         </nav>
-        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>01</b><span>BUSINESS · 사업소개</span></p>
-        <h1>기대효과</h1>
+        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>04</b><span>PR CENTER · 홍보센터</span></p>
+        <h1>발행물</h1>
       </div>
     </section>
 
     <!-- ===== LNB ===== -->
-    <nav class="lnb" aria-label="사업소개 하위 메뉴">
+    <nav class="lnb" aria-label="홍보센터 하위 메뉴">
       <div class="wrap">
-        <a href="overview.html">사업개요</a>
-        <a href="location.html">입지</a>
-        <a href="effect.html" class="is-on" aria-current="page">기대효과</a>
-        <a href="schedule.html">추진일정</a>
-        <a href="company.html">사업주체</a>
+        <a href="notice.html">공지사항</a>
+        <a href="press.html">언론보도</a>
+        <a href="video.html">홍보영상</a>
+        <a href="gallery.html">갤러리</a>
+        <a href="publication.html" class="is-on" aria-current="page">발행물</a>
       </div>
     </nav>
 
-<!-- ===== 1. 경제적 기대효과 · 핵심 지표 (스토리보드 v2 slide34) ===== -->
-    <section class="sec sec--bleed" id="value">
+<!-- 스토리보드 v2 slide100. 항목마다 "새 창으로 보기"(url)와 "내려받기"(file)가 갈린다 -->
+    <section class="sec" id="list">
       <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>EXPECTED VALUE</b><span>기대효과</span></p>
-        <h2 class="h2 rv">B-CITY가 만들어갈 경제·산업·사회적 가치를 통해<br />
-          <em>대한민국 미래 성장의 새로운 기준</em>을 제시합니다</h2>
-
-        <div class="eff-head rv">
-          <p class="eff-cat"><b>01</b>경제적 기대효과</p>
-          <h3 class="eff-t">지역 경제 활성화와 신규 일자리 창출</h3>
-        </div>
-
-        <!-- ⚠ 숫자 출처가 서로 다르다 — 인계 시 반드시 확인할 것
-             · 계획인구 15,917명 / 6,366세대 : IM 정본(260716_B-CITY_IM.pptx) slide26 확정값
-             · 취업유발 7,000여 명 · 생산유발 1.5조원 : 스토리보드 v2 slide34 에만 있고
-               IM 정본에는 없다. 원문 표기가 "7,0백 여명" · "1,5 조원" 인데, 같은 슬라이드가
-               6,366세대를 "6,3백 세대", 15,917명을 "16천여 명" 으로 줄여 쓴 패턴을 따르면
-               앞자리 두 자리만 남긴 표기다 → 7,0xx / 1.5조 로 읽었다. **미확정** -->
-        <ul class="kpi rv">
-          <li class="kpi-item">
-            <span class="kpi-v"><span data-count="15917">15,917</span><small>명</small><i><span data-count="6366">6,366</span>세대</i></span>
-            <span>
-              <b class="kpi-l">계획인구</b>
-              <span class="kpi-d">자족형 도시의 새로운 정주 인구 — 아파트·시니어하우징·주상복합·단독주택 등
-                다양한 주거 유형이 어우러지는 미래 도시</span>
-            </span>
-          </li>
-          <li class="kpi-item">
-            <span class="kpi-v"><span data-count="7000">7,000</span><small>여 명</small><i>사업 추진 기준</i></span>
-            <span>
-              <b class="kpi-l">취업유발</b>
-              <span class="kpi-d">사업 추진으로 창출되는 일자리 — 첨단 산업·연구·서비스 분야의 신규 고용 기대</span>
-            </span>
-          </li>
-          <li class="kpi-item">
-            <span class="kpi-v"><span data-count="1.5" data-dec="1">1.5</span><small>조원</small><i>사업 추진 기준</i></span>
-            <span>
-              <b class="kpi-l">생산유발효과</b>
-              <span class="kpi-d">지역 경제에 더해지는 생산 가치 — 강원권 산업·소비·서비스 확장에 따른 경제적 파급효과</span>
-            </span>
-          </li>
-        </ul>
-
-        <!-- 02 산업 — 비주얼 좌 / 본문 우 (스토리보드 slide35) -->
-        <div class="zf rv">
-          <figure class="zf-fig">
-            <img src="assets/img-bio.jpg" alt="자동화 장비가 가동되는 바이오 제약 연구실"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>02</b>산업적 기대효과</p>
-            <h3 class="eff-t">AI·BIO 융합 첨단산업 생태계 형성</h3>
-            <ul class="eff-list">
-              <li>AI·첨단 바이오 산업의 국가 전략거점 형성</li>
-              <li>입주 기업 간 R&amp;D 협력 및 산업 시너지 창출</li>
-              <li>신약 개발·정밀의료·푸드테크 등 신산업 육성 기반 마련</li>
-              <li>산·학·연 협력을 통한 혁신 클러스터 생태계 구축</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 03 사회 — 좌우 반전 -->
-        <div class="zf zf--flip rv">
-          <figure class="zf-fig">
-            <img src="assets/img-family.jpg" alt="교육시설 앞을 오가는 사람들"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>03</b>사회적 기대효과</p>
-            <h3 class="eff-t">자족형 정주 환경과 삶의 질 향상</h3>
-            <ul class="eff-list">
-              <li>직주근접 라이프스타일로 워라밸 실현</li>
-              <li>글로벌 교육환경 조성으로 고급 인재 정착 유도</li>
-              <li>통합의료·웰니스 인프라로 건강한 도시 생활 보장</li>
-              <li>다양한 주거 유형을 통한 건강한 지역 공동체 형성</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 04 지역균형 — 비주얼 좌.
-             location-belt 은 춘천 AI바이오 · 원주 의료기기 · 평창 그린바이오 · 강릉 천연물바이오
-             4거점을 담은 강원 초광역 벨트 지도다(자산 출처: index.html 입지 2페이지) -->
-        <div class="zf rv">
-          <figure class="zf-fig zf-fig--plain">
-            <img src="assets/img/location-belt.avif"
-                 onerror="this.onerror=null;this.src='assets/img/location-belt.png'"
-                 alt="춘천·원주·평창·강릉 4개 거점을 표시한 강원형 바이오·헬스 초광역 경제권 지도"
-                 loading="lazy" decoding="async" />
-            <figcaption>춘천 AI바이오 · 원주 의료기기 · 평창 그린바이오 · 강릉 천연물바이오</figcaption>
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>04</b>지역균형발전 기대효과</p>
-            <h3 class="eff-t">비수도권 첨단산업 거점으로 국토 균형발전 기여</h3>
-            <ul class="eff-list">
-              <li>강원특별자치도 첨단산업 메카 도약</li>
-              <li>동부권 GTX·고속도로 연계 광역 비즈니스 허브 형성</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 05 환경 — 좌우 반전 -->
-        <div class="zf zf--flip rv">
-          <figure class="zf-fig">
-            <img src="assets/img-shuttle.jpg" alt="가로수길과 보행로를 따라 자율주행 셔틀이 오가는 도시 전경"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>05</b>환경 · 지속가능성 기대효과</p>
-            <h3 class="eff-t">친환경 도시모델 제시</h3>
-            <ul class="eff-list">
-              <li>풍부한 녹지·수변 공간 기반 친환경 도시 모델 구현</li>
-              <li>보행 친화 도시 설계로 친환경 이동 환경 구축</li>
-              <li>자연과 첨단기술이 공존하는 지속가능한 도시 패러다임 제시</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 06 글로벌 — 비주얼 좌 -->
-        <div class="zf rv">
-          <figure class="zf-fig zf-fig--plain">
-            <img src="assets/img/location-gateway.avif"
-                 onerror="this.onerror=null;this.src='assets/img/location-gateway.png'"
-                 alt="B-CITY 를 중심으로 김포공항·양양국제공항과 속초항·동해항의 위치를 표시한 강원권 지도"
-                 loading="lazy" decoding="async" />
-            <figcaption>공항 2곳 · 항만 2곳으로 이어지는 글로벌 게이트웨이</figcaption>
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>06</b>글로벌 기대효과</p>
-            <h3 class="eff-t">대한민국 첨단산업의 국제적 위상 강화</h3>
-            <ul class="eff-list">
-              <li>동북아 첨단 바이오·AI 허브 도약</li>
-              <li>외국교육기관 및 해외 인재 유입으로 국제도시화</li>
-              <li>글로벌 제약·바이오 기업과의 협력 네트워크 구축</li>
-              <li>정밀의료 빅데이터를 활용한 글로벌 R&amp;D 협업 확대</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="closer rv">
-          <p>B-CITY는 단순한 도시개발을 넘어,<br />
-            지역과 국가, 그리고 세계에 새로운 가치를 만들어가는 <em>미래 성장의 출발점</em>이 됩니다</p>
-        </div>
-
-        <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>PUBLICATION</b><span>발행물</span></p>
+        <h2 class="h2 rv">카달로그와 <em>사업 소개 자료</em></h2>
+        <p class="pr-empty">등록된 게시물이 없습니다.</p>
       </div>
     </section>
   </main>
@@ -736,55 +756,38 @@
       });
     })();
 
-    /* 수치 카운트업 — [data-count] 를 가진 요소가 화면에 들어올 때 0 에서 목표값까지 센다.
-
-       원칙 두 가지.
-         1) **마크업에는 최종값이 그대로 적혀 있다.** JS 가 없거나 실패해도 숫자는 보인다.
-            여기서는 애니메이션만 얹는다(진행 중에만 값을 덮어쓴다).
-         2) `prefers-reduced-motion` 이면 아무것도 하지 않는다 — 최종값 그대로 둔다.
-
-       속성:
-         data-count="15917"   목표값(숫자만. 표시용 콤마는 여기 넣지 않는다)
-         data-dec="1"         소수 자릿수(기본 0). 1.5 조원처럼 소수가 있는 값에 쓴다
-
-       ⚠ 한 번 세고 끝낸다(unobserve). 스크롤을 오르내릴 때마다 다시 세면 시선을 뺏는다. */
+    /* 분류 필터 — 갤러리(행사·현장·조감도·기타)와 발행물(카달로그·IM·브로슈어·리포트)이
+       같은 코드를 쓴다. 카드에 hidden 을 세우고 보이기는 CSS 가 정한다.
+       ⚠ style.display 를 직접 건드리지 말 것. hidden 은 접근성 트리에서도 빠지므로
+         스크린리더가 감춰진 카드를 읽지 않는다. */
     (function () {
-      var els = [].slice.call(document.querySelectorAll('[data-count]'));
-      if (!els.length) return;
-      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (!('IntersectionObserver' in window)) return;   // 최종값이 이미 있으므로 그냥 둔다
+      var btns = [].slice.call(document.querySelectorAll('.pr-filter'));
+      if (!btns.length) return;
+      /* ⚠ 반드시 목록 컨테이너 안으로 한정한다. 예전에는 `[data-cat]` 전역이었는데
+         **분류 탭 자신도 data-cat 을 들고 있어서** 탭을 고르면 나머지 탭이 함께
+         hidden 이 됐다 — 한 번 고르면 다른 분류로 갈 수 없었다(2026-08-10 신고). */
+      var cards = [].slice.call(
+        document.querySelectorAll('.pr-cards [data-cat], .pub-list [data-cat]'));
+      var live = document.getElementById('filterCount');
 
-      var DUR = 1100;
-      var fmt = function (v, dec) {
-        return v.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      };
-
-      var run = function (el) {
-        var to = parseFloat(el.dataset.count);
-        var dec = parseInt(el.dataset.dec || '0', 10);
-        if (!isFinite(to)) return;
-        var t0 = null;
-        var step = function (t) {
-          if (t0 === null) t0 = t;
-          var p = Math.min(1, (t - t0) / DUR);
-          // easeOutCubic — 끝에서 부드럽게 멈춘다
-          var e = 1 - Math.pow(1 - p, 3);
-          el.textContent = fmt(to * e, dec);
-          if (p < 1) requestAnimationFrame(step);
-          else el.textContent = fmt(to, dec);   // 마지막은 목표값으로 정확히 맞춘다
-        };
-        requestAnimationFrame(step);
-      };
-
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          io.unobserve(en.target);
-          run(en.target);
+      var apply = function (cat) {
+        var n = 0;
+        cards.forEach(function (c) {
+          var on = cat === 'all' || c.dataset.cat === cat;
+          c.hidden = !on;
+          if (on) n++;
         });
-      }, { threshold: 0.4 });
+        btns.forEach(function (b) {
+          var on = b.dataset.cat === cat;
+          b.classList.toggle('is-on', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        if (live) live.textContent = n + '건 표시 중';
+      };
 
-      els.forEach(function (el) { io.observe(el); });
+      btns.forEach(function (b) {
+        b.addEventListener('click', function () { apply(b.dataset.cat); });
+      });
     })();
   </script>
 </body>

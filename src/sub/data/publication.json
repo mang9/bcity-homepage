@@ -1,0 +1,59 @@
+[
+  {
+    "id": "pub-im",
+    "title": "B-CITY 사업 소개 IM",
+    "kind": "im",
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "file": "assets/img-city.jpg",
+    "image": "assets/img-bio.jpg",
+    "date": "2026-07-16",
+    "visible": false,
+    "order": 1,
+    "_sample": true
+  },
+  {
+    "id": "pub-catalog",
+    "title": "춘천기업혁신파크 카달로그",
+    "kind": "catalog",
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "file": "assets/img-city.jpg",
+    "image": "assets/img-city.jpg",
+    "date": "2026-06-30",
+    "visible": false,
+    "order": 2,
+    "_sample": true
+  },
+  {
+    "id": "pub-brochure",
+    "title": "투자 유치 브로슈어",
+    "kind": "brochure",
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "file": "assets/img-city.jpg",
+    "date": "2026-06-02",
+    "visible": false,
+    "order": 3,
+    "_sample": true
+  },
+  {
+    "id": "pub-report",
+    "title": "2026 상반기 사업 추진 리포트",
+    "kind": "report",
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "file": "assets/img-city.jpg",
+    "date": "2026-05-20",
+    "visible": false,
+    "order": 4,
+    "_sample": true
+  },
+  {
+    "id": "pub-catalog-2",
+    "title": "8대 권역 안내 카달로그",
+    "kind": "catalog",
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "file": "assets/img-city.jpg",
+    "date": "2026-04-11",
+    "visible": false,
+    "order": 5,
+    "_sample": true
+  }
+]

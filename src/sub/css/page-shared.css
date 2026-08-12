@@ -17,24 +17,12 @@
 .sub-d { margin: 10px 0 0; font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted);
   max-width: 74ch; }
 
-/* 데이터 표 — 노선·소요시간·현황 류. 좁은 화면에서 행 블록으로 접는다 */
-.dtab { width: 100%; margin-top: clamp(18px, 1.8vw, 26px);
-  border-top: 2px solid var(--color-primary); font-size: clamp(14px, .98vw, 15.5px); }
-.dtab th, .dtab td { padding: clamp(11px, 1vw, 15px) clamp(12px, 1.2vw, 20px);
-  text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
-.dtab thead th { padding-block: 11px; background: rgb(var(--primary-rgb) / .08);
-  font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
-.dtab tbody th { font-family: var(--font-display); font-weight: 700; color: var(--color-text); }
-.dtab td { background: var(--color-surface); }
-.dtab .num { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--color-text); }
-.dtab tbody tr:last-child th, .dtab tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
-/* 상태 배지 — 운영 중 / 추진 중.
-   틴트가 민트/파랑으로 상태를 구분하고, 글자는 명도차가 큰 기존 토큰을 쓴다.
-   민트(#3DBFA8)를 그대로 글자색에 쓰면 흰 배경 대비가 2.2:1 로 본문 대비에 못 미친다. */
-.st { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px;
-  font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
-.st--live { background: rgb(61 191 168 / .18); color: var(--color-navy); }
-.st--plan { background: rgb(var(--primary-rgb) / .1); color: var(--color-primary); }
+/* 섹션 안의 하위 블록 간격. company.html 의 01/02/03 블록이 쓴다.
+   ⚠ 원래 page-location.css 에 있었는데 company 는 그 파일을 싣지 않아
+     **처음부터 적용된 적이 없었다**(2026-08-07 lint-classes 로 발견).
+     공용이므로 여기 둔다 — 특정 페이지 CSS 로 되돌리지 말 것. */
+.tr-block { margin-top: clamp(40px, 4vw, 68px); }
+.tr-block:first-of-type { margin-top: clamp(30px, 3vw, 46px); }
 
 /* 마무리 문장 — 슬라이드 하단 정리 카피.
    스토리보드(slide29 · 32 · 37)는 **박스가 아니라 여백 위의 큰 문장**이다.
@@ -62,49 +50,14 @@
    ⚠ DOM 순서는 항상 [비주얼 → 본문]으로 고정하고 `order` 로 **보이는 순서만** 뒤집는다.
      마크업 순서를 실제로 바꾸면 키보드 탭 순서와 스크린리더 낭독 순서가 블록마다
      달라져 읽는 사람이 흐름을 잃는다. */
-.zz { display: grid; align-items: center; gap: clamp(22px, 2.8vw, 56px);
-  grid-template-columns: minmax(0, 1fr); margin-top: clamp(38px, 4vw, 72px); }
-.zz:first-of-type { margin-top: clamp(28px, 3vw, 48px); }
-@media (min-width: 900px) {
-  .zz { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .zz--flip > :first-child { order: 2; }
-}
-.zz-fig { margin: 0; }
-.zz-fig img { width: 100%; height: auto; border-radius: var(--radius-lg);
-  border: 1px solid var(--color-line); background: var(--color-surface); }
-.zz-fig figcaption { margin-top: 10px; font-size: 12.5px; color: var(--color-text-muted); }
-/* ⚠ location-belt · location-gateway 는 **네이비 배경 위에 얹도록 만든 자산**이다
-   (index.html 입지 섹션이 .bg-navy 스테이지 위에서 쓴다). 옅은 하늘색 3D 일러스트라
-   밝은 면에 그대로 놓으면 형태가 거의 날아간다 — 실제로 흰 배경에서 빈 칸처럼 보였다.
-   그래서 이 변형만 네이비 패널로 감싼다. 사진(.zz-fig)에는 쓰지 말 것. */
-.zz-fig--plain img { border-color: var(--color-navy); background: var(--color-navy);
-  padding: clamp(14px, 1.7vw, 28px); }
-
-/* 비주얼 자리에 들어가는 수치 패널 — 해당 블록의 사진 자산이 없을 때 쓴다.
-   빈 칸을 두거나 이미지를 지어내는 대신, 그 블록에서 가장 중요한 수치를 크게 세운다. */
-.fig-stat { display: grid; gap: clamp(16px, 1.7vw, 26px); margin: 0;
-  padding: clamp(26px, 3vw, 48px) clamp(22px, 2.6vw, 40px);
-  border-radius: var(--radius-lg); background: rgb(var(--primary-rgb) / .05);
-  border: 1px solid var(--color-line); }
-.fig-stat > div { display: grid; gap: 4px; }
-.fig-stat b { font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(30px, 3.4vw, 52px); line-height: 1.04; letter-spacing: -.034em;
-  color: var(--color-primary); font-variant-numeric: tabular-nums; }
-.fig-stat b small { font-size: .44em; letter-spacing: -.01em; margin-left: 3px; }
-.fig-stat span { font-size: clamp(13.5px, 1vw, 15px); line-height: 1.55;
-  color: var(--color-text-muted); }
-.fig-stat span i { font-style: normal; font-weight: 700; color: var(--color-text); }
+/* 상태 배지 — 운영 중 / 추진 중.
+   틴트가 민트/파랑으로 상태를 구분하고, 글자는 명도차가 큰 기존 토큰을 쓴다.
+   민트(#3DBFA8)를 그대로 글자색에 쓰면 흰 배경 대비가 2.2:1 로 본문 대비에 못 미친다. */
+.st { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px;
+  font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
+.st--live { background: rgb(61 191 168 / .18); color: var(--color-navy); }
+.st--plan { background: rgb(var(--primary-rgb) / .1); color: var(--color-primary); }
 
 /* 각주 */
 .note { margin: clamp(18px, 1.8vw, 26px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
-@media (max-width: 640px) {
-  .dtab thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-  .dtab, .dtab tbody, .dtab tr, .dtab th, .dtab td { display: block; width: auto; }
-  .dtab tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
-  .dtab tbody th { padding: 12px 14px 0; border: 0; }
-  .dtab td { padding: 3px 14px; border: 0; }
-  .dtab td:last-child { padding-bottom: 13px; }
-  .dtab tbody tr:last-child th, .dtab tbody tr:last-child td { border-bottom: 0; }
-  .dtab tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
-}

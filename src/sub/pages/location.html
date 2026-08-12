@@ -2,157 +2,95 @@
 {
   "slug": "location",
   "title": "입지 · B-CITY 춘천기업혁신파크",
-  "description": "서울 잠실에서 40분. GTX-B 연장과 제2경춘고속화도로로 완성되는 수도권 생활권이며, 춘천의 산업·학술·의료·관광 광역 인프라가 유기적으로 연결되는 입지입니다.",
+  "description": "서울·수도권 1시간 생활권. GTX-B 연장과 제2경춘고속화도로, 양양국제공항과 동해권 항만으로 이어지는 교통망과 춘천의 산업·학술·의료·관광 광역 인프라를 소개합니다.",
   "nav": "location",
   "heroImg": "assets/img-wide.jpg",
   "h1": "입지",
   "css": ["page-shared", "page-location"],
-  "js": ["subtab"]
+  "js": ["locmap"]
 }
 -->
-    <!-- 서브탭 (스토리보드 v2 slide27·30 의 '교통환경 / 광역 인프라' 버튼) -->
-    <div class="wrap subtab-bar">
-      <nav class="subtab" aria-label="입지 하위 항목">
-        <a href="#transit" class="is-on" aria-current="true">교통환경</a>
-        <a href="#infra">광역 인프라</a>
-      </nav>
-    </div>
-
-    <!-- ===== 1. 교통환경 (스토리보드 v2 slide27~29) ===== -->
+    <!-- ===== 1. 교통환경 (스토리보드 v2 slide27~29) =====
+         지도 한 장을 크게 두고, 아래 4개 영역을 누르면 그 경로를 강조한다.
+         표를 걷어내고 카드가 곧 내용이다.
+         ⚠ 지도가 모드에 따라 바뀐다 — "철도·도로·공항·항만 통합" 지도가 아직 없어서다.
+           자세한 사정과 통합 시 고칠 지점은 src/sub/js/locmap.js 상단 주석 참조. -->
     <section class="sec" id="transit">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>TRANSPORT</b><span>교통환경</span></p>
-        <h2 class="h2 rv">서울 잠실에서 <em>40분</em>,<br />수도권 생활 인프라로 편입</h2>
+        <h2 class="h2 rv">B-CITY는 서울·수도권 <em>1시간 생활권</em>은 물론,<br />
+          국내를 넘어 글로벌 비즈니스 허브로 도약합니다</h2>
         <p class="lede rv">새로운 동부권 비즈니스 허브, B-CITY</p>
 
-        <!-- 종합 교통 지도. index.html 입지 섹션의 전경 레이어(location-metro-fg)를 그대로 쓴다 —
-             노선·지점명·소요시간이 이미 다 들어 있어 단독으로 성립한다.
-             ⚠ <picture> 로 감싸지 말 것(§11.5-4). AVIF 를 src 에 직접 넣고 error 에서 PNG 로
-               한 번만 되돌린다(같은 2단 폴백을 onerror 로 축약한 형태) -->
-        <figure class="tr-map rv">
-          <div class="tr-map-scroll">
-            <img src="assets/img/location-metro-fg.avif"
-                 onerror="this.onerror=null;this.src='assets/img/location-metro-fg.png'"
-                 alt="B-CITY 를 중심으로 잠실 40분, 강촌IC 10분, 남춘천IC 3분, 춘천시청 15분과 GTX-B 연장선·제2경춘국도(예정) 노선을 표시한 광역 교통도"
-                 loading="lazy" decoding="async" />
-          </div>
-          <figcaption>서울양양고속도로 · GTX-B 연장선(예정) · 제2경춘국도(예정) 기준 광역 접근성</figcaption>
-        </figure>
-
-        <!-- 01 철도 — 비주얼 좌 / 본문 우 -->
-        <div class="zz rv">
-          <div class="fig-stat">
-            <div><b>50<small>분</small></b><span><i>서울역</i> · GTX-B 연장선(2030년 개통 예정)</span></div>
-            <div><b>55<small>분</small></b><span><i>청량리역</i> · ITX-청춘 운영 중</span></div>
-          </div>
-          <div>
-            <p class="tr-cat"><b>01</b>철도 교통</p>
-            <h3 class="sub-t">수도권을 잇는 광역 철도망</h3>
-            <table class="dtab">
-              <caption class="sr">B-CITY 철도 교통 노선별 소요시간과 현황</caption>
-              <thead>
-                <tr><th scope="col">노선</th><th scope="col">소요시간</th><th scope="col">현황</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">GTX-B</th><td class="num">서울역 50분</td><td><span class="st st--plan">추진 중</span> 2030년 개통 예정</td></tr>
-                <tr><th scope="row">ITX-청춘</th><td class="num">청량리역 55분</td><td><span class="st st--live">운영 중</span></td></tr>
-                <tr><th scope="row">경춘선</th><td>청량리 연결</td><td><span class="st st--live">운영 중</span></td></tr>
-              </tbody>
-            </table>
-            <p class="tr-sum">GTX-B 춘천 연장이 완료되면 서울 핵심 업무지구까지 <b>50분대</b>로 단축되어,
-              수도권 통근·통학이 일상이 됩니다.</p>
-          </div>
+        <!-- 광역 교통망 지도 — 래스터 배경 + SVG 4겹(경로 · 흐름 · 마커 · 라벨).
+             네 겹 모두 viewBox 0 0 1672 941 로 같은 프레임을 공유한다.
+             ⚠ 기본 상태는 **전체 정지**다. 카드를 고르면 그 교통수단만 살아나고
+               흐름 애니메이션이 그 위에서만 흐른다(사용자 지시 2026-08-11). -->
+        <div class="tmap rv" id="tmap" data-mode="all">
+          <!-- 초기 src 는 JPEG 다. JS 가 AVIF(44KB)로 올려 쓰고 실패하면 이 파일로 되돌린다.
+               src 를 비워 두면 JS 가 늦거나 죽었을 때 빈 프레임이 남는다(§11.6 setMapSrc 와 같은 방식) -->
+          <img class="tmap-img" src="assets/img/transit-map.png"
+               alt="B-CITY 를 중심으로 철도·도로·항공·항만이 이어지는 광역 교통망 지도. 아래 네 영역을 선택하면 해당 경로가 강조됩니다."
+               decoding="async" />
+{{> transit-routes}}
+{{> transit-flow}}
+{{> transit-markers}}
+{{> transit-labels}}
         </div>
 
-        <!-- 02 도로 — 좌우 반전(본문 좌 / 비주얼 우) -->
-        <div class="zz zz--flip rv">
-          <div class="fig-stat">
-            <div><b>3<small>분</small></b><span><i>남춘천 IC</i> 직접 연결</span></div>
-            <div><b>40<small>분</small></b><span><i>서울</i> · 서울양양고속도로 운영 중</span></div>
-          </div>
-          <div>
-            <p class="tr-cat"><b>02</b>도로 교통</p>
-            <h3 class="sub-t">사통팔달의 고속도로 인프라</h3>
-            <table class="dtab">
-              <caption class="sr">B-CITY 도로 교통 노선별 소요시간과 비고</caption>
-              <thead>
-                <tr><th scope="col">노선</th><th scope="col">소요시간</th><th scope="col">비고</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">제2경춘고속화도로</th><td class="num">서울 45분</td><td><span class="st st--plan">추진 중</span> 4~6차로</td></tr>
-                <tr><th scope="row">서울양양고속도로</th><td class="num">서울 40분</td><td><span class="st st--live">운영 중</span> 4~6차로</td></tr>
-                <tr><th scope="row">중앙고속도로</th><td>원주 방면</td><td><span class="st st--live">운영 중</span> 4차로</td></tr>
-                <tr><th scope="row">김유정로</th><td>도심 연결</td><td></td></tr>
-                <tr><th scope="row">충효로</th><td>도심 연결</td><td></td></tr>
-              </tbody>
-            </table>
-            <p class="tr-sum"><b>남춘천 IC</b>와 직접 연결되며, 제2경춘고속화도로 개통 시
-              서울·수도권 접근성이 한층 강화됩니다.</p>
-          </div>
-        </div>
-
-        <!-- 03 항공 — 비주얼 좌 / 본문 우.
-             location-gateway 는 김포·양양공항과 속초·동해항을 한 장에 담고 있어
-             03·04 두 블록을 함께 설명한다(자산 출처: index.html 입지 3페이지) -->
-        <div class="zz rv">
-          <figure class="zz-fig zz-fig--plain">
-            <img src="assets/img/location-gateway.avif"
-                 onerror="this.onerror=null;this.src='assets/img/location-gateway.png'"
-                 alt="B-CITY 를 중심으로 김포공항·양양국제공항과 속초항·동해항의 위치를 표시한 강원권 지도"
-                 loading="lazy" decoding="async" />
-            <figcaption>공항 2곳 · 항만 2곳으로 이어지는 글로벌 게이트웨이</figcaption>
-          </figure>
-          <div>
-            <p class="tr-cat"><b>03</b>항공</p>
-            <h3 class="sub-t">글로벌 비즈니스 연계</h3>
-            <table class="dtab">
-              <caption class="sr">B-CITY 인접 공항별 소요시간과 특성</caption>
-              <thead>
-                <tr><th scope="col">공항</th><th scope="col">소요시간</th><th scope="col">특성</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">양양국제공항</th><td class="num">약 60분</td><td>국내선 · 국제선 운항</td></tr>
-                <tr><th scope="row">김포공항</th><td class="num">약 80분</td><td>국내선 중심 · 일부 국제선</td></tr>
-              </tbody>
-            </table>
-            <p class="tr-sum">국내선과 국제선의 두 축을 통해 국내 출장부터 글로벌 비즈니스까지
-              원활한 항공 이동이 가능합니다.</p>
-          </div>
-        </div>
-
-        <!-- 04 항만 — 좌우 반전 -->
-        <div class="zz zz--flip rv">
-          <div class="fig-stat">
-            <div><b>90<small>분</small></b><span><i>속초항</i> · 국제 크루즈 · 러시아 항로</span></div>
-            <div><b>120<small>분</small></b><span><i>동해항</i> · 종합 무역항 · 국제 무역 거점</span></div>
-          </div>
-          <div>
-            <p class="tr-cat"><b>04</b>항만</p>
-            <h3 class="sub-t">동해권 물류·수출입 거점 연계</h3>
-            <table class="dtab">
-              <caption class="sr">B-CITY 인접 항만별 소요시간과 특성</caption>
-              <thead>
-                <tr><th scope="col">항만</th><th scope="col">소요시간</th><th scope="col">특성</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">속초항</th><td class="num">약 90분</td><td>국제 크루즈 · 러시아 항로</td></tr>
-                <tr><th scope="row">동해항</th><td class="num">약 120분</td><td>종합 무역항 · 국제 무역 거점</td></tr>
-              </tbody>
-            </table>
-            <p class="tr-sum">동해권 주요 항만과 연계로 <b>바이오·산업 물자의 수출입 인프라</b>가 확보됩니다.</p>
-          </div>
-        </div>
-
-        <div class="closer rv">
-          <p>B-CITY는 서울·수도권 <em>1시간 생활권</em>은 물론,
-            국내를 넘어 글로벌 비즈니스 허브로 도약합니다</p>
-        </div>
+        <ul class="tmodes rv">
+          <li>
+            <button type="button" class="tmode" data-mode="rail" aria-pressed="false">
+              <span class="tmode-h"><span class="tmode-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="3.5" width="13" height="12" rx="3"/><path d="M5.5 10h13"/><path d="M9 13h.01M15 13h.01"/><path d="m8 19 1.5-3.5M16 19l-1.5-3.5"/></svg></span><span class="tmode-t">철도</span></span>
+              <ul class="tmode-list">
+                <li><b>GTX-B</b> <span>서울역 50분</span></li>
+                <li><b>ITX-청춘</b> <span>청량리역 55분</span></li>
+                <li><b>경춘선</b> <span>청량리 연결</span></li>
+              </ul>
+              <span class="tmode-sum">GTX-B 춘천 연장 시 서울 핵심 업무지구까지 50분대</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="tmode" data-mode="road" aria-pressed="false">
+              <span class="tmode-h"><span class="tmode-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 3.5 6 20.5M15.5 3.5 18 20.5"/><path d="M12 5.5v3M12 12v3"/></svg></span><span class="tmode-t">도로</span></span>
+              <ul class="tmode-list">
+                <li><b>서울양양고속도로</b> <span>서울 40분</span></li>
+                <li><b>제2경춘고속화도로</b> <span>서울 45분</span></li>
+                <li><b>중앙고속도로</b> <span>원주 방면</span></li>
+              </ul>
+              <span class="tmode-sum">남춘천 IC 와 직접 연결 · 제2경춘고속화도로 추진 중</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="tmode" data-mode="air" aria-pressed="false">
+              <span class="tmode-h"><span class="tmode-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 15.2 3.5 9.8V7.2l2.4.9 1.2 1.7 4 1.3V5l2.2.8 1 6.2 5.5 1.8a1.4 1.4 0 0 1 .7 1.2v.2Z"/><path d="M6.5 19.5h11"/></svg></span><span class="tmode-t">항공</span></span>
+              <ul class="tmode-list">
+                <li><b>양양국제공항</b> <span>약 60분</span></li>
+                <li><b>김포공항</b> <span>약 80분</span></li>
+              </ul>
+              <span class="tmode-sum">국내선과 국제선 두 축으로 글로벌 비즈니스 연계</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="tmode" data-mode="port" aria-pressed="false">
+              <span class="tmode-h"><span class="tmode-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v11.5"/><circle cx="12" cy="5" r="1.9"/><path d="M9 11h6"/><path d="M4.5 13.2c0 3.7 3.4 6.3 7.5 6.3s7.5-2.6 7.5-6.3"/></svg></span><span class="tmode-t">항만</span></span>
+              <ul class="tmode-list">
+                <li><b>속초항</b> <span>약 90분</span></li>
+                <li><b>동해항</b> <span>약 120분</span></li>
+              </ul>
+              <span class="tmode-sum">동해권 물류 거점 연계로 수출입 인프라 확보</span>
+            </button>
+          </li>
+        </ul>
 
         <p class="note">* 소요시간은 교통량 및 도로사정에 따라 차이가 발생할 수 있습니다.</p>
       </div>
     </section>
 
-    <!-- ===== 2. 광역 인프라 (스토리보드 v2 slide30~32) ===== -->
+    <!-- ===== 2. 광역 인프라 (스토리보드 v2 slide30~32) =====
+         기획서 구성대로 그룹마다 사진 그리드를 둔다.
+         ⚠ 사진 자산 미확보 — 프레임 안은 현재 자리표시다(page-location.css 주석 참조).
+           이전 "카드 + 칩" 구성은 src/sub/_backup/ 에 보관돼 있다. -->
     <section class="sec sec--surface" id="infra">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>INFRASTRUCTURE</b><span>광역 인프라</span></p>
@@ -160,56 +98,90 @@
         <p class="lede rv">대한민국 바이오 산업의 중심 춘천을 기반으로, 산업·교육·의료·관광 인프라가
           유기적으로 연결된 미래 혁신도시의 최적 입지를 완성합니다</p>
 
-        <div class="infra">
-          <div class="infra-item rv">
+        <div class="inf-group rv">
+          <div class="inf-head">
             <p class="tr-cat"><b>01</b>산업 인프라</p>
             <h3 class="sub-t">대한민국 바이오 혁신 생태계의 중심</h3>
-            <p class="sub-d">춘천바이오산업진흥원과 강원연구개발특구를 비롯한 다양한 산업 인프라를
+            <p class="inf-d">춘천바이오산업진흥원과 강원연구개발특구를 비롯한 다양한 산업 인프라를
               기반으로 기업과 연구기관, 인재가 함께 성장하는 혁신 생태계를 형성합니다.</p>
-            <ul class="chips">
-              <li class="chip">춘천바이오산업진흥원</li>
-              <li class="chip">강원연구개발특구</li>
-              <li class="chip">인근 산업단지 및 네트워크</li>
-            </ul>
           </div>
+          <ul class="inf-shots">
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">춘천바이오산업진흥원</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">강원연구개발특구</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">인근 산업단지 및 네트워크</figcaption></figure></li>
+          </ul>
+        </div>
 
-          <div class="infra-item rv">
+        <div class="inf-group rv">
+          <div class="inf-head">
             <p class="tr-cat"><b>02</b>학술 인프라</p>
             <h3 class="sub-t">미래 인재를 키우는 교육·연구 거점</h3>
-            <p class="sub-d">강원권 대학과 연구기관이 집적된 교육 환경을 바탕으로
+            <p class="inf-d">강원권 대학과 연구기관이 집적된 교육 환경을 바탕으로
               산업과 연구, 인재 양성이 선순환하는 혁신 생태계를 구축합니다.</p>
-            <ul class="chips">
-              <li class="chip">강원대학교 (춘천캠퍼스)</li>
-              <li class="chip">한림대학교</li>
-            </ul>
           </div>
+          <ul class="inf-shots">
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">강원대학교 (춘천캠퍼스)</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">한림대학교</figcaption></figure></li>
+          </ul>
+        </div>
 
-          <div class="infra-item rv">
+        <div class="inf-group rv">
+          <div class="inf-head">
             <p class="tr-cat"><b>03</b>의료 · 공공 인프라</p>
             <h3 class="sub-t">수준 높은 의료 서비스와 안정적인 행정 인프라</h3>
-            <p class="sub-d">대학병원을 중심으로 한 의료 인프라와 강원특별자치도 및
+            <p class="inf-d">대학병원을 중심으로 한 의료 인프라와 강원특별자치도 및
               춘천시의 행정 지원 체계를 기반으로 안정적인 정주환경을 제공합니다.</p>
-            <ul class="chips">
-              <li class="chip">강원대학교병원</li>
-              <li class="chip">한림대춘천성심병원</li>
-              <li class="chip">강원도청 · 춘천시청</li>
-            </ul>
           </div>
+          <ul class="inf-shots">
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">강원대학교병원</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">한림대춘천성심병원</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">강원도청 · 춘천시청</figcaption></figure></li>
+          </ul>
+        </div>
 
-          <div class="infra-item rv">
+        <div class="inf-group rv">
+          <div class="inf-head">
             <p class="tr-cat"><b>04</b>관광 · 여가 인프라</p>
             <h3 class="sub-t">사계절 자연과 문화를 누리는 라이프 환경</h3>
-            <p class="sub-d">남이섬, 강촌, 의암호, 소양강 등 춘천을 대표하는
+            <p class="inf-d">남이섬, 강촌, 의암호, 소양강 등 춘천을 대표하는
               관광·문화 자원을 가까이 누릴 수 있는 차별화된 정주환경을 제공합니다.</p>
-            <ul class="chips">
-              <li class="chip">남이섬</li>
-              <li class="chip">비발디파크</li>
-              <li class="chip">강촌 (엘리시안 강촌)</li>
-              <li class="chip">의암호</li>
-              <li class="chip">소양강</li>
-              <li class="chip">레고랜드</li>
-            </ul>
           </div>
+          <ul class="inf-shots">
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">남이섬</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">비발디파크</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">강촌 (엘리시안 강촌)</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">의암호</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">소양강</figcaption></figure></li>
+            <li class="inf-shot"><figure style="margin:0">
+              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <figcaption class="inf-cap">레고랜드</figcaption></figure></li>
+          </ul>
         </div>
 
         <div class="closer rv">

@@ -1,0 +1,11 @@
+/* 백업 — 위 location-infra-cards.html 과 짝이다. 자세한 설명은 그 파일 주석 참조 */
+/* 광역 인프라 — 4개 그룹을 2열 카드로.
+   ⚠ 스토리보드 slide30~32 는 그룹마다 사진(강원대·한림대·병원·도청·남이섬·레고랜드 등)을
+     요구하지만 해당 자산이 없다. 사진 없이도 성립하도록 '그룹 카드 + 시설명 칩' 구조로
+     짰다. 사진이 들어오면 .infra-item 안에 그림을 추가하면 되고 칩은 캡션으로 남는다. */
+.infra { display: grid; gap: clamp(12px, 1.2vw, 20px); margin-top: clamp(22px, 2.2vw, 34px);
+  grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1024px) { .infra { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.infra-item { margin: 0; padding: clamp(20px, 1.9vw, 30px) clamp(18px, 1.9vw, 30px);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  background: var(--color-surface); }

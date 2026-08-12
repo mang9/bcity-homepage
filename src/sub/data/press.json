@@ -1,0 +1,182 @@
+[
+  {
+    "id": "press-01",
+    "title": "춘천 기업혁신파크, 바이오 국가첨단전략산업 특화단지 지정",
+    "outlet": "매체명 A",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 A 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-07-02",
+    "visible": false,
+    "order": 1,
+    "_sample": true
+  },
+  {
+    "id": "press-02",
+    "title": "더존비즈온 앵커로 참여하는 1.1조원 규모 도시개발",
+    "outlet": "매체명 B",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 B 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-06-18",
+    "visible": false,
+    "order": 2,
+    "_sample": true
+  },
+  {
+    "id": "press-03",
+    "title": "GTX-B 춘천 연장 추진… 서울 50분대 생활권",
+    "outlet": "매체명 A",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 A 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-05-29",
+    "visible": false,
+    "order": 3,
+    "_sample": true
+  },
+  {
+    "id": "press-04",
+    "title": "강원특별자치도·춘천시, B-CITY PFV 출자 확정",
+    "outlet": "매체명 C",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 C 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-05-08",
+    "visible": false,
+    "order": 4,
+    "_sample": true
+  },
+  {
+    "id": "press-05",
+    "title": "AI·바이오 융합 클러스터로 조성되는 춘천 B-CITY",
+    "outlet": "매체명 B",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 B 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-04-22",
+    "visible": false,
+    "order": 5,
+    "_sample": true
+  },
+  {
+    "id": "press-06",
+    "title": "기업혁신파크 선도사업, 2033년 준공 목표",
+    "outlet": "매체명 C",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 C 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-03-30",
+    "visible": false,
+    "order": 6,
+    "_sample": true
+  },
+  {
+    "id": "press-07",
+    "title": "B-CITY 계획인구 15,917명… 자족형 도시로",
+    "outlet": "매체명 A",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 A 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2026-02-19",
+    "visible": false,
+    "order": 7,
+    "_sample": true
+  },
+  {
+    "id": "press-08",
+    "title": "바이오테크이노밸리 PFV 설립… 사업 본격화",
+    "outlet": "매체명 B",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 B 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2025-12-11",
+    "visible": false,
+    "order": 8,
+    "_sample": true
+  },
+  {
+    "id": "press-09",
+    "title": "춘천·홍천 바이오 특화단지, 산업 생태계 기대",
+    "outlet": "매체명 C",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 C 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2025-11-25",
+    "visible": false,
+    "order": 9,
+    "_sample": true
+  },
+  {
+    "id": "press-10",
+    "title": "제2경춘고속화도로 개통 시 서울 45분",
+    "outlet": "매체명 A",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 A 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2025-10-14",
+    "visible": false,
+    "order": 10,
+    "_sample": true
+  },
+  {
+    "id": "press-11",
+    "title": "외국교육기관 유치 추진하는 춘천 B-CITY",
+    "outlet": "매체명 B",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 B 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2025-09-03",
+    "visible": false,
+    "order": 11,
+    "_sample": true
+  },
+  {
+    "id": "press-12",
+    "title": "동해권 항만 연계 물류 인프라 확보",
+    "outlet": "매체명 C",
+    "summary": "※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다.",
+    "body": [
+      "매체명 C 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.",
+      "이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다."
+    ],
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "date": "2025-08-20",
+    "visible": false,
+    "order": 12,
+    "_sample": true
+  }
+]

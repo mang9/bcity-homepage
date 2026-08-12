@@ -1,0 +1,55 @@
+/* 백업 — 2026-08-07 입지 재구성으로 쓰임이 사라진 컴포넌트 2종.
+   page-shared.css 에서 떼어냈다(모든 서브페이지에 실리는 파일이라 죽은 채 두면 낭비).
+   되살리려면 이 내용을 page-shared.css 로 다시 옮기고 마크업을 붙인다.
+   ⚠ .dtab 은 640px 이하에서 행 블록으로 접히는 분기까지 포함돼 있다. */
+
+/* 데이터 표 — 노선·소요시간·현황 류. 좁은 화면에서 행 블록으로 접는다 */
+.dtab { width: 100%; margin-top: clamp(18px, 1.8vw, 26px);
+  border-top: 2px solid var(--color-primary); font-size: clamp(14px, .98vw, 15.5px); }
+.dtab th, .dtab td { padding: clamp(11px, 1vw, 15px) clamp(12px, 1.2vw, 20px);
+  text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+.dtab thead th { padding-block: 11px; background: rgb(var(--primary-rgb) / .08);
+  font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
+.dtab tbody th { font-family: var(--font-display); font-weight: 700; color: var(--color-text); }
+.dtab td { background: var(--color-surface); }
+.dtab .num { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--color-text); }
+.dtab tbody tr:last-child th, .dtab tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
+
+
+/* 비주얼 자리에 들어가는 수치 패널 — 해당 블록의 사진 자산이 없을 때 쓴다.
+   빈 칸을 두거나 이미지를 지어내는 대신, 그 블록에서 가장 중요한 수치를 크게 세운다. */
+.fig-stat { display: grid; gap: clamp(16px, 1.7vw, 26px); margin: 0;
+  padding: clamp(26px, 3vw, 48px) clamp(22px, 2.6vw, 40px);
+  border-radius: var(--radius-lg); background: rgb(var(--primary-rgb) / .05);
+  border: 1px solid var(--color-line); }
+.fig-stat > div { display: grid; gap: 4px; }
+.fig-stat b { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(30px, 3.4vw, 52px); line-height: 1.04; letter-spacing: -.034em;
+  color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.fig-stat b small { font-size: .44em; letter-spacing: -.01em; margin-left: 3px; }
+.fig-stat span { font-size: clamp(13.5px, 1vw, 15px); line-height: 1.55;
+  color: var(--color-text-muted); }
+.fig-stat span i { font-style: normal; font-weight: 700; color: var(--color-text); }
+
+/* ── .zz — 컨테이너 안 좌우 교차 2단 (2026-08-10 이관) ────────────────────
+   기대효과 페이지가 꽉 찬 2단(.zf, page-effect.css)으로 바뀌면서 쓰는 곳이 없어졌다.
+   컨테이너 폭 안에서 사진과 본문을 교차시켜야 할 때 되살려 쓸 수 있다.
+   되살릴 때는 page-shared.css 로 옮기고 lint-classes 를 돌릴 것. */
+.zz { display: grid; align-items: center; gap: clamp(22px, 2.8vw, 56px);
+  grid-template-columns: minmax(0, 1fr); margin-top: clamp(38px, 4vw, 72px); }
+.zz:first-of-type { margin-top: clamp(28px, 3vw, 48px); }
+@media (min-width: 900px) {
+  .zz { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .zz--flip > :first-child { order: 2; }
+}
+.zz-fig { margin: 0; }
+.zz-fig img { width: 100%; height: auto; border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line); background: var(--color-surface); }
+.zz-fig figcaption { margin-top: 10px; font-size: 12.5px; color: var(--color-text-muted); }
+/* 지도류(투명 배경 3D 일러스트)용 변형 — 흰 면에 여백을 두고 얹는다.
+   ⚠ 배경을 네이비로 하지 말 것. 지도의 지점명이 **짙은 네이비 글자**라
+     흰 후광이 없는 라벨(예: location-belt 의 "강릉")이 통째로 사라진다(2026-08-07 실측).
+     한때 네이비로 감싼 적이 있는데, 그건 location-belt.avif 가 깨져 빈 칸으로 보이던
+     것을 대비 문제로 오진해 넣은 조치였다. AVIF 를 고친 뒤에는 밝은 면이 맞다. */
+.zz-fig--plain img { border-color: var(--color-line); background: var(--color-surface);
+  padding: clamp(12px, 1.4vw, 24px); }

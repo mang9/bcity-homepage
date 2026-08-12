@@ -1,0 +1,62 @@
+[
+  {
+    "id": "gal-render-wide",
+    "title": "B-CITY 전경 조감도",
+    "category": "render",
+    "image": "assets/img-wide.jpg",
+    "date": "2026-07-01",
+    "visible": false,
+    "order": 1,
+    "_sample": true
+  },
+  {
+    "id": "gal-render-street",
+    "title": "중심 상업가로",
+    "category": "render",
+    "image": "assets/img-street.jpg",
+    "date": "2026-07-01",
+    "visible": false,
+    "order": 2,
+    "_sample": true
+  },
+  {
+    "id": "gal-event-park",
+    "title": "센트럴파크 공연 행사",
+    "category": "event",
+    "image": "assets/img-park.jpg",
+    "date": "2026-06-20",
+    "visible": false,
+    "order": 3,
+    "_sample": true
+  },
+  {
+    "id": "gal-site-bio",
+    "title": "바이오 연구시설 현장",
+    "category": "site",
+    "image": "assets/img-bio.jpg",
+    "date": "2026-06-12",
+    "visible": false,
+    "order": 4,
+    "_sample": true
+  },
+  {
+    "id": "gal-etc-shuttle",
+    "title": "자율주행 셔틀 운행 구간",
+    "category": "etc",
+    "image": "assets/img-shuttle.jpg",
+    "date": "2026-05-30",
+    "visible": false,
+    "order": 5,
+    "_sample": true
+  },
+  {
+    "id": "gal-render-city",
+    "title": "주간 도시 전경",
+    "category": "render",
+    "image": "assets/slide-day.jpg",
+    "date": "2026-05-15",
+    "visible": false,
+    "order": 6,
+    "_sample": true
+  }
+]

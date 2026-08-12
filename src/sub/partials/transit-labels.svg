@@ -1,0 +1,32 @@
+<!-- 지명·노선명. 아웃라인이 아니라 <text> 라 확대·검색·낭독에 견딘다.
+     ⚠ 글자 스타일은 SVG 안 <style> 이 아니라 page-location.css 에 있다 —
+       SVG 내부 <style> 은 lint-classes 가 보지 못해 "정의 없는 클래스" 로 잡힌다. -->
+<svg class="tmap-lay tmap-labels" aria-label="교통 정보" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1672 941" role="img" aria-label="B-CITY 광역 교통망 텍스트">
+  <g id="labels-itx-cheongchun" data-route="itx-cheongchun" data-transport="rail">
+    <text class="tl-place" x="144.8" y="615.5">서울역</text><text class="tl-place" x="239.3" y="576.1">청량리</text>
+    <text class="tl-place" x="436.8" y="474.9">마석</text><text class="tl-place" x="562.2" y="383.2">가평</text>
+    <text class="tl-place" x="670.1" y="361.4">강촌</text><text class="tl-place" x="725.4" y="309.2">춘천역</text>
+    <text class="tl-route" x="334.8" y="565.6" fill="#1758B5" transform="rotate(-14 334.8 565.6)">ITX-청춘</text>
+  </g>
+  <g id="labels-gtx-b" data-route="gtx-b" data-transport="rail"><text class="tl-route tl-small" x="450.3" y="531.0" fill="#19AFA6" transform="rotate(-10 450.3 531.0)">GTX-B 연장선(예정)</text></g>
+  <g id="labels-seoul-yangyang" data-route="seoul-yangyang" data-transport="road">
+    <text class="tl-place" x="253.3" y="676.9">잠실</text><text class="tl-place" x="338.2" y="620.2">강일JC</text>
+    <text class="tl-route" x="481.8" y="568.1" fill="#527EA8">서울양양고속도로</text>
+  </g>
+  <g id="labels-second-gyeongchun" data-route="second-gyeongchun" data-transport="road">
+    <text class="tl-place" x="284.1" y="495.4">중랑IC</text>
+    <text class="tl-route tl-small" x="475.7" y="455.8" fill="#19AFA6">제2경춘국도(예정)</text>
+  </g>
+  <g id="labels-context-access" data-route="context-access" data-transport="road">
+    <text class="tl-place" x="578.0" y="646.4">비발디파크</text><text class="tl-place" x="878.0" y="791.7">원주</text>
+    <text class="tl-place tl-small" x="809.1" y="352.1">춘천시청 · 강원도청</text><text class="tl-place" x="763.0" y="549.2">남춘천IC</text>
+  </g>
+  <g id="labels-yangyang-airport" data-route="yangyang-airport" data-transport="air"><text class="tl-place" x="1378.1" y="279.9">양양국제공항</text></g>
+  <g id="labels-sokcho-port" data-route="sokcho-port" data-transport="port"><text class="tl-place" x="1328.9" y="147.8">속초항</text></g>
+  <g id="labels-donghae-port" data-route="donghae-port" data-transport="port"><text class="tl-place" x="1562.5" y="688.3">동해항</text></g>
+  <g id="label-bcity" data-route="bcity" data-transport="common">
+    <rect x="651" y="574" width="118" height="38" rx="11" fill="#0B3677"/>
+    <text x="710" y="600" text-anchor="middle" font-family="Pretendard, 'Noto Sans KR', sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">B-CITY</text>
+    <text class="tl-place tl-small" x="710" y="637" text-anchor="middle">춘천 광판리</text>
+  </g>
+</svg>

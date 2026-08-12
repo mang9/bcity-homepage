@@ -6,11 +6,12 @@
   "nav": "effect",
   "heroImg": "assets/img-park.jpg",
   "h1": "기대효과",
-  "css": ["page-shared", "page-effect"]
+  "css": ["page-shared", "page-effect"],
+  "js": ["countup"]
 }
 -->
     <!-- ===== 1. 경제적 기대효과 · 핵심 지표 (스토리보드 v2 slide34) ===== -->
-    <section class="sec" id="value">
+    <section class="sec sec--bleed" id="value">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>EXPECTED VALUE</b><span>기대효과</span></p>
         <h2 class="h2 rv">B-CITY가 만들어갈 경제·산업·사회적 가치를 통해<br />
@@ -29,7 +30,7 @@
                앞자리 두 자리만 남긴 표기다 → 7,0xx / 1.5조 로 읽었다. **미확정** -->
         <ul class="kpi rv">
           <li class="kpi-item">
-            <span class="kpi-v">15,917<small>명</small><i>6,366세대</i></span>
+            <span class="kpi-v"><span data-count="15917">15,917</span><small>명</small><i><span data-count="6366">6,366</span>세대</i></span>
             <span>
               <b class="kpi-l">계획인구</b>
               <span class="kpi-d">자족형 도시의 새로운 정주 인구 — 아파트·시니어하우징·주상복합·단독주택 등
@@ -37,14 +38,14 @@
             </span>
           </li>
           <li class="kpi-item">
-            <span class="kpi-v">7,000<small>여 명</small><i>사업 추진 기준</i></span>
+            <span class="kpi-v"><span data-count="7000">7,000</span><small>여 명</small><i>사업 추진 기준</i></span>
             <span>
               <b class="kpi-l">취업유발</b>
               <span class="kpi-d">사업 추진으로 창출되는 일자리 — 첨단 산업·연구·서비스 분야의 신규 고용 기대</span>
             </span>
           </li>
           <li class="kpi-item">
-            <span class="kpi-v">1.5<small>조원</small><i>사업 추진 기준</i></span>
+            <span class="kpi-v"><span data-count="1.5" data-dec="1">1.5</span><small>조원</small><i>사업 추진 기준</i></span>
             <span>
               <b class="kpi-l">생산유발효과</b>
               <span class="kpi-d">지역 경제에 더해지는 생산 가치 — 강원권 산업·소비·서비스 확장에 따른 경제적 파급효과</span>
@@ -53,12 +54,12 @@
         </ul>
 
         <!-- 02 산업 — 비주얼 좌 / 본문 우 (스토리보드 slide35) -->
-        <div class="zz rv">
-          <figure class="zz-fig">
+        <div class="zf rv">
+          <figure class="zf-fig">
             <img src="assets/img-bio.jpg" alt="자동화 장비가 가동되는 바이오 제약 연구실"
                  loading="lazy" decoding="async" />
           </figure>
-          <div>
+          <div class="zf-body">
             <p class="eff-cat"><b>02</b>산업적 기대효과</p>
             <h3 class="eff-t">AI·BIO 융합 첨단산업 생태계 형성</h3>
             <ul class="eff-list">
@@ -71,12 +72,12 @@
         </div>
 
         <!-- 03 사회 — 좌우 반전 -->
-        <div class="zz zz--flip rv">
-          <figure class="zz-fig">
+        <div class="zf zf--flip rv">
+          <figure class="zf-fig">
             <img src="assets/img-family.jpg" alt="교육시설 앞을 오가는 사람들"
                  loading="lazy" decoding="async" />
           </figure>
-          <div>
+          <div class="zf-body">
             <p class="eff-cat"><b>03</b>사회적 기대효과</p>
             <h3 class="eff-t">자족형 정주 환경과 삶의 질 향상</h3>
             <ul class="eff-list">
@@ -91,15 +92,15 @@
         <!-- 04 지역균형 — 비주얼 좌.
              location-belt 은 춘천 AI바이오 · 원주 의료기기 · 평창 그린바이오 · 강릉 천연물바이오
              4거점을 담은 강원 초광역 벨트 지도다(자산 출처: index.html 입지 2페이지) -->
-        <div class="zz rv">
-          <figure class="zz-fig zz-fig--plain">
+        <div class="zf rv">
+          <figure class="zf-fig zf-fig--plain">
             <img src="assets/img/location-belt.avif"
                  onerror="this.onerror=null;this.src='assets/img/location-belt.png'"
                  alt="춘천·원주·평창·강릉 4개 거점을 표시한 강원형 바이오·헬스 초광역 경제권 지도"
                  loading="lazy" decoding="async" />
             <figcaption>춘천 AI바이오 · 원주 의료기기 · 평창 그린바이오 · 강릉 천연물바이오</figcaption>
           </figure>
-          <div>
+          <div class="zf-body">
             <p class="eff-cat"><b>04</b>지역균형발전 기대효과</p>
             <h3 class="eff-t">비수도권 첨단산업 거점으로 국토 균형발전 기여</h3>
             <ul class="eff-list">
@@ -110,12 +111,12 @@
         </div>
 
         <!-- 05 환경 — 좌우 반전 -->
-        <div class="zz zz--flip rv">
-          <figure class="zz-fig">
+        <div class="zf zf--flip rv">
+          <figure class="zf-fig">
             <img src="assets/img-shuttle.jpg" alt="가로수길과 보행로를 따라 자율주행 셔틀이 오가는 도시 전경"
                  loading="lazy" decoding="async" />
           </figure>
-          <div>
+          <div class="zf-body">
             <p class="eff-cat"><b>05</b>환경 · 지속가능성 기대효과</p>
             <h3 class="eff-t">친환경 도시모델 제시</h3>
             <ul class="eff-list">
@@ -127,15 +128,15 @@
         </div>
 
         <!-- 06 글로벌 — 비주얼 좌 -->
-        <div class="zz rv">
-          <figure class="zz-fig zz-fig--plain">
+        <div class="zf rv">
+          <figure class="zf-fig zf-fig--plain">
             <img src="assets/img/location-gateway.avif"
                  onerror="this.onerror=null;this.src='assets/img/location-gateway.png'"
                  alt="B-CITY 를 중심으로 김포공항·양양국제공항과 속초항·동해항의 위치를 표시한 강원권 지도"
                  loading="lazy" decoding="async" />
             <figcaption>공항 2곳 · 항만 2곳으로 이어지는 글로벌 게이트웨이</figcaption>
           </figure>
-          <div>
+          <div class="zf-body">
             <p class="eff-cat"><b>06</b>글로벌 기대효과</p>
             <h3 class="eff-t">대한민국 첨단산업의 국제적 위상 강화</h3>
             <ul class="eff-list">

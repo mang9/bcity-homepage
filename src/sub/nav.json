@@ -43,9 +43,13 @@
       ]
     },
     {
-      "key": "pr", "no": "04", "label": "홍보센터", "en": "PR",
+      "key": "pr", "no": "04", "label": "홍보센터", "en": "PR CENTER",
       "items": [
-        { "key": "news", "label": "공지사항 · 언론보도", "href": "index.html#pr" }
+        { "key": "notice",      "label": "공지사항", "href": "notice.html" },
+        { "key": "press",       "label": "언론보도", "href": "press.html" },
+        { "key": "video",       "label": "홍보영상", "href": "video.html" },
+        { "key": "gallery",     "label": "갤러리",   "href": "gallery.html" },
+        { "key": "publication", "label": "발행물",   "href": "publication.html" }
       ]
     }
   ],

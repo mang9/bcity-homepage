@@ -1,0 +1,28 @@
+<!--build
+{
+  "slug": "press",
+  "title": "언론보도 · B-CITY 춘천기업혁신파크",
+  "description": "춘천기업혁신파크 B-CITY 관련 언론보도를 모았습니다.",
+  "nav": "press",
+  "heroImg": "assets/img-street.jpg",
+  "h1": "언론보도",
+  "css": ["page-shared", "page-pr"],
+  "js": ["press-list"],
+  "list": { "kind": "press", "layout": "rows" }
+}
+-->
+    <!-- 스토리보드 v2 slide97. 목록은 src/sub/data/press.json 에서 온다 -->
+    <section class="sec" id="list">
+      <div class="wrap">
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>PRESS</b><span>언론보도</span></p>
+        <h2 class="h2 rv">언론이 주목한 <em>B-CITY</em></h2>
+
+<!-- 분류·검색 컨트롤은 빌더의 SHOW_LIST_FILTERS 스위치가 낸다(tools/build/pages.mjs).
+             마크업을 여기 두면 스위치가 두 곳으로 갈라진다 -->
+{{controls}}
+
+{{list}}
+        <p class="pr-empty" id="pressEmpty" hidden>검색 결과가 없습니다.</p>
+        <nav class="pl-pager" id="pressPager" aria-label="페이지" hidden></nav>
+      </div>
+    </section>

@@ -121,10 +121,6 @@
   .bc-call b[data-short]::after { content: attr(data-short); font-size: 12px; }
 }
 
-/* .cl-detail 은 현재 마크업에서 쓰이지 않는다(2단 상세 카드용으로 남겨 둔 것).
-   제거는 별건으로 다룬다 — 이 커밋은 렌더 제로디프가 목표다 */
-.cl-detail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 1.2vw, 20px); margin-top: clamp(20px, 2vw, 30px); }
 .cl-note { margin: clamp(22px, 2.2vw, 32px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
 /* ===== 반응형 ===== */
@@ -145,4 +141,3 @@
   .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 0; }
   .spec tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
 }
-@media (max-width: 400px) { .cl-detail { grid-template-columns: minmax(0, 1fr); } }

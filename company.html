@@ -216,24 +216,12 @@
     .sub-d { margin: 10px 0 0; font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted);
       max-width: 74ch; }
 
-    /* 데이터 표 — 노선·소요시간·현황 류. 좁은 화면에서 행 블록으로 접는다 */
-    .dtab { width: 100%; margin-top: clamp(18px, 1.8vw, 26px);
-      border-top: 2px solid var(--color-primary); font-size: clamp(14px, .98vw, 15.5px); }
-    .dtab th, .dtab td { padding: clamp(11px, 1vw, 15px) clamp(12px, 1.2vw, 20px);
-      text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
-    .dtab thead th { padding-block: 11px; background: rgb(var(--primary-rgb) / .08);
-      font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
-    .dtab tbody th { font-family: var(--font-display); font-weight: 700; color: var(--color-text); }
-    .dtab td { background: var(--color-surface); }
-    .dtab .num { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--color-text); }
-    .dtab tbody tr:last-child th, .dtab tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
-    /* 상태 배지 — 운영 중 / 추진 중.
-       틴트가 민트/파랑으로 상태를 구분하고, 글자는 명도차가 큰 기존 토큰을 쓴다.
-       민트(#3DBFA8)를 그대로 글자색에 쓰면 흰 배경 대비가 2.2:1 로 본문 대비에 못 미친다. */
-    .st { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px;
-      font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
-    .st--live { background: rgb(61 191 168 / .18); color: var(--color-navy); }
-    .st--plan { background: rgb(var(--primary-rgb) / .1); color: var(--color-primary); }
+    /* 섹션 안의 하위 블록 간격. company.html 의 01/02/03 블록이 쓴다.
+       ⚠ 원래 page-location.css 에 있었는데 company 는 그 파일을 싣지 않아
+         **처음부터 적용된 적이 없었다**(2026-08-07 lint-classes 로 발견).
+         공용이므로 여기 둔다 — 특정 페이지 CSS 로 되돌리지 말 것. */
+    .tr-block { margin-top: clamp(40px, 4vw, 68px); }
+    .tr-block:first-of-type { margin-top: clamp(30px, 3vw, 46px); }
 
     /* 마무리 문장 — 슬라이드 하단 정리 카피.
        스토리보드(slide29 · 32 · 37)는 **박스가 아니라 여백 위의 큰 문장**이다.
@@ -261,113 +249,164 @@
        ⚠ DOM 순서는 항상 [비주얼 → 본문]으로 고정하고 `order` 로 **보이는 순서만** 뒤집는다.
          마크업 순서를 실제로 바꾸면 키보드 탭 순서와 스크린리더 낭독 순서가 블록마다
          달라져 읽는 사람이 흐름을 잃는다. */
-    .zz { display: grid; align-items: center; gap: clamp(22px, 2.8vw, 56px);
-      grid-template-columns: minmax(0, 1fr); margin-top: clamp(38px, 4vw, 72px); }
-    .zz:first-of-type { margin-top: clamp(28px, 3vw, 48px); }
-    @media (min-width: 900px) {
-      .zz { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-      .zz--flip > :first-child { order: 2; }
-    }
-    .zz-fig { margin: 0; }
-    .zz-fig img { width: 100%; height: auto; border-radius: var(--radius-lg);
-      border: 1px solid var(--color-line); background: var(--color-surface); }
-    .zz-fig figcaption { margin-top: 10px; font-size: 12.5px; color: var(--color-text-muted); }
-    /* ⚠ location-belt · location-gateway 는 **네이비 배경 위에 얹도록 만든 자산**이다
-       (index.html 입지 섹션이 .bg-navy 스테이지 위에서 쓴다). 옅은 하늘색 3D 일러스트라
-       밝은 면에 그대로 놓으면 형태가 거의 날아간다 — 실제로 흰 배경에서 빈 칸처럼 보였다.
-       그래서 이 변형만 네이비 패널로 감싼다. 사진(.zz-fig)에는 쓰지 말 것. */
-    .zz-fig--plain img { border-color: var(--color-navy); background: var(--color-navy);
-      padding: clamp(14px, 1.7vw, 28px); }
-
-    /* 비주얼 자리에 들어가는 수치 패널 — 해당 블록의 사진 자산이 없을 때 쓴다.
-       빈 칸을 두거나 이미지를 지어내는 대신, 그 블록에서 가장 중요한 수치를 크게 세운다. */
-    .fig-stat { display: grid; gap: clamp(16px, 1.7vw, 26px); margin: 0;
-      padding: clamp(26px, 3vw, 48px) clamp(22px, 2.6vw, 40px);
-      border-radius: var(--radius-lg); background: rgb(var(--primary-rgb) / .05);
-      border: 1px solid var(--color-line); }
-    .fig-stat > div { display: grid; gap: 4px; }
-    .fig-stat b { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(30px, 3.4vw, 52px); line-height: 1.04; letter-spacing: -.034em;
-      color: var(--color-primary); font-variant-numeric: tabular-nums; }
-    .fig-stat b small { font-size: .44em; letter-spacing: -.01em; margin-left: 3px; }
-    .fig-stat span { font-size: clamp(13.5px, 1vw, 15px); line-height: 1.55;
-      color: var(--color-text-muted); }
-    .fig-stat span i { font-style: normal; font-weight: 700; color: var(--color-text); }
+    /* 상태 배지 — 운영 중 / 추진 중.
+       틴트가 민트/파랑으로 상태를 구분하고, 글자는 명도차가 큰 기존 토큰을 쓴다.
+       민트(#3DBFA8)를 그대로 글자색에 쓰면 흰 배경 대비가 2.2:1 로 본문 대비에 못 미친다. */
+    .st { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px;
+      font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
+    .st--live { background: rgb(61 191 168 / .18); color: var(--color-navy); }
+    .st--plan { background: rgb(var(--primary-rgb) / .1); color: var(--color-primary); }
 
     /* 각주 */
     .note { margin: clamp(18px, 1.8vw, 26px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
-    @media (max-width: 640px) {
-      .dtab thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-      .dtab, .dtab tbody, .dtab tr, .dtab th, .dtab td { display: block; width: auto; }
-      .dtab tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
-      .dtab tbody th { padding: 12px 14px 0; border: 0; }
-      .dtab td { padding: 3px 14px; border: 0; }
-      .dtab td:last-child { padding-bottom: 13px; }
-      .dtab tbody tr:last-child th, .dtab tbody tr:last-child td { border-bottom: 0; }
-      .dtab tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
-    }
-
     /* ── page-company.css ─────────────────────────────────────────── */
-    /* ===== 사업주체 — 사업구조 · PFV 구조도 · 강점 · 공식문서 · 파트너 ===== */
+    /* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
 
-    /* PFV 구조도 — 스토리보드 slide43 "구조도 디자인 필요".
-       이미지가 아니라 CSS 그리드로 그린다: 출자·대출·수익 3개 유입 → PFV → AMC 위탁.
-       자산이 없어도 성립하고, 텍스트라 검색·스크린리더·확대에 모두 견딘다. */
-    .pfv { margin-top: clamp(28px, 2.8vw, 44px); display: grid; gap: clamp(14px, 1.4vw, 22px); }
+    /* ── 사업추진 체계 구조도 (스토리보드 slide43) ───────────────────────────
+       이미지가 아니라 마크업이다. 확대해도 깨지지 않고 검색·낭독에 잡히며,
+       출자 비율처럼 바뀔 수 있는 값을 고치는 데 이미지 재작업이 필요 없다.
 
-    /* 유입 3열 */
-    .pfv-in { display: grid; gap: clamp(10px, 1vw, 16px); grid-template-columns: minmax(0, 1fr); }
-    @media (min-width: 640px) { .pfv-in { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+       구성: [PFV 출자자 5분류] → [PFV 명목회사] → [세 방향 자금·자산 흐름]
+       연결선은 .orgc-link 하나로 그린다 — 가운데 세로선 + 위아래 가로 분기.       */
+    .orgc { margin-top: clamp(28px, 2.8vw, 44px); }
 
-    .pfv-box { padding: clamp(16px, 1.6vw, 24px) clamp(15px, 1.6vw, 22px);
+    .orgc-cap { margin: 0 auto; width: max-content;
+      padding: 7px 20px; border: 1px solid var(--color-primary); border-radius: 999px;
+      font-family: var(--font-display); font-weight: 700; font-size: 13px;
+      letter-spacing: .02em; color: var(--color-primary); background: var(--color-surface); }
+
+    /* 출자자 5분류 — 좁은 화면에서는 2열, 넓으면 한 줄 */
+    .orgc-sh { display: grid; gap: clamp(8px, .9vw, 14px); margin: clamp(16px, 1.6vw, 24px) 0 0;
+      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 560px)  { .orgc-sh { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 900px)  { .orgc-sh { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+    .orgc-shi { display: flex; flex-direction: column; gap: 4px;
+      padding: clamp(13px, 1.3vw, 18px) clamp(11px, 1.1vw, 15px);
       border: 1px solid var(--color-line); border-radius: var(--radius-md);
       background: var(--color-surface); text-align: center; }
-    .pfv-box b { display: block; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.15vw, 18px); letter-spacing: -.012em; color: var(--color-text); }
-    .pfv-box span { display: block; margin-top: 5px; font-size: 13px; line-height: 1.55;
+    .orgc-shk { font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14px, 1.05vw, 16px); letter-spacing: -.01em; color: var(--color-text); }
+    /* 영문 약어 뒤의 한글 보충(공공·금융·시공·전략) — 약어만으로는 읽히지 않는다 */
+    .orgc-shk i { font-style: normal; font-weight: 600; font-size: .82em;
       color: var(--color-text-muted); }
+    .orgc-shn { font-size: 12.5px; line-height: 1.5; color: var(--color-text-muted);
+      word-break: keep-all; }
+    /* 지분율 — 이 구조도에서 가장 먼저 읽혀야 하는 값이다.
+       ⚠ 각 값은 **분류 전체**의 지분율이다. 구성원 목록이 바뀌어도 분류 값은 그대로다.
+         자세한 경위는 CLAUDE.md §11.12 참고. */
+    .orgc-shp { margin-top: auto; padding-top: 6px; font-style: normal;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.2vw, 19px); font-variant-numeric: tabular-nums;
+      color: var(--color-primary); }
+    /* 미확정(CI) — 파선으로 '확정 전'임을 드러낸다 */
+    .orgc-shi--tbd { background: none; border-style: dashed; }
+    .orgc-shi--tbd .orgc-shp { color: var(--color-text-muted); }
 
-    /* 중심 박스(PFV) — 유입과 위탁 사이. 색으로 위계를 만든다 */
-    .pfv-box--core { background: var(--color-primary); border-color: var(--color-primary);
-      padding-block: clamp(20px, 2vw, 30px); }
-    .pfv-box--core b { color: #fff; font-size: clamp(17px, 1.5vw, 24px); }
-    .pfv-box--core span { color: rgba(255,255,255,.86); font-size: 13.5px; }
-    .pfv-box--core em { display: block; margin-top: 3px; font-style: normal; font-size: 12.5px;
-      letter-spacing: .06em; color: var(--color-light-blue); }
-    .pfv-box--amc { background: var(--color-bg); }
+    /* 연결선 — 가운데 세로선. 높이만 차지하고 내용은 없다 */
+    .orgc-link { position: relative; height: clamp(22px, 2.2vw, 34px); margin: 0; }
+    .orgc-link::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: var(--color-line); }
+    /* 아래를 가리키는 삼각형 */
+    .orgc-link::after { content: ""; position: absolute; left: 50%; bottom: 0;
+      transform: translateX(-50%); border-left: 5px solid transparent;
+      border-right: 5px solid transparent; border-top: 7px solid var(--color-line); }
 
-    /* 화살표 — 유입/위탁 방향. 회전 텍스트나 SVG 없이 삼각형 하나로 */
-    .pfv-arw { justify-self: center; width: 0; height: 0;
-      border-left: 8px solid transparent; border-right: 8px solid transparent;
-      border-top: 10px solid var(--color-line); }
-    .pfv-note { margin: clamp(14px, 1.4vw, 20px) 0 0; font-size: 13.5px; line-height: 1.7;
+    /* PFV 본체 — 색으로 위계를 만든다. 구조도에서 유일한 채운 박스다 */
+    .orgc-core { padding: clamp(20px, 2vw, 30px) clamp(18px, 1.8vw, 26px);
+      border-radius: var(--radius-md); background: var(--color-primary); text-align: center; }
+    .orgc-core b { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(17px, 1.5vw, 24px); letter-spacing: -.018em; color: #fff; }
+    .orgc-core span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.6;
+      color: rgba(255, 255, 255, .86); }
+
+    /* 세 방향 흐름 — 각 열은 PFV 와 주고받는 한 쌍이다 */
+    .orgc-flow { display: grid; gap: clamp(10px, 1vw, 16px); margin: 0; padding: 0; list-style: none;
+      grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 720px) { .orgc-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+    /* 라벨 묶음 → 끝단 사이 연결선. gap 을 선이 차지하므로 gap 은 0 이다 */
+    .orgc-fi { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .orgc-fi::before { content: ""; order: 1; width: 1px; height: 14px; background: var(--color-line); }
+    .orgc-fx { order: 0; }
+    .orgc-fe { order: 2; }
+    .orgc-fx { display: flex; flex-direction: column; gap: 5px; margin: 0; width: 100%;
+      padding: clamp(12px, 1.2vw, 16px) clamp(10px, 1vw, 14px);
+      border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+      background: var(--color-surface); }
+    /* 방향은 화살표 하나로만 구분한다 — 색을 나누면 다른 의미로 읽힌다 */
+    .orgc-up, .orgc-dn { display: flex; align-items: center; gap: 7px;
+      font-size: 13px; line-height: 1.45; color: var(--color-text); }
+    .orgc-up::before, .orgc-dn::before { flex: none; width: 15px; text-align: center;
+      font-family: var(--font-display); font-weight: 700; font-size: 13px;
+      color: var(--color-primary); }
+    .orgc-up::before { content: "↑"; }
+    .orgc-dn::before { content: "↓"; color: var(--color-text-muted); }
+    /* 끝단(토지소유주·수분양자·금융기관) */
+    .orgc-fe { display: block; width: 100%; padding: clamp(11px, 1.1vw, 15px) 10px;
+      border-radius: var(--radius-sm); background: var(--color-bg);
+      border: 1px solid var(--color-line); text-align: center;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14px, 1.05vw, 16px); color: var(--color-text); }
+    .orgc-key { margin: clamp(12px, 1.2vw, 18px) 0 0; text-align: center;
+      font-size: 12.5px; color: var(--color-text-muted); }
+    .orgc-key b { margin-left: 10px; color: var(--color-primary); }
+    .orgc-key b:first-child { margin-left: 0; }
+
+    .pfv-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 13.5px; line-height: 1.7;
       color: var(--color-text-muted); }
     .pfv-note b { color: var(--color-text); font-weight: 700; }
 
-    /* 강점 5종 */
-    .merit { display: grid; gap: clamp(10px, 1vw, 16px); margin-top: clamp(24px, 2.4vw, 38px);
-      grid-template-columns: minmax(0, 1fr); padding: 0; list-style: none; }
-    @media (min-width: 768px)  { .merit { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (min-width: 1280px) { .merit { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    .merit-item { padding: clamp(17px, 1.7vw, 25px) clamp(16px, 1.7vw, 24px);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md);
-      background: var(--color-surface); }
-    .merit-item b { display: block; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.15vw, 18px); letter-spacing: -.012em; color: var(--color-primary); }
-    .merit-item span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.62;
-      color: var(--color-text-muted); }
+    /* ── 다섯 가지 강점 ────────────────────────────────────────────────────
+       카드(테두리 박스)에서 **번호 + 상단 룰의 편집형**으로 바꿨다(2026-08-10 지시).
+       앞의 구조도가 이미 박스 투성이라, 강점까지 박스면 어느 쪽이 중요한지 안 읽힌다. */
+    .mrt { display: grid; gap: clamp(16px, 1.8vw, 30px) clamp(14px, 1.6vw, 28px);
+      margin: clamp(24px, 2.4vw, 38px) 0 0; padding: 0; list-style: none;
+      grid-template-columns: minmax(0, 1fr); counter-reset: none; }
+    @media (min-width: 600px)  { .mrt { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1100px) { .mrt { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 
-    /* 관련 공식 문서 — 스토리보드는 [보기] 버튼 → 공문 팝업을 요구하지만 공문 파일이 없다.
-       버튼 없이 목록만 낸다. 파일이 들어오면 각 li 에 <a class="doc-view"> 를 붙이면 된다. */
+    .mrt-i { padding-top: clamp(12px, 1.2vw, 16px); border-top: 2px solid var(--color-primary); }
+    .mrt-n { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: 12px; letter-spacing: .1em; color: var(--color-primary);
+      font-variant-numeric: tabular-nums; }
+    .mrt-t { display: block; margin-top: 7px; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.2vw, 18px); letter-spacing: -.014em; color: var(--color-text);
+      word-break: keep-all; }
+    .mrt-d { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.6;
+      color: var(--color-text-muted); word-break: keep-all; }
+
+    /* ── 관련 공식 문서 ────────────────────────────────────────────────────
+       기획서 slide44 는 항목마다 [보기]를 요구한다. 공문 PDF 가 아직 없어
+       지금은 전부 비활성(.is-off)이고, 파일이 들어오면 <a href> 로 바꾸면 된다. */
     .docs { margin: clamp(20px, 2vw, 30px) 0 0; padding: 0; list-style: none;
       border-top: 1px solid var(--color-line); }
-    .docs li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline;
+    .docs li { display: grid; align-items: center; gap: 4px 14px;
+      grid-template-columns: minmax(0, 1fr) auto;
       padding: clamp(13px, 1.2vw, 17px) 2px; border-bottom: 1px solid var(--color-line);
       font-size: clamp(14px, 1vw, 15.5px); }
-    .docs li span { color: var(--color-text); }
-    .docs li time { flex: none; font-family: var(--font-display); font-weight: 700;
+    .docs li time { grid-column: 1; flex: none; font-family: var(--font-display); font-weight: 700;
       font-size: 13px; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+    .doc-n { grid-column: 1; color: var(--color-text); word-break: keep-all; }
+    /* 날짜와 제목을 한 줄에 두기엔 제목이 길다 → 좁은 화면은 2줄, 넓은 화면은 한 줄 */
+    @media (min-width: 720px) {
+      .docs li { grid-template-columns: auto minmax(0, 1fr) auto; }
+      .docs li time { grid-column: 1; }
+      .doc-n { grid-column: 2; }
+    }
+    .doc-view { grid-column: -2 / -1; grid-row: 1 / -1; justify-self: end; align-self: center;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 62px; padding: 7px 15px; border-radius: 999px;
+      border: 1px solid var(--color-line); background: var(--color-surface);
+      font-size: 13px; font-weight: 600; color: var(--color-text);
+      transition: border-color .2s, color .2s; }
+    a.doc-view:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    /* 비활성 — 누를 수 없다는 것이 보여야 한다. 색만 흐리면 링크로 착각한다 */
+    .doc-view.is-off { color: var(--color-text-muted); background: none;
+      border-style: dashed; cursor: default; }
+    .docs-note { margin: clamp(12px, 1.2vw, 16px) 0 0; font-size: 12.5px;
+      color: var(--color-text-muted); }
 
     /* 파트너 — 분류별 그룹, 그룹 안에 로고 카드 */
     .ptn-group { margin-top: clamp(34px, 3.4vw, 56px); }
@@ -380,8 +419,11 @@
       letter-spacing: .04em; color: var(--color-primary); }
     .ptn-gh span { display: block; margin-top: 6px; font-size: 13.5px; color: var(--color-text-muted); }
 
+    /* ⚠ margin:0 을 반드시 둔다. 브라우저 기본 ul 마진(16px)이 남아 있었는데,
+         일반 블록에서는 위 .ptn-gh 의 margin-bottom(20px)과 **상쇄되어** 안 보였다.
+         그리드 안(.ptn-trio)에서는 상쇄가 없어 20+16=36px 로 이 묶음만 벌어졌다(실측). */
     .ptn-cards { display: grid; gap: clamp(10px, 1vw, 16px); grid-template-columns: minmax(0, 1fr);
-      padding: 0; list-style: none; }
+      margin: 0; padding: 0; list-style: none; }
     @media (min-width: 640px)  { .ptn-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (min-width: 1024px) { .ptn-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     .ptn-card { padding: clamp(18px, 1.8vw, 26px); border: 1px solid var(--color-line);
@@ -397,9 +439,12 @@
     .ptn-card span { display: block; margin-top: 7px; font-size: 13.5px; line-height: 1.62;
       color: var(--color-text-muted); }
     .ptn-card span em { font-style: normal; font-weight: 700; color: var(--color-primary); }
-    /* 로고 없는 카드(TBD) — 파선으로 '확정 전'임을 드러낸다 */
-    .ptn-card--tbd { background: none; border-style: dashed; }
-    .ptn-card--tbd b { color: var(--color-text-muted); }
+    /* 확정 전 항목(CI·SI) — **카드로 두지 않는다.**
+       목록 안에 나란히 두면 확정된 파트너와 같은 무게로 읽힌다(2026-08-10 지시).
+       그룹 아래 한 줄 보조 문구로 내린다. */
+    .ptn-tbd { margin: clamp(12px, 1.2vw, 16px) 0 0; padding-left: 13px;
+      border-left: 2px dashed var(--color-line);
+      font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
 
     /* 파트너가 1곳뿐인 분류(앵커·AMC·금융)는 3열 그리드에서 2/3 이 빈다.
        그 카드만 행 전체를 쓰면서 로고를 왼쪽에 두는 가로 배치로 바꾼다.
@@ -417,6 +462,39 @@
       .ptn-card:only-child b    { grid-area: name; align-self: end; }
       .ptn-card:only-child span { grid-area: desc; align-self: start; }
     }
+
+    /* ── 1곳뿐인 분류 3종을 한 줄 3단으로 (앵커 · 자산관리 · 금융) ─────────────
+       각 분류가 파트너 1곳이라 세로로 쌓으면 카드 하나 아래 큰 여백만 반복된다.
+
+       ⚠ 헤더 줄 수가 분류마다 달라(1줄 vs 2줄) 그냥 3열로 두면 카드 시작선이 어긋난다.
+         subgrid 로 [헤더행 · 카드행]을 3단이 공유하게 해서 줄을 맞춘다.
+         subgrid 미지원 브라우저에서는 일반 블록으로 떨어지고 레이아웃만 살짝 어긋난다. */
+    .ptn-trio { margin-top: clamp(34px, 3.4vw, 56px); display: grid;
+      gap: clamp(30px, 3vw, 48px); grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) {
+      /* ⚠ row-gap 은 0 이다. subgrid 의 행 간격이 곧 헤더↔카드 간격이 되는데,
+           그러면 이 묶음만 다른 분류(.ptn-gh 의 margin-bottom)보다 벌어진다.
+           간격은 .ptn-gh 하나가 정하게 두고 열 간격만 준다. */
+      .ptn-trio { grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: auto 1fr; row-gap: 0; column-gap: clamp(20px, 2vw, 32px); }
+      .ptn-trio .ptn-group { grid-row: span 2; display: grid; grid-template-rows: subgrid; }
+    }
+    /* 묶음 안에서는 분류 자체의 테두리·여백을 쓰지 않는다.
+       ⚠ padding-top 을 남기면 subgrid 의 첫 행 높이에 더해져 이 묶음만 헤더↔카드 간격이
+         16px 더 벌어진다(실측). 구분선과 위 여백은 묶음(.ptn-trio)이 한 번만 갖는다. */
+    /* 구분선은 두지 않는다(2026-08-10 지시) — 여백으로만 나눈다.
+       ⚠ padding-top 도 함께 뺐다. 선을 두려고 넣었던 여백인데, 선이 없으면 이 묶음만
+         위가 84px 로 벌어져 다른 분류(49px)와 리듬이 어긋난다. 간격은 margin-top 하나가 정한다. */
+    .ptn-trio .ptn-group { margin-top: 0; padding-top: 0; border-top: 0; }
+    /* ⚠ :only-child 가로 배치(로고 왼쪽)를 반드시 끈다. 3단 안에서는 열이 좁아
+         로고와 설명이 각각 절반씩만 차지해 둘 다 읽기 어려워진다. */
+    @media (min-width: 640px) {
+      .ptn-trio .ptn-card:only-child { grid-column: auto; display: block; }
+      .ptn-trio .ptn-card:only-child .ptn-logo { justify-content: flex-start; margin-bottom: 14px; }
+    }
+    /* ⚠ .ptn-cards 는 자체적으로 1/2/3열 그리드다. 3단 안에서 그대로 두면 이미 좁은
+         열을 또 3등분해 카드가 120px 로 쪼그라든다(실측). 여기서는 1열로 고정한다. */
+    .ptn-trio .ptn-cards { grid-template-columns: minmax(0, 1fr); align-content: start; }
   </style>
 </head>
 
@@ -479,7 +557,11 @@
       <a href="index.html#zones">토지확보 현황</a>
       <a href="index.html#contact">문의하기</a>
       <h2>04 홍보센터</h2>
-      <a href="index.html#pr">공지사항 · 언론보도</a>
+      <a href="notice.html">공지사항</a>
+      <a href="press.html">언론보도</a>
+      <a href="video.html">홍보영상</a>
+      <a href="gallery.html">갤러리</a>
+      <a href="publication.html">발행물</a>
     </div>
   </div>
 
@@ -509,7 +591,7 @@
       </div>
     </nav>
 
-<!-- ===== 1. 사업 구조 (스토리보드 v2 slide42~43) ===== -->
+<!-- ===== 1. 사업 구조 (스토리보드 v2 slide42~44) ===== -->
     <section class="sec" id="structure">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BUSINESS STRUCTURE</b><span>사업 구조</span></p>
@@ -522,58 +604,137 @@
           <p class="sub-d">B-CITY는 PFV(Project Financing Vehicle) 구조로 운영됩니다.
             자본금·대출·분양수익이 한 곳에 집중되어 투명하고 효율적으로 관리되는 검증된 개발사업 구조입니다.</p>
 
-          <!-- 구조도: 자본금·대출·분양수익 → PFV → AMC 위탁 -->
-          <div class="pfv">
-            <div class="pfv-in">
-              <div class="pfv-box"><b>자본금</b><span>강원특별자치도 · 춘천시 · 앵커기업 · 금융투자자 출자</span></div>
-              <div class="pfv-box"><b>대출</b><span>사업비 조달(PF) — 2027년 1분기 예정</span></div>
-              <div class="pfv-box"><b>분양수익</b><span>토지 · 시설 공급 수익</span></div>
+          <!-- 사업추진 체계 구조도 — 스토리보드 slide43 의 구조도를 그대로 옮겼다.
+               이미지가 아니라 마크업이다: 확대해도 깨지지 않고 검색·낭독에 잡힌다. -->
+          <div class="orgc">
+            <p class="orgc-cap">PFV 출자자</p>
+            <ul class="orgc-sh">
+              <li class="orgc-shi">
+                <b class="orgc-shk">앵커기업</b>
+                <span class="orgc-shn">더존비즈온</span>
+                <em class="orgc-shp">37.5%</em>
+              </li>
+              <li class="orgc-shi">
+                <b class="orgc-shk">GI <i>공공</i></b>
+                <span class="orgc-shn">강원특별자치도 · 춘천시</span>
+                <em class="orgc-shp">각 4.9%</em>
+              </li>
+              <li class="orgc-shi">
+                <b class="orgc-shk">FI <i>금융</i></b>
+                <span class="orgc-shn">IBK투자증권</span>
+                <em class="orgc-shp">5.0%</em>
+              </li>
+              <li class="orgc-shi orgc-shi--tbd">
+                <b class="orgc-shk">CI <i>시공</i></b>
+                <span class="orgc-shn">TBD</span>
+                <em class="orgc-shp">확정 전</em>
+              </li>
+              <li class="orgc-shi">
+                <b class="orgc-shk">SI <i>전략</i></b>
+                <span class="orgc-shn">에스에너지 · 프로티움사이언스</span>
+                <em class="orgc-shp">MOU</em>
+              </li>
+            </ul>
+
+            <p class="orgc-link" aria-hidden="true"></p>
+
+            <div class="orgc-core">
+              <b>바이오테크이노밸리 PFV</b>
+              <span>명목회사 — 자본금 · 대출 · 분양수익을 한 계정으로 통합 관리</span>
             </div>
-            <div class="pfv-arw" aria-hidden="true"></div>
-            <div class="pfv-box pfv-box--core">
-              <b>PFV</b>
-              <em>PROJECT FINANCING VEHICLE</em>
-              <span>바이오테크이노밸리피에프브이㈜ — 사업 시행 명목회사<br />자본·대출·수익을 통합 관리</span>
-            </div>
-            <div class="pfv-arw" aria-hidden="true"></div>
-            <div class="pfv-box pfv-box--amc">
-              <b>AMC — 자산관리 업무 위탁</b>
-              <span>바이오테크이노밸리자산관리㈜ · 자산관리 업무 전문 수탁자</span>
-            </div>
+
+            <p class="orgc-link" aria-hidden="true"></p>
+
+            <!-- PFV 를 가운데 두고 세 방향의 자금·자산 흐름. 각 열은 주고받는 한 쌍이다 -->
+            <ul class="orgc-flow">
+              <li class="orgc-fi">
+                <p class="orgc-fx">
+                  <span class="orgc-up">토지매입 · 수용</span>
+                  <span class="orgc-dn">토지보상비</span>
+                </p>
+                <b class="orgc-fe">토지소유주</b>
+              </li>
+              <li class="orgc-fi">
+                <p class="orgc-fx">
+                  <span class="orgc-dn">용지분양</span>
+                  <span class="orgc-up">분양대금</span>
+                </p>
+                <b class="orgc-fe">수분양자</b>
+              </li>
+              <li class="orgc-fi">
+                <p class="orgc-fx">
+                  <span class="orgc-up">PF대출</span>
+                  <span class="orgc-dn">원리금상환</span>
+                </p>
+                <b class="orgc-fe">금융기관</b>
+              </li>
+            </ul>
+            <p class="orgc-key"><b>↑</b> PFV 로 들어오는 흐름 <b>↓</b> PFV 에서 나가는 흐름</p>
           </div>
-          <p class="pfv-note"><b>PFV 와 AMC 를 분리 운영</b>하므로 사업 시행 주체와 자산관리 주체의
-            역할·책임이 나뉘고, 자금 흐름이 한 계정으로 모여 추적됩니다.</p>
+
+          <p class="pfv-note"><b>PFV 와 AMC 를 분리 운영</b>합니다. 사업 시행 주체(바이오테크이노밸리피에프브이㈜)와
+            자산관리 주체(바이오테크이노밸리자산관리㈜)의 역할·책임이 나뉘고, 자금 흐름은 한 계정으로 모여 추적됩니다.</p>
         </div>
 
         <div class="tr-block rv">
           <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">이 구조가 만드는 다섯 가지 강점</h3></div>
-          <ul class="merit">
-            <li class="merit-item"><b>민·관 합동</b><span>정부·지자체·민간 자본 결합</span></li>
-            <li class="merit-item"><b>공신력 확보</b><span>국토부 선도사업 지정</span></li>
-            <li class="merit-item"><b>추진 가속화</b><span>지자체 직접 출자로 인허가 연계 강화</span></li>
-            <li class="merit-item"><b>자산 분리</b><span>PFV–AMC 분리 운영으로 투명성 확보</span></li>
-            <li class="merit-item"><b>다층 파트너십</b><span>앵커 · GI · FI · CI · SI 구조</span></li>
-          </ul>
+          <ol class="mrt">
+            <li class="mrt-i"><span class="mrt-n">01</span>
+              <b class="mrt-t">민·관 합동</b><span class="mrt-d">정부 · 지자체 · 민간 자본 결합</span></li>
+            <li class="mrt-i"><span class="mrt-n">02</span>
+              <b class="mrt-t">공신력 확보</b><span class="mrt-d">국토교통부 선도사업 지정</span></li>
+            <li class="mrt-i"><span class="mrt-n">03</span>
+              <b class="mrt-t">추진 가속화</b><span class="mrt-d">지자체 직접 출자로 인허가 연계 강화</span></li>
+            <li class="mrt-i"><span class="mrt-n">04</span>
+              <b class="mrt-t">자산 분리</b><span class="mrt-d">PFV–AMC 분리 운영으로 투명성 확보</span></li>
+            <li class="mrt-i"><span class="mrt-n">05</span>
+              <b class="mrt-t">다층 파트너십</b><span class="mrt-d">앵커 · GI · FI · CI · SI 구조</span></li>
+          </ol>
         </div>
 
         <div class="tr-block rv">
           <div class="sub-h"><span class="sub-no">03</span><h3 class="sub-t">관련 공식 문서</h3></div>
           <p class="sub-d">사업의 각 단계는 정부·지자체의 공식 문서로 확인됩니다.</p>
-          <!-- ⚠ 스토리보드 slide44 는 항목마다 [보기] 버튼 → 공문 팝업을 요구한다.
-               공문 파일(PDF)이 아직 없어 버튼을 넣지 않았다. 파일이 들어오면
-               각 li 에 링크를 추가하면 되고 목록 구조는 그대로 쓸 수 있다. -->
+          <!-- ⚠ [보기] 는 공문 원본(PDF)으로 연결된다. 파일이 아직 없어 지금은 전부
+               비활성이며, 파일이 들어오면 각 li 의 버튼을 아래 형태로 바꾸면 끝난다.
+                 <a class="doc-view" href="assets/doc/…​.pdf" target="_blank" rel="noopener">보기</a>
+               비활성일 때는 <span class="doc-view is-off" aria-disabled="true"> 를 쓴다 —
+               <button disabled> 이 아닌 이유는 이 자리가 원래 링크이기 때문이다. -->
           <ul class="docs">
-            <li><time datetime="2024-03-27">2024.03.27</time><span>국토교통부 기업혁신파크 선도사업 선정 공문</span></li>
-            <li><time datetime="2024-09-09">2024.09.09</time><span>강원특별자치도 · 춘천시 출자지분 확정 공문</span></li>
-            <li><time datetime="2024-03-18">2024.03.18</time><span>강원특별자치도 토지거래허가구역 지정 공고</span></li>
-            <li><time datetime="2024-08-29">2024.08.29</time><span>춘천시 개발행위허가 제한지역 지정 고시</span></li>
-            <li><time datetime="2025-09-11">2025.09.11</time><span>춘천 기업혁신파크 선도사업 개발구역 지정 공동제안 사항 공고</span></li>
+            <li>
+              <time datetime="2024-03-27">2024.03.27</time>
+              <span class="doc-n">국토교통부 기업혁신파크 선도사업 선정 공문</span>
+              <span class="doc-view is-off" aria-disabled="true">보기</span>
+            </li>
+            <li>
+              <time datetime="2024-09-09">2024.09.09</time>
+              <span class="doc-n">강원특별자치도 · 춘천시 출자지분 확정 공문</span>
+              <span class="doc-view is-off" aria-disabled="true">보기</span>
+            </li>
+            <li>
+              <time datetime="2024-03-18">2024.03.18</time>
+              <span class="doc-n">강원특별자치도 토지거래허가구역 지정 공고</span>
+              <span class="doc-view is-off" aria-disabled="true">보기</span>
+            </li>
+            <li>
+              <time datetime="2024-08-29">2024.08.29</time>
+              <span class="doc-n">춘천시 개발행위허가 제한지역 지정 고시</span>
+              <span class="doc-view is-off" aria-disabled="true">보기</span>
+            </li>
+            <li>
+              <time datetime="2025-09-11">2025.09.11</time>
+              <span class="doc-n">춘천 기업혁신파크 선도사업 개발구역 지정 공동제안 사항 공고</span>
+              <span class="doc-view is-off" aria-disabled="true">보기</span>
+            </li>
           </ul>
+          <p class="docs-note">※ 공문 원본은 준비되는 대로 [보기]에서 열람하실 수 있습니다.</p>
         </div>
       </div>
     </section>
 
-    <!-- ===== 2. 파트너사 소개 (스토리보드 v2 slide45~47) ===== -->
+    <!-- ===== 2. 파트너사 소개 (스토리보드 v2 slide45~47) =====
+         기획서 구성: [왼쪽 = 분류명(국문 + 영문) + 한 줄 설명] · [오른쪽 = 로고 + 설명]
+         분류가 늘어도 왼쪽 열 폭이 고정이라 오른쪽 시작선이 흔들리지 않는다. -->
     <section class="sec sec--surface" id="partners">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>PARTNERS</b><span>파트너사 소개</span></p>
@@ -582,7 +743,7 @@
 
         <div class="ptn-group rv">
           <p class="ptn-gh"><b>관계 기관</b><i>GOVERNMENT PARTNERS</i>
-            <span>사업 인가·지원의 핵심 주체</span></p>
+            <span>사업 인가 · 지원의 핵심 주체</span></p>
           <ul class="ptn-cards">
             <li class="ptn-card">
               <span class="ptn-logo"><img src="assets/logo/partner-molit.png" alt="국토교통부" style="--lh:32px" loading="lazy" decoding="async" /></span>
@@ -602,31 +763,32 @@
           </ul>
         </div>
 
-        <div class="ptn-group rv">
+        <div class="ptn-trio rv">
+        <div class="ptn-group">
           <p class="ptn-gh"><b>앵커 기업</b><i>ANCHOR PARTNER</i>
             <span>사업의 중심에서 비전을 함께 그리는 핵심 파트너</span></p>
           <ul class="ptn-cards">
             <li class="ptn-card">
               <span class="ptn-logo"><img src="assets/logo/partner-douzone.png" alt="더존비즈온" style="--lh:30px" loading="lazy" decoding="async" /></span>
               <b>더존비즈온</b>
-              <span>대한민국 대표 ICT·SaaS 기업으로서<br />B-CITY의 AI·디지털 산업 생태계를 선도</span>
+              <span>앵커 파트너 / PFV <em>출자 37.5%</em><br />대한민국 대표 ICT·SaaS 기업으로서 B-CITY의 AI·디지털 산업 생태계를 선도</span>
             </li>
           </ul>
         </div>
 
-        <div class="ptn-group rv">
+        <div class="ptn-group">
           <p class="ptn-gh"><b>자산관리</b><i>AMC</i>
             <span>PFV 자산의 전문 운용과 사업 실행을 관리하는 수탁자</span></p>
           <ul class="ptn-cards">
             <li class="ptn-card">
-              <span class="ptn-logo"><img src="assets/logo/partner-amc.jpg" alt="바이오테크이노밸리 AMC" style="--lh:28px" loading="lazy" decoding="async" /></span>
+              <span class="ptn-logo"><img src="assets/logo/partner-amc.jpg" alt="바이오테크이노밸리자산관리" style="--lh:28px" loading="lazy" decoding="async" /></span>
               <b>바이오테크이노밸리자산관리㈜</b>
               <span>자산관리 수탁자(AMC)<br />PFV 자산의 전문 운용 및 사업 실행 관리</span>
             </li>
           </ul>
         </div>
 
-        <div class="ptn-group rv">
+        <div class="ptn-group">
           <p class="ptn-gh"><b>금융 파트너</b><i>FINANCIAL INVESTORS</i>
             <span>사업의 안정적 자금 조달을 지원하는 금융 파트너</span></p>
           <ul class="ptn-cards">
@@ -636,6 +798,7 @@
               <span>금융투자자(FI) / PFV 출자<br />사업자금 조달 및 금융 자문</span>
             </li>
           </ul>
+        </div>
         </div>
 
         <div class="ptn-group rv">
@@ -652,12 +815,9 @@
               <b>프로티움사이언스</b>
               <span>MOU 체결 / 바이오 산업 협력 파트너<br />첨단 바이오 클러스터 산업 생태계 협력</span>
             </li>
-            <li class="ptn-card ptn-card--tbd">
-              <span class="ptn-logo" aria-hidden="true"></span>
-              <b>시공파트너(CI) · 전략적 투자자(SI)</b>
-              <span>지속 확대 예정</span>
-            </li>
           </ul>
+          <!-- 확정 전이라 카드로 내지 않는다. 카드로 두면 확정된 파트너와 같은 무게로 읽힌다 -->
+          <p class="ptn-tbd">시공파트너(CI) · 전략적 투자자(SI)는 지속 확대 예정입니다.</p>
         </div>
 
         <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>

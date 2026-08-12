@@ -1,0 +1,74 @@
+[
+  {
+    "id": "video-01",
+    "title": "B-CITY 춘천기업혁신파크 메인 홍보영상",
+    "image": "assets/still/hero.jpg",
+    "videoFile": "assets/vid/hero.mp4",
+    "duration": "0:12",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-07-28",
+    "visible": false,
+    "order": 1,
+    "_sample": true
+  },
+  {
+    "id": "video-02",
+    "title": "사업개요 — 1.1조원 국가도시개발 프로젝트",
+    "image": "assets/still/seg05.jpg",
+    "videoFile": "assets/vid/business.mp4",
+    "duration": "0:34",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-07-25",
+    "visible": false,
+    "order": 2,
+    "_sample": true
+  },
+  {
+    "id": "video-03",
+    "title": "AI데이터 클러스터 소개",
+    "image": "assets/still/district/d01.jpg",
+    "videoFile": "assets/vid/district/d01.mp4",
+    "duration": "0:04",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-06-22",
+    "visible": false,
+    "order": 3,
+    "_sample": true
+  },
+  {
+    "id": "video-04",
+    "title": "첨단 바이오 클러스터 소개",
+    "image": "assets/still/district/d02.jpg",
+    "videoFile": "assets/vid/district/d02.mp4",
+    "duration": "0:04",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-06-19",
+    "visible": false,
+    "order": 4,
+    "_sample": true
+  },
+  {
+    "id": "video-05",
+    "title": "푸드 물류 클러스터 소개",
+    "image": "assets/still/district/d03.jpg",
+    "videoFile": "assets/vid/district/d03.mp4",
+    "duration": "0:04",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-05-16",
+    "visible": false,
+    "order": 5,
+    "_sample": true
+  },
+  {
+    "id": "video-06",
+    "title": "바이오 MICE 클러스터 소개",
+    "image": "assets/still/district/d04.jpg",
+    "videoFile": "assets/vid/district/d04.mp4",
+    "duration": "0:04",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-05-13",
+    "visible": false,
+    "order": 6,
+    "_sample": true
+  }
+]

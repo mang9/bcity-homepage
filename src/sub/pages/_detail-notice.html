@@ -1,0 +1,29 @@
+<!--build
+{
+  "template": "notice",
+  "slugPrefix": "notice",
+  "title": "{{postTitle}} · 공지사항 · B-CITY 춘천기업혁신파크",
+  "description": "{{postExcerpt}}",
+  "nav": "notice",
+  "heroImg": "assets/img-park.jpg",
+  "h1": "공지사항",
+  "css": ["page-shared", "page-pr"]
+}
+-->
+    <!-- 게시글 상세. 데이터 항목 하나당 한 페이지가 빌드 시점에 생성된다
+         (src/sub/data/notice.json → notice-<id>.html). 스토리보드에는 공개용 상세 화면이
+         없어 관리자 등록 폼(slide108: 제목·내용·첨부파일)의 필드를 기준으로 짰다. -->
+    <section class="sec" id="post">
+      <div class="wrap wrap--narrow">
+        <article class="post">
+          <header class="post-head">
+            <h2 class="post-title">{{postTitle}}</h2>
+            <p class="post-meta"><time datetime="{{postDateISO}}">{{postDate}}</time></p>
+          </header>
+          {{postBody}}
+          {{postSource}}
+          {{postFiles}}
+        </article>
+        {{postNav}}
+      </div>
+    </section>

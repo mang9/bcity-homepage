@@ -45,3 +45,107 @@
 /* 불릿은 ::before 로 — list-style 마커는 들여쓰기 제어가 브라우저마다 다르다 */
 .eff-list li::before { content: ""; position: absolute; left: 0; top: .62em;
   width: 6px; height: 6px; border-radius: 50%; background: var(--color-mint); }
+
+/* ── 꽉 찬 2단 (.zf) — 사진이 화면 끝까지 닿는 좌우 교차 블록 ────────────
+   컨테이너 안 2단(.zz)은 좌우에 여백이 남아 사진이 작아 보인다. 여기서는
+   블록을 화면 폭으로 빼내고, 본문 쪽만 컨테이너 안쪽 선에 맞춘다.
+
+   ⚠ `width: 100vw` 는 **세로 스크롤바 폭을 포함**한다(윈도우 등). 그대로 두면 가로
+     스크롤이 생기므로 섹션에 `overflow-x: clip` 을 걸어 막는다.
+     clip 을 쓰는 이유는 hidden 과 달리 **스크롤 컨테이너를 만들지 않아서**다 —
+     hidden 이면 안쪽에 sticky 를 둘 때 조용히 망가진다.
+   ⚠ --zf-gut 은 index.html 의 --gut 과 같은 계산이다(§6.3). 화면이 컨테이너보다
+     좁아지는 구간에서 본문이 화면 끝에 붙는 것을 막는다. */
+.sec--bleed { overflow-x: clip; }
+
+/* ⚠ 블록 사이 여백은 0 이다(2026-08-10 지시) — 사진이 위아래로 맞붙어 띠처럼 이어진다.
+     숨 쉴 공간은 **본문 열의 padding-block** 이 담당한다. 블록 간격을 여기서 되살리면
+     사진 사이에 배경색 띠가 생겨 의도가 깨진다. */
+.zf { --zf-gut: max(clamp(24px, 4.4vw, 72px),
+        calc((100vw - var(--wrap)) / 2 + clamp(20px, 4vw, 48px)));
+  width: 100vw; margin-inline: calc(50% - 50vw);
+  margin-top: 0;
+  display: grid; align-items: center; gap: 0;
+  grid-template-columns: minmax(0, 1fr); }
+/* 첫 블록만 위 지표 목록과 떨어뜨린다.
+   블록끼리는 붙지만 **01 지표와 02 이후의 사진 2단은 성격이 다른 구획**이라
+   여기서는 확실히 띄운다(2026-08-10 지시). 섹션 상하 여백(.sec)과 같은 리듬을 쓴다.
+
+   ⚠ `.zf:first-of-type` 을 쓰지 말 것. `:first-of-type` 은 **같은 태그 이름** 중
+     첫째를 뜻하므로, 형제에 `div.eff-head` 가 먼저 있으면 그쪽이 잡히고 첫 `.zf` 는
+     영원히 매칭되지 않는다. 실제로 그래서 이 여백이 계속 0 이었다(2026-08-10 실측).
+     클래스로 위치를 지정할 때는 인접 형제(`+`)를 쓴다. */
+.kpi + .zf { margin-top: clamp(56px, 6.4vw, 112px); }
+
+/* 좁은 화면 — 1단. 사진은 그대로 화면 폭, 본문만 여백을 준다.
+   ⚠ 배경을 흰 면으로 깐다(2026-08-10 지시). 이때 **align-self: stretch 가 반드시 필요**하다 —
+     .zf 가 align-items:center 라 본문 열이 내용 높이만큼만 잡히고, 그러면 흰 면이
+     사진 높이를 못 채워 위아래에 페이지 배경 띠가 남는다. 늘린 뒤 안에서 세로 가운데로 모은다. */
+.zf-body { padding-inline: var(--zf-gut);
+  padding-block: clamp(30px, 4.4vw, 48px);
+  background: var(--color-surface); align-self: stretch;
+  display: flex; flex-direction: column; justify-content: center; }
+
+@media (min-width: 900px) {
+  .zf { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  /* 사진 좌 / 본문 우 (기본) */
+  .zf-body { padding-inline: clamp(30px, 3.6vw, 68px) var(--zf-gut);
+    padding-block: clamp(40px, 4.4vw, 80px); }
+  /* 사진 우 / 본문 좌 — DOM 순서는 [사진 → 본문] 고정이고 order 로만 뒤집는다.
+     마크업을 실제로 바꾸면 탭 순서·낭독 순서가 블록마다 달라진다 */
+  .zf--flip > :first-child { order: 2; }
+  .zf--flip .zf-body { padding-inline: var(--zf-gut) clamp(30px, 3.6vw, 68px); }
+}
+
+.zf-fig { margin: 0; align-self: stretch; display: flex; flex-direction: column; }
+.zf-fig img { width: 100%; height: 100%; object-fit: cover; display: block;
+  min-height: clamp(300px, 40vw, 660px); }
+/* ⚠ 캡션을 사진 아래 흐름에 두면 블록이 맞붙었을 때 사진 사이에 흰 띠가 생긴다.
+     사진 위에 얹고 아래에서 옅은 그라데이션으로 읽히게 한다. */
+.zf-fig { position: relative; }
+.zf-fig figcaption { position: absolute; left: 0; right: 0; bottom: 0;
+  padding: clamp(26px, 3vw, 44px) var(--zf-gut) clamp(12px, 1.2vw, 18px);
+  font-size: 12.5px; color: var(--color-text-muted);
+  background: linear-gradient(transparent, rgb(var(--navy-rgb) / .05) 45%,
+              rgb(var(--navy-rgb) / .09)); }
+@media (min-width: 900px) {
+  .zf:not(.zf--flip) .zf-fig figcaption { padding-right: clamp(20px, 2vw, 32px); }
+  .zf--flip .zf-fig figcaption { padding-left: clamp(20px, 2vw, 32px); }
+}
+/* 지도류(투명 배경 일러스트) — cover 로 자르면 지점이 잘려 나간다.
+   ⚠ 배경을 네이비로 하지 말 것(§ page-shared 의 .zz-fig--plain 주석과 같은 이유) */
+.zf-fig--plain { background: var(--color-surface); justify-content: center; }
+.zf-fig--plain img { object-fit: contain; padding: clamp(16px, 2.2vw, 40px); }
+
+/* ── 모션 ──────────────────────────────────────────────────────────────
+   블록 자체의 페이드는 공통 .rv 가 맡는다. 여기서는 두 가지를 더 얹는다.
+     · 사진: 살짝 확대된 상태에서 제자리로 — 정지 사진에 들어오는 느낌을 준다
+     · 본문: 요소별로 조금씩 늦게 올라온다(번호 → 제목 → 목록)
+   ⚠ 사진 확대는 부모에 overflow:hidden 이 있어야 가장자리가 새지 않는다. */
+.zf-fig { overflow: hidden; }
+.zf-fig img { transform: scale(1.07); transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
+.zf.in .zf-fig img { transform: none; }
+
+.zf-body > * { opacity: 0; transform: translateY(16px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+.zf.in .zf-body > * { opacity: 1; transform: none; }
+.zf.in .zf-body > :nth-child(2) { transition-delay: .09s; }
+.zf.in .zf-body > :nth-child(3) { transition-delay: .18s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .zf-fig img, .zf-body > * { transform: none !important; opacity: 1 !important;
+    transition: none !important; }
+}
+
+/* ── 마무리 문장 — 꽉 찬 2단 바로 아래 ─────────────────────────────────
+   06 블록과 붙이고, 구분선은 화면 끝까지 잇는다(2026-08-10 지시).
+   위 사진들이 화면 폭인데 구분선만 컨테이너 폭에서 끊기면 선이 떠 보인다.
+
+   ⚠ .closer 는 입지·추진일정도 쓰는 공용 클래스다. **여기서만** 바꾸도록
+     .sec--bleed 아래로 한정한다 — 전역으로 고치면 저 두 페이지의 리듬이 함께 바뀐다.
+   ⚠ 선만 화면 폭으로 빼고 **글은 컨테이너 안에 둔다.** 블록째 내보내면 마무리 문장이
+     화면 끝까지 퍼져 한 줄이 지나치게 길어진다. */
+.sec--bleed .closer { margin-top: 0; padding-top: 0; border-top: 0; position: relative; }
+.sec--bleed .closer::before { content: ""; position: absolute; top: 0;
+  left: calc(50% - 50vw); width: 100vw; height: 1px; background: var(--color-line); }
+.sec--bleed .closer p { padding-top: clamp(46px, 5vw, 88px); }

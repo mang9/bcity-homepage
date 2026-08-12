@@ -1,62 +1,149 @@
-/* ===== 사업주체 — 사업구조 · PFV 구조도 · 강점 · 공식문서 · 파트너 ===== */
+/* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
 
-/* PFV 구조도 — 스토리보드 slide43 "구조도 디자인 필요".
-   이미지가 아니라 CSS 그리드로 그린다: 출자·대출·수익 3개 유입 → PFV → AMC 위탁.
-   자산이 없어도 성립하고, 텍스트라 검색·스크린리더·확대에 모두 견딘다. */
-.pfv { margin-top: clamp(28px, 2.8vw, 44px); display: grid; gap: clamp(14px, 1.4vw, 22px); }
+/* ── 사업추진 체계 구조도 (스토리보드 slide43) ───────────────────────────
+   이미지가 아니라 마크업이다. 확대해도 깨지지 않고 검색·낭독에 잡히며,
+   출자 비율처럼 바뀔 수 있는 값을 고치는 데 이미지 재작업이 필요 없다.
 
-/* 유입 3열 */
-.pfv-in { display: grid; gap: clamp(10px, 1vw, 16px); grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 640px) { .pfv-in { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+   구성: [PFV 출자자 5분류] → [PFV 명목회사] → [세 방향 자금·자산 흐름]
+   연결선은 .orgc-link 하나로 그린다 — 가운데 세로선 + 위아래 가로 분기.       */
+.orgc { margin-top: clamp(28px, 2.8vw, 44px); }
 
-.pfv-box { padding: clamp(16px, 1.6vw, 24px) clamp(15px, 1.6vw, 22px);
+.orgc-cap { margin: 0 auto; width: max-content;
+  padding: 7px 20px; border: 1px solid var(--color-primary); border-radius: 999px;
+  font-family: var(--font-display); font-weight: 700; font-size: 13px;
+  letter-spacing: .02em; color: var(--color-primary); background: var(--color-surface); }
+
+/* 출자자 5분류 — 좁은 화면에서는 2열, 넓으면 한 줄 */
+.orgc-sh { display: grid; gap: clamp(8px, .9vw, 14px); margin: clamp(16px, 1.6vw, 24px) 0 0;
+  padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 560px)  { .orgc-sh { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 900px)  { .orgc-sh { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+.orgc-shi { display: flex; flex-direction: column; gap: 4px;
+  padding: clamp(13px, 1.3vw, 18px) clamp(11px, 1.1vw, 15px);
   border: 1px solid var(--color-line); border-radius: var(--radius-md);
   background: var(--color-surface); text-align: center; }
-.pfv-box b { display: block; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(15px, 1.15vw, 18px); letter-spacing: -.012em; color: var(--color-text); }
-.pfv-box span { display: block; margin-top: 5px; font-size: 13px; line-height: 1.55;
+.orgc-shk { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(14px, 1.05vw, 16px); letter-spacing: -.01em; color: var(--color-text); }
+/* 영문 약어 뒤의 한글 보충(공공·금융·시공·전략) — 약어만으로는 읽히지 않는다 */
+.orgc-shk i { font-style: normal; font-weight: 600; font-size: .82em;
   color: var(--color-text-muted); }
+.orgc-shn { font-size: 12.5px; line-height: 1.5; color: var(--color-text-muted);
+  word-break: keep-all; }
+/* 지분율 — 이 구조도에서 가장 먼저 읽혀야 하는 값이다.
+   ⚠ 각 값은 **분류 전체**의 지분율이다. 구성원 목록이 바뀌어도 분류 값은 그대로다.
+     자세한 경위는 CLAUDE.md §11.12 참고. */
+.orgc-shp { margin-top: auto; padding-top: 6px; font-style: normal;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.2vw, 19px); font-variant-numeric: tabular-nums;
+  color: var(--color-primary); }
+/* 미확정(CI) — 파선으로 '확정 전'임을 드러낸다 */
+.orgc-shi--tbd { background: none; border-style: dashed; }
+.orgc-shi--tbd .orgc-shp { color: var(--color-text-muted); }
 
-/* 중심 박스(PFV) — 유입과 위탁 사이. 색으로 위계를 만든다 */
-.pfv-box--core { background: var(--color-primary); border-color: var(--color-primary);
-  padding-block: clamp(20px, 2vw, 30px); }
-.pfv-box--core b { color: #fff; font-size: clamp(17px, 1.5vw, 24px); }
-.pfv-box--core span { color: rgba(255,255,255,.86); font-size: 13.5px; }
-.pfv-box--core em { display: block; margin-top: 3px; font-style: normal; font-size: 12.5px;
-  letter-spacing: .06em; color: var(--color-light-blue); }
-.pfv-box--amc { background: var(--color-bg); }
+/* 연결선 — 가운데 세로선. 높이만 차지하고 내용은 없다 */
+.orgc-link { position: relative; height: clamp(22px, 2.2vw, 34px); margin: 0; }
+.orgc-link::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 1px; background: var(--color-line); }
+/* 아래를 가리키는 삼각형 */
+.orgc-link::after { content: ""; position: absolute; left: 50%; bottom: 0;
+  transform: translateX(-50%); border-left: 5px solid transparent;
+  border-right: 5px solid transparent; border-top: 7px solid var(--color-line); }
 
-/* 화살표 — 유입/위탁 방향. 회전 텍스트나 SVG 없이 삼각형 하나로 */
-.pfv-arw { justify-self: center; width: 0; height: 0;
-  border-left: 8px solid transparent; border-right: 8px solid transparent;
-  border-top: 10px solid var(--color-line); }
-.pfv-note { margin: clamp(14px, 1.4vw, 20px) 0 0; font-size: 13.5px; line-height: 1.7;
+/* PFV 본체 — 색으로 위계를 만든다. 구조도에서 유일한 채운 박스다 */
+.orgc-core { padding: clamp(20px, 2vw, 30px) clamp(18px, 1.8vw, 26px);
+  border-radius: var(--radius-md); background: var(--color-primary); text-align: center; }
+.orgc-core b { display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(17px, 1.5vw, 24px); letter-spacing: -.018em; color: #fff; }
+.orgc-core span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.6;
+  color: rgba(255, 255, 255, .86); }
+
+/* 세 방향 흐름 — 각 열은 PFV 와 주고받는 한 쌍이다 */
+.orgc-flow { display: grid; gap: clamp(10px, 1vw, 16px); margin: 0; padding: 0; list-style: none;
+  grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 720px) { .orgc-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* 라벨 묶음 → 끝단 사이 연결선. gap 을 선이 차지하므로 gap 은 0 이다 */
+.orgc-fi { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.orgc-fi::before { content: ""; order: 1; width: 1px; height: 14px; background: var(--color-line); }
+.orgc-fx { order: 0; }
+.orgc-fe { order: 2; }
+.orgc-fx { display: flex; flex-direction: column; gap: 5px; margin: 0; width: 100%;
+  padding: clamp(12px, 1.2vw, 16px) clamp(10px, 1vw, 14px);
+  border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-surface); }
+/* 방향은 화살표 하나로만 구분한다 — 색을 나누면 다른 의미로 읽힌다 */
+.orgc-up, .orgc-dn { display: flex; align-items: center; gap: 7px;
+  font-size: 13px; line-height: 1.45; color: var(--color-text); }
+.orgc-up::before, .orgc-dn::before { flex: none; width: 15px; text-align: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 13px;
+  color: var(--color-primary); }
+.orgc-up::before { content: "↑"; }
+.orgc-dn::before { content: "↓"; color: var(--color-text-muted); }
+/* 끝단(토지소유주·수분양자·금융기관) */
+.orgc-fe { display: block; width: 100%; padding: clamp(11px, 1.1vw, 15px) 10px;
+  border-radius: var(--radius-sm); background: var(--color-bg);
+  border: 1px solid var(--color-line); text-align: center;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(14px, 1.05vw, 16px); color: var(--color-text); }
+.orgc-key { margin: clamp(12px, 1.2vw, 18px) 0 0; text-align: center;
+  font-size: 12.5px; color: var(--color-text-muted); }
+.orgc-key b { margin-left: 10px; color: var(--color-primary); }
+.orgc-key b:first-child { margin-left: 0; }
+
+.pfv-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 13.5px; line-height: 1.7;
   color: var(--color-text-muted); }
 .pfv-note b { color: var(--color-text); font-weight: 700; }
 
-/* 강점 5종 */
-.merit { display: grid; gap: clamp(10px, 1vw, 16px); margin-top: clamp(24px, 2.4vw, 38px);
-  grid-template-columns: minmax(0, 1fr); padding: 0; list-style: none; }
-@media (min-width: 768px)  { .merit { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1280px) { .merit { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.merit-item { padding: clamp(17px, 1.7vw, 25px) clamp(16px, 1.7vw, 24px);
-  border: 1px solid var(--color-line); border-radius: var(--radius-md);
-  background: var(--color-surface); }
-.merit-item b { display: block; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(15px, 1.15vw, 18px); letter-spacing: -.012em; color: var(--color-primary); }
-.merit-item span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.62;
-  color: var(--color-text-muted); }
+/* ── 다섯 가지 강점 ────────────────────────────────────────────────────
+   카드(테두리 박스)에서 **번호 + 상단 룰의 편집형**으로 바꿨다(2026-08-10 지시).
+   앞의 구조도가 이미 박스 투성이라, 강점까지 박스면 어느 쪽이 중요한지 안 읽힌다. */
+.mrt { display: grid; gap: clamp(16px, 1.8vw, 30px) clamp(14px, 1.6vw, 28px);
+  margin: clamp(24px, 2.4vw, 38px) 0 0; padding: 0; list-style: none;
+  grid-template-columns: minmax(0, 1fr); counter-reset: none; }
+@media (min-width: 600px)  { .mrt { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .mrt { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 
-/* 관련 공식 문서 — 스토리보드는 [보기] 버튼 → 공문 팝업을 요구하지만 공문 파일이 없다.
-   버튼 없이 목록만 낸다. 파일이 들어오면 각 li 에 <a class="doc-view"> 를 붙이면 된다. */
+.mrt-i { padding-top: clamp(12px, 1.2vw, 16px); border-top: 2px solid var(--color-primary); }
+.mrt-n { display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: 12px; letter-spacing: .1em; color: var(--color-primary);
+  font-variant-numeric: tabular-nums; }
+.mrt-t { display: block; margin-top: 7px; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.2vw, 18px); letter-spacing: -.014em; color: var(--color-text);
+  word-break: keep-all; }
+.mrt-d { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.6;
+  color: var(--color-text-muted); word-break: keep-all; }
+
+/* ── 관련 공식 문서 ────────────────────────────────────────────────────
+   기획서 slide44 는 항목마다 [보기]를 요구한다. 공문 PDF 가 아직 없어
+   지금은 전부 비활성(.is-off)이고, 파일이 들어오면 <a href> 로 바꾸면 된다. */
 .docs { margin: clamp(20px, 2vw, 30px) 0 0; padding: 0; list-style: none;
   border-top: 1px solid var(--color-line); }
-.docs li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline;
+.docs li { display: grid; align-items: center; gap: 4px 14px;
+  grid-template-columns: minmax(0, 1fr) auto;
   padding: clamp(13px, 1.2vw, 17px) 2px; border-bottom: 1px solid var(--color-line);
   font-size: clamp(14px, 1vw, 15.5px); }
-.docs li span { color: var(--color-text); }
-.docs li time { flex: none; font-family: var(--font-display); font-weight: 700;
+.docs li time { grid-column: 1; flex: none; font-family: var(--font-display); font-weight: 700;
   font-size: 13px; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.doc-n { grid-column: 1; color: var(--color-text); word-break: keep-all; }
+/* 날짜와 제목을 한 줄에 두기엔 제목이 길다 → 좁은 화면은 2줄, 넓은 화면은 한 줄 */
+@media (min-width: 720px) {
+  .docs li { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .docs li time { grid-column: 1; }
+  .doc-n { grid-column: 2; }
+}
+.doc-view { grid-column: -2 / -1; grid-row: 1 / -1; justify-self: end; align-self: center;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 62px; padding: 7px 15px; border-radius: 999px;
+  border: 1px solid var(--color-line); background: var(--color-surface);
+  font-size: 13px; font-weight: 600; color: var(--color-text);
+  transition: border-color .2s, color .2s; }
+a.doc-view:hover { border-color: var(--color-primary); color: var(--color-primary); }
+/* 비활성 — 누를 수 없다는 것이 보여야 한다. 색만 흐리면 링크로 착각한다 */
+.doc-view.is-off { color: var(--color-text-muted); background: none;
+  border-style: dashed; cursor: default; }
+.docs-note { margin: clamp(12px, 1.2vw, 16px) 0 0; font-size: 12.5px;
+  color: var(--color-text-muted); }
 
 /* 파트너 — 분류별 그룹, 그룹 안에 로고 카드 */
 .ptn-group { margin-top: clamp(34px, 3.4vw, 56px); }
@@ -69,8 +156,11 @@
   letter-spacing: .04em; color: var(--color-primary); }
 .ptn-gh span { display: block; margin-top: 6px; font-size: 13.5px; color: var(--color-text-muted); }
 
+/* ⚠ margin:0 을 반드시 둔다. 브라우저 기본 ul 마진(16px)이 남아 있었는데,
+     일반 블록에서는 위 .ptn-gh 의 margin-bottom(20px)과 **상쇄되어** 안 보였다.
+     그리드 안(.ptn-trio)에서는 상쇄가 없어 20+16=36px 로 이 묶음만 벌어졌다(실측). */
 .ptn-cards { display: grid; gap: clamp(10px, 1vw, 16px); grid-template-columns: minmax(0, 1fr);
-  padding: 0; list-style: none; }
+  margin: 0; padding: 0; list-style: none; }
 @media (min-width: 640px)  { .ptn-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) { .ptn-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .ptn-card { padding: clamp(18px, 1.8vw, 26px); border: 1px solid var(--color-line);
@@ -86,9 +176,12 @@
 .ptn-card span { display: block; margin-top: 7px; font-size: 13.5px; line-height: 1.62;
   color: var(--color-text-muted); }
 .ptn-card span em { font-style: normal; font-weight: 700; color: var(--color-primary); }
-/* 로고 없는 카드(TBD) — 파선으로 '확정 전'임을 드러낸다 */
-.ptn-card--tbd { background: none; border-style: dashed; }
-.ptn-card--tbd b { color: var(--color-text-muted); }
+/* 확정 전 항목(CI·SI) — **카드로 두지 않는다.**
+   목록 안에 나란히 두면 확정된 파트너와 같은 무게로 읽힌다(2026-08-10 지시).
+   그룹 아래 한 줄 보조 문구로 내린다. */
+.ptn-tbd { margin: clamp(12px, 1.2vw, 16px) 0 0; padding-left: 13px;
+  border-left: 2px dashed var(--color-line);
+  font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
 
 /* 파트너가 1곳뿐인 분류(앵커·AMC·금융)는 3열 그리드에서 2/3 이 빈다.
    그 카드만 행 전체를 쓰면서 로고를 왼쪽에 두는 가로 배치로 바꾼다.
@@ -106,3 +199,36 @@
   .ptn-card:only-child b    { grid-area: name; align-self: end; }
   .ptn-card:only-child span { grid-area: desc; align-self: start; }
 }
+
+/* ── 1곳뿐인 분류 3종을 한 줄 3단으로 (앵커 · 자산관리 · 금융) ─────────────
+   각 분류가 파트너 1곳이라 세로로 쌓으면 카드 하나 아래 큰 여백만 반복된다.
+
+   ⚠ 헤더 줄 수가 분류마다 달라(1줄 vs 2줄) 그냥 3열로 두면 카드 시작선이 어긋난다.
+     subgrid 로 [헤더행 · 카드행]을 3단이 공유하게 해서 줄을 맞춘다.
+     subgrid 미지원 브라우저에서는 일반 블록으로 떨어지고 레이아웃만 살짝 어긋난다. */
+.ptn-trio { margin-top: clamp(34px, 3.4vw, 56px); display: grid;
+  gap: clamp(30px, 3vw, 48px); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) {
+  /* ⚠ row-gap 은 0 이다. subgrid 의 행 간격이 곧 헤더↔카드 간격이 되는데,
+       그러면 이 묶음만 다른 분류(.ptn-gh 의 margin-bottom)보다 벌어진다.
+       간격은 .ptn-gh 하나가 정하게 두고 열 간격만 준다. */
+  .ptn-trio { grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto 1fr; row-gap: 0; column-gap: clamp(20px, 2vw, 32px); }
+  .ptn-trio .ptn-group { grid-row: span 2; display: grid; grid-template-rows: subgrid; }
+}
+/* 묶음 안에서는 분류 자체의 테두리·여백을 쓰지 않는다.
+   ⚠ padding-top 을 남기면 subgrid 의 첫 행 높이에 더해져 이 묶음만 헤더↔카드 간격이
+     16px 더 벌어진다(실측). 구분선과 위 여백은 묶음(.ptn-trio)이 한 번만 갖는다. */
+/* 구분선은 두지 않는다(2026-08-10 지시) — 여백으로만 나눈다.
+   ⚠ padding-top 도 함께 뺐다. 선을 두려고 넣었던 여백인데, 선이 없으면 이 묶음만
+     위가 84px 로 벌어져 다른 분류(49px)와 리듬이 어긋난다. 간격은 margin-top 하나가 정한다. */
+.ptn-trio .ptn-group { margin-top: 0; padding-top: 0; border-top: 0; }
+/* ⚠ :only-child 가로 배치(로고 왼쪽)를 반드시 끈다. 3단 안에서는 열이 좁아
+     로고와 설명이 각각 절반씩만 차지해 둘 다 읽기 어려워진다. */
+@media (min-width: 640px) {
+  .ptn-trio .ptn-card:only-child { grid-column: auto; display: block; }
+  .ptn-trio .ptn-card:only-child .ptn-logo { justify-content: flex-start; margin-bottom: 14px; }
+}
+/* ⚠ .ptn-cards 는 자체적으로 1/2/3열 그리드다. 3단 안에서 그대로 두면 이미 좁은
+     열을 또 3등분해 카드가 120px 로 쪼그라든다(실측). 여기서는 1열로 고정한다. */
+.ptn-trio .ptn-cards { grid-template-columns: minmax(0, 1fr); align-content: start; }

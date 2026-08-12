@@ -1,0 +1,27 @@
+<!--build
+{
+  "template": "press",
+  "slugPrefix": "press",
+  "title": "{{postTitle}} · 언론보도 · B-CITY 춘천기업혁신파크",
+  "description": "{{postExcerpt}}",
+  "nav": "press",
+  "heroImg": "assets/img-street.jpg",
+  "h1": "언론보도",
+  "css": ["page-shared", "page-pr"]
+}
+-->
+    <!-- 언론보도 상세. 원문 기사는 본문 아래 "원문 기사 보기" 버튼으로 나간다
+         (사용자 지시 2026-08-10 — 목록에서 바로 외부로 보내지 않는다). -->
+    <section class="sec" id="post">
+      <div class="wrap wrap--narrow">
+        <article class="post">
+          <header class="post-head">
+            <h2 class="post-title">{{postTitle}}</h2>
+            <p class="post-meta">{{postOutlet}}<time datetime="{{postDateISO}}">보도일자 {{postDate}}</time></p>
+          </header>
+          {{postBody}}
+          {{postSource}}
+        </article>
+        {{postNav}}
+      </div>
+    </section>

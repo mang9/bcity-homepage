@@ -7,9 +7,10 @@
     "build": "npm run build:css && npm run build:pages",
     "build:css": "tailwindcss -i src/css/app.css -o assets/css/app.css --minify",
     "build:pages": "node tools/build/pages.mjs",
-    "build:check": "node tools/build/pages.mjs --check",
+    "build:check": "node tools/build/pages.mjs --check && node tools/build/lint-classes.mjs",
     "dev": "tailwindcss -i src/css/app.css -o assets/css/app.css --watch",
-    "build:pretty": "tailwindcss -i src/css/app.css -o assets/css/app.css"
+    "build:pretty": "tailwindcss -i src/css/app.css -o assets/css/app.css",
+    "lint:classes": "node tools/build/lint-classes.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.11"
