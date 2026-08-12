@@ -153,7 +153,14 @@
 .inf-frame { position: relative; display: flex; align-items: center; justify-content: center;
   aspect-ratio: 16 / 9; padding: 14px; border-radius: var(--radius-md);
   border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
-.inf-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* 16:9 프레임에 원본 비율이 제각각이라 cover 로 자른다.
+   ⚠ 어디를 남길지는 사진마다 다르다 — 인라인 `--op` 로 컷을 지정한다(구도 판단).
+     예: 남이섬은 아래쪽 유람선을 살려야 해서 center 56%, 강원대병원은 2.35:1 로 넓어
+     좌우가 잘리므로 본관이 남도록 42% center.
+   ⚠ 한국관광공사 사진은 우하단에 출처 워터마크가 박혀 있다. 잘려 나갈 수 있어
+     섹션 하단에 **출처를 글로 밝혀 뒀다** — 워터마크에만 의존하지 않는다. */
+.inf-frame img { position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: var(--op, center); }
 /* 사진이 없을 때 보이는 명패. 사진이 들어오면 img 가 덮는다 */
 /* 자리표시. 시설명은 아래 캡션이 이미 말하므로 여기서 반복하지 않는다 */
 .inf-plate { position: relative; text-align: center; font-size: 12.5px; font-weight: 600;

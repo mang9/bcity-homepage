@@ -416,7 +416,14 @@
     .inf-frame { position: relative; display: flex; align-items: center; justify-content: center;
       aspect-ratio: 16 / 9; padding: 14px; border-radius: var(--radius-md);
       border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
-    .inf-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    /* 16:9 프레임에 원본 비율이 제각각이라 cover 로 자른다.
+       ⚠ 어디를 남길지는 사진마다 다르다 — 인라인 `--op` 로 컷을 지정한다(구도 판단).
+         예: 남이섬은 아래쪽 유람선을 살려야 해서 center 56%, 강원대병원은 2.35:1 로 넓어
+         좌우가 잘리므로 본관이 남도록 42% center.
+       ⚠ 한국관광공사 사진은 우하단에 출처 워터마크가 박혀 있다. 잘려 나갈 수 있어
+         섹션 하단에 **출처를 글로 밝혀 뒀다** — 워터마크에만 의존하지 않는다. */
+    .inf-frame img { position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: var(--op, center); }
     /* 사진이 없을 때 보이는 명패. 사진이 들어오면 img 가 덮는다 */
     /* 자리표시. 시설명은 아래 캡션이 이미 말하므로 여기서 반복하지 않는다 */
     .inf-plate { position: relative; text-align: center; font-size: 12.5px; font-weight: 600;
@@ -769,10 +776,10 @@
           </div>
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/kangwon-univ.avif" alt="캠퍼스와 기숙사 건물이 보이는 강원대학교 춘천캠퍼스 항공 전경" style="--op:center" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">강원대학교 (춘천캠퍼스)</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/hallym-univ.avif" alt="설경에 둘러싸인 한림대학교 캠퍼스 건물" style="--op:center 46%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">한림대학교</figcaption></figure></li>
           </ul>
         </div>
@@ -786,13 +793,13 @@
           </div>
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/kangwon-hospital.avif" alt="산을 배경으로 한 강원대학교병원 전경" style="--op:42% center" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">강원대학교병원</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/hallym-hospital.avif" alt="한림대학교춘천성심병원 권역응급의료센터 입구" style="--op:center 42%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">한림대춘천성심병원</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/cityhall.avif" alt="춘천시청 청사와 광장" style="--op:center 26%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">강원도청 · 춘천시청</figcaption></figure></li>
           </ul>
         </div>
@@ -806,22 +813,22 @@
           </div>
           <ul class="inf-shots">
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/namisum.avif" alt="남이섬으로 향하는 유람선과 강변 숲" style="--op:center 56%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">남이섬</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/vivaldi.avif" alt="설원 슬로프가 펼쳐진 비발디파크 전경" style="--op:center" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">비발디파크</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/gangchon.avif" alt="호수와 분수가 있는 엘리시안 강촌 정원" style="--op:center 52%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">강촌 (엘리시안 강촌)</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/uiamho.avif" alt="산으로 둘러싸인 의암호 수면" style="--op:center 46%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">의암호</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/soyang.avif" alt="소양강을 가로지르는 스카이워크와 다리" style="--op:center 46%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">소양강</figcaption></figure></li>
             <li class="inf-shot"><figure style="margin:0">
-              <span class="inf-frame"><span class="inf-plate">사진 준비 중</span></span>
+              <span class="inf-frame"><img src="assets/img/infra/legoland.avif" alt="레고랜드 코리아 정문 광장" style="--op:center 44%" loading="lazy" decoding="async" /></span>
               <figcaption class="inf-cap">레고랜드</figcaption></figure></li>
           </ul>
         </div>
@@ -831,6 +838,7 @@
           <small>B-CITY는 춘천이 가진 모든 광역 인프라가 유기적으로 연결되는 최적의 입지에 자리합니다</small>
         </div>
 
+        <p class="note">※ 사진 출처 — 남이섬 · 비발디파크 · 엘리시안 강촌 · 의암호 · 소양강 · 레고랜드: 한국관광공사 / 강원대학교 춘천캠퍼스 · 춘천시청: 공공누리 / 강원대학교병원 · 한림대춘천성심병원 · 한림대학교: 각 기관 홈페이지</p>
         <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
       </div>
     </section>
