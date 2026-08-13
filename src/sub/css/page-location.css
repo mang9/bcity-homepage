@@ -169,11 +169,16 @@
 
    ⚠ 배경 위에 흰 글자를 얹으므로 **스크림이 필수**다. 사진이 밝은 항공샷이라
      스크림 없이는 본문이 읽히지 않는다(측정: 스크림 후 흰 글자 대비 8:1 이상).
-   ⚠ 100vh 를 그대로 쓰지 않는다. 세로가 짧은 창에서 카피가 잘린다 —
-     clamp 로 하한을 두고 콘텐츠가 더 크면 늘어나게 한다. */
+   ⚠ **띠 높이는 배경 사진의 비율을 따른다.** 고정 높이(88vh)로 두면 띠가 세로로 길어져
+     `cover` 가 사진 가로의 절반만 보여 준다(실측: 777×920 띠에서 사진 폭의 46%만 노출).
+     `aspect-ratio` 로 사진과 같은 비율을 주면 좌우가 잘리지 않고 꽉 찬다.
+     ⚠ 사진을 갈아끼우면 **이 비율도 함께 고쳐야 한다.**
+  ⚠ min-height 는 카피가 잘리지 않게 하는 하한이다. 콘텐츠가 더 크면 그만큼 늘어나고,
+     그때는 사진이 조금 잘린다 — 100vh 를 쓰면 세로가 짧은 창에서 카피가 잘린다. */
 .inf-hero { position: relative; width: 100vw; margin-inline: calc(50% - 50vw);
   margin-top: calc(-1 * clamp(58px, 6.4vw, 112px));   /* .sec 상단 패딩을 상쇄해 위 섹션과 붙인다 */
-  min-height: clamp(560px, 88vh, 920px);
+  aspect-ratio: 1918 / 1046;                          /* = assets/img/infra-bg.avif */
+  min-height: clamp(560px, 62vh, 820px);
   display: flex; align-items: center; overflow: hidden; }
 .inf-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: center 62%; }
