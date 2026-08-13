@@ -1,32 +1,142 @@
 /* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
 
-/* ── 사업추진 체계 구조도 (납품 시안 SVG) ─────────────────────────────
-   데스크톱 1920×1080 방사형 · 모바일 900×1900 세로형 두 벌을 **둘 다 인라인**으로 넣고
-   화면 폭으로 갈아 끼운다.
+/* ── 사업추진 체계 구조도 — 마크업으로 그린다 ─────────────────────────
+   납품 시안(business-structure-v1)의 배치·팔레트를 마크업으로 옮긴 것이다.
+   **SVG 는 화살촉과 PFV 워드마크뿐이다.**
 
-   ⚠ `<img src="…svg">` 로 넣지 않는다. SVG 안에서 참조하는 외부 폰트가 로드되지 않아
-     Paperlogy 가 폴백으로 떨어진다(그래서 파티셜의 font-family 를 사이트 스택으로 바꿔 뒀다).
-   ⚠ 두 SVG 가 한 페이지에 있으므로 내부 id 를 `bsd-` / `bsm-` 로 네임스페이스했다.
-     같은 id 가 겹치면 마커·그라데이션이 서로를 덮어쓴다.
-   ⚠ 지분율이 바뀌면 **파티셜 SVG 의 `<text>` 를 고친다.** 마크업으로 그렸던 이전 구조도의
-     "값만 고치면 된다"는 이점을 시안 채택으로 내놓은 부분이다.                          */
-/* 구조도는 **컨텐츠 폭 안**에 둔다(2026-08-13 지시).
-   ⚠ 전에는 화면 폭까지 빼냈는데(margin-inline: calc(50% - 50vw)) 그림이 페이지를 압도했다.
-   ⚠ 대가: 1920 캔버스가 컨테이너(최대 1320px)로 줄어 축척이 0.64~0.69 가 되고
-     가장 작은 글자가 **9.6px**, 본문 글자가 11.5px 로 내려간다(1440 실측).
-     축척으로는 이걸 되돌릴 수 없다 — 글자를 키우려면 **SVG 원본의 font-size** 를 올려야 하고
-     그러면 라벨이 상자를 넘어 겹친다(PF대출원리금 상환 등). 원본 재작업이 필요한 사안이다.
-   ⚠ 세로형(900 캔버스)은 같은 컨테이너에서 축척 1.36 이라 글자가 오히려 크다 —
-     읽기만 보면 세로형을 전 구간에 쓰는 편이 낫다. 어느 쪽을 쓸지는 확인 사항. */
-.orgfig { margin: clamp(28px, 2.8vw, 44px) 0 0; }
-.orgfig-svg { width: 100%; height: auto; }
-/* ⚠ 두 변형의 기본값을 **미디어쿼리 밖에** 함께 적는다.
-     `lint-classes` 의 선택자 수집이 `{…}` 블록을 지우면서 미디어쿼리 안쪽까지 함께 삼킨다 —
-     한쪽만 미디어쿼리에 두면 "정의 없는 클래스" 로 잡힌다(2026-08-13 실측). */
-.orgfig-svg--pc { display: block; }
-.orgfig-svg--mo { display: none; }
+   ⚠ 왜 SVG 한 장을 쓰지 않는가 — 1920 캔버스를 컨테이너(최대 1320px)에 맞추면 축척이
+     0.64 로 줄어 글자가 9.6px 이 되고 얇은 획이 뭉개져 "파란 라인" 처럼 보인다(2026-08-13 지적).
+     마크업은 글자가 항상 실제 CSS 픽셀이라 그 문제가 원천적으로 없다.
+   ⚠ 화살표는 [CSS 축 + SVG 화살촉] 이다. 화살표 전체를 SVG 로 늘리면 화살촉도 함께 늘어난다.
+   ⚠ DOM 순서(수분양자 → 토지소유주 → 금융기관 → PFV)는 고정이고, 방사형 배치는
+     `grid-template-areas` 로만 만든다.                                                */
 
-/* CI 도급 관계 문구 — 데스크톱 구조도에는 이 관계가 그려져 있지 않아 글로 남긴다 */
+/* 팔레트 — 시안 값을 여기 한 곳에 모은다. 색을 바꿀 때 이 블록만 본다 */
+.bs { --bs-in: #27a67a;          /* PFV 로 들어오는 흐름(초록) */
+      --bs-out: #2185ff;         /* PFV 에서 나가는 흐름(파랑) */
+      --bs-core: #2155ff;        /* PFV 코어 테두리 */
+      --bs-edge: #d9e5f3;        /* 카드 테두리 */
+      --bs-ink: #14243b;         /* 제목 */
+      --bs-sub: #34455c;         /* 보조 설명 */
+      margin: clamp(28px, 2.8vw, 44px) 0 0; }
+
+/* ── 방사형 배치 ─────────────────────────────────────────────────── */
+.bs-radial { display: grid; align-items: center; justify-items: stretch;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 1.35fr) minmax(0, 1fr);
+  grid-template-areas: ".    buyer .   "
+                       "land core  fin ";
+  gap: clamp(10px, 1.2vw, 20px) clamp(8px, 1vw, 16px); }
+.bs-side--buyer { grid-area: buyer; }
+.bs-side--land { grid-area: land; }
+.bs-side--fin { grid-area: fin; }
+.bs-core { grid-area: core; }
+
+/* 끝단 박스 — 초록 테두리(시안) */
+.bs-node { margin: 0; padding: clamp(16px, 1.8vw, 26px) clamp(12px, 1.2vw, 18px);
+  border: 2px solid var(--bs-in); border-radius: var(--radius-lg);
+  background: var(--color-surface); text-align: center;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.3vw, 20px); letter-spacing: -.015em; color: var(--bs-ink); }
+
+/* 흐름 라벨 묶음 — 끝단과 코어 사이에 놓인다 */
+.bs-flows { display: grid; gap: 6px; }
+.bs-flow { display: flex; align-items: center; gap: 8px; margin: 0;
+  font-size: clamp(11.5px, .95vw, 14px); font-weight: 700; color: var(--bs-ink);
+  white-space: nowrap; }
+.bs-flow b { font-weight: 700; }
+
+/* 화살표 — 축은 CSS, 화살촉은 SVG. 방향은 flex-direction 으로만 바꾼다 */
+.bs-arw { display: flex; align-items: center; flex: 1 1 auto; min-width: 34px; }
+.bs-arw::before { content: ""; flex: 1 1 auto; height: 3px; background: currentColor; }
+.bs-arw svg { flex: none; width: 11px; height: 11px; fill: currentColor; }
+.bs-arw--in { color: var(--bs-in); }
+.bs-arw--out { color: var(--bs-out); }
+
+/* 왼쪽 끝단(토지소유주) — [박스][흐름] 이고 화살표는 오른쪽(코어)을 향한다 */
+.bs-side--land, .bs-side--fin { display: grid; align-items: center;
+  grid-template-columns: minmax(0, auto) minmax(90px, 1fr);
+  gap: clamp(8px, 1vw, 16px); }
+/* 오른쪽 끝단(금융기관) — 순서를 뒤집어 [흐름][박스] 로 보인다.
+   ⚠ 마크업은 그대로 두고 order 로만 뒤집는다(낭독 순서 유지) */
+.bs-side--fin { grid-template-columns: minmax(90px, 1fr) minmax(0, auto); }
+.bs-side--fin .bs-node { order: 2; }
+.bs-side--fin .bs-flows { order: 1; }
+/* ⚠ 화살표가 향하는 쪽은 **`.bs-arw` 의 flex-direction** 이 정한다.
+     `.bs-flow` 를 뒤집으면 라벨과 화살표의 **자리**만 바뀌고 화살촉은 그대로 오른쪽에 남는다
+     (처음에 그렇게 해서 '토지 보상비'와 'PF대출약정'이 엉뚱한 쪽을 가리켰다 — 실측으로 잡았다).
+   기본값: 축 → 화살촉 순서라 **오른쪽**을 향한다. row-reverse 면 왼쪽을 향한다. */
+.bs-side--fin .bs-flow { flex-direction: row-reverse; }   /* 화살표를 코어 쪽(왼쪽)에 둔다 */
+.bs-side--land .bs-flow--out .bs-arw,   /* 토지 보상비 → 토지소유주(왼쪽) */
+.bs-side--fin  .bs-flow--in  .bs-arw {  /* PF대출약정 → 코어(왼쪽) */
+  flex-direction: row-reverse; }
+
+/* 위 끝단(수분양자) — 세로 화살표 */
+.bs-side--buyer { display: grid; justify-items: center; gap: clamp(6px, .8vw, 12px); }
+.bs-side--buyer .bs-node { min-width: min(100%, 260px); }
+.bs-side--buyer .bs-flows { grid-auto-flow: column; gap: clamp(14px, 1.8vw, 30px); }
+.bs-side--buyer .bs-flow { flex-direction: column; gap: 4px; }
+.bs-side--buyer .bs-arw { flex-direction: column; min-width: 0; min-height: 30px; }
+.bs-side--buyer .bs-arw::before { width: 3px; height: auto; }
+.bs-side--buyer .bs-arw svg { transform: rotate(90deg); }
+/* 나가는 흐름(용지분양)은 위를 향한다 */
+.bs-side--buyer .bs-flow--out { flex-direction: column-reverse; }
+.bs-side--buyer .bs-flow--out .bs-arw { flex-direction: column-reverse; }
+.bs-side--buyer .bs-flow--out .bs-arw svg { transform: rotate(-90deg); }
+
+/* ── PFV 코어 ─────────────────────────────────────────────────────── */
+.bs-core { padding: clamp(22px, 2.4vw, 38px) clamp(16px, 1.8vw, 30px);
+  border: 3px solid var(--bs-core); border-radius: var(--radius-lg);
+  background: var(--color-surface); text-align: center; }
+.bs-logo { display: block; width: min(100%, 300px); height: auto; margin: 0 auto; }
+.bs-core-t { margin: clamp(10px, 1.2vw, 16px) 0 0; font-family: var(--font-display);
+  font-weight: 700; font-size: clamp(17px, 1.6vw, 26px); letter-spacing: -.02em;
+  color: var(--bs-ink); }
+.bs-core-s { margin: 6px 0 0; font-size: clamp(12px, 1vw, 15px); color: var(--bs-sub); }
+
+/* ── 출자금 납부 — 위를 향하는 띠 ───────────────────────────────────
+   시안의 큰 그라데이션 화살표를 CSS clip-path 로 그린다. 도형 하나라 SVG 가 필요 없다. */
+.bs-fund { position: relative; display: grid; justify-items: center; align-content: end;
+  gap: 2px; margin: 0; padding: clamp(30px, 3.4vw, 52px) 0 clamp(12px, 1.2vw, 18px);
+  width: min(100%, 320px); margin-inline: auto;
+  clip-path: polygon(50% 0, 100% 46%, 76% 46%, 76% 100%, 24% 100%, 24% 46%, 0 46%);
+  background: linear-gradient(180deg, #8fd0ff, var(--bs-out)); }
+.bs-fund b { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(14px, 1.3vw, 20px); color: #fff; }
+.bs-fund i { font-style: normal; font-size: clamp(11px, .9vw, 13px); color: rgba(255,255,255,.9); }
+
+/* ── PFV 출자자 ───────────────────────────────────────────────────── */
+.bs-holders { padding: clamp(18px, 2vw, 30px);
+  border: 2px solid #91c9ff; border-radius: var(--radius-lg);
+  background: var(--color-surface); }
+.bs-holders-h { margin: 0 0 clamp(14px, 1.4vw, 20px); text-align: center;
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.2vw, 18px);
+  letter-spacing: .02em; color: var(--color-primary); }
+.bs-holder-s { list-style: none; display: grid; gap: clamp(8px, 1vw, 14px);
+  grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; }
+.bs-holder { display: flex; flex-direction: column;
+  border: 1px solid var(--bs-edge); border-radius: var(--radius-md); overflow: hidden; }
+.bs-holder-h { margin: 0; padding: 9px 10px; background: #eaf2ff; text-align: center;
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(12px, 1vw, 14.5px);
+  color: #203f9b; }
+.bs-holder-l { list-style: none; flex: 1; display: grid; align-content: center; gap: 8px;
+  margin: 0; padding: clamp(12px, 1.2vw, 18px) clamp(10px, 1vw, 14px); }
+.bs-holder-l li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px;
+  align-items: baseline; padding-top: 8px; border-top: 1px solid var(--bs-edge); }
+.bs-holder-l li:first-child { padding-top: 0; border-top: 0; }
+.bs-hn { font-size: clamp(11.5px, .95vw, 14px); font-weight: 700; color: var(--bs-ink);
+  word-break: keep-all; }
+.bs-hn i { display: block; margin-top: 2px; font-style: normal; font-weight: 400;
+  font-size: 10.5px; line-height: 1.35; color: var(--bs-sub); }
+.bs-holder-l em { font-style: normal; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(13px, 1.15vw, 17px); font-variant-numeric: tabular-nums;
+  color: var(--bs-out); white-space: nowrap; }
+/* 미확정(CI · SI) — 파선으로 드러내고 값은 약하게 */
+.bs-holder--tbd { border-style: dashed; }
+.bs-holder--tbd .bs-holder-l em { color: var(--color-text-muted); }
+
+.bs-cap { margin: clamp(12px, 1.2vw, 18px) 0 0; font-size: 12px; color: var(--color-text-muted); }
+
+/* CI 도급 관계 문구 */
 .orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
   gap: 4px 12px; margin: clamp(14px, 1.4vw, 22px) 0 0;
   padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 20px);
@@ -36,13 +146,31 @@
 .orgc-side b { font-family: var(--font-display); font-weight: 700; font-size: 13px;
   color: var(--color-text); }
 
-/* ⚠ 전환 지점을 767 이 아니라 **1023** 으로 둔다. 768~1023 구간에서 데스크톱 그림은
-     축척 0.44~0.51 까지 줄어 글자가 7~8px 이 된다 — 세로형(900 캔버스)이 훨씬 읽힌다. */
+/* ── 반응형 ───────────────────────────────────────────────────────── */
 @media (max-width: 1023px) {
-  .orgfig-svg--pc { display: none; }
-  .orgfig-svg--mo { display: block; }
-  /* 모바일 구조도에는 도급 관계가 그림 안에 들어 있다 — 아래 문구와 겹치므로 감춘다 */
-  .orgc-side { display: none; }
+  /* 방사형을 세로 한 줄로 — 마크업 순서(수분양자 → 토지 → 금융 → PFV)를 그대로 쓴다 */
+  .bs-radial { grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "buyer" "land" "fin" "core"; }
+  .bs-side--land, .bs-side--fin { grid-template-columns: minmax(0, 1fr); }
+  .bs-side--fin .bs-node { order: 0; }
+  .bs-side--fin .bs-flows { order: 1; }
+  /* 세로 배치에서는 세 끝단 모두 아래(유입) · 위(유출) 화살표를 쓴다.
+     ⚠ 선택자를 **3클래스**로 맞춘다. 데스크톱의 `.bs-side--fin .bs-flow--in .bs-arw` 가
+       3클래스라, 2클래스로 쓰면 특이도에서 밀려 모바일에서도 옆을 가리킨다
+       (미디어쿼리는 특이도를 이기지 못한다). */
+  .bs-side .bs-flows { grid-auto-flow: column; gap: clamp(12px, 3vw, 24px);
+    justify-content: center; }
+  .bs-side .bs-flow, .bs-side--fin .bs-flow { flex-direction: column; gap: 4px; }
+  .bs-side .bs-flow .bs-arw { flex-direction: column; min-width: 0; min-height: 26px; }
+  .bs-side .bs-flow .bs-arw::before { width: 3px; height: auto; }
+  .bs-side .bs-flow .bs-arw svg { transform: rotate(90deg); }
+  .bs-side .bs-flow--out .bs-arw { flex-direction: column-reverse; }
+  .bs-side .bs-flow--out .bs-arw svg { transform: rotate(-90deg); }
+  .bs-holder-s { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .bs-holder-s { grid-template-columns: minmax(0, 1fr); }
+  .bs-fund { width: 100%; }
 }
 
 .pfv-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 13.5px; line-height: 1.7;
