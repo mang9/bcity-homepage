@@ -351,31 +351,44 @@
     .dz-sums-total span { margin: 0 6px; color: var(--color-line); }
     .dz-note { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
 
-    /* 분류 탭 — 클러스터(산업) / 콤플렉스(생활).
-       ⚠ 마크업에는 두 묶음이 모두 있고 감추는 일은 dztab.js 가 한다. JS 가 없으면 8개가 전부 보인다.
+    /* 권역 탭 — 8개를 클러스터 / 콤플렉스 두 묶음으로 나눠 세운다.
+       기획서 slide60~75 의 좌측 목록과 같은 구성이다.
+       ⚠ 마크업에는 8개 패널이 모두 있고 감추는 일은 dztab.js 가 한다. JS 가 없으면 전부 보인다.
        ⚠ 컨트롤(`data-tab`)과 데이터(`data-group`)의 속성 이름을 다르게 둔다 — 같으면 셀렉터가
          탭 자신까지 잡는다(§11.10 의 실제 사고). */
-    .dz-tabs { display: flex; gap: 8px; margin: clamp(34px, 3.6vw, 60px) 0 0;
-      border-bottom: 1px solid var(--color-line); }
-    .dz-tab { appearance: none; display: inline-flex; align-items: baseline; gap: 8px;
-      margin-bottom: -1px; padding: clamp(11px, 1.1vw, 15px) clamp(18px, 1.8vw, 26px);
-      border: 0; border-bottom: 2px solid transparent; background: none; cursor: pointer;
-      font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.15vw, 17px);
-      letter-spacing: -.012em; color: var(--color-text-muted); }
-    .dz-tab i { font-style: normal; font-family: var(--font-body); font-weight: 700;
-      font-size: 11.5px; color: var(--color-text-muted); }
-    .dz-tab:hover { color: var(--color-text); }
-    .dz-tab.is-on { border-bottom-color: var(--color-primary); color: var(--color-primary); }
-    .dz-tab.is-on i { color: var(--color-primary); }
-    .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -4px; }
+    .dz-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(14px, 1.6vw, 28px); margin: clamp(34px, 3.6vw, 60px) 0 clamp(20px, 2.2vw, 32px);
+      padding-bottom: clamp(16px, 1.6vw, 24px); border-bottom: 1px solid var(--color-line); }
+    /* 묶음 하나 — 제목 + 탭 목록. ⚠ min-width:0 이 없으면 긴 권역 이름이 칸을 밀어낸다 */
+    .dz-tabgrp { min-width: 0; }
+    .dz-tabgrp-h { margin: 0 0 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
+      color: var(--color-text-muted); }
+    .dz-tablist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    /* 왼쪽 색 띠가 권역 식별색이다. ⚠ 색만으로 구분하지 않는다 — 번호와 이름이 항상 함께 있다 */
+    .dz-tab { appearance: none; display: grid; grid-template-columns: auto minmax(0, 1fr);
+      align-items: baseline; gap: 8px; width: 100%; cursor: pointer; text-align: left;
+      padding: clamp(9px, .9vw, 13px) clamp(11px, 1.1vw, 15px);
+      border: 1px solid var(--color-line); border-left: 3px solid var(--c);
+      background: var(--color-surface);
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(12.5px, 1vw, 14.5px);
+      letter-spacing: -.012em; color: var(--color-text-muted); word-break: keep-all; }
+    .dz-tab i { font-style: normal; font-family: var(--font-body); font-size: 11px;
+      color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+    .dz-tab:hover { color: var(--color-text); border-color: var(--c); }
+    .dz-tab.is-on { background: var(--c); border-color: var(--c); color: #ffffff; }
+    .dz-tab.is-on i { color: rgba(255, 255, 255, .8); }
+    .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
-    /* 탭 묶음 — 첫 권역이 탭 바로 아래 붙지 않도록 위 여백은 .dz-zone 이 갖는다.
-       ⚠ `hidden` 은 dztab.js 가 붙인다. CSS 로 감추지 않는 이유는 JS 가 없을 때 8개가
+    /* ⚠ `hidden` 은 dztab.js 가 붙인다. CSS 로 감추지 않는 이유는 JS 가 없을 때 8개가
          모두 보여야 하기 때문이다(마크업이 진실, JS 는 동작만 얹는다). */
     .dz-panel[hidden] { display: none; }
+    .dz-panel:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
+    /* JS 가 살아 있으면 한 번에 하나만 보이므로 패널끼리의 위 여백이 필요 없다.
+       JS 가 없어 8개가 다 보일 때만 간격이 생기도록 인접 형제에만 준다. */
+    .dz-panel + .dz-panel { margin-top: clamp(28px, 3vw, 50px); }
 
     /* 권역 블록 — 왼쪽 굵은 색 띠가 권역을 구분한다 */
-    .dz-zone { margin-top: clamp(28px, 3vw, 50px); padding: clamp(24px, 2.6vw, 40px);
+    .dz-zone { padding: clamp(24px, 2.6vw, 40px);
       padding-left: clamp(22px, 2.4vw, 38px);
       background: var(--color-surface); border: 1px solid var(--color-line);
       border-left: 4px solid var(--c); border-radius: var(--radius-lg); }
@@ -420,16 +433,23 @@
     .dz-map figcaption { margin-top: 8px; text-align: center;
       font-size: 11.5px; letter-spacing: .06em; color: var(--color-text-muted); }
 
+     /* 표 — **격자와 라운드를 쓰지 않는다**(2026-08-13 지시).
+       세로 괘선과 칸 배경을 걷어내고 **가로줄만** 남기면 숫자 열이 그대로 읽힌다.
+       머리글은 배경 상자 대신 아래 굵은 줄 하나로 구분한다. */
     .dz-tbl { width: 100%; min-width: 360px; border-collapse: collapse;
       font-size: 13px; font-variant-numeric: tabular-nums; }
-    .dz-tbl th, .dz-tbl td { padding: 9px 12px; border: 1px solid var(--color-line);
+    .dz-tbl th, .dz-tbl td { padding: 10px 14px 10px 0; border: 0;
+      border-bottom: 1px solid var(--color-line);
       text-align: right; line-height: 1.5; white-space: nowrap; }
-    .dz-tbl thead th { background: var(--color-bg); font-weight: 700; text-align: center;
-      font-size: 12px; color: var(--color-text-muted); }
-    .dz-tbl tbody th { text-align: left; font-weight: 700; background: var(--color-bg); }
-    /* 합계 행 — 표의 결론이다. 권역 색으로 눌러 준다 */
-    .dz-tbl .is-sum th, .dz-tbl .is-sum td { background: rgb(var(--primary-rgb) / .05);
-      font-weight: 700; color: var(--c); }
+    .dz-tbl th:last-child, .dz-tbl td:last-child { padding-right: 0; }
+    .dz-tbl thead th { padding-bottom: 8px; border-bottom: 1.5px solid var(--color-text);
+      background: none; font-weight: 700; font-size: 11.5px; letter-spacing: .06em;
+      color: var(--color-text); }
+    .dz-tbl tbody th { text-align: left; font-weight: 700; background: none;
+      color: var(--color-text); }
+    /* 합계 행 — 표의 결론이다. 칸을 칠하지 않고 위 굵은 줄과 권역 색으로만 세운다 */
+    .dz-tbl .is-sum th, .dz-tbl .is-sum td { border-top: 1.5px solid var(--c);
+      border-bottom: 0; padding-top: 11px; font-weight: 700; color: var(--c); }
     /* 바이오MICE 처럼 문자열 열이 섞인 표는 오른쪽 정렬이 어색하다 */
     .dz-tbl td:nth-child(n+4) { text-align: center; white-space: normal; }
 
@@ -487,6 +507,8 @@
     }
     @media (max-width: 1023px) {
       .cc-gs { grid-template-columns: minmax(0, 1fr); }
+      /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */
+      .dz-tabs { grid-template-columns: minmax(0, 1fr); }
       .dz-keys { grid-template-columns: minmax(0, 1fr); }
       .lv-list { grid-template-columns: minmax(0, 1fr); }
       /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
@@ -495,6 +517,7 @@
     }
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
+      .dz-tablist { grid-template-columns: minmax(0, 1fr); }
       .dz-spec div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
     }
   </style>

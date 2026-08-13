@@ -38,16 +38,47 @@
           <p class="dz-note">※ 하천 · 공원 · 녹지 등 47.9만평 제외 기준입니다.</p>
         </div>
 
-        <!-- 분류 탭 — 클러스터(산업) / 콤플렉스(생활). 여덟을 한 줄로 늘어놓으면 성격 차이가 묻힌다.
-             ⚠ 두 묶음 모두 마크업에 펼쳐져 있다. 감추는 일은 dztab.js 가 한다(JS 없으면 전부 보인다). -->
-        <div class="dz-tabs rv" role="tablist" aria-label="권역 분류">
-          <button type="button" class="dz-tab is-on" id="tab-cluster" data-tab="cluster"
-                  role="tab" aria-selected="true" aria-controls="panel-cluster">클러스터<i>4</i></button>
-          <button type="button" class="dz-tab" id="tab-complex" data-tab="complex"
-                  role="tab" aria-selected="false" aria-controls="panel-complex">콤플렉스<i>4</i></button>
+        <!-- 권역 탭 — 8개 권역을 하나씩 고른다. 기획서 slide60~75 의 좌측 목록과 같은 구성이며
+             클러스터(산업) / 콤플렉스(생활) 두 묶음으로 나뉜다.
+             ⚠ 8개 패널이 모두 마크업에 있다. 감추는 일은 dztab.js 가 한다(JS 없으면 전부 보인다). -->
+      <div class="dz-tabs rv">
+        <div class="dz-tabgrp">
+          <p class="dz-tabgrp-h">클러스터</p>
+          <div class="dz-tablist" role="tablist" aria-label="클러스터 권역">
+            <button type="button" class="dz-tab is-on" id="tab-01" data-tab="01"
+                    role="tab" aria-selected="true" aria-controls="panel-01"
+                    style="--c: var(--color-district-ai)"><i>01</i>AI 데이터</button>
+            <button type="button" class="dz-tab" id="tab-02" data-tab="02"
+                    role="tab" aria-selected="false" aria-controls="panel-02"
+                    style="--c: var(--color-district-bio)"><i>02</i>첨단 바이오</button>
+            <button type="button" class="dz-tab" id="tab-03" data-tab="03"
+                    role="tab" aria-selected="false" aria-controls="panel-03"
+                    style="--c: var(--color-district-food)"><i>03</i>푸드 물류</button>
+            <button type="button" class="dz-tab" id="tab-04" data-tab="04"
+                    role="tab" aria-selected="false" aria-controls="panel-04"
+                    style="--c: var(--color-district-mice)"><i>04</i>바이오MICE</button>
+          </div>
         </div>
+        <div class="dz-tabgrp">
+          <p class="dz-tabgrp-h">콤플렉스</p>
+          <div class="dz-tablist" role="tablist" aria-label="콤플렉스 권역">
+            <button type="button" class="dz-tab" id="tab-05" data-tab="05"
+                    role="tab" aria-selected="false" aria-controls="panel-05"
+                    style="--c: var(--color-district-biz)"><i>05</i>비즈니스</button>
+            <button type="button" class="dz-tab" id="tab-06" data-tab="06"
+                    role="tab" aria-selected="false" aria-controls="panel-06"
+                    style="--c: var(--color-district-housing)"><i>06</i>하우징</button>
+            <button type="button" class="dz-tab" id="tab-07" data-tab="07"
+                    role="tab" aria-selected="false" aria-controls="panel-07"
+                    style="--c: var(--color-district-edu)"><i>07</i>에듀</button>
+            <button type="button" class="dz-tab" id="tab-08" data-tab="08"
+                    role="tab" aria-selected="false" aria-controls="panel-08"
+                    style="--c: var(--color-district-golf)"><i>08</i>골프레저</button>
+          </div>
+        </div>
+      </div>
 
-        <div class="dz-panel" id="panel-cluster" role="tabpanel" aria-labelledby="tab-cluster" data-group="cluster">
+        <div class="dz-panel" id="panel-01" role="tabpanel" aria-labelledby="tab-01" data-group="01" tabindex="0">
             <div class="dz-zone rv" id="z01" style="--c: var(--color-district-ai)">
               <div class="dz-head">
                 <p class="dz-cat"><b>01</b>클러스터</p>
@@ -115,7 +146,9 @@
                 </li>
               </ul>
             </div>
+        </div>
 
+        <div class="dz-panel" id="panel-02" role="tabpanel" aria-labelledby="tab-02" data-group="02" tabindex="0">
             <div class="dz-zone rv" id="z02" style="--c: var(--color-district-bio)">
               <div class="dz-head">
                 <p class="dz-cat"><b>02</b>클러스터</p>
@@ -177,7 +210,9 @@
                 </li>
               </ul>
             </div>
+        </div>
 
+        <div class="dz-panel" id="panel-03" role="tabpanel" aria-labelledby="tab-03" data-group="03" tabindex="0">
             <div class="dz-zone rv" id="z03" style="--c: var(--color-district-food)">
               <div class="dz-head">
                 <p class="dz-cat"><b>03</b>클러스터</p>
@@ -242,7 +277,9 @@
                 </li>
               </ul>
             </div>
+        </div>
 
+        <div class="dz-panel" id="panel-04" role="tabpanel" aria-labelledby="tab-04" data-group="04" tabindex="0">
             <div class="dz-zone rv" id="z04" style="--c: var(--color-district-mice)">
               <div class="dz-head">
                 <p class="dz-cat"><b>04</b>클러스터</p>
@@ -308,7 +345,7 @@
             </div>
         </div>
 
-        <div class="dz-panel" id="panel-complex" role="tabpanel" aria-labelledby="tab-complex" data-group="complex">
+        <div class="dz-panel" id="panel-05" role="tabpanel" aria-labelledby="tab-05" data-group="05" tabindex="0">
             <div class="dz-zone rv" id="z05" style="--c: var(--color-district-biz)">
               <div class="dz-head">
                 <p class="dz-cat"><b>05</b>콤플렉스</p>
@@ -370,7 +407,9 @@
                 </li>
               </ul>
             </div>
+        </div>
 
+        <div class="dz-panel" id="panel-06" role="tabpanel" aria-labelledby="tab-06" data-group="06" tabindex="0">
             <div class="dz-zone rv" id="z06" style="--c: var(--color-district-housing)">
               <div class="dz-head">
                 <p class="dz-cat"><b>06</b>콤플렉스</p>
@@ -434,7 +473,9 @@
                 </li>
               </ul>
             </div>
+        </div>
 
+        <div class="dz-panel" id="panel-07" role="tabpanel" aria-labelledby="tab-07" data-group="07" tabindex="0">
             <div class="dz-zone rv" id="z07" style="--c: var(--color-district-edu)">
               <div class="dz-head">
                 <p class="dz-cat"><b>07</b>콤플렉스</p>
@@ -499,7 +540,9 @@
                 </li>
               </ul>
             </div>
+        </div>
 
+        <div class="dz-panel" id="panel-08" role="tabpanel" aria-labelledby="tab-08" data-group="08" tabindex="0">
             <div class="dz-zone rv" id="z08" style="--c: var(--color-district-golf)">
               <div class="dz-head">
                 <p class="dz-cat"><b>08</b>콤플렉스</p>
