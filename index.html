@@ -818,10 +818,12 @@
         ['구역 소개','#districts'],
         ['정주환경','#districts'],
       ]},
-      { no:'03', title:'투자·입주', href:'#business', items:[
-        ['토지확보 현황','#zones'],
-        ['특구별 혜택','#business'],
-        ['주요 혜택','#business'],
+      /* 03 투자·입주 서브페이지 3개 완성(2026-08-13). 문의하기만 메인 앵커로 남는다.
+         ⚠ src/sub/nav.json 과 항목·순서를 맞출 것 — 두 벌이라 한쪽만 고치면 어긋난다. */
+      { no:'03', title:'투자·입주', href:'land.html', items:[
+        ['토지확보 현황','land.html'],
+        ['특구별 혜택','zone-benefit.html'],
+        ['주요 혜택','benefit.html'],
         ['문의하기','#contact'],
       ]},
       { no:'04', title:'홍보센터', href:'notice.html', items:[

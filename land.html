@@ -1,13 +1,13 @@
 <!-- 생성물이다. 이 파일을 고치지 말 것.
-     소스: src/sub/pages/effect.html + src/sub/{layout.html,partials,css,js,nav.json}
+     소스: src/sub/pages/land.html + src/sub/{layout.html,partials,css,js,nav.json}
      빌드: npm run build:pages -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>기대효과 · B-CITY 춘천기업혁신파크</title>
-  <meta name="description" content="계획인구 15,917명·6,366세대의 자족형 도시. 경제·산업·사회·지역균형·환경·글로벌 6개 축에서 B-CITY가 만들어갈 가치를 정리했습니다." />
+  <title>토지확보 현황 · B-CITY 춘천기업혁신파크</title>
+  <meta name="description" content="기업도시개발특별법 적용으로 토지확보 요건이 50%로 완화됩니다. B-CITY는 76.52%를 이미 확보해 토지 미수용 리스크를 원천적으로 해소했습니다." />
 
   <!-- 오프라인 시연용 로컬 폰트 (index.html 과 동일) -->
   <link href="assets/vendor/inter/inter.local.css" rel="stylesheet" />
@@ -280,157 +280,161 @@
     .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
       overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
-    /* ── page-effect.css ─────────────────────────────────────────── */
-    /* ===== 기대효과 ===== */
+    /* ── page-invest.css ─────────────────────────────────────────── */
+    /* ===== 투자·입주 — 토지확보 현황 · 특구별 혜택 · 주요 혜택 =====
+       세 페이지가 이 한 벌을 공유한다(front-matter 의 css 배열이 모두 page-invest).
+       내용 출처는 스토리보드 v2 slide89~94. */
 
-    /* 핵심 지표 3종 — 스토리보드 slide34 는 3열 카드가 아니라
-       [큰 숫자] | [라벨 + 설명] 이 세로로 3행 쌓이는 구조다(숫자 x29.5 / 라벨 x49.2).
-       숫자 열을 고정 폭으로 잡아 세 줄의 숫자 왼쪽 끝이 맞물리게 한다. */
-    .kpi { margin: clamp(30px, 3vw, 50px) 0 0; padding: 0; list-style: none;
+    /* ── 가로 스크롤 컨테이너 ────────────────────────────────────────────
+       표는 좁은 화면에서 **접지 않고 스크롤한다.** 셀 하나하나가 금액·기간 조건이라
+       카드로 쪼개면 어느 열(수도권 / 수도권 외 / 관내)의 값인지 알 수 없게 된다.
+       ⚠ 페이지 자체가 가로로 밀리면 안 되므로 스크롤은 **이 상자 안에서만** 일어난다.
+       ⚠ tabindex="0" 을 준 표에는 포커스 링이 보여야 한다 — 키보드로도 스크롤해야 한다. */
+    .iv-scroll { overflow-x: auto; margin-top: clamp(18px, 1.8vw, 28px);
+      border-radius: var(--radius-md); -webkit-overflow-scrolling: touch; }
+    .iv-scroll:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+    /* ── 법적 요건 비교 표 (토지확보 현황 01) ──────────────────────────── */
+    .iv-cmp { width: 100%; min-width: 620px; border-collapse: collapse;
+      background: var(--color-surface); font-size: clamp(13px, .95vw, 14.5px); }
+    .iv-cmp th, .iv-cmp td { padding: clamp(13px, 1.3vw, 18px) clamp(12px, 1.2vw, 20px);
+      border: 1px solid var(--color-line); text-align: left; line-height: 1.6;
+      vertical-align: middle; word-break: keep-all; }
+    .iv-cmp thead th { background: var(--color-bg); font-family: var(--font-display);
+      font-weight: 700; font-size: clamp(13.5px, 1vw, 15px); color: var(--color-text); }
+    .iv-cmp tbody th { width: 26%; background: var(--color-bg); font-weight: 700;
+      color: var(--color-text); }
+    /* 강조 열 = B-CITY 가 적용받는 특별법. ⚠ 한쪽만 칠한다 — 양쪽을 칠하면 구분이 사라진다 */
+    .iv-cmp .is-on { background: rgb(var(--primary-rgb) / .055); color: var(--color-primary); }
+    .iv-cmp thead .is-on { background: var(--color-primary); color: #fff; }
+    .iv-cmp thead .is-on span { display: block; margin-top: 3px; font-family: var(--font-body);
+      font-weight: 600; font-size: 11.5px; letter-spacing: .04em; color: rgba(255, 255, 255, .82); }
+    .iv-cmp .is-on b { font-family: var(--font-display); font-size: 1.35em; }
+
+    /* ── 확보율 게이지 (토지확보 현황 02) ──────────────────────────────
+       막대 길이는 인라인 `--v`, 법적 요건 눈금은 `--legal` 이 정한다.
+       ⚠ 값이 바뀌면 마크업의 숫자(data-count 포함)와 이 두 변수를 **함께** 고친다. */
+    .iv-gauge { margin-top: clamp(22px, 2.2vw, 34px); padding: clamp(22px, 2.4vw, 36px);
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-lg); }
+    .iv-gauge-tags { display: flex; flex-wrap: wrap; gap: clamp(16px, 2.4vw, 44px);
+      justify-content: flex-end; margin: 0 0 clamp(14px, 1.4vw, 20px); }
+    .iv-tag { display: flex; flex-direction: column; gap: 2px; text-align: right; }
+    .iv-tag b { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
+    .iv-tag em { font-style: normal; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(22px, 2.2vw, 34px); line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .iv-tag--legal em { color: var(--color-text-muted); }
+    .iv-tag--own em { color: var(--color-primary); }
+
+    .iv-gauge-bar { position: relative; height: clamp(16px, 1.6vw, 24px);
+      background: var(--color-bg); border-radius: 999px; overflow: hidden; }
+    .iv-gauge-fill { position: absolute; inset: 0 auto 0 0; width: var(--v);
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-mint)); }
+    /* 법적 요건 눈금 — 채움 위에 얹는다. 흰 선이라 어디까지가 '최소'인지 바로 읽힌다 */
+    .iv-gauge-legal { position: absolute; top: 0; bottom: 0; left: var(--legal);
+      width: 2px; background: var(--color-surface); }
+    .iv-gauge-scale { display: flex; margin: 8px 0 0; padding: 0; list-style: none;
+      font-size: 11.5px; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+    /* 눈금 0·50·75·100 을 실제 위치에 맞춰 놓는다(균등 분할이 아니다) */
+    .iv-gauge-scale span { position: relative; }
+    .iv-gauge-scale span:nth-child(1) { flex: 0 0 50%; }
+    .iv-gauge-scale span:nth-child(2) { flex: 0 0 25%; }
+    .iv-gauge-scale span:nth-child(3) { flex: 0 0 25%; }
+    .iv-gauge-scale span:nth-child(4) { flex: 0 0 0; margin-left: auto; }
+
+    /* ── 특구 블록 (특구별 혜택) ───────────────────────────────────────── */
+    .iv-cat { margin: 0 0 14px; display: flex; align-items: baseline; gap: 16px;
+      font-size: 12.5px; letter-spacing: .04em; color: var(--color-text-muted); }
+    .iv-cat b { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
+      color: var(--color-primary); }
+
+    .iv-zone { margin-top: clamp(26px, 2.8vw, 46px); padding-top: clamp(26px, 2.8vw, 46px);
       border-top: 1px solid var(--color-line); }
-    .kpi-item { display: grid; gap: 6px clamp(24px, 3.4vw, 64px);
-      grid-template-columns: minmax(0, 1fr);
-      padding: clamp(22px, 2.4vw, 38px) 0; border-bottom: 1px solid var(--color-line);
-      align-items: center; }
-    @media (min-width: 768px) {
-      .kpi-item { grid-template-columns: minmax(0, clamp(220px, 26vw, 340px)) minmax(0, 1fr); }
-    }
-    /* 38→74px. DESIGN.md 의 kpi 역할값(38px)이 최소, hero-xl(74px)이 최대다 */
-    .kpi-v { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(38px, 4.6vw, 74px); line-height: 1; letter-spacing: -.04em;
-      color: var(--color-primary); font-variant-numeric: tabular-nums; }
-    /* 단위는 수치보다 작게 — 숫자 덩어리가 먼저 읽혀야 한다 */
-    .kpi-v small { font-size: .34em; font-weight: 700; letter-spacing: -.01em; margin-left: 4px;
-      color: var(--color-navy); }
-    .kpi-v i { display: block; font-style: normal; font-family: var(--font-body);
-      font-size: 15px; font-weight: 600; letter-spacing: 0; margin-top: 10px;
+    .iv-zone:first-of-type { margin-top: clamp(30px, 3.2vw, 52px); }
+    .iv-zone-h .sub-t { margin: 0; }
+    .iv-zone-h .sub-t i { font-style: normal; font-weight: 600; font-size: .68em;
       color: var(--color-text-muted); }
-    .kpi-l { display: block; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(16px, 1.3vw, 21px); letter-spacing: -.018em; color: var(--color-navy); }
-    .kpi-d { display: block; margin-top: 7px; font-size: clamp(13.5px, 1vw, 15.5px);
-      line-height: 1.65; color: var(--color-text-muted); max-width: 56ch; }
+    /* 선정 지역 — 특구마다 대상 시·군이 다르다. 제목 바로 아래에 알약으로 붙인다 */
+    .iv-zone-area { display: inline-block; margin: 10px 0 0; padding: 5px 14px;
+      border-radius: 999px; background: rgb(var(--primary-rgb) / .08);
+      font-size: 12.5px; font-weight: 700; color: var(--color-primary); }
 
-    /* 01 경제적 기대효과는 좌우 2단이 아니라 지표 리스트가 본문 역할을 한다 */
-    .eff-head { margin-top: clamp(38px, 4vw, 68px); }
+    .iv-zgs { list-style: none; display: grid; gap: clamp(12px, 1.2vw, 18px);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: clamp(18px, 1.8vw, 26px) 0 0; padding: 0; }
+    .iv-zg { padding: clamp(18px, 1.8vw, 24px);
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-top: 2px solid var(--color-primary); border-radius: var(--radius-md); }
+    .iv-zg-t { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14.5px, 1.15vw, 17px); letter-spacing: -.012em; }
+    .iv-zg-l { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+    .iv-zg-l li { position: relative; padding-left: 14px; font-size: 13.5px; line-height: 1.65;
+      color: var(--color-text-muted); word-break: keep-all; }
+    .iv-zg-l li::before { content: ""; position: absolute; left: 0; top: .62em;
+      width: 5px; height: 5px; border-radius: 50%; background: var(--color-mint); }
+    /* 근거 고시·의결 — 본문보다 확실히 약하게. 숫자를 뒷받침하는 출처다 */
+    .iv-src { margin: clamp(14px, 1.4vw, 20px) 0 0; font-size: 12px; line-height: 1.6;
+      color: var(--color-text-muted); }
 
-    /* 기대효과 블록 — 좌우 교차 2단(.zz)의 본문 쪽 */
-    .eff-cat { margin: 0 0 9px; display: flex; align-items: baseline; gap: 10px;
-      font-size: 12.5px; font-weight: 600; letter-spacing: .16em; color: var(--color-text-muted); }
-    .eff-cat b { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
-      font-weight: 700; letter-spacing: 0; color: var(--color-primary);
-      font-variant-numeric: tabular-nums; }
-    .eff-t { margin: 0; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(20px, 1.9vw, 31px); line-height: 1.32; letter-spacing: -.022em; }
-    .eff-list { margin: clamp(16px, 1.7vw, 26px) 0 0; padding: 0; list-style: none;
-      display: grid; gap: 11px; }
-    .eff-list li { position: relative; padding-left: 17px;
-      font-size: clamp(14px, 1vw, 16px); line-height: 1.62; color: var(--color-text-muted); }
-    /* 불릿은 ::before 로 — list-style 마커는 들여쓰기 제어가 브라우저마다 다르다 */
-    .eff-list li::before { content: ""; position: absolute; left: 0; top: .62em;
-      width: 6px; height: 6px; border-radius: 50%; background: var(--color-mint); }
+    /* ── 요약 2카드 (주요 혜택) ────────────────────────────────────────── */
+    .iv-sum { list-style: none; display: grid; gap: clamp(12px, 1.2vw, 20px);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: clamp(28px, 3vw, 48px) 0 0; padding: 0; }
+    .iv-sum-i { padding: clamp(22px, 2.2vw, 32px);
+      background: var(--color-primary); border-radius: var(--radius-lg); color: #fff; }
+    .iv-sum-t { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(17px, 1.45vw, 22px); letter-spacing: -.015em; }
+    .iv-sum-d { margin: 8px 0 0; font-size: 13.5px; line-height: 1.65;
+      color: rgba(255, 255, 255, .86); }
 
-    /* ── 꽉 찬 2단 (.zf) — 사진이 화면 끝까지 닿는 좌우 교차 블록 ────────────
-       컨테이너 안 2단(.zz)은 좌우에 여백이 남아 사진이 작아 보인다. 여기서는
-       블록을 화면 폭으로 빼내고, 본문 쪽만 컨테이너 안쪽 선에 맞춘다.
+    /* ── 기업 유형별 지원 표 (주요 혜택) ────────────────────────────────
+       원문 표(스토리보드 slide94)의 병합 구조를 rowspan/colspan 으로 그대로 옮겼다.
+       ⚠ 병합을 풀어 평평하게 만들지 말 것 — "수도권과 수도권 외가 같은 조건"이라는
+         정보가 colspan 자체에 담겨 있다. */
+    .iv-tbl { width: 100%; min-width: 940px; border-collapse: collapse;
+      background: var(--color-surface); font-size: clamp(12.5px, .92vw, 14px); }
+    .iv-tbl th, .iv-tbl td { padding: clamp(11px, 1.1vw, 16px) clamp(10px, 1vw, 16px);
+      border: 1px solid var(--color-line); text-align: left; line-height: 1.6;
+      vertical-align: middle; word-break: keep-all; }
+    .iv-tbl thead th { background: var(--color-primary); color: #fff;
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(13px, .95vw, 14.5px);
+      text-align: center; }
+    .iv-tbl tbody th { background: var(--color-bg); font-weight: 700; color: var(--color-text);
+      text-align: center; }
+    /* 대분류(보조금 · 세제혜택) — 세로로 길게 걸치는 칸이라 조금 더 진하게 */
+    .iv-tbl-g { background: rgb(var(--primary-rgb) / .075) !important; color: var(--color-primary) !important;
+      font-family: var(--font-display); }
+    .iv-tbl th i { display: block; font-style: normal; font-weight: 400; font-size: .85em;
+      color: var(--color-text-muted); }
+    /* 셀 안의 보충 조건(* 로 시작하는 단서) — 금액과 같은 무게로 읽히면 안 된다 */
+    .iv-tbl td i { display: block; margin-top: 6px; font-style: normal; font-size: .88em;
+      line-height: 1.55; color: var(--color-text-muted); }
+    /* 해당 없음 — 빈 칸으로 두면 '누락'과 구별되지 않는다 */
+    .iv-na { text-align: center; color: var(--color-text-muted); }
+    .iv-tbl sup a { color: var(--color-primary); text-decoration: none; }
+    .iv-tbl sup a:hover, .iv-tbl sup a:focus-visible { text-decoration: underline; }
 
-       ⚠ `width: 100vw` 는 **세로 스크롤바 폭을 포함**한다(윈도우 등). 그대로 두면 가로
-         스크롤이 생기므로 섹션에 `overflow-x: clip` 을 걸어 막는다.
-         clip 을 쓰는 이유는 hidden 과 달리 **스크롤 컨테이너를 만들지 않아서**다 —
-         hidden 이면 안쪽에 sticky 를 둘 때 조용히 망가진다.
-       ⚠ --zf-gut 은 index.html 의 --gut 과 같은 계산이다(§6.3). 화면이 컨테이너보다
-         좁아지는 구간에서 본문이 화면 끝에 붙는 것을 막는다. */
+    /* ── 각주 ─────────────────────────────────────────────────────────── */
+    .iv-fn { margin: clamp(16px, 1.6vw, 24px) 0 0; padding: 0; list-style: none;
+      display: grid; gap: 8px; }
+    .iv-fn li { font-size: 12px; line-height: 1.7; color: var(--color-text-muted);
+      word-break: keep-all; }
+    .iv-fn b { color: var(--color-text); }
+    .iv-fnb { margin-left: 6px; color: var(--color-primary); text-decoration: none; }
+    .iv-fnb:hover, .iv-fnb:focus-visible { text-decoration: underline; }
+    /* 각주로 뛰었을 때 sticky LNB 밑으로 파고들지 않게 한다 */
+    .iv-fn li:target, .iv-tbl sup a:target { scroll-margin-top: calc(var(--lnb-h) + 16px); }
 
-    /* ⚠ 블록 사이 여백은 0 이다(2026-08-10 지시) — 사진이 위아래로 맞붙어 띠처럼 이어진다.
-         숨 쉴 공간은 **본문 열의 padding-block** 이 담당한다. 블록 간격을 여기서 되살리면
-         사진 사이에 배경색 띠가 생겨 의도가 깨진다. */
-    .zf { --zf-gut: max(clamp(24px, 4.4vw, 72px),
-            calc((100vw - var(--wrap)) / 2 + clamp(20px, 4vw, 48px)));
-      width: 100vw; margin-inline: calc(50% - 50vw);
-      margin-top: 0;
-      display: grid; align-items: center; gap: 0;
-      grid-template-columns: minmax(0, 1fr); }
-    /* 첫 블록만 위 지표 목록과 떨어뜨린다.
-       블록끼리는 붙지만 **01 지표와 02 이후의 사진 2단은 성격이 다른 구획**이라
-       여기서는 확실히 띄운다(2026-08-10 지시). 섹션 상하 여백(.sec)과 같은 리듬을 쓴다.
-
-       ⚠ `.zf:first-of-type` 을 쓰지 말 것. `:first-of-type` 은 **같은 태그 이름** 중
-         첫째를 뜻하므로, 형제에 `div.eff-head` 가 먼저 있으면 그쪽이 잡히고 첫 `.zf` 는
-         영원히 매칭되지 않는다. 실제로 그래서 이 여백이 계속 0 이었다(2026-08-10 실측).
-         클래스로 위치를 지정할 때는 인접 형제(`+`)를 쓴다. */
-    .kpi + .zf { margin-top: clamp(56px, 6.4vw, 112px); }
-
-    /* 좁은 화면 — 1단. 사진은 그대로 화면 폭, 본문만 여백을 준다.
-       ⚠ 배경을 흰 면으로 깐다(2026-08-10 지시). 이때 **align-self: stretch 가 반드시 필요**하다 —
-         .zf 가 align-items:center 라 본문 열이 내용 높이만큼만 잡히고, 그러면 흰 면이
-         사진 높이를 못 채워 위아래에 페이지 배경 띠가 남는다. 늘린 뒤 안에서 세로 가운데로 모은다. */
-    .zf-body { padding-inline: var(--zf-gut);
-      padding-block: clamp(30px, 4.4vw, 48px);
-      background: var(--color-surface); align-self: stretch;
-      display: flex; flex-direction: column; justify-content: center; }
-
-    @media (min-width: 900px) {
-      .zf { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-      /* 사진 좌 / 본문 우 (기본) */
-      .zf-body { padding-inline: clamp(30px, 3.6vw, 68px) var(--zf-gut);
-        padding-block: clamp(40px, 4.4vw, 80px); }
-      /* 사진 우 / 본문 좌 — DOM 순서는 [사진 → 본문] 고정이고 order 로만 뒤집는다.
-         마크업을 실제로 바꾸면 탭 순서·낭독 순서가 블록마다 달라진다 */
-      .zf--flip > :first-child { order: 2; }
-      .zf--flip .zf-body { padding-inline: var(--zf-gut) clamp(30px, 3.6vw, 68px); }
+    /* ── 반응형 ───────────────────────────────────────────────────────── */
+    @media (max-width: 1023px) {
+      .iv-zgs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-
-    .zf-fig { margin: 0; align-self: stretch; display: flex; flex-direction: column; }
-    .zf-fig img { width: 100%; height: 100%; object-fit: cover; display: block;
-      min-height: clamp(300px, 40vw, 660px); }
-    /* ⚠ 캡션을 사진 아래 흐름에 두면 블록이 맞붙었을 때 사진 사이에 흰 띠가 생긴다.
-         사진 위에 얹고 아래에서 옅은 그라데이션으로 읽히게 한다. */
-    .zf-fig { position: relative; }
-    .zf-fig figcaption { position: absolute; left: 0; right: 0; bottom: 0;
-      padding: clamp(26px, 3vw, 44px) var(--zf-gut) clamp(12px, 1.2vw, 18px);
-      font-size: 12.5px; color: var(--color-text-muted);
-      background: linear-gradient(transparent, rgb(var(--navy-rgb) / .05) 45%,
-                  rgb(var(--navy-rgb) / .09)); }
-    @media (min-width: 900px) {
-      .zf:not(.zf--flip) .zf-fig figcaption { padding-right: clamp(20px, 2vw, 32px); }
-      .zf--flip .zf-fig figcaption { padding-left: clamp(20px, 2vw, 32px); }
+    @media (max-width: 767px) {
+      .iv-zgs { grid-template-columns: minmax(0, 1fr); }
+      .iv-sum { grid-template-columns: minmax(0, 1fr); }
+      .iv-gauge-tags { justify-content: space-between; }
     }
-    /* 지도류(투명 배경 일러스트) — cover 로 자르면 지점이 잘려 나간다.
-       ⚠ 배경을 네이비로 하지 말 것(§ page-shared 의 .zz-fig--plain 주석과 같은 이유) */
-    .zf-fig--plain { background: var(--color-surface); justify-content: center; }
-    .zf-fig--plain img { object-fit: contain; padding: clamp(16px, 2.2vw, 40px); }
-
-    /* ── 모션 ──────────────────────────────────────────────────────────────
-       블록 자체의 페이드는 공통 .rv 가 맡는다. 여기서는 두 가지를 더 얹는다.
-         · 사진: 살짝 확대된 상태에서 제자리로 — 정지 사진에 들어오는 느낌을 준다
-         · 본문: 요소별로 조금씩 늦게 올라온다(번호 → 제목 → 목록)
-       ⚠ 사진 확대는 부모에 overflow:hidden 이 있어야 가장자리가 새지 않는다. */
-    .zf-fig { overflow: hidden; }
-    .zf-fig img { transform: scale(1.07); transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
-    .zf.in .zf-fig img { transform: none; }
-
-    .zf-body > * { opacity: 0; transform: translateY(16px);
-      transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
-    .zf.in .zf-body > * { opacity: 1; transform: none; }
-    .zf.in .zf-body > :nth-child(2) { transition-delay: .09s; }
-    .zf.in .zf-body > :nth-child(3) { transition-delay: .18s; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .zf-fig img, .zf-body > * { transform: none !important; opacity: 1 !important;
-        transition: none !important; }
-    }
-
-    /* ── 마무리 문장 — 꽉 찬 2단 바로 아래 ─────────────────────────────────
-       06 블록과 붙이고, 구분선은 화면 끝까지 잇는다(2026-08-10 지시).
-       위 사진들이 화면 폭인데 구분선만 컨테이너 폭에서 끊기면 선이 떠 보인다.
-
-       ⚠ .closer 는 입지·추진일정도 쓰는 공용 클래스다. **여기서만** 바꾸도록
-         .sec--bleed 아래로 한정한다 — 전역으로 고치면 저 두 페이지의 리듬이 함께 바뀐다.
-       ⚠ 선만 화면 폭으로 빼고 **글은 컨테이너 안에 둔다.** 블록째 내보내면 마무리 문장이
-         화면 끝까지 퍼져 한 줄이 지나치게 길어진다. */
-    .sec--bleed .closer { margin-top: 0; padding-top: 0; border-top: 0; position: relative; }
-    .sec--bleed .closer::before { content: ""; position: absolute; top: 0;
-      left: calc(50% - 50vw); width: 100vw; height: 1px; background: var(--color-line); }
-    .sec--bleed .closer p { padding-top: clamp(46px, 5vw, 88px); }
   </style>
 </head>
 
@@ -452,9 +456,9 @@
 <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
-        <a href="overview.html" class="is-on" aria-current="page">사업소개</a>
+        <a href="overview.html">사업소개</a>
         <a href="index.html#concept">도시소개</a>
-        <a href="index.html#zones">투자·입주</a>
+        <a href="index.html#zones" class="is-on" aria-current="page">투자·입주</a>
         <a href="index.html#pr">홍보센터</a>
       </nav>
       <div class="gnb-side">
@@ -483,14 +487,14 @@
       <h2>01 사업소개</h2>
       <a href="overview.html">사업개요</a>
       <a href="location.html">입지</a>
-      <a href="effect.html" class="is-on">기대효과</a>
+      <a href="effect.html">기대효과</a>
       <a href="schedule.html">추진일정</a>
       <a href="company.html">사업주체</a>
       <h2>02 도시소개</h2>
       <a href="brand.html">브랜드 · 컨셉</a>
       <a href="index.html#districts">구역 소개</a>
       <h2>03 투자·입주</h2>
-      <a href="land.html">토지확보 현황</a>
+      <a href="land.html" class="is-on">토지확보 현황</a>
       <a href="zone-benefit.html">특구별 혜택</a>
       <a href="benefit.html">주요 혜택</a>
       <a href="index.html#contact">문의하기</a>
@@ -506,164 +510,84 @@
   <main id="main">
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/img-park.jpg" alt="" />
+      <img class="hero-bg" src="assets/img-logistics.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
           <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>사업소개</span><span aria-hidden="true">›</span><b>기대효과</b>
+          <span>투자·입주</span><span aria-hidden="true">›</span><b>토지확보 현황</b>
         </nav>
-        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>01</b><span>BUSINESS · 사업소개</span></p>
-        <h1>기대효과</h1>
+        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>03</b><span>INVEST · 투자·입주</span></p>
+        <h1>토지확보 현황</h1>
       </div>
     </section>
 
     <!-- ===== LNB ===== -->
-    <nav class="lnb" aria-label="사업소개 하위 메뉴">
+    <nav class="lnb" aria-label="투자·입주 하위 메뉴">
       <div class="wrap">
-        <a href="overview.html">사업개요</a>
-        <a href="location.html">입지</a>
-        <a href="effect.html" class="is-on" aria-current="page">기대효과</a>
-        <a href="schedule.html">추진일정</a>
-        <a href="company.html">사업주체</a>
+        <a href="land.html" class="is-on" aria-current="page">토지확보 현황</a>
+        <a href="zone-benefit.html">특구별 혜택</a>
+        <a href="benefit.html">주요 혜택</a>
+        <a href="index.html#contact">문의하기</a>
       </div>
     </nav>
 
-<!-- ===== 1. 경제적 기대효과 · 핵심 지표 (스토리보드 v2 slide34) ===== -->
-    <section class="sec sec--bleed" id="value">
+<!-- ===== 토지확보 현황 (스토리보드 v2 slide89~90) ===== -->
+    <section class="sec" id="secured">
       <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>EXPECTED VALUE</b><span>기대효과</span></p>
-        <h2 class="h2 rv">B-CITY가 만들어갈 경제·산업·사회적 가치를 통해<br />
-          <em>대한민국 미래 성장의 새로운 기준</em>을 제시합니다</h2>
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>LAND SECURED</b><span>토지확보 현황</span></p>
+        <h2 class="h2 rv">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
+        <p class="lede rv">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
 
-        <div class="eff-head rv">
-          <p class="eff-cat"><b>01</b>경제적 기대효과</p>
-          <h3 class="eff-t">지역 경제 활성화와 신규 일자리 창출</h3>
-        </div>
+        <div class="tr-block rv">
+          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">법적 요건 비교</h3></div>
+          <p class="sub-d">같은 개발사업이라도 어느 법을 적용받느냐에 따라 출발선이 다릅니다.
+            B-CITY는 기업도시개발 특별법을 적용받아 절반의 토지만 확보해도 사업을 추진할 수 있습니다.</p>
 
-        <!-- ⚠ 숫자 출처가 서로 다르다 — 인계 시 반드시 확인할 것
-             · 계획인구 15,917명 / 6,366세대 : IM 정본(260716_B-CITY_IM.pptx) slide26 확정값
-             · 취업유발 7,000여 명 · 생산유발 1.5조원 : 스토리보드 v2 slide34 에만 있고
-               IM 정본에는 없다. 원문 표기가 "7,0백 여명" · "1,5 조원" 인데, 같은 슬라이드가
-               6,366세대를 "6,3백 세대", 15,917명을 "16천여 명" 으로 줄여 쓴 패턴을 따르면
-               앞자리 두 자리만 남긴 표기다 → 7,0xx / 1.5조 로 읽었다. **미확정** -->
-        <ul class="kpi rv">
-          <li class="kpi-item">
-            <span class="kpi-v"><span data-count="15917">15,917</span><small>명</small><i><span data-count="6366">6,366</span>세대</i></span>
-            <span>
-              <b class="kpi-l">계획인구</b>
-              <span class="kpi-d">자족형 도시의 새로운 정주 인구 — 아파트·시니어하우징·주상복합·단독주택 등
-                다양한 주거 유형이 어우러지는 미래 도시</span>
-            </span>
-          </li>
-          <li class="kpi-item">
-            <span class="kpi-v"><span data-count="7000">7,000</span><small>여 명</small><i>사업 추진 기준</i></span>
-            <span>
-              <b class="kpi-l">취업유발</b>
-              <span class="kpi-d">사업 추진으로 창출되는 일자리 — 첨단 산업·연구·서비스 분야의 신규 고용 기대</span>
-            </span>
-          </li>
-          <li class="kpi-item">
-            <span class="kpi-v"><span data-count="1.5" data-dec="1">1.5</span><small>조원</small><i>사업 추진 기준</i></span>
-            <span>
-              <b class="kpi-l">생산유발효과</b>
-              <span class="kpi-d">지역 경제에 더해지는 생산 가치 — 강원권 산업·소비·서비스 확장에 따른 경제적 파급효과</span>
-            </span>
-          </li>
-        </ul>
-
-        <!-- 02 산업 — 비주얼 좌 / 본문 우 (스토리보드 slide35) -->
-        <div class="zf rv">
-          <figure class="zf-fig">
-            <img src="assets/img/effect/02-industry.avif" alt="AI 데이터 인프라와 바이오 R&D·파일럿 생산설비가 이어지는 첨단 산업 현장"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>02</b>산업적 기대효과</p>
-            <h3 class="eff-t">AI·BIO 융합 첨단산업 생태계 형성</h3>
-            <ul class="eff-list">
-              <li>AI·첨단 바이오 산업의 국가 전략거점 형성</li>
-              <li>입주 기업 간 R&amp;D 협력 및 산업 시너지 창출</li>
-              <li>신약 개발·정밀의료·푸드테크 등 신산업 육성 기반 마련</li>
-              <li>산·학·연 협력을 통한 혁신 클러스터 생태계 구축</li>
-            </ul>
+          <!-- 두 법을 나란히 비교한다. ⚠ 강조 열(특별법)에만 색을 준다 —
+               양쪽 다 칠하면 어느 쪽이 B-CITY 인지 읽히지 않는다. -->
+          <div class="iv-scroll">
+            <table class="iv-cmp">
+              <caption class="sr-only">도시개발법과 기업도시개발 특별법의 토지확보 요건 비교</caption>
+              <thead>
+                <tr><th scope="col">구분</th><th scope="col">도시개발법</th>
+                    <th scope="col" class="is-on">기업도시개발 특별법<span>B-CITY 적용</span></th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">법적 최소요건</th><td>66.7% 이상</td><td class="is-on"><b>50%</b></td></tr>
+                <tr><th scope="row">토지 면적 요건</th><td>사업대상 토지의 2/3</td><td class="is-on">사업대상 토지의 50%</td></tr>
+                <tr><th scope="row">소유자 동의</th><td>토지소유자 총수의 &frac12; 이상 동의</td><td class="is-on">소유권 취득 또는 사용동의</td></tr>
+                <tr><th scope="row">충족 조건</th><td>두 요건 모두 충족 필요</td><td class="is-on">50% 확보 시 미확보 토지까지 수용 가능</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- 03 사회 — 좌우 반전 -->
-        <div class="zf zf--flip rv">
-          <figure class="zf-fig">
-            <img src="assets/img/effect/03-social.avif" alt="보행 가로를 따라 오가는 다양한 세대의 주민들"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>03</b>사회적 기대효과</p>
-            <h3 class="eff-t">자족형 정주 환경과 삶의 질 향상</h3>
-            <ul class="eff-list">
-              <li>직주근접 라이프스타일로 워라밸 실현</li>
-              <li>글로벌 교육환경 조성으로 고급 인재 정착 유도</li>
-              <li>통합의료·웰니스 인프라로 건강한 도시 생활 보장</li>
-              <li>다양한 주거 유형을 통한 건강한 지역 공동체 형성</li>
-            </ul>
-          </div>
-        </div>
+        <div class="tr-block rv">
+          <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
+          <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
+            토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
 
-        <!-- 04 지역균형 — 비주얼 좌.
-             location-belt 은 춘천 AI바이오 · 원주 의료기기 · 평창 그린바이오 · 강릉 천연물바이오
-             4거점을 담은 강원 초광역 벨트 지도다(자산 출처: index.html 입지 2페이지) -->
-        <div class="zf rv">
-          <figure class="zf-fig">
-            <img src="assets/img/effect/04-regional.avif" alt="강원권 첨단산업 거점과 광역 철도·도로가 이어지는 도시 전경"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>04</b>지역균형발전 기대효과</p>
-            <h3 class="eff-t">비수도권 첨단산업 거점으로 국토 균형발전 기여</h3>
-            <ul class="eff-list">
-              <li>강원특별자치도 첨단산업 메카 도약</li>
-              <li>동부권 GTX·고속도로 연계 광역 비즈니스 허브 형성</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 05 환경 — 좌우 반전 -->
-        <div class="zf zf--flip rv">
-          <figure class="zf-fig">
-            <img src="assets/img/effect/05-sustainability.avif" alt="녹지와 수변을 낀 보행·자전거 중심의 친환경 도시 가로"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>05</b>환경 · 지속가능성 기대효과</p>
-            <h3 class="eff-t">친환경 도시모델 제시</h3>
-            <ul class="eff-list">
-              <li>풍부한 녹지·수변 공간 기반 친환경 도시 모델 구현</li>
-              <li>보행 친화 도시 설계로 친환경 이동 환경 구축</li>
-              <li>자연과 첨단기술이 공존하는 지속가능한 도시 패러다임 제시</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 06 글로벌 — 비주얼 좌 -->
-        <div class="zf rv">
-          <figure class="zf-fig">
-            <img src="assets/img/effect/06-global.avif" alt="글로벌 협업 데이터를 함께 보는 연구진과 국제 비즈니스 공간"
-                 loading="lazy" decoding="async" />
-          </figure>
-          <div class="zf-body">
-            <p class="eff-cat"><b>06</b>글로벌 기대효과</p>
-            <h3 class="eff-t">대한민국 첨단산업의 국제적 위상 강화</h3>
-            <ul class="eff-list">
-              <li>동북아 첨단 바이오·AI 허브 도약</li>
-              <li>외국교육기관 및 해외 인재 유입으로 국제도시화</li>
-              <li>글로벌 제약·바이오 기업과의 협력 네트워크 구축</li>
-              <li>정밀의료 빅데이터를 활용한 글로벌 R&amp;D 협업 확대</li>
-            </ul>
+          <!-- 게이지 — 눈금(0·50·75·100)과 두 표식(법적 요건 50% · 확보율 76.52%).
+               ⚠ 막대 길이는 인라인 --v 가 정한다. 값이 바뀌면 마크업의 숫자와 --v 를 **함께** 고친다. -->
+          <div class="iv-gauge" style="--legal: 50%; --v: 76.52%">
+            <p class="iv-gauge-tags">
+              <span class="iv-tag iv-tag--legal"><b>법적 최소 요건</b><em>50%</em></span>
+              <span class="iv-tag iv-tag--own"><b>B-CITY 확보율</b><em><span data-count="76.52" data-dec="2">76.52</span>%</em></span>
+            </p>
+            <div class="iv-gauge-bar" role="img"
+                 aria-label="B-CITY 토지 확보율 76.52퍼센트. 법적 최소 요건은 50퍼센트입니다.">
+              <span class="iv-gauge-fill"></span>
+              <span class="iv-gauge-legal" aria-hidden="true"></span>
+            </div>
+            <p class="iv-gauge-scale" aria-hidden="true"><span>0%</span><span>50%</span><span>75%</span><span>100%</span></p>
           </div>
         </div>
 
         <div class="closer rv">
-          <p>B-CITY는 단순한 도시개발을 넘어,<br />
-            지역과 국가, 그리고 세계에 새로운 가치를 만들어가는 <em>미래 성장의 출발점</em>이 됩니다</p>
+          <p>B-CITY는 <em>시작부터 안정적</em>입니다<br />
+            이미 법적 요건보다 더 많은 토지를 확보한 상태로<br />
+            토지 미수용 리스크 없이 안정적으로 사업이 추진되고 있습니다</p>
         </div>
 
         <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
