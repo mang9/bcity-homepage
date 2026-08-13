@@ -35,6 +35,12 @@
       /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
          여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
       --color-logo: #2c3e91;
+      /* 브랜드 정본 3색(스토리보드 slide51 — Pantone 까지 지정돼 있다). 사이트 UI 토큰과 **다르다**:
+           Indigo #2C3E91 = --color-logo (UI 의 --color-primary #344198 과 다름)
+           Mint   #3DBFA8 = --color-mint (일치)
+           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-azure #4E7AC7 은 아이브로우용 다른 색)
+         brand.html 만 쓴다. UI 색을 이걸로 바꾸지 말 것 — 대비·톤이 전부 다시 계산돼야 한다. */
+      --brand-azure: #0095d9;
       --scrim-rgb: 0 17 34;
       --navy-rgb: 0 39 66;
       --primary-rgb: 52 65 152;
@@ -559,7 +565,7 @@
       <a href="schedule.html">추진일정</a>
       <a href="company.html" class="is-on">사업주체</a>
       <h2>02 도시소개</h2>
-      <a href="index.html#concept">브랜드 · 컨셉</a>
+      <a href="brand.html">브랜드 · 컨셉</a>
       <a href="index.html#districts">구역 소개</a>
       <h2>03 투자·입주</h2>
       <a href="index.html#zones">토지확보 현황</a>

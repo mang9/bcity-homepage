@@ -31,7 +31,7 @@
     {
       "key": "city", "no": "02", "label": "도시소개", "en": "CITY",
       "items": [
-        { "key": "brand",     "label": "브랜드 · 컨셉", "href": "index.html#concept" },
+        { "key": "brand",     "label": "브랜드 · 컨셉", "href": "brand.html" },
         { "key": "districts", "label": "구역 소개",     "href": "index.html#districts" }
       ]
     },
