@@ -277,12 +277,14 @@
     /* ── page-company.css ─────────────────────────────────────────── */
     /* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
 
-    /* ── 사업추진 체계 구조도 (스토리보드 slide43) ───────────────────────────
+    /* ── 사업추진 체계 구조도 (2026-08-13 갱신본 이미지) ──────────────────────
        이미지가 아니라 마크업이다. 확대해도 깨지지 않고 검색·낭독에 잡히며,
        출자 비율처럼 바뀔 수 있는 값을 고치는 데 이미지 재작업이 필요 없다.
 
-       구성: [PFV 출자자 5분류] → [PFV 명목회사] → [세 방향 자금·자산 흐름]
-       연결선은 .orgc-link 하나로 그린다 — 가운데 세로선 + 위아래 가로 분기.       */
+       원본은 PFV 를 가운데 둔 **방사형**이다(위 수분양자 · 좌 토지소유주 · 우 금융기관 ·
+       아래 출자자). 세로 한 줄로 옮기면서 위→아래 순서를 원본의 위계에 맞췄다:
+         [세 방향 흐름] → [PFV] →(출자금 납부)→ [출자자 5분류] ⋯ [CI 도급 관계]
+       ⚠ 방사형을 그대로 재현하지 않는다 — 좁은 화면에서 선과 박스가 겹쳐 무너진다. */
     .orgc { margin-top: clamp(28px, 2.8vw, 44px); }
 
     .orgc-cap { margin: 0 auto; width: max-content;
@@ -290,42 +292,43 @@
       font-family: var(--font-display); font-weight: 700; font-size: 13px;
       letter-spacing: .02em; color: var(--color-primary); background: var(--color-surface); }
 
-    /* 출자자 5분류 — 좁은 화면에서는 2열, 넓으면 한 줄 */
-    .orgc-sh { display: grid; gap: clamp(8px, .9vw, 14px); margin: clamp(16px, 1.6vw, 24px) 0 0;
-      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    @media (min-width: 560px)  { .orgc-sh { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (min-width: 900px)  { .orgc-sh { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+    /* 세 방향 흐름 — 각 열은 PFV 와 주고받는 한 쌍이다 */
+    .orgc-flow { display: grid; gap: clamp(10px, 1vw, 16px); margin: 0; padding: 0; list-style: none;
+      grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 720px) { .orgc-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-    .orgc-shi { display: flex; flex-direction: column; gap: 4px;
-      padding: clamp(13px, 1.3vw, 18px) clamp(11px, 1.1vw, 15px);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md);
-      background: var(--color-surface); text-align: center; }
-    .orgc-shk { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.05vw, 16px); letter-spacing: -.01em; color: var(--color-text); }
-    /* 영문 약어 뒤의 한글 보충(공공·금융·시공·전략) — 약어만으로는 읽히지 않는다 */
-    .orgc-shk i { font-style: normal; font-weight: 600; font-size: .82em;
-      color: var(--color-text-muted); }
-    .orgc-shn { font-size: 12.5px; line-height: 1.5; color: var(--color-text-muted);
-      word-break: keep-all; }
-    /* 지분율 — 이 구조도에서 가장 먼저 읽혀야 하는 값이다.
-       ⚠ 각 값은 **분류 전체**의 지분율이다. 구성원 목록이 바뀌어도 분류 값은 그대로다.
-         자세한 경위는 CLAUDE.md §11.12 참고. */
-    .orgc-shp { margin-top: auto; padding-top: 6px; font-style: normal;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.2vw, 19px); font-variant-numeric: tabular-nums;
+    /* 끝단 → 연결선 → 라벨 묶음 순. gap 을 선이 차지하므로 gap 은 0 이다.
+       ⚠ order 는 마크업 순서(끝단 → 라벨)를 **그대로** 따른다. 흐름이 PFV 위로 올라가면서
+         끝단이 위, 라벨이 아래가 됐다 — 이전(라벨 위 · 끝단 아래)의 반대다. */
+    .orgc-fi { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .orgc-fi::before { content: ""; order: 1; width: 1px; height: 14px; background: var(--color-line); }
+    .orgc-fe { order: 0; }
+    .orgc-fx { order: 2; }
+    .orgc-fx { display: flex; flex-direction: column; gap: 5px; margin: 0; width: 100%;
+      padding: clamp(12px, 1.2vw, 16px) clamp(10px, 1vw, 14px);
+      border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+      background: var(--color-surface); }
+    /* 방향은 화살표 하나로만 구분한다 — 색을 나누면 다른 의미로 읽힌다 */
+    .orgc-in, .orgc-out { display: flex; align-items: center; gap: 7px;
+      font-size: 13px; line-height: 1.45; color: var(--color-text); }
+    .orgc-in::before, .orgc-out::before { flex: none; width: 15px; text-align: center;
+      font-family: var(--font-display); font-weight: 700; font-size: 13px;
       color: var(--color-primary); }
-    /* 미확정(CI) — 파선으로 '확정 전'임을 드러낸다 */
-    .orgc-shi--tbd { background: none; border-style: dashed; }
-    .orgc-shi--tbd .orgc-shp { color: var(--color-text-muted); }
-
-    /* 연결선 — 가운데 세로선. 높이만 차지하고 내용은 없다 */
-    .orgc-link { position: relative; height: clamp(22px, 2.2vw, 34px); margin: 0; }
-    .orgc-link::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0;
-      width: 1px; background: var(--color-line); }
-    /* 아래를 가리키는 삼각형 */
-    .orgc-link::after { content: ""; position: absolute; left: 50%; bottom: 0;
-      transform: translateX(-50%); border-left: 5px solid transparent;
-      border-right: 5px solid transparent; border-top: 7px solid var(--color-line); }
+    /* ⚠ 흐름이 PFV **위**에 있으므로 들어오는 흐름이 ↓ 다.
+         이전 구조(흐름이 PFV 아래)에서는 반대였다 — 순서를 뒤집으면 여기도 뒤집어야 한다.
+         클래스 이름을 up/dn 에서 in/out 으로 바꾼 것도 그 혼동을 없애기 위해서다. */
+    .orgc-in::before  { content: "↓"; }
+    .orgc-out::before { content: "↑"; color: var(--color-text-muted); }
+    /* 끝단(토지소유주·수분양자·금융기관) */
+    .orgc-fe { display: block; width: 100%; padding: clamp(11px, 1.1vw, 15px) 10px;
+      border-radius: var(--radius-sm); background: var(--color-bg);
+      border: 1px solid var(--color-line); text-align: center;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14px, 1.05vw, 16px); color: var(--color-text); }
+    .orgc-key { margin: clamp(12px, 1.2vw, 18px) 0 clamp(18px, 1.8vw, 28px); text-align: center;
+      font-size: 12.5px; color: var(--color-text-muted); }
+    .orgc-key b { margin-left: 10px; color: var(--color-primary); }
+    .orgc-key b:first-child { margin-left: 0; }
 
     /* PFV 본체 — 색으로 위계를 만든다. 구조도에서 유일한 채운 박스다 */
     .orgc-core { padding: clamp(20px, 2vw, 30px) clamp(18px, 1.8vw, 26px);
@@ -335,38 +338,67 @@
     .orgc-core span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.6;
       color: rgba(255, 255, 255, .86); }
 
-    /* 세 방향 흐름 — 각 열은 PFV 와 주고받는 한 쌍이다 */
-    .orgc-flow { display: grid; gap: clamp(10px, 1vw, 16px); margin: 0; padding: 0; list-style: none;
-      grid-template-columns: minmax(0, 1fr); }
-    @media (min-width: 720px) { .orgc-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-
-    /* 라벨 묶음 → 끝단 사이 연결선. gap 을 선이 차지하므로 gap 은 0 이다 */
-    .orgc-fi { display: flex; flex-direction: column; align-items: center; gap: 0; }
-    .orgc-fi::before { content: ""; order: 1; width: 1px; height: 14px; background: var(--color-line); }
-    .orgc-fx { order: 0; }
-    .orgc-fe { order: 2; }
-    .orgc-fx { display: flex; flex-direction: column; gap: 5px; margin: 0; width: 100%;
-      padding: clamp(12px, 1.2vw, 16px) clamp(10px, 1vw, 14px);
-      border: 1px solid var(--color-line); border-radius: var(--radius-sm);
-      background: var(--color-surface); }
-    /* 방향은 화살표 하나로만 구분한다 — 색을 나누면 다른 의미로 읽힌다 */
-    .orgc-up, .orgc-dn { display: flex; align-items: center; gap: 7px;
-      font-size: 13px; line-height: 1.45; color: var(--color-text); }
-    .orgc-up::before, .orgc-dn::before { flex: none; width: 15px; text-align: center;
-      font-family: var(--font-display); font-weight: 700; font-size: 13px;
+    /* 출자금 납부 — 출자자에서 PFV 로 **올라가는** 연결선. 라벨을 선 옆에 붙인다.
+       ⚠ 화살표가 위를 가리켜야 한다. 아래를 가리키면 PFV 가 출자자에게 돈을 주는 그림이 된다. */
+    .orgc-link { position: relative; display: flex; flex-direction: column; align-items: center;
+      gap: 4px; margin: 0; padding: clamp(14px, 1.4vw, 22px) 0; }
+    .orgc-link::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: var(--color-line); }
+    .orgc-link--up::after { content: ""; position: absolute; left: 50%; top: 0;
+      transform: translateX(-50%); border-left: 5px solid transparent;
+      border-right: 5px solid transparent; border-bottom: 7px solid var(--color-primary); }
+    .orgc-link b, .orgc-link i { position: relative; padding-inline: 10px;
+      background: var(--color-bg); font-style: normal; }
+    .orgc-link b { font-family: var(--font-display); font-weight: 700; font-size: 13.5px;
       color: var(--color-primary); }
-    .orgc-up::before { content: "↑"; }
-    .orgc-dn::before { content: "↓"; color: var(--color-text-muted); }
-    /* 끝단(토지소유주·수분양자·금융기관) */
-    .orgc-fe { display: block; width: 100%; padding: clamp(11px, 1.1vw, 15px) 10px;
-      border-radius: var(--radius-sm); background: var(--color-bg);
-      border: 1px solid var(--color-line); text-align: center;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.05vw, 16px); color: var(--color-text); }
-    .orgc-key { margin: clamp(12px, 1.2vw, 18px) 0 0; text-align: center;
+    .orgc-link i { font-size: 12px; color: var(--color-text-muted); }
+
+    /* 출자자 5분류 — 좁은 화면에서는 2열, 넓으면 한 줄 */
+    .orgc-sh { display: grid; gap: clamp(8px, .9vw, 14px); margin: clamp(16px, 1.6vw, 24px) 0 0;
+      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 560px)  { .orgc-sh { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 900px)  { .orgc-sh { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+    .orgc-shi { display: flex; flex-direction: column; gap: 10px;
+      padding: clamp(13px, 1.3vw, 18px) clamp(11px, 1.1vw, 15px);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md);
+      background: var(--color-surface); }
+    .orgc-shk { font-family: var(--font-display); font-weight: 700; text-align: center;
+      font-size: clamp(14px, 1.05vw, 16px); letter-spacing: -.01em; color: var(--color-text); }
+    /* 영문 약어 뒤의 한글 보충(공공·금융·시공·전략) — 약어만으로는 읽히지 않는다 */
+    .orgc-shk i { font-style: normal; font-weight: 600; font-size: .82em;
+      color: var(--color-text-muted); }
+
+    /* 분류 안의 출자자 목록. 갱신본에서 앵커기업이 더존비즈온 37.3% + AMC 0.2% 로,
+       GI 가 강원특별자치도 4.9% + 춘천시 4.9% 로 **각각 두 줄**이 됐다 —
+       그래서 이름·지분율을 한 쌍으로 여러 개 담을 수 있는 목록으로 바꿨다.
+       ⚠ 이전 구조(.orgc-shn / .orgc-shp)는 분류당 한 쌍만 담을 수 있었다. */
+    .orgc-shl { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+    .orgc-shl li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px;
+      align-items: baseline; padding-top: 7px; border-top: 1px solid var(--color-line); }
+    .orgc-shl li:first-child { padding-top: 0; border-top: 0; }
+    .orgc-shl span { font-size: 12.5px; line-height: 1.45; color: var(--color-text);
+      word-break: keep-all; }
+    /* AMC 풀네임처럼 보조 설명이 붙는 자리 — 줄을 바꿔 이름과 구분한다 */
+    .orgc-shl span i { display: block; margin-top: 2px; font-style: normal; font-size: 11px;
+      line-height: 1.35; color: var(--color-text-muted); }
+    .orgc-shl em { font-style: normal; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14px, 1.1vw, 17px); font-variant-numeric: tabular-nums;
+      color: var(--color-primary); white-space: nowrap; }
+    /* 미확정(CI · SI) — 파선으로 '확정 전'임을 드러낸다 */
+    .orgc-shi--tbd { background: none; border-style: dashed; }
+    .orgc-shi--tbd .orgc-shl em { color: var(--color-text-muted); }
+
+    /* CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다.
+       원본 그림에서 이 선만 점선인 이유가 그것이라 여기서도 파선으로 구분한다. */
+    .orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+      gap: 4px 12px; margin: clamp(14px, 1.4vw, 22px) 0 0;
+      padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 20px);
+      border: 1px dashed var(--color-line); border-radius: var(--radius-sm);
       font-size: 12.5px; color: var(--color-text-muted); }
-    .orgc-key b { margin-left: 10px; color: var(--color-primary); }
-    .orgc-key b:first-child { margin-left: 0; }
+    .orgc-side span { font-size: 12.5px; }
+    .orgc-side b { font-family: var(--font-display); font-weight: 700; font-size: 13px;
+      color: var(--color-text); }
 
     .pfv-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 13.5px; line-height: 1.7;
       color: var(--color-text-muted); }
@@ -618,72 +650,89 @@
           <p class="sub-d">B-CITY는 PFV(Project Financing Vehicle) 구조로 운영됩니다.
             자본금·대출·분양수익이 한 곳에 집중되어 투명하고 효율적으로 관리되는 검증된 개발사업 구조입니다.</p>
 
-          <!-- 사업추진 체계 구조도 — 스토리보드 slide43 의 구조도를 그대로 옮겼다.
-               이미지가 아니라 마크업이다: 확대해도 깨지지 않고 검색·낭독에 잡힌다. -->
+          <!-- 사업추진 체계 구조도 — 2026-08-13 갱신본 이미지를 그대로 옮겼다.
+               이미지가 아니라 마크업이다: 확대해도 깨지지 않고 검색·낭독에 잡히며,
+               지분율처럼 바뀌는 값을 고치는 데 이미지 재작업이 필요 없다.
+
+               ⚠ 순서가 갱신본에서 뒤집혔다 — 원본 그림은 PFV 를 가운데 두고
+                 위(수분양자)·좌(토지소유주)·우(금융기관)로 뻗고 **아래에서 출자자가
+                 출자금을 올려보내는** 방사형이다. 세로 한 줄로 옮기면서
+                 [흐름 3방향] → [PFV] → [출자금 납부] → [출자자] 순으로 맞췄다.
+                 방사형을 그대로 재현하지 않는 이유는 좁은 화면에서 무너지기 때문이다. -->
           <div class="orgc">
+            <!-- PFV 를 가운데 두고 세 방향의 자금·자산 흐름. 각 열은 주고받는 한 쌍이다 -->
+            <ul class="orgc-flow">
+              <li class="orgc-fi">
+                <b class="orgc-fe">토지소유주</b>
+                <p class="orgc-fx">
+                  <span class="orgc-in">토지 매매</span>
+                  <span class="orgc-out">토지 보상비</span>
+                </p>
+              </li>
+              <li class="orgc-fi">
+                <b class="orgc-fe">수분양자</b>
+                <p class="orgc-fx">
+                  <span class="orgc-in">분양대금</span>
+                  <span class="orgc-out">용지분양</span>
+                </p>
+              </li>
+              <li class="orgc-fi">
+                <b class="orgc-fe">금융기관</b>
+                <p class="orgc-fx">
+                  <span class="orgc-in">PF대출약정</span>
+                  <span class="orgc-out">PF대출원리금 상환</span>
+                </p>
+              </li>
+            </ul>
+            <p class="orgc-key"><b>↓</b> PFV 로 들어오는 흐름 <b>↑</b> PFV 에서 나가는 흐름</p>
+
+            <div class="orgc-core">
+              <b>바이오테크 이노밸리 PFV</b>
+              <span>명목회사 — 자본금 · 대출 · 분양수익을 한 계정으로 통합 관리</span>
+            </div>
+
+            <!-- 출자금은 아직 납부 중이다. '진행 중' 을 빼면 완료된 것으로 읽힌다 -->
+            <p class="orgc-link orgc-link--up"><b>출자금 납부</b><i>진행 중</i></p>
+
             <p class="orgc-cap">PFV 출자자</p>
             <ul class="orgc-sh">
               <li class="orgc-shi">
                 <b class="orgc-shk">앵커기업</b>
-                <span class="orgc-shn">더존비즈온</span>
-                <em class="orgc-shp">37.5%</em>
+                <ul class="orgc-shl">
+                  <li><span>더존비즈온</span><em>37.3%</em></li>
+                  <li><span>AMC <i>바이오테크이노밸리자산관리</i></span><em>0.2%</em></li>
+                </ul>
               </li>
               <li class="orgc-shi">
                 <b class="orgc-shk">GI <i>공공</i></b>
-                <span class="orgc-shn">강원특별자치도 · 춘천시</span>
-                <em class="orgc-shp">각 4.9%</em>
+                <ul class="orgc-shl">
+                  <li><span>강원특별자치도</span><em>4.9%</em></li>
+                  <li><span>춘천시</span><em>4.9%</em></li>
+                </ul>
               </li>
               <li class="orgc-shi">
                 <b class="orgc-shk">FI <i>금융</i></b>
-                <span class="orgc-shn">IBK투자증권</span>
-                <em class="orgc-shp">5.0%</em>
+                <ul class="orgc-shl">
+                  <li><span>IBK투자증권</span><em>5.0%</em></li>
+                </ul>
               </li>
               <li class="orgc-shi orgc-shi--tbd">
                 <b class="orgc-shk">CI <i>시공</i></b>
-                <span class="orgc-shn">TBD</span>
-                <em class="orgc-shp">확정 전</em>
+                <ul class="orgc-shl">
+                  <li><span>부지조성공사 등</span><em>TBD</em></li>
+                </ul>
               </li>
-              <li class="orgc-shi">
+              <li class="orgc-shi orgc-shi--tbd">
                 <b class="orgc-shk">SI <i>전략</i></b>
-                <span class="orgc-shn">에스에너지 · 프로티움사이언스</span>
-                <em class="orgc-shp">MOU</em>
+                <ul class="orgc-shl">
+                  <li><span>중소형 CDMO · 제약 · 바이오기업 등</span><em>TBD</em></li>
+                </ul>
               </li>
             </ul>
 
-            <p class="orgc-link" aria-hidden="true"></p>
-
-            <div class="orgc-core">
-              <b>바이오테크이노밸리 PFV</b>
-              <span>명목회사 — 자본금 · 대출 · 분양수익을 한 계정으로 통합 관리</span>
-            </div>
-
-            <p class="orgc-link" aria-hidden="true"></p>
-
-            <!-- PFV 를 가운데 두고 세 방향의 자금·자산 흐름. 각 열은 주고받는 한 쌍이다 -->
-            <ul class="orgc-flow">
-              <li class="orgc-fi">
-                <p class="orgc-fx">
-                  <span class="orgc-up">토지매입 · 수용</span>
-                  <span class="orgc-dn">토지보상비</span>
-                </p>
-                <b class="orgc-fe">토지소유주</b>
-              </li>
-              <li class="orgc-fi">
-                <p class="orgc-fx">
-                  <span class="orgc-dn">용지분양</span>
-                  <span class="orgc-up">분양대금</span>
-                </p>
-                <b class="orgc-fe">수분양자</b>
-              </li>
-              <li class="orgc-fi">
-                <p class="orgc-fx">
-                  <span class="orgc-up">PF대출</span>
-                  <span class="orgc-dn">원리금상환</span>
-                </p>
-                <b class="orgc-fe">금융기관</b>
-              </li>
-            </ul>
-            <p class="orgc-key"><b>↑</b> PFV 로 들어오는 흐름 <b>↓</b> PFV 에서 나가는 흐름</p>
+            <!-- CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다.
+                 원본에서 이 선만 점선인 이유가 그것이라 여기서도 파선으로 구분한다. -->
+            <p class="orgc-side"><b>공사도급계약 및 책임준공</b><span>CI(시공)는 출자자이면서 동시에 PFV 와 도급 관계를 맺습니다</span></p>
           </div>
 
           <p class="pfv-note"><b>PFV 와 AMC 를 분리 운영</b>합니다. 사업 시행 주체(바이오테크이노밸리피에프브이㈜)와
