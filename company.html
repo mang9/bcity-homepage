@@ -385,8 +385,12 @@
     .orgc-shl em { font-style: normal; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(14px, 1.1vw, 17px); font-variant-numeric: tabular-nums;
       color: var(--color-primary); white-space: nowrap; }
-    /* 미확정(CI · SI) — 파선으로 '확정 전'임을 드러낸다 */
-    .orgc-shi--tbd { background: none; border-style: dashed; }
+    /* 미확정(CI · SI) — **배경은 다른 카드와 같은 흰 면**이고 파선 테두리로만 '확정 전'을 드러낸다.
+       ⚠ 배경을 비우면(background: none) 페이지 배경이 비쳐 두 칸만 움푹 들어가 보인다(2026-08-13 지시). */
+    .orgc-shi--tbd { border-style: dashed; }
+    /* TBD 는 이름 옆이 아니라 **아랫줄**에 둔다 — 갱신본 그림과 같은 배치이고,
+       확정된 지분율(37.3% 처럼 이름 옆에 붙는 값)과 성격이 달라 같은 줄에 두면 같은 무게로 읽힌다. */
+    .orgc-shi--tbd .orgc-shl li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
     .orgc-shi--tbd .orgc-shl em { color: var(--color-text-muted); }
 
     /* CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다.
