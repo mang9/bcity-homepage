@@ -32,6 +32,18 @@
       --color-text-muted: #5b6b82;
       --color-line: #d8e3f2;
 
+      /* 8대 권역 식별색 — DESIGN.md 에 있는 토큰인데 서브페이지 사본에는 빠져 있었다.
+         구역소개 페이지가 쓰기 시작하면서 채워 넣는다. 흰색 대비 전부 4.62 이상(DESIGN.md §색).
+         ⚠ index.html 은 이 값을 @theme 과 :root 양쪽에 갖는다(§1.3 트리셰이킹). */
+      --color-district-ai: #344198;
+      --color-district-bio: #288074;
+      --color-district-food: #a1662b;
+      --color-district-mice: #337aa3;
+      --color-district-biz: #7758ad;
+      --color-district-housing: #877240;
+      --color-district-edu: #667d31;
+      --color-district-golf: #378152;
+
       /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
          여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
       --color-logo: #2c3e91;
@@ -607,8 +619,10 @@
       <a href="schedule.html">추진일정</a>
       <a href="company.html" class="is-on">사업주체</a>
       <h2>02 도시소개</h2>
-      <a href="brand.html">브랜드 · 컨셉</a>
-      <a href="index.html#districts">구역 소개</a>
+      <a href="brand.html">브랜드</a>
+      <a href="concept.html">컨셉</a>
+      <a href="districts.html">구역 소개</a>
+      <a href="living.html">정주환경</a>
       <h2>03 투자·입주</h2>
       <a href="land.html">토지확보 현황</a>
       <a href="zone-benefit.html">특구별 혜택</a>

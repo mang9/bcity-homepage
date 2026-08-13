@@ -1,0 +1,146 @@
+/* ===== 도시소개 — 컨셉 · 구역 소개 · 정주환경 =====
+   세 페이지가 이 한 벌을 공유한다. 내용 출처는 스토리보드 v2 slide53~87.
+   ⚠ 구역 소개는 `page-invest` 도 함께 싣는다 — 가로 스크롤 상자(.iv-scroll)를 재사용하기 때문이다.
+     표를 좁은 화면에서 접지 않고 스크롤하는 이유는 page-invest.css 주석 참고. */
+
+/* ── 공통 번호 라벨 ─────────────────────────────────────────────────
+   입지의 `.tr-cat` 과 모양이 같지만 그쪽은 page-location.css 에만 있어
+   이 번들에서는 쓸 수 없다(§11.11 의 2번 유형). 여기 따로 둔다. */
+.cc-cat, .lv-cat, .dz-cat { margin: 0 0 12px; display: flex; align-items: baseline; gap: 14px;
+  font-size: 12.5px; letter-spacing: .06em; color: var(--color-text-muted); }
+.cc-cat b, .lv-cat b, .dz-cat b { font-family: var(--font-display);
+  font-size: clamp(15px, 1.2vw, 19px); color: var(--color-primary); }
+
+/* ── 1. 컨셉 — 4개 축 ──────────────────────────────────────────────
+   축마다 위 룰 하나로 구획을 나눈다. 박스로 감싸면 네 덩어리가 각각 떠 보인다. */
+.cc-axis { margin-top: clamp(34px, 3.6vw, 60px); padding-top: clamp(30px, 3.2vw, 52px);
+  border-top: 1px solid var(--color-line); }
+.cc-axis:first-of-type { margin-top: clamp(38px, 4vw, 66px); }
+.cc-t { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(20px, 1.85vw, 30px); line-height: 1.4; letter-spacing: -.02em; }
+.cc-s { margin: 14px 0 0; max-width: 76ch; font-size: clamp(14px, 1vw, 16px); line-height: 1.7;
+  color: var(--color-primary); }
+.cc-d { margin: 14px 0 0; max-width: 76ch; font-size: clamp(14px, 1vw, 16px); line-height: 1.8;
+  color: var(--color-text-muted); }
+
+/* 세부 그룹 3열 (03 Physical AI · 04 Food Cluster) */
+.cc-gs { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.2vw, 20px); margin: clamp(22px, 2.2vw, 34px) 0 0; padding: 0; }
+.cc-g { padding: clamp(20px, 2vw, 28px); background: var(--color-surface);
+  border: 1px solid var(--color-line); border-top: 2px solid var(--color-primary);
+  border-radius: var(--radius-md); }
+.cc-g-t { display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.2vw, 18px); letter-spacing: -.012em; }
+.cc-g-s { margin: 6px 0 0; font-size: 13px; font-weight: 700; color: var(--color-primary); }
+.cc-g-l { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.cc-g-l li { position: relative; padding-left: 14px; font-size: 13.5px; line-height: 1.65;
+  color: var(--color-text-muted); word-break: keep-all; }
+.cc-g-l li::before { content: ""; position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--color-mint); }
+
+/* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
+
+/* 권역별 면적 8칸 — 색은 권역 식별색이다. ⚠ 색만으로 구분하지 않는다(이름을 항상 함께 쓴다) */
+.dz-sums { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1vw, 16px); margin: clamp(20px, 2vw, 30px) 0 0; padding: 0; }
+.dz-sum-i { display: flex; flex-direction: column; gap: 4px;
+  padding: clamp(14px, 1.4vw, 20px) clamp(12px, 1.2vw, 18px);
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-left: 3px solid var(--c); border-radius: var(--radius-sm); }
+.dz-sum-i b { font-size: 13px; font-weight: 700; color: var(--color-text); }
+.dz-sum-i em { font-style: normal; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(16px, 1.3vw, 20px); font-variant-numeric: tabular-nums; color: var(--c); }
+.dz-sums-total { margin: clamp(14px, 1.4vw, 20px) 0 0; font-size: clamp(14px, 1.05vw, 16px);
+  color: var(--color-text); }
+.dz-sums-total b { font-family: var(--font-display); color: var(--color-primary); margin-right: 8px; }
+.dz-sums-total span { margin: 0 6px; color: var(--color-line); }
+.dz-note { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+
+/* 권역 블록 — 왼쪽 굵은 색 띠가 권역을 구분한다 */
+.dz-zone { margin-top: clamp(28px, 3vw, 50px); padding: clamp(24px, 2.6vw, 40px);
+  padding-left: clamp(22px, 2.4vw, 38px);
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-left: 4px solid var(--c); border-radius: var(--radius-lg); }
+/* 제목 묶음 — 아래 본문(스펙·면적표)과 성격이 달라 최대 폭을 따로 잡는다 */
+.dz-head { max-width: 96ch; }
+.dz-cat b { color: var(--c); }
+.dz-name { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(20px, 1.8vw, 26px); letter-spacing: -.02em; }
+.dz-h { margin: 10px 0 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55;
+  font-weight: 700; color: var(--c); word-break: keep-all; }
+.dz-s { margin: 10px 0 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
+  color: var(--color-text-muted); word-break: keep-all; }
+
+/* 스펙(2열 정의목록) | 구역별 면적표 — 넓으면 나란히, 좁으면 위아래 */
+.dz-body { display: grid; grid-template-columns: minmax(260px, .85fr) minmax(0, 1.15fr);
+  gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: start; }
+.dz-spec { margin: 0; display: grid; gap: 10px; }
+.dz-spec div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;
+  align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid var(--color-line); }
+.dz-spec div:last-child { padding-bottom: 0; border-bottom: 0; }
+.dz-spec dt { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
+.dz-spec dd { margin: 0; font-size: 13.5px; line-height: 1.55; word-break: keep-all; }
+/* 면적표 칸 — ⚠ min-width:0 이 없으면 표가 그리드 칸을 밀어내 페이지가 가로로 넘친다.
+   `.iv-scroll` 은 부모가 좁아져야 스크롤을 만드는데, 그리드 기본값(auto)은 안 좁아진다. */
+.dz-area { min-width: 0; }
+.dz-area-h { margin: 0 0 10px; font-size: 12.5px; font-weight: 700; letter-spacing: .04em;
+  color: var(--color-text-muted); }
+
+.dz-tbl { width: 100%; min-width: 360px; border-collapse: collapse;
+  font-size: 13px; font-variant-numeric: tabular-nums; }
+.dz-tbl th, .dz-tbl td { padding: 9px 12px; border: 1px solid var(--color-line);
+  text-align: right; line-height: 1.5; white-space: nowrap; }
+.dz-tbl thead th { background: var(--color-bg); font-weight: 700; text-align: center;
+  font-size: 12px; color: var(--color-text-muted); }
+.dz-tbl tbody th { text-align: left; font-weight: 700; background: var(--color-bg); }
+/* 합계 행 — 표의 결론이다. 권역 색으로 눌러 준다 */
+.dz-tbl .is-sum th, .dz-tbl .is-sum td { background: rgb(var(--primary-rgb) / .05);
+  font-weight: 700; color: var(--c); }
+/* 바이오MICE 처럼 문자열 열이 섞인 표는 오른쪽 정렬이 어색하다 */
+.dz-tbl td:nth-child(n+4) { text-align: center; white-space: normal; }
+
+/* 핵심 가치 — 권역마다 한 문장. 인용처럼 굵은 색 선을 왼쪽에 둔다 */
+.dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0; padding-left: clamp(14px, 1.4vw, 20px);
+  border-left: 3px solid var(--c);
+  font-size: clamp(14px, 1.1vw, 17px); line-height: 1.75; color: var(--color-text); }
+.dz-value em { font-style: normal; font-weight: 700; color: var(--c); }
+
+/* ── 3. 정주환경 ──────────────────────────────────────────────────── */
+.lv-area { margin-top: clamp(34px, 3.6vw, 60px); padding-top: clamp(30px, 3.2vw, 52px);
+  border-top: 1px solid var(--color-line); }
+.lv-area:first-of-type { margin-top: clamp(38px, 4vw, 66px); }
+.lv-head .sub-t { margin: 0; }
+.lv-head .sub-t em { font-style: normal; color: var(--color-primary); }
+.lv-lead { margin: 14px 0 0; max-width: 76ch; font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.8; color: var(--color-text-muted); }
+/* 해시태그 칩 — 아래 항목들의 목차 역할이다 */
+.lv-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px;
+  margin: clamp(16px, 1.6vw, 22px) 0 0; padding: 0; }
+.lv-chips li { padding: 6px 14px; border-radius: 999px;
+  background: rgb(var(--primary-rgb) / .07);
+  font-size: 12.5px; font-weight: 700; color: var(--color-primary); }
+
+.lv-list { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.4vw, 22px); margin: clamp(22px, 2.2vw, 34px) 0 0; padding: 0; }
+.lv-item { padding: clamp(20px, 2vw, 30px); background: var(--color-surface);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md); }
+.lv-tag { margin: 0; font-size: 12.5px; font-weight: 700; color: var(--color-mint); }
+.lv-h { display: block; margin-top: 8px; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.25vw, 19px); line-height: 1.45; letter-spacing: -.015em;
+  word-break: keep-all; }
+.lv-d { margin: 12px 0 0; font-size: 13.5px; line-height: 1.8; color: var(--color-text-muted);
+  word-break: keep-all; }
+
+/* ── 반응형 ───────────────────────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .dz-sums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .cc-gs { grid-template-columns: minmax(0, 1fr); }
+  .dz-body { grid-template-columns: minmax(0, 1fr); }
+  .lv-list { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .dz-sums { grid-template-columns: minmax(0, 1fr); }
+  .dz-spec div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
