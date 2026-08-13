@@ -1,131 +1,51 @@
 /* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
 
-/* ── 사업추진 체계 구조도 (2026-08-13 갱신본 이미지) ──────────────────────
-   이미지가 아니라 마크업이다. 확대해도 깨지지 않고 검색·낭독에 잡히며,
-   출자 비율처럼 바뀔 수 있는 값을 고치는 데 이미지 재작업이 필요 없다.
+/* ── 사업추진 체계 구조도 (납품 시안 SVG) ─────────────────────────────
+   데스크톱 1920×1080 방사형 · 모바일 900×1900 세로형 두 벌을 **둘 다 인라인**으로 넣고
+   화면 폭으로 갈아 끼운다.
 
-   원본은 PFV 를 가운데 둔 **방사형**이다(위 수분양자 · 좌 토지소유주 · 우 금융기관 ·
-   아래 출자자). 세로 한 줄로 옮기면서 위→아래 순서를 원본의 위계에 맞췄다:
-     [세 방향 흐름] → [PFV] →(출자금 납부)→ [출자자 5분류] ⋯ [CI 도급 관계]
-   ⚠ 방사형을 그대로 재현하지 않는다 — 좁은 화면에서 선과 박스가 겹쳐 무너진다. */
-.orgc { margin-top: clamp(28px, 2.8vw, 44px); }
+   ⚠ `<img src="…svg">` 로 넣지 않는다. SVG 안에서 참조하는 외부 폰트가 로드되지 않아
+     Paperlogy 가 폴백으로 떨어진다(그래서 파티셜의 font-family 를 사이트 스택으로 바꿔 뒀다).
+   ⚠ 두 SVG 가 한 페이지에 있으므로 내부 id 를 `bsd-` / `bsm-` 로 네임스페이스했다.
+     같은 id 가 겹치면 마커·그라데이션이 서로를 덮어쓴다.
+   ⚠ 지분율이 바뀌면 **파티셜 SVG 의 `<text>` 를 고친다.** 마크업으로 그렸던 이전 구조도의
+     "값만 고치면 된다"는 이점을 시안 채택으로 내놓은 부분이다.                          */
+/* ⚠ 구조도는 **1920 캔버스로 설계된 그림**이다. 컨테이너(최대 1320px)에 넣으면
+     축척이 0.64~0.69 로 줄어 가장 작은 글자가 9.6px 까지 내려간다(1440 실측).
+     그래서 이 그림만 화면 폭까지 넓힌다 — 1920 뷰포트에서 축척 1.0(설계 크기)이 된다.
+   ⚠ 좌우로 빼내는 방법은 `margin-inline: calc(50% - 50vw)` 다(§6.3 · .inf-hero 와 같은 관용구).
+     `transform: translateX(calc(50% - 50vw))` 로는 안 된다 — transform 의 `50%` 는 **자기 폭**
+     (=100vw)이라 계산이 0 이 되어 제자리에 남고, 오른쪽이 그대로 잘린다(2026-08-13 실측).
+   ⚠ 부모 섹션에 `.sec--bleed`(overflow-x: clip)가 필요하다 — 100vw 는 세로 스크롤바 폭을
+     포함하므로 그것 없이는 가로 스크롤이 생긴다(§11.13). */
+.orgfig { width: 100vw; margin-inline: calc(50% - 50vw);
+  margin-top: clamp(28px, 2.8vw, 44px); }
+.orgfig-svg { width: 100%; height: auto; }
+/* ⚠ 두 변형의 기본값을 **미디어쿼리 밖에** 함께 적는다.
+     `lint-classes` 의 선택자 수집이 `{…}` 블록을 지우면서 미디어쿼리 안쪽까지 함께 삼킨다 —
+     한쪽만 미디어쿼리에 두면 "정의 없는 클래스" 로 잡힌다(2026-08-13 실측). */
+.orgfig-svg--pc { display: block; }
+.orgfig-svg--mo { display: none; }
 
-.orgc-cap { margin: 0 auto; width: max-content;
-  padding: 7px 20px; border: 1px solid var(--color-primary); border-radius: 999px;
-  font-family: var(--font-display); font-weight: 700; font-size: 13px;
-  letter-spacing: .02em; color: var(--color-primary); background: var(--color-surface); }
-
-/* 세 방향 흐름 — 각 열은 PFV 와 주고받는 한 쌍이다 */
-.orgc-flow { display: grid; gap: clamp(10px, 1vw, 16px); margin: 0; padding: 0; list-style: none;
-  grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 720px) { .orgc-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-
-/* 끝단 → 연결선 → 라벨 묶음 순. gap 을 선이 차지하므로 gap 은 0 이다.
-   ⚠ order 는 마크업 순서(끝단 → 라벨)를 **그대로** 따른다. 흐름이 PFV 위로 올라가면서
-     끝단이 위, 라벨이 아래가 됐다 — 이전(라벨 위 · 끝단 아래)의 반대다. */
-.orgc-fi { display: flex; flex-direction: column; align-items: center; gap: 0; }
-.orgc-fi::before { content: ""; order: 1; width: 1px; height: 14px; background: var(--color-line); }
-.orgc-fe { order: 0; }
-.orgc-fx { order: 2; }
-.orgc-fx { display: flex; flex-direction: column; gap: 5px; margin: 0; width: 100%;
-  padding: clamp(12px, 1.2vw, 16px) clamp(10px, 1vw, 14px);
-  border: 1px solid var(--color-line); border-radius: var(--radius-sm);
-  background: var(--color-surface); }
-/* 방향은 화살표 하나로만 구분한다 — 색을 나누면 다른 의미로 읽힌다 */
-.orgc-in, .orgc-out { display: flex; align-items: center; gap: 7px;
-  font-size: 13px; line-height: 1.45; color: var(--color-text); }
-.orgc-in::before, .orgc-out::before { flex: none; width: 15px; text-align: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 13px;
-  color: var(--color-primary); }
-/* ⚠ 흐름이 PFV **위**에 있으므로 들어오는 흐름이 ↓ 다.
-     이전 구조(흐름이 PFV 아래)에서는 반대였다 — 순서를 뒤집으면 여기도 뒤집어야 한다.
-     클래스 이름을 up/dn 에서 in/out 으로 바꾼 것도 그 혼동을 없애기 위해서다. */
-.orgc-in::before  { content: "↓"; }
-.orgc-out::before { content: "↑"; color: var(--color-text-muted); }
-/* 끝단(토지소유주·수분양자·금융기관) */
-.orgc-fe { display: block; width: 100%; padding: clamp(11px, 1.1vw, 15px) 10px;
-  border-radius: var(--radius-sm); background: var(--color-bg);
-  border: 1px solid var(--color-line); text-align: center;
-  font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(14px, 1.05vw, 16px); color: var(--color-text); }
-.orgc-key { margin: clamp(12px, 1.2vw, 18px) 0 clamp(18px, 1.8vw, 28px); text-align: center;
-  font-size: 12.5px; color: var(--color-text-muted); }
-.orgc-key b { margin-left: 10px; color: var(--color-primary); }
-.orgc-key b:first-child { margin-left: 0; }
-
-/* PFV 본체 — 색으로 위계를 만든다. 구조도에서 유일한 채운 박스다 */
-.orgc-core { padding: clamp(20px, 2vw, 30px) clamp(18px, 1.8vw, 26px);
-  border-radius: var(--radius-md); background: var(--color-primary); text-align: center; }
-.orgc-core b { display: block; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(17px, 1.5vw, 24px); letter-spacing: -.018em; color: #fff; }
-.orgc-core span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.6;
-  color: rgba(255, 255, 255, .86); }
-
-/* 출자금 납부 — 출자자에서 PFV 로 **올라가는** 연결선. 라벨을 선 옆에 붙인다.
-   ⚠ 화살표가 위를 가리켜야 한다. 아래를 가리키면 PFV 가 출자자에게 돈을 주는 그림이 된다. */
-.orgc-link { position: relative; display: flex; flex-direction: column; align-items: center;
-  gap: 4px; margin: 0; padding: clamp(14px, 1.4vw, 22px) 0; }
-.orgc-link::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0;
-  width: 1px; background: var(--color-line); }
-.orgc-link--up::after { content: ""; position: absolute; left: 50%; top: 0;
-  transform: translateX(-50%); border-left: 5px solid transparent;
-  border-right: 5px solid transparent; border-bottom: 7px solid var(--color-primary); }
-.orgc-link b, .orgc-link i { position: relative; padding-inline: 10px;
-  background: var(--color-bg); font-style: normal; }
-.orgc-link b { font-family: var(--font-display); font-weight: 700; font-size: 13.5px;
-  color: var(--color-primary); }
-.orgc-link i { font-size: 12px; color: var(--color-text-muted); }
-
-/* 출자자 5분류 — 좁은 화면에서는 2열, 넓으면 한 줄 */
-.orgc-sh { display: grid; gap: clamp(8px, .9vw, 14px); margin: clamp(16px, 1.6vw, 24px) 0 0;
-  padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (min-width: 560px)  { .orgc-sh { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 900px)  { .orgc-sh { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-
-.orgc-shi { display: flex; flex-direction: column; gap: 10px;
-  padding: clamp(13px, 1.3vw, 18px) clamp(11px, 1.1vw, 15px);
-  border: 1px solid var(--color-line); border-radius: var(--radius-md);
-  background: var(--color-surface); }
-.orgc-shk { font-family: var(--font-display); font-weight: 700; text-align: center;
-  font-size: clamp(14px, 1.05vw, 16px); letter-spacing: -.01em; color: var(--color-text); }
-/* 영문 약어 뒤의 한글 보충(공공·금융·시공·전략) — 약어만으로는 읽히지 않는다 */
-.orgc-shk i { font-style: normal; font-weight: 600; font-size: .82em;
-  color: var(--color-text-muted); }
-
-/* 분류 안의 출자자 목록. 갱신본에서 앵커기업이 더존비즈온 37.3% + AMC 0.2% 로,
-   GI 가 강원특별자치도 4.9% + 춘천시 4.9% 로 **각각 두 줄**이 됐다 —
-   그래서 이름·지분율을 한 쌍으로 여러 개 담을 수 있는 목록으로 바꿨다.
-   ⚠ 이전 구조(.orgc-shn / .orgc-shp)는 분류당 한 쌍만 담을 수 있었다. */
-.orgc-shl { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
-.orgc-shl li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px;
-  align-items: baseline; padding-top: 7px; border-top: 1px solid var(--color-line); }
-.orgc-shl li:first-child { padding-top: 0; border-top: 0; }
-.orgc-shl span { font-size: 12.5px; line-height: 1.45; color: var(--color-text);
-  word-break: keep-all; }
-/* AMC 풀네임처럼 보조 설명이 붙는 자리 — 줄을 바꿔 이름과 구분한다 */
-.orgc-shl span i { display: block; margin-top: 2px; font-style: normal; font-size: 11px;
-  line-height: 1.35; color: var(--color-text-muted); }
-.orgc-shl em { font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(14px, 1.1vw, 17px); font-variant-numeric: tabular-nums;
-  color: var(--color-primary); white-space: nowrap; }
-/* 미확정(CI · SI) — **배경은 다른 카드와 같은 흰 면**이고 파선 테두리로만 '확정 전'을 드러낸다.
-   ⚠ 배경을 비우면(background: none) 페이지 배경이 비쳐 두 칸만 움푹 들어가 보인다(2026-08-13 지시). */
-.orgc-shi--tbd { border-style: dashed; }
-/* TBD 는 이름 옆이 아니라 **아랫줄**에 둔다 — 갱신본 그림과 같은 배치이고,
-   확정된 지분율(37.3% 처럼 이름 옆에 붙는 값)과 성격이 달라 같은 줄에 두면 같은 무게로 읽힌다. */
-.orgc-shi--tbd .orgc-shl li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
-.orgc-shi--tbd .orgc-shl em { color: var(--color-text-muted); }
-
-/* CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다.
-   원본 그림에서 이 선만 점선인 이유가 그것이라 여기서도 파선으로 구분한다. */
+/* CI 도급 관계 문구 — 데스크톱 구조도에는 이 관계가 그려져 있지 않아 글로 남긴다 */
 .orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
   gap: 4px 12px; margin: clamp(14px, 1.4vw, 22px) 0 0;
   padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 20px);
-  border: 1px dashed var(--color-line); border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-line);
   font-size: 12.5px; color: var(--color-text-muted); }
 .orgc-side span { font-size: 12.5px; }
 .orgc-side b { font-family: var(--font-display); font-weight: 700; font-size: 13px;
   color: var(--color-text); }
+
+/* ⚠ 전환 지점을 767 이 아니라 **1023** 으로 둔다. 768~1023 구간에서 데스크톱 그림은
+     축척 0.44~0.51 까지 줄어 글자가 7~8px 이 된다 — 세로형(900 캔버스)이 훨씬 읽힌다. */
+@media (max-width: 1023px) {
+  .orgfig { width: auto; margin-inline: 0; }
+  .orgfig-svg--pc { display: none; }
+  .orgfig-svg--mo { display: block; }
+  /* 모바일 구조도에는 도급 관계가 그림 안에 들어 있다 — 아래 문구와 겹치므로 감춘다 */
+  .orgc-side { display: none; }
+}
 
 .pfv-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 13.5px; line-height: 1.7;
   color: var(--color-text-muted); }

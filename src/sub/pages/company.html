@@ -10,7 +10,7 @@
 }
 -->
     <!-- ===== 1. 사업 구조 (스토리보드 v2 slide42~44) ===== -->
-    <section class="sec" id="structure">
+    <section class="sec sec--bleed" id="structure">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BUSINESS STRUCTURE</b><span>사업 구조</span></p>
         <h2 class="h2 rv">민·관이 함께 만드는, <em>가장 단단한 사업 구조</em></h2>
@@ -22,90 +22,33 @@
           <p class="sub-d">B-CITY는 PFV(Project Financing Vehicle) 구조로 운영됩니다.
             자본금·대출·분양수익이 한 곳에 집중되어 투명하고 효율적으로 관리되는 검증된 개발사업 구조입니다.</p>
 
-          <!-- 사업추진 체계 구조도 — 2026-08-13 갱신본 이미지를 그대로 옮겼다.
-               이미지가 아니라 마크업이다: 확대해도 깨지지 않고 검색·낭독에 잡히며,
-               지분율처럼 바뀌는 값을 고치는 데 이미지 재작업이 필요 없다.
+          <!-- 사업추진 체계 구조도 — 납품 시안(business-structure-v1)을 그대로 쓴다.
+               ⚠ 이전에는 마크업으로 그린 세로형이었다. "지분율이 바뀌어도 이미지 재작업이
+                 필요 없다"는 장점을 시안 채택으로 내놓은 셈이니, **값이 바뀌면 SVG 안의
+                 <text> 를 고쳐야 한다**(파티셜이 편집 가능한 벡터라 이미지보다는 낫다).
+               ⚠ 데스크톱(1920×1080 방사형)과 모바일(900×1900 세로형) 두 벌이다.
+                 둘 다 인라인으로 넣고 CSS 로 갈아 끼운다 — <img> 로 넣으면 SVG 안의
+                 외부 @font-face 가 로드되지 않아 Paperlogy 가 폴백으로 떨어진다.
+               ⚠ 납품본에서 금융 파트너 표기를 한 곳 조정했다. 경위는 CLAUDE.md §11.26 참고. -->
+          <figure class="orgfig">
+            {{> orgchart-pc}}
+            {{> orgchart-mo}}
+            <!-- 구조도는 role="img" 라 안쪽 텍스트가 낭독되지 않는다.
+                 정보가 사라지지 않도록 같은 내용을 글로 한 벌 남긴다. -->
+            <figcaption class="sr-only">
+              바이오테크 이노밸리 PFV 사업 추진 체계.
+              PFV 는 명목회사이자 사업 시행 주체이며, 토지소유주와는 토지 매매 · 토지 보상비를,
+              수분양자와는 분양대금 · 용지분양을, 금융기관과는 PF대출약정 · PF대출원리금 상환을 주고받습니다.
+              PFV 출자자는 앵커기업 더존비즈온 37.3% 와 AMC 바이오테크이노밸리자산관리 0.2%,
+              GI 공공 강원특별자치도 4.9% 와 춘천시 4.9%, FI 금융 IBK투자증권 5.0%,
+              CI 시공 부지조성공사 등 확정 전, SI 전략 중소형 CDMO · 제약 · 바이오기업 확정 전으로 구성되며
+              출자금 납부가 진행 중입니다.
+            </figcaption>
+          </figure>
 
-               ⚠ 순서가 갱신본에서 뒤집혔다 — 원본 그림은 PFV 를 가운데 두고
-                 위(수분양자)·좌(토지소유주)·우(금융기관)로 뻗고 **아래에서 출자자가
-                 출자금을 올려보내는** 방사형이다. 세로 한 줄로 옮기면서
-                 [흐름 3방향] → [PFV] → [출자금 납부] → [출자자] 순으로 맞췄다.
-                 방사형을 그대로 재현하지 않는 이유는 좁은 화면에서 무너지기 때문이다. -->
-          <div class="orgc">
-            <!-- PFV 를 가운데 두고 세 방향의 자금·자산 흐름. 각 열은 주고받는 한 쌍이다 -->
-            <ul class="orgc-flow">
-              <li class="orgc-fi">
-                <b class="orgc-fe">토지소유주</b>
-                <p class="orgc-fx">
-                  <span class="orgc-in">토지 매매</span>
-                  <span class="orgc-out">토지 보상비</span>
-                </p>
-              </li>
-              <li class="orgc-fi">
-                <b class="orgc-fe">수분양자</b>
-                <p class="orgc-fx">
-                  <span class="orgc-in">분양대금</span>
-                  <span class="orgc-out">용지분양</span>
-                </p>
-              </li>
-              <li class="orgc-fi">
-                <b class="orgc-fe">금융기관</b>
-                <p class="orgc-fx">
-                  <span class="orgc-in">PF대출약정</span>
-                  <span class="orgc-out">PF대출원리금 상환</span>
-                </p>
-              </li>
-            </ul>
-            <p class="orgc-key"><b>↓</b> PFV 로 들어오는 흐름 <b>↑</b> PFV 에서 나가는 흐름</p>
-
-            <div class="orgc-core">
-              <b>바이오테크 이노밸리 PFV</b>
-              <span>명목회사 — 자본금 · 대출 · 분양수익을 한 계정으로 통합 관리</span>
-            </div>
-
-            <!-- 출자금은 아직 납부 중이다. '진행 중' 을 빼면 완료된 것으로 읽힌다 -->
-            <p class="orgc-link orgc-link--up"><b>출자금 납부</b><i>진행 중</i></p>
-
-            <p class="orgc-cap">PFV 출자자</p>
-            <ul class="orgc-sh">
-              <li class="orgc-shi">
-                <b class="orgc-shk">앵커기업</b>
-                <ul class="orgc-shl">
-                  <li><span>더존비즈온</span><em>37.3%</em></li>
-                  <li><span>AMC <i>바이오테크이노밸리자산관리</i></span><em>0.2%</em></li>
-                </ul>
-              </li>
-              <li class="orgc-shi">
-                <b class="orgc-shk">GI <i>공공</i></b>
-                <ul class="orgc-shl">
-                  <li><span>강원특별자치도</span><em>4.9%</em></li>
-                  <li><span>춘천시</span><em>4.9%</em></li>
-                </ul>
-              </li>
-              <li class="orgc-shi">
-                <b class="orgc-shk">FI <i>금융</i></b>
-                <ul class="orgc-shl">
-                  <li><span>IBK투자증권</span><em>5.0%</em></li>
-                </ul>
-              </li>
-              <li class="orgc-shi orgc-shi--tbd">
-                <b class="orgc-shk">CI <i>시공</i></b>
-                <ul class="orgc-shl">
-                  <li><span>부지조성공사 등</span><em>TBD</em></li>
-                </ul>
-              </li>
-              <li class="orgc-shi orgc-shi--tbd">
-                <b class="orgc-shk">SI <i>전략</i></b>
-                <ul class="orgc-shl">
-                  <li><span>중소형 CDMO · 제약 · 바이오기업 등</span><em>TBD</em></li>
-                </ul>
-              </li>
-            </ul>
-
-            <!-- CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다.
-                 원본에서 이 선만 점선인 이유가 그것이라 여기서도 파선으로 구분한다. -->
-            <p class="orgc-side"><b>공사도급계약 및 책임준공</b><span>CI(시공)는 출자자이면서 동시에 PFV 와 도급 관계를 맺습니다</span></p>
-          </div>
+          <!-- CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다.
+               ⚠ 모바일 구조도에는 이 관계가 그림 안에 들어 있어 그쪽에서는 감춘다. -->
+          <p class="orgc-side"><b>공사도급계약 및 책임준공</b><span>CI(시공)는 출자자이면서 동시에 PFV 와 도급 관계를 맺습니다</span></p>
 
           <p class="pfv-note"><b>PFV 와 AMC 를 분리 운영</b>합니다. 사업 시행 주체(바이오테크이노밸리피에프브이㈜)와
             자산관리 주체(바이오테크이노밸리자산관리㈜)의 역할·책임이 나뉘고, 자금 흐름은 한 계정으로 모여 추적됩니다.</p>

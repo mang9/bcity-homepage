@@ -78,10 +78,29 @@ const jsClasses = (() => {
   return out;
 })();
 
+/** ⚠ **인라인 SVG 는 자기 <style> 을 갖는다.** 납품받은 구조도처럼 `.st0`~`.st32` 같은
+ *  클래스가 SVG 안에서 정의되고 SVG 안에서만 쓰인다. 페이지 CSS 번들에는 당연히 없으므로
+ *  그대로 두면 전부 "정의 없는 클래스" 로 잡힌다(2026-08-13 구조도 교체 때 47건).
+ *
+ *  그래서 SVG 블록 안쪽 <style> 의 선택자도 그 페이지의 '정의' 로 인정한다.
+ *  ⚠ SVG 블록을 통째로 무시하지는 않는다 — `.tmap-routes` · `.dz-map-hl` 처럼
+ *    **페이지 CSS 가 스타일링하는** SVG 클래스는 계속 검사 대상이어야 한다. */
+function svgLocalClasses(slug) {
+  const html = read(ROOT, slug + '.html');
+  const out = new Set();
+  for (const svg of html.matchAll(/<svg[\s\S]*?<\/svg>/g)) {
+    for (const st of svg[0].matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
+      const selectors = stripComments(st[1]).replace(/\{[^}]*\}/g, '{}');
+      for (const m of selectors.matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
+    }
+  }
+  return out;
+}
+
 /** 생성된 HTML 의 body 마크업에서 쓰이는 클래스를 모은다(<style>·<script> 제외) */
 function usedIn(slug) {
   const html = read(ROOT, slug + '.html')
-    .replace(/<style>[\s\S]*?<\/style>/g, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/g, '')
     .replace(/<script>[\s\S]*?<\/script>/g, '')
     .replace(/<!--[\s\S]*?-->/g, '');
   return harvest(html, new Map());
@@ -111,7 +130,9 @@ for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.ht
   const def = definedIn(files);
   for (const slug of slugs) {
     const use = usedIn(slug);
-    const undef = [...use.keys()].filter((c) => !def.has(c) && !JS_STATE.has(c)).sort();
+    const svgLocal = svgLocalClasses(slug);
+    const undef = [...use.keys()]
+      .filter((c) => !def.has(c) && !JS_STATE.has(c) && !svgLocal.has(c)).sort();
     if (!undef.length) continue;
     problems += undef.length;
     console.log(`  ✗ ${slug}.html — 번들(${files.join(', ')})에 정의 없는 클래스 ${undef.length}개`);
