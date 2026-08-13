@@ -351,6 +351,29 @@
     .dz-sums-total span { margin: 0 6px; color: var(--color-line); }
     .dz-note { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
 
+    /* 분류 탭 — 클러스터(산업) / 콤플렉스(생활).
+       ⚠ 마크업에는 두 묶음이 모두 있고 감추는 일은 dztab.js 가 한다. JS 가 없으면 8개가 전부 보인다.
+       ⚠ 컨트롤(`data-tab`)과 데이터(`data-group`)의 속성 이름을 다르게 둔다 — 같으면 셀렉터가
+         탭 자신까지 잡는다(§11.10 의 실제 사고). */
+    .dz-tabs { display: flex; gap: 8px; margin: clamp(34px, 3.6vw, 60px) 0 0;
+      border-bottom: 1px solid var(--color-line); }
+    .dz-tab { appearance: none; display: inline-flex; align-items: baseline; gap: 8px;
+      margin-bottom: -1px; padding: clamp(11px, 1.1vw, 15px) clamp(18px, 1.8vw, 26px);
+      border: 0; border-bottom: 2px solid transparent; background: none; cursor: pointer;
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.15vw, 17px);
+      letter-spacing: -.012em; color: var(--color-text-muted); }
+    .dz-tab i { font-style: normal; font-family: var(--font-body); font-weight: 700;
+      font-size: 11.5px; color: var(--color-text-muted); }
+    .dz-tab:hover { color: var(--color-text); }
+    .dz-tab.is-on { border-bottom-color: var(--color-primary); color: var(--color-primary); }
+    .dz-tab.is-on i { color: var(--color-primary); }
+    .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -4px; }
+
+    /* 탭 묶음 — 첫 권역이 탭 바로 아래 붙지 않도록 위 여백은 .dz-zone 이 갖는다.
+       ⚠ `hidden` 은 dztab.js 가 붙인다. CSS 로 감추지 않는 이유는 JS 가 없을 때 8개가
+         모두 보여야 하기 때문이다(마크업이 진실, JS 는 동작만 얹는다). */
+    .dz-panel[hidden] { display: none; }
+
     /* 권역 블록 — 왼쪽 굵은 색 띠가 권역을 구분한다 */
     .dz-zone { margin-top: clamp(28px, 3vw, 50px); padding: clamp(24px, 2.6vw, 40px);
       padding-left: clamp(22px, 2.4vw, 38px);
@@ -367,7 +390,7 @@
       color: var(--color-text-muted); word-break: keep-all; }
 
     /* 스펙(2열 정의목록) | 구역별 면적표 — 넓으면 나란히, 좁으면 위아래 */
-    .dz-body { display: grid; grid-template-columns: minmax(260px, .85fr) minmax(0, 1.15fr);
+    .dz-body { display: grid; grid-template-columns: minmax(200px, .55fr) minmax(0, 1.45fr);
       gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: start; }
     .dz-spec { margin: 0; display: grid; gap: 10px; }
     .dz-spec div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;
@@ -380,6 +403,22 @@
     .dz-area { min-width: 0; }
     .dz-area-h { margin: 0 0 10px; font-size: 12.5px; font-weight: 700; letter-spacing: .04em;
       color: var(--color-text-muted); }
+
+    /* 토지이용계획도 — 전체 배치도 위에 해당 권역 레이어를 겹친다.
+       ⚠ 두 이미지의 비율이 미세하게 다르다(배경 880x1100 = 0.800 · 레이어 462x577 = 0.801).
+         둘 다 `object-fit: contain` 이라 같은 방식으로 레터박싱되어 정합이 유지된다.
+       ⚠ `<picture>` 로 감싸지 말 것 — inline 요소가 흐름에 끼어들어 absolute 겹침 전제를 깬다
+         (§11.5-4 의 실제 회귀 이력). AVIF 는 `<img src>` 에 그대로 넣으면 된다. */
+    .dz-map { margin: 0; }
+    .dz-map-in { position: relative; display: block; padding: clamp(10px, 1.2vw, 18px);
+      background: var(--color-bg); border-radius: var(--radius-md); }
+    .dz-map-base { display: block; width: 100%; height: auto; opacity: .5; }
+    .dz-map-hl { position: absolute; inset: clamp(10px, 1.2vw, 18px);
+      width: auto; height: auto; max-width: none;
+      inline-size: calc(100% - 2 * clamp(10px, 1.2vw, 18px));
+      block-size: calc(100% - 2 * clamp(10px, 1.2vw, 18px)); object-fit: contain; }
+    .dz-map figcaption { margin-top: 8px; text-align: center;
+      font-size: 11.5px; letter-spacing: .06em; color: var(--color-text-muted); }
 
     .dz-tbl { width: 100%; min-width: 360px; border-collapse: collapse;
       font-size: 13px; font-variant-numeric: tabular-nums; }
@@ -399,6 +438,22 @@
       border-left: 3px solid var(--c);
       font-size: clamp(14px, 1.1vw, 17px); line-height: 1.75; color: var(--color-text); }
     .dz-value em { font-style: normal; font-weight: 700; color: var(--c); }
+
+    /* 핵심 가치 3항목 — 기획서의 [핵심 가치] 슬라이드에 있는 3열 표를 그대로 옮긴 것이다.
+       ⚠ 한 문장 요약(.dz-value)만으로는 내용이 통째로 빠진다(2026-08-13 사용자 지적). */
+    .dz-keys { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(12px, 1.2vw, 20px); margin: clamp(16px, 1.6vw, 24px) 0 0; padding: 0; }
+    .dz-key { padding: clamp(18px, 1.8vw, 26px); background: var(--color-bg);
+      border-radius: var(--radius-md); border-top: 2px solid var(--c); }
+    .dz-key-t { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14px, 1.15vw, 17px); letter-spacing: -.012em; word-break: keep-all; }
+    .dz-key-t i { font-style: normal; font-size: .95em; color: var(--c); }
+    .dz-key-l { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 7px; }
+    .dz-key-l li { position: relative; padding-left: 13px; font-size: 13px; line-height: 1.65;
+      color: var(--color-text-muted); word-break: keep-all; }
+    .dz-key-l li::before { content: ""; position: absolute; left: 0; top: .6em;
+      width: 4px; height: 4px; border-radius: 50%; background: var(--c); }
 
     /* ── 3. 정주환경 ──────────────────────────────────────────────────── */
     .lv-area { margin-top: clamp(34px, 3.6vw, 60px); padding-top: clamp(30px, 3.2vw, 52px);
@@ -432,8 +487,11 @@
     }
     @media (max-width: 1023px) {
       .cc-gs { grid-template-columns: minmax(0, 1fr); }
-      .dz-body { grid-template-columns: minmax(0, 1fr); }
+      .dz-keys { grid-template-columns: minmax(0, 1fr); }
       .lv-list { grid-template-columns: minmax(0, 1fr); }
+      /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
+      .dz-body { grid-template-columns: minmax(0, 1fr); }
+      .dz-map { max-width: 320px; margin-inline: auto; }
     }
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
