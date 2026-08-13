@@ -179,8 +179,10 @@
   object-fit: cover; object-position: center 62%; }
 /* 스크림 — 왼쪽(카피 쪽)을 더 짙게 해서 글은 살리고 사진은 남긴다 */
 .inf-hero::after { content: ""; position: absolute; inset: 0;
-  background: linear-gradient(100deg, rgb(var(--navy-rgb) / .92) 0%,
-              rgb(var(--navy-rgb) / .82) 42%, rgb(var(--navy-rgb) / .55) 100%); }
+  /* ⚠ 배경 사진을 갈아끼우면 **대비를 다시 재야 한다.** 2026-08-13 에 사진을 바꾸자
+     본문(.lede)이 6.98 → 4.67 로 떨어져(AA 4.5 턱걸이) 스크림을 올렸다. */
+  background: linear-gradient(100deg, rgb(var(--navy-rgb) / .93) 0%,
+              rgb(var(--navy-rgb) / .87) 42%, rgb(var(--navy-rgb) / .68) 100%); }
 .inf-hero-in { position: relative; z-index: 1; width: 100%;
   max-width: var(--wrap); margin-inline: auto;
   padding: clamp(56px, 6vw, 104px) clamp(20px, 4vw, 48px); }
