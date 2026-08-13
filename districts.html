@@ -562,7 +562,7 @@
 
     /* [토지이용계획도] | [부지 개요 + 구역별 면적] — 오른쪽 한 열에 표까지 함께 둔다.
        같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다(2026-08-13 지시). */
-    .dz-body { display: grid; grid-template-columns: minmax(180px, .5fr) minmax(0, 1.5fr);
+    .dz-body { display: grid; grid-template-columns: minmax(240px, .85fr) minmax(0, 1.15fr);
       gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: start; }
     /* ⚠ min-width:0 — 없으면 안쪽 표가 이 칸을 밀어내 페이지가 가로로 넘친다(.dz-area 와 같은 이유) */
     .dz-info { min-width: 0; }
@@ -598,24 +598,33 @@
       font-size: 11.5px; letter-spacing: .06em; color: var(--color-text-muted); }
 
      /* 표 — **격자와 라운드를 쓰지 않는다**(2026-08-13 지시).
-       세로 괘선과 칸 배경을 걷어내고 **가로줄만** 남기면 숫자 열이 그대로 읽힌다.
-       머리글은 배경 상자 대신 아래 굵은 줄 하나로 구분한다. */
-    .dz-tbl { width: 100%; min-width: 360px; border-collapse: collapse;
+       세로 괘선과 칸 배경을 걷어내고 **가로줄만** 남긴다.
+       머리글은 배경 상자 대신 **위아래 줄**로 감싼다 — 위가 굵어 표가 어디서 시작하는지 보인다.
+
+       정렬 규칙(2026-08-13 지시로 정리):
+         · 머리글       가운데 — 전에는 본문과 어긋나 바이오MICE 용도지역 · 골프레저 시설이 튀었다
+         · 첫 열(이름)  왼쪽
+         · 숫자(㎡ · 평) 오른쪽 — `.is-num` 을 빌더가 붙인다
+         · 그 밖의 값   가운데 (용도지역 · 용적률 · 층수 · 수량처럼 숫자가 아닌 값)
+       ⚠ 정렬을 열 번호(`:nth-child`)로 정하지 말 것. 표마다 열 구성이 달라 금세 어긋난다. */
+    .dz-tbl { width: 100%; min-width: 320px; border-collapse: collapse;
       font-size: 13px; font-variant-numeric: tabular-nums; }
-    .dz-tbl th, .dz-tbl td { padding: 10px 14px 10px 0; border: 0;
+    .dz-tbl th, .dz-tbl td { padding: 10px 12px 10px 0; border: 0;
       border-bottom: 1px solid var(--color-line);
-      text-align: right; line-height: 1.5; white-space: nowrap; }
+      text-align: center; line-height: 1.5; white-space: nowrap; }
     .dz-tbl th:last-child, .dz-tbl td:last-child { padding-right: 0; }
-    .dz-tbl thead th { padding-bottom: 8px; border-bottom: 1.5px solid var(--color-text);
+    .dz-tbl thead th { padding-block: 9px; text-align: center;
+      border-top: 1.5px solid var(--color-text); border-bottom: 1px solid var(--color-text);
       background: none; font-weight: 700; font-size: 11.5px; letter-spacing: .06em;
       color: var(--color-text); }
     .dz-tbl tbody th { text-align: left; font-weight: 700; background: none;
       color: var(--color-text); }
+    .dz-tbl .is-num { text-align: right; }
     /* 합계 행 — 표의 결론이다. 칸을 칠하지 않고 위 굵은 줄과 권역 색으로만 세운다 */
     .dz-tbl .is-sum th, .dz-tbl .is-sum td { border-top: 1.5px solid var(--c);
       border-bottom: 0; padding-top: 11px; font-weight: 700; color: var(--c); }
-    /* 바이오MICE 처럼 문자열 열이 섞인 표는 오른쪽 정렬이 어색하다 */
-    .dz-tbl td:nth-child(n+4) { text-align: center; white-space: normal; }
+    /* 문자열 값은 줄바꿈을 허용한다 — 숫자만 한 줄로 붙잡아 둔다 */
+    .dz-tbl td:not(.is-num) { white-space: normal; }
 
     /* 핵심 가치 — 권역마다 한 문장. 인용처럼 굵은 색 선을 왼쪽에 둔다 */
     .dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0; padding-left: clamp(14px, 1.4vw, 20px);
@@ -677,7 +686,7 @@
       .lv-list { grid-template-columns: minmax(0, 1fr); }
       /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
       .dz-body { grid-template-columns: minmax(0, 1fr); }
-      .dz-map { max-width: 320px; margin-inline: auto; }
+      .dz-map { max-width: 380px; margin-inline: auto; }
     }
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
@@ -893,12 +902,12 @@
                         <caption class="sr-only">AI 데이터 클러스터 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">DC1</th><td>141,852</td><td>42,910</td></tr>
-                          <tr><th scope="row">DC2</th><td>23,499</td><td>7,108</td></tr>
-                          <tr><th scope="row">DC3</th><td>31,806</td><td>9,621</td></tr>
-                          <tr><th scope="row">DC4</th><td>11,451</td><td>3,464</td></tr>
-                          <tr><th scope="row">DC5</th><td>18,035</td><td>5,456</td></tr>
-                          <tr class="is-sum"><th scope="row">합계</th><td>226,643</td><td>68,560</td></tr>
+                          <tr><th scope="row">DC1</th><td class="is-num">141,852</td><td class="is-num">42,910</td></tr>
+                          <tr><th scope="row">DC2</th><td class="is-num">23,499</td><td class="is-num">7,108</td></tr>
+                          <tr><th scope="row">DC3</th><td class="is-num">31,806</td><td class="is-num">9,621</td></tr>
+                          <tr><th scope="row">DC4</th><td class="is-num">11,451</td><td class="is-num">3,464</td></tr>
+                          <tr><th scope="row">DC5</th><td class="is-num">18,035</td><td class="is-num">5,456</td></tr>
+                          <tr class="is-sum"><th scope="row">합계</th><td class="is-num">226,643</td><td class="is-num">68,560</td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -965,9 +974,9 @@
                         <caption class="sr-only">첨단 바이오 클러스터 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">HT1+HT2</th><td>241,327</td><td>73,002</td></tr>
-                          <tr><th scope="row">HT3</th><td>29,583</td><td>8,949</td></tr>
-                          <tr class="is-sum"><th scope="row">합계</th><td>270,910</td><td>81,950</td></tr>
+                          <tr><th scope="row">HT1+HT2</th><td class="is-num">241,327</td><td class="is-num">73,002</td></tr>
+                          <tr><th scope="row">HT3</th><td class="is-num">29,583</td><td class="is-num">8,949</td></tr>
+                          <tr class="is-sum"><th scope="row">합계</th><td class="is-num">270,910</td><td class="is-num">81,950</td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -1034,11 +1043,11 @@
                         <caption class="sr-only">푸드 물류 클러스터 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">FU1</th><td>22,702</td><td>6,867</td></tr>
-                          <tr><th scope="row">FU2</th><td>29,435</td><td>8,904</td></tr>
-                          <tr><th scope="row">FU3</th><td>35,597</td><td>10,768</td></tr>
-                          <tr><th scope="row">FU4</th><td>51,126</td><td>15,466</td></tr>
-                          <tr class="is-sum"><th scope="row">소계</th><td>138,860</td><td>42,005</td></tr>
+                          <tr><th scope="row">FU1</th><td class="is-num">22,702</td><td class="is-num">6,867</td></tr>
+                          <tr><th scope="row">FU2</th><td class="is-num">29,435</td><td class="is-num">8,904</td></tr>
+                          <tr><th scope="row">FU3</th><td class="is-num">35,597</td><td class="is-num">10,768</td></tr>
+                          <tr><th scope="row">FU4</th><td class="is-num">51,126</td><td class="is-num">15,466</td></tr>
+                          <tr class="is-sum"><th scope="row">소계</th><td class="is-num">138,860</td><td class="is-num">42,005</td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -1104,11 +1113,11 @@
                         <caption class="sr-only">바이오MICE 클러스터 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th><th scope="col">용도지역</th><th scope="col">용적률</th><th scope="col">비고</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">Bio1</th><td>23,993</td><td>7,528</td><td>제2종 일반주거지역</td><td>250%</td><td>과학자마을</td></tr>
-                          <tr><th scope="row">Bio2</th><td>22,917</td><td>6,932</td><td>준주거지역</td><td>500%</td><td>의료시설</td></tr>
-                          <tr><th scope="row">Bio3</th><td>44,011</td><td>13,313</td><td>준주거지역</td><td>500%</td><td>MICE 복합용지</td></tr>
-                          <tr><th scope="row">Bio4</th><td>37,713</td><td>11,409</td><td>준공업지역</td><td>400%</td><td>—</td></tr>
-                          <tr class="is-sum"><th scope="row">합계</th><td>128,634</td><td>38,912</td><td></td><td></td><td></td></tr>
+                          <tr><th scope="row">Bio1</th><td class="is-num">23,993</td><td class="is-num">7,528</td><td>제2종 일반주거지역</td><td>250%</td><td>과학자마을</td></tr>
+                          <tr><th scope="row">Bio2</th><td class="is-num">22,917</td><td class="is-num">6,932</td><td>준주거지역</td><td>500%</td><td>의료시설</td></tr>
+                          <tr><th scope="row">Bio3</th><td class="is-num">44,011</td><td class="is-num">13,313</td><td>준주거지역</td><td>500%</td><td>MICE 복합용지</td></tr>
+                          <tr><th scope="row">Bio4</th><td class="is-num">37,713</td><td class="is-num">11,409</td><td>준공업지역</td><td>400%</td><td>—</td></tr>
+                          <tr class="is-sum"><th scope="row">합계</th><td class="is-num">128,634</td><td class="is-num">38,912</td><td></td><td></td><td></td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -1174,9 +1183,9 @@
                         <caption class="sr-only">비즈니스 콤플렉스 구역별 면적</caption>
                         <thead><tr><th scope="col">구분</th><th scope="col">㎡</th><th scope="col">평</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">업무시설</th><td>29,583</td><td>8,949</td></tr>
-                          <tr><th scope="row">상업시설</th><td>26,120</td><td>7,901</td></tr>
-                          <tr class="is-sum"><th scope="row">합계</th><td>55,703</td><td>16,850</td></tr>
+                          <tr><th scope="row">업무시설</th><td class="is-num">29,583</td><td class="is-num">8,949</td></tr>
+                          <tr><th scope="row">상업시설</th><td class="is-num">26,120</td><td class="is-num">7,901</td></tr>
+                          <tr class="is-sum"><th scope="row">합계</th><td class="is-num">55,703</td><td class="is-num">16,850</td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -1242,11 +1251,11 @@
                         <caption class="sr-only">하우징 콤플렉스 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th><th scope="col">층수</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">단독주택</th><td>28,986</td><td>8,768</td><td>4층 이하</td></tr>
-                          <tr><th scope="row">공동주택</th><td>250,291</td><td>75,713</td><td>29층 이하</td></tr>
-                          <tr><th scope="row">근린생활시설</th><td>4,206</td><td>1,272</td><td>—</td></tr>
-                          <tr><th scope="row">주상복합</th><td>42,639</td><td>12,898</td><td>35층 이하</td></tr>
-                          <tr class="is-sum"><th scope="row">합계</th><td>326,122</td><td>98,651</td><td></td></tr>
+                          <tr><th scope="row">단독주택</th><td class="is-num">28,986</td><td class="is-num">8,768</td><td>4층 이하</td></tr>
+                          <tr><th scope="row">공동주택</th><td class="is-num">250,291</td><td class="is-num">75,713</td><td>29층 이하</td></tr>
+                          <tr><th scope="row">근린생활시설</th><td class="is-num">4,206</td><td class="is-num">1,272</td><td>—</td></tr>
+                          <tr><th scope="row">주상복합</th><td class="is-num">42,639</td><td class="is-num">12,898</td><td>35층 이하</td></tr>
+                          <tr class="is-sum"><th scope="row">합계</th><td class="is-num">326,122</td><td class="is-num">98,651</td><td></td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -1312,12 +1321,12 @@
                         <caption class="sr-only">에듀 콤플렉스 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th><th scope="col">건폐율</th><th scope="col">용적률</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">유치원</th><td>4,202</td><td>1,271</td><td>50%</td><td>200%</td></tr>
-                          <tr><th scope="row">초등학교</th><td>15,667</td><td>4,739</td><td>50%</td><td>200%</td></tr>
-                          <tr><th scope="row">중학교</th><td>15,304</td><td>4,629</td><td>50%</td><td>200%</td></tr>
-                          <tr><th scope="row">고등학교</th><td>14,435</td><td>4,367</td><td>50%</td><td>200%</td></tr>
-                          <tr><th scope="row">외국교육기관</th><td>40,539</td><td>12,263</td><td>50%</td><td>250%</td></tr>
-                          <tr class="is-sum"><th scope="row">합계</th><td>90,147</td><td>27,269</td><td></td><td></td></tr>
+                          <tr><th scope="row">유치원</th><td class="is-num">4,202</td><td class="is-num">1,271</td><td>50%</td><td>200%</td></tr>
+                          <tr><th scope="row">초등학교</th><td class="is-num">15,667</td><td class="is-num">4,739</td><td>50%</td><td>200%</td></tr>
+                          <tr><th scope="row">중학교</th><td class="is-num">15,304</td><td class="is-num">4,629</td><td>50%</td><td>200%</td></tr>
+                          <tr><th scope="row">고등학교</th><td class="is-num">14,435</td><td class="is-num">4,367</td><td>50%</td><td>200%</td></tr>
+                          <tr><th scope="row">외국교육기관</th><td class="is-num">40,539</td><td class="is-num">12,263</td><td>50%</td><td>250%</td></tr>
+                          <tr class="is-sum"><th scope="row">합계</th><td class="is-num">90,147</td><td class="is-num">27,269</td><td></td><td></td></tr>
                         </tbody>
                       </table>
                     </div>

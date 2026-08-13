@@ -404,7 +404,7 @@
 
     /* [토지이용계획도] | [부지 개요 + 구역별 면적] — 오른쪽 한 열에 표까지 함께 둔다.
        같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다(2026-08-13 지시). */
-    .dz-body { display: grid; grid-template-columns: minmax(180px, .5fr) minmax(0, 1.5fr);
+    .dz-body { display: grid; grid-template-columns: minmax(240px, .85fr) minmax(0, 1.15fr);
       gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: start; }
     /* ⚠ min-width:0 — 없으면 안쪽 표가 이 칸을 밀어내 페이지가 가로로 넘친다(.dz-area 와 같은 이유) */
     .dz-info { min-width: 0; }
@@ -440,24 +440,33 @@
       font-size: 11.5px; letter-spacing: .06em; color: var(--color-text-muted); }
 
      /* 표 — **격자와 라운드를 쓰지 않는다**(2026-08-13 지시).
-       세로 괘선과 칸 배경을 걷어내고 **가로줄만** 남기면 숫자 열이 그대로 읽힌다.
-       머리글은 배경 상자 대신 아래 굵은 줄 하나로 구분한다. */
-    .dz-tbl { width: 100%; min-width: 360px; border-collapse: collapse;
+       세로 괘선과 칸 배경을 걷어내고 **가로줄만** 남긴다.
+       머리글은 배경 상자 대신 **위아래 줄**로 감싼다 — 위가 굵어 표가 어디서 시작하는지 보인다.
+
+       정렬 규칙(2026-08-13 지시로 정리):
+         · 머리글       가운데 — 전에는 본문과 어긋나 바이오MICE 용도지역 · 골프레저 시설이 튀었다
+         · 첫 열(이름)  왼쪽
+         · 숫자(㎡ · 평) 오른쪽 — `.is-num` 을 빌더가 붙인다
+         · 그 밖의 값   가운데 (용도지역 · 용적률 · 층수 · 수량처럼 숫자가 아닌 값)
+       ⚠ 정렬을 열 번호(`:nth-child`)로 정하지 말 것. 표마다 열 구성이 달라 금세 어긋난다. */
+    .dz-tbl { width: 100%; min-width: 320px; border-collapse: collapse;
       font-size: 13px; font-variant-numeric: tabular-nums; }
-    .dz-tbl th, .dz-tbl td { padding: 10px 14px 10px 0; border: 0;
+    .dz-tbl th, .dz-tbl td { padding: 10px 12px 10px 0; border: 0;
       border-bottom: 1px solid var(--color-line);
-      text-align: right; line-height: 1.5; white-space: nowrap; }
+      text-align: center; line-height: 1.5; white-space: nowrap; }
     .dz-tbl th:last-child, .dz-tbl td:last-child { padding-right: 0; }
-    .dz-tbl thead th { padding-bottom: 8px; border-bottom: 1.5px solid var(--color-text);
+    .dz-tbl thead th { padding-block: 9px; text-align: center;
+      border-top: 1.5px solid var(--color-text); border-bottom: 1px solid var(--color-text);
       background: none; font-weight: 700; font-size: 11.5px; letter-spacing: .06em;
       color: var(--color-text); }
     .dz-tbl tbody th { text-align: left; font-weight: 700; background: none;
       color: var(--color-text); }
+    .dz-tbl .is-num { text-align: right; }
     /* 합계 행 — 표의 결론이다. 칸을 칠하지 않고 위 굵은 줄과 권역 색으로만 세운다 */
     .dz-tbl .is-sum th, .dz-tbl .is-sum td { border-top: 1.5px solid var(--c);
       border-bottom: 0; padding-top: 11px; font-weight: 700; color: var(--c); }
-    /* 바이오MICE 처럼 문자열 열이 섞인 표는 오른쪽 정렬이 어색하다 */
-    .dz-tbl td:nth-child(n+4) { text-align: center; white-space: normal; }
+    /* 문자열 값은 줄바꿈을 허용한다 — 숫자만 한 줄로 붙잡아 둔다 */
+    .dz-tbl td:not(.is-num) { white-space: normal; }
 
     /* 핵심 가치 — 권역마다 한 문장. 인용처럼 굵은 색 선을 왼쪽에 둔다 */
     .dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0; padding-left: clamp(14px, 1.4vw, 20px);
@@ -519,7 +528,7 @@
       .lv-list { grid-template-columns: minmax(0, 1fr); }
       /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
       .dz-body { grid-template-columns: minmax(0, 1fr); }
-      .dz-map { max-width: 320px; margin-inline: auto; }
+      .dz-map { max-width: 380px; margin-inline: auto; }
     }
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
