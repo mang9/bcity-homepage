@@ -6,18 +6,32 @@
   "nav": "living",
   "heroImg": "assets/img-shuttle.jpg",
   "h1": "정주환경",
-  "css": ["page-shared", "page-city"]
+  "css": ["page-shared", "page-city"],
+  "js": ["tabs"]
 }
 -->
     <!-- ===== 정주환경 (스토리보드 v2 slide77~87) ===== -->
     <section class="sec" id="living">
-      <div class="wrap">
+      <div class="wrap" data-tabs="living">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
         <h2 class="h2 rv">일과 삶이 조화롭게 어우러지는 곳<br />
           비즈니스 · 주거 · 교육 · 문화가 하나로 완성되는 <em>자족도시</em></h2>
         <p class="lede rv">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
 
-        <div class="lv-area rv" id="area01">
+        <!-- 4개 환경 탭 — 최신 기획서(와이어프레임)의 구성이다.
+             ⚠ 네 패널이 모두 마크업에 있다. 감추는 일은 tabs.js 가 한다(JS 없으면 전부 보인다). -->
+        <div class="lv-tabs rv" role="tablist" aria-label="정주환경 분류">
+          <button type="button" class="lv-tab is-on" id="tab-01" data-tab="01"
+                  role="tab" aria-selected="true" aria-controls="area01">비즈니스 환경</button>
+          <button type="button" class="lv-tab" id="tab-02" data-tab="02"
+                  role="tab" aria-selected="false" aria-controls="area02">주거 환경</button>
+          <button type="button" class="lv-tab" id="tab-03" data-tab="03"
+                  role="tab" aria-selected="false" aria-controls="area03">교육 환경</button>
+          <button type="button" class="lv-tab" id="tab-04" data-tab="04"
+                  role="tab" aria-selected="false" aria-controls="area04">문화시설</button>
+        </div>
+
+        <div class="lv-area rv" id="area01" data-group="01" role="tabpanel" aria-labelledby="tab-01" tabindex="0">
           <div class="lv-head">
             <p class="lv-cat"><b>01</b>Business Environment</p>
             <h3 class="sub-t">비즈니스 환경 — <em>일하기 좋은 도시</em></h3>
@@ -48,7 +62,7 @@
           </ul>
         </div>
 
-        <div class="lv-area rv" id="area02">
+        <div class="lv-area rv" id="area02" data-group="02" role="tabpanel" aria-labelledby="tab-02" tabindex="0">
           <div class="lv-head">
             <p class="lv-cat"><b>02</b>Residential Environment</p>
             <h3 class="sub-t">주거 환경 — <em>살기 좋은 도시</em></h3>
@@ -79,7 +93,7 @@
           </ul>
         </div>
 
-        <div class="lv-area rv" id="area03">
+        <div class="lv-area rv" id="area03" data-group="03" role="tabpanel" aria-labelledby="tab-03" tabindex="0">
           <div class="lv-head">
             <p class="lv-cat"><b>03</b>Educational Environment</p>
             <h3 class="sub-t">교육 환경 — <em>배움이 넘치는 도시</em></h3>
@@ -105,7 +119,7 @@
           </ul>
         </div>
 
-        <div class="lv-area rv" id="area04">
+        <div class="lv-area rv" id="area04" data-group="04" role="tabpanel" aria-labelledby="tab-04" tabindex="0">
           <div class="lv-head">
             <p class="lv-cat"><b>04</b>Culture &amp; Leisure</p>
             <h3 class="sub-t">문화시설 — <em>쉼이 있는 도시</em></h3>
