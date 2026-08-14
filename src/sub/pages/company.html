@@ -6,7 +6,8 @@
   "nav": "company",
   "heroImg": "assets/img-street.jpg",
   "h1": "사업주체",
-  "css": ["page-shared", "page-company"]
+  "css": ["page-shared", "page-company"],
+  "js": ["lightbox"]
 }
 -->
     <!-- ===== 1. 사업 구조 (스토리보드 v2 slide42~44) ===== -->
@@ -18,7 +19,7 @@
           대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다.</p>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">명목회사(PFV) 중심의 투명한 사업 운영</h3></div>
+          <div class="sub-h"><h3 class="sub-t">명목회사(PFV) 중심의 투명한 사업 운영</h3></div>
           <p class="sub-d">B-CITY는 PFV(Project Financing Vehicle) 구조로 운영됩니다.
             자본금·대출·분양수익이 한 곳에 집중되어 투명하고 효율적으로 관리되는 검증된 개발사업 구조입니다.</p>
 
@@ -120,7 +121,7 @@
         </div>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">이 구조가 만드는 다섯 가지 강점</h3></div>
+          <div class="sub-h"><h3 class="sub-t">이 구조가 만드는 다섯 가지 강점</h3></div>
           <ol class="mrt">
             <li class="mrt-i"><span class="mrt-n">01</span>
               <b class="mrt-t">민·관 합동</b><span class="mrt-d">정부 · 지자체 · 민간 자본 결합</span></li>
@@ -136,13 +137,17 @@
         </div>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">03</span><h3 class="sub-t">관련 공식 문서</h3></div>
+          <div class="sub-h"><h3 class="sub-t">관련 공식 문서</h3></div>
           <p class="sub-d">사업의 각 단계는 정부·지자체의 공식 문서로 확인됩니다.</p>
-          <!-- ⚠ [보기] 는 공문 원본(PDF)으로 연결된다. 파일이 아직 없어 지금은 전부
-               비활성이며, 파일이 들어오면 각 li 의 버튼을 아래 형태로 바꾸면 끝난다.
-                 <a class="doc-view" href="assets/doc/…​.pdf" target="_blank" rel="noopener">보기</a>
-               비활성일 때는 <span class="doc-view is-off" aria-disabled="true"> 를 쓴다 —
-               <button disabled> 이 아닌 이유는 이 자리가 원래 링크이기 때문이다. -->
+          <!-- [보기] 를 누르면 **같은 화면에서** 문서 이미지를 확대해 보여 준다(2026-08-14 지시).
+               갤러리·홍보영상과 같은 컴포넌트(src/sub/js/lightbox.js)를 쓴다.
+                 data-lb="image" + data-src="이미지 경로" + data-title="설명"
+               ⚠ 캡션 속성은 **`data-title`** 이다. `data-cap` 은 lightbox.js 가 읽지 않아
+                 캡션이 빈 채로 열린다(2026-08-14 실측으로 확인).
+               ⚠ **문서 이미지가 아직 없다.** IM 부록의 공문 이미지를 `assets/doc/` 에 넣고
+                 아래 각 항목의 `data-src` 를 채우면 그대로 동작한다. 그때까지는
+                 `<span class="doc-view is-off">` 로 두어 **누를 수 없다는 것이 보이게** 한다 —
+                 링크만 걸어 두고 404 를 띄우는 것보다 낫다. -->
           <ul class="docs">
             <li>
               <time datetime="2024-03-27">2024.03.27</time>

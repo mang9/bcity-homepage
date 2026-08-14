@@ -236,16 +236,21 @@
   .docs li time { grid-column: 1; }
   .doc-n { grid-column: 2; }
 }
+/* [보기] — **사각 화이트 버튼**이다(2026-08-14 지시). 알약(999px)과 파선을 걷어냈다.
+   ⚠ `button` 과 `span` 두 형태를 함께 쓴다(누를 수 있을 때 / 없을 때).
+     `appearance: none` 이 없으면 button 만 OS 기본 스타일이 남아 둘이 달라 보인다. */
 .doc-view { grid-column: -2 / -1; grid-row: 1 / -1; justify-self: end; align-self: center;
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 62px; padding: 7px 15px; border-radius: 999px;
+  appearance: none; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 66px; padding: 8px 16px; border-radius: var(--radius-sm);
   border: 1px solid var(--color-line); background: var(--color-surface);
-  font-size: 13px; font-weight: 600; color: var(--color-text);
-  transition: border-color .2s, color .2s; }
-a.doc-view:hover { border-color: var(--color-primary); color: var(--color-primary); }
-/* 비활성 — 누를 수 없다는 것이 보여야 한다. 색만 흐리면 링크로 착각한다 */
-.doc-view.is-off { color: var(--color-text-muted); background: none;
-  border-style: dashed; cursor: default; }
+  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--color-text);
+  cursor: pointer; transition: border-color .2s, color .2s, background-color .2s; }
+.doc-view:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.doc-view:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+/* 비활성 — 형태는 같고 색만 죽인다. 원본이 아직 없는 항목이다 */
+.doc-view.is-off { color: var(--color-text-muted); border-color: var(--color-line);
+  cursor: default; }
+.doc-view.is-off:hover { border-color: var(--color-line); color: var(--color-text-muted); }
 .docs-note { margin: clamp(12px, 1.2vw, 16px) 0 0; font-size: 12.5px;
   color: var(--color-text-muted); }
 

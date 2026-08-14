@@ -531,16 +531,21 @@
       .docs li time { grid-column: 1; }
       .doc-n { grid-column: 2; }
     }
+    /* [보기] — **사각 화이트 버튼**이다(2026-08-14 지시). 알약(999px)과 파선을 걷어냈다.
+       ⚠ `button` 과 `span` 두 형태를 함께 쓴다(누를 수 있을 때 / 없을 때).
+         `appearance: none` 이 없으면 button 만 OS 기본 스타일이 남아 둘이 달라 보인다. */
     .doc-view { grid-column: -2 / -1; grid-row: 1 / -1; justify-self: end; align-self: center;
-      display: inline-flex; align-items: center; justify-content: center;
-      min-width: 62px; padding: 7px 15px; border-radius: 999px;
+      appearance: none; display: inline-flex; align-items: center; justify-content: center;
+      min-width: 66px; padding: 8px 16px; border-radius: var(--radius-sm);
       border: 1px solid var(--color-line); background: var(--color-surface);
-      font-size: 13px; font-weight: 600; color: var(--color-text);
-      transition: border-color .2s, color .2s; }
-    a.doc-view:hover { border-color: var(--color-primary); color: var(--color-primary); }
-    /* 비활성 — 누를 수 없다는 것이 보여야 한다. 색만 흐리면 링크로 착각한다 */
-    .doc-view.is-off { color: var(--color-text-muted); background: none;
-      border-style: dashed; cursor: default; }
+      font-family: inherit; font-size: 13px; font-weight: 600; color: var(--color-text);
+      cursor: pointer; transition: border-color .2s, color .2s, background-color .2s; }
+    .doc-view:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .doc-view:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    /* 비활성 — 형태는 같고 색만 죽인다. 원본이 아직 없는 항목이다 */
+    .doc-view.is-off { color: var(--color-text-muted); border-color: var(--color-line);
+      cursor: default; }
+    .doc-view.is-off:hover { border-color: var(--color-line); color: var(--color-text-muted); }
     .docs-note { margin: clamp(12px, 1.2vw, 16px) 0 0; font-size: 12.5px;
       color: var(--color-text-muted); }
 
@@ -740,7 +745,7 @@
           대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다.</p>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">명목회사(PFV) 중심의 투명한 사업 운영</h3></div>
+          <div class="sub-h"><h3 class="sub-t">명목회사(PFV) 중심의 투명한 사업 운영</h3></div>
           <p class="sub-d">B-CITY는 PFV(Project Financing Vehicle) 구조로 운영됩니다.
             자본금·대출·분양수익이 한 곳에 집중되어 투명하고 효율적으로 관리되는 검증된 개발사업 구조입니다.</p>
 
@@ -865,7 +870,7 @@
         </div>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">이 구조가 만드는 다섯 가지 강점</h3></div>
+          <div class="sub-h"><h3 class="sub-t">이 구조가 만드는 다섯 가지 강점</h3></div>
           <ol class="mrt">
             <li class="mrt-i"><span class="mrt-n">01</span>
               <b class="mrt-t">민·관 합동</b><span class="mrt-d">정부 · 지자체 · 민간 자본 결합</span></li>
@@ -881,13 +886,17 @@
         </div>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">03</span><h3 class="sub-t">관련 공식 문서</h3></div>
+          <div class="sub-h"><h3 class="sub-t">관련 공식 문서</h3></div>
           <p class="sub-d">사업의 각 단계는 정부·지자체의 공식 문서로 확인됩니다.</p>
-          <!-- ⚠ [보기] 는 공문 원본(PDF)으로 연결된다. 파일이 아직 없어 지금은 전부
-               비활성이며, 파일이 들어오면 각 li 의 버튼을 아래 형태로 바꾸면 끝난다.
-                 <a class="doc-view" href="assets/doc/…​.pdf" target="_blank" rel="noopener">보기</a>
-               비활성일 때는 <span class="doc-view is-off" aria-disabled="true"> 를 쓴다 —
-               <button disabled> 이 아닌 이유는 이 자리가 원래 링크이기 때문이다. -->
+          <!-- [보기] 를 누르면 **같은 화면에서** 문서 이미지를 확대해 보여 준다(2026-08-14 지시).
+               갤러리·홍보영상과 같은 컴포넌트(src/sub/js/lightbox.js)를 쓴다.
+                 data-lb="image" + data-src="이미지 경로" + data-title="설명"
+               ⚠ 캡션 속성은 **`data-title`** 이다. `data-cap` 은 lightbox.js 가 읽지 않아
+                 캡션이 빈 채로 열린다(2026-08-14 실측으로 확인).
+               ⚠ **문서 이미지가 아직 없다.** IM 부록의 공문 이미지를 `assets/doc/` 에 넣고
+                 아래 각 항목의 `data-src` 를 채우면 그대로 동작한다. 그때까지는
+                 `<span class="doc-view is-off">` 로 두어 **누를 수 없다는 것이 보이게** 한다 —
+                 링크만 걸어 두고 404 를 띄우는 것보다 낫다. -->
           <ul class="docs">
             <li>
               <time datetime="2024-03-27">2024.03.27</time>
@@ -1090,6 +1099,104 @@
       items.forEach(function (el, i) {
         el.style.transitionDelay = (i % 4) * 0.07 + 's';
         io.observe(el);
+      });
+    })();
+
+    /* 화면 내 확대보기 — 갤러리 이미지 · 홍보영상 재생을 한 컴포넌트로 처리한다.
+       새 창으로 내보내지 않고 같은 화면에서 연다.
+
+       여는 대상은 트리거의 data-* 가 정한다.
+         data-lb="image"  + data-src            → 큰 이미지
+         data-lb="video"  + data-video-file     → 로컬 mp4 (<video controls>)
+         data-lb="video"  + data-youtube        → 유튜브 iframe (nocookie 도메인)
+
+       ⚠ 오버레이 DOM 은 여기서 만든다. 페이지마다 마크업을 넣으면 5곳이 어긋난다.
+         클래스 이름은 page-pr.css 와 짝이므로 한쪽만 바꾸지 말 것
+         (lint-classes 가 이 파일도 읽어서 죽은 CSS 판정에 반영한다). */
+    (function () {
+      var triggers = [].slice.call(document.querySelectorAll('[data-lb]'));
+      if (!triggers.length) return;
+
+      var box, media, caption, closeBtn, lastFocus = null;
+
+      var build = function () {
+        box = document.createElement('div');
+        box.className = 'lb';
+        box.hidden = true;
+        box.innerHTML =
+          '<div class="lb-back" data-lb-close></div>' +
+          '<div class="lb-panel" role="dialog" aria-modal="true" aria-label="확대보기">' +
+            '<button type="button" class="lb-close" data-lb-close aria-label="닫기">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+              'stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+            '</button>' +
+            '<div class="lb-media"></div>' +
+            '<p class="lb-cap"></p>' +
+          '</div>';
+        document.body.appendChild(box);
+        media = box.querySelector('.lb-media');
+        caption = box.querySelector('.lb-cap');
+        closeBtn = box.querySelector('.lb-close');
+        /* ⚠ closest 로 찾는다. hasAttribute 로는 닫기 버튼이 동작하지 않았다 —
+           버튼 안에 <svg> 아이콘이 있어서 가운데를 누르면 e.target 이 <svg>(또는 <path>)이고
+           그 노드에는 data-lb-close 가 없다. 버튼 면적의 대부분이 아이콘이라
+           "닫기가 안 눌린다"로 나타났다(2026-08-10 신고). */
+        box.addEventListener('click', function (e) {
+          if (e.target.closest('[data-lb-close]')) close();
+        });
+      };
+
+      var close = function () {
+        if (!box || box.hidden) return;
+        // 미디어를 비워야 영상이 계속 재생되지 않는다(iframe 은 제거해야 멈춘다)
+        media.innerHTML = '';
+        box.hidden = true;
+        document.body.style.overflow = '';
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+        lastFocus = null;
+      };
+
+      var open = function (el) {
+        if (!box) build();
+        var kind = el.dataset.lb;
+        var title = el.dataset.title || '';
+        var html = '';
+
+        if (kind === 'image') {
+          html = '<img src="' + el.dataset.src + '" alt="' + title.replace(/"/g, '&quot;') + '">';
+        } else if (el.dataset.videoFile) {
+          // playsinline: iOS 가 전체화면으로 가로채지 않게 한다
+          html = '<video src="' + el.dataset.videoFile + '" controls autoplay playsinline></video>';
+        } else if (el.dataset.youtube) {
+          html = '<div class="lb-embed"><iframe src="https://www.youtube-nocookie.com/embed/' +
+                 el.dataset.youtube + '?autoplay=1&rel=0" title="' +
+                 title.replace(/"/g, '&quot;') + '" frameborder="0" allowfullscreen ' +
+                 'allow="accelerometer; autoplay; encrypted-media; picture-in-picture"></iframe></div>';
+        } else {
+          return;   // 재생할 것이 없으면 아무것도 하지 않는다
+        }
+
+        media.innerHTML = html;
+        caption.textContent = title;
+        caption.hidden = !title;
+        lastFocus = document.activeElement;
+        box.hidden = false;
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      };
+
+      triggers.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();       // <a> 로 두어 JS 가 죽어도 원본으로 갈 수 있게 했다
+          open(el);
+        });
+      });
+
+      addEventListener('keydown', function (e) {
+        if (!box || box.hidden) return;
+        if (e.key === 'Escape') { close(); return; }
+        // 포커스를 패널 안에 가둔다 — 닫기 버튼 하나뿐이라 Tab 을 되돌리면 충분하다
+        if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
       });
     })();
   </script>
