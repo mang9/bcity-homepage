@@ -356,6 +356,9 @@
     .iv-gauge-scale span:nth-child(2) { flex: 0 0 25%; }
     .iv-gauge-scale span:nth-child(3) { flex: 0 0 25%; }
     .iv-gauge-scale span:nth-child(4) { flex: 0 0 0; margin-left: auto; }
+    /* 확보율의 산정 기준 각주 — 게이지 바로 아래, 눈금과 겹치지 않게 */
+    .iv-gauge-note { margin: clamp(12px, 1.2vw, 18px) 0 0; text-align: right;
+      font-size: 11.5px; color: var(--color-text-muted); }
 
     /* ── 특구 블록 (특구별 혜택) ───────────────────────────────────────── */
     .iv-cat { margin: 0 0 14px; display: flex; align-items: baseline; gap: 16px;
@@ -802,12 +805,12 @@
         <div class="tr-block rv">
           <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">8개 권역이 하나의 도시 생태계를 완성합니다</h3></div>
           <p class="sub-d">AI · BIO · FOOD · MICE 4대 클러스터와 주거 · 교육 · 업무 · 레저 4대 콤플렉스,
-            권역 부지 65만평을 포함해 총 약 110만평 규모입니다.</p>
+            권역 부지 약 65.2만평을 포함해 총 약 110만평 규모입니다.</p>
 
           <!-- 권역별 면적 — 색은 8대 권역 식별색(--color-district-*)을 그대로 쓴다.
                ⚠ 흰 면 위 텍스트라 DESIGN.md 가 보증한 대비(전부 4.62 이상)가 그대로 유효하다. -->
           <ul class="dz-sums">
-            <li class="dz-sum-i" style="--c: var(--color-district-ai)"><b>AI 데이터</b><em>6.1만평</em></li>
+            <li class="dz-sum-i" style="--c: var(--color-district-ai)"><b>AI 데이터</b><em>6.3만평</em></li>
             <li class="dz-sum-i" style="--c: var(--color-district-bio)"><b>바이오</b><em>8.2만평</em></li>
             <li class="dz-sum-i" style="--c: var(--color-district-food)"><b>푸드</b><em>4.2만평</em></li>
             <li class="dz-sum-i" style="--c: var(--color-district-mice)"><b>바이오 MICE</b><em>3.9만평</em></li>
@@ -816,7 +819,7 @@
             <li class="dz-sum-i" style="--c: var(--color-district-biz)"><b>비즈니스</b><em>1.7만평</em></li>
             <li class="dz-sum-i" style="--c: var(--color-district-golf)"><b>골프 · 레저</b><em>28.5만평</em></li>
           </ul>
-          <p class="dz-sums-total"><b>합계</b> 권역 부지 65만평 <span>·</span> 총 약 110만평</p>
+          <p class="dz-sums-total"><b>합계</b> 권역 부지 약 65.2만평 <span>·</span> 총 약 110만평</p>
           <p class="dz-note">※ 하천 · 공원 · 녹지 등 47.9만평 제외 기준입니다.</p>
         </div>
 
@@ -866,7 +869,7 @@
                 <p class="dz-cat"><b>01</b>클러스터</p>
                 <h3 class="dz-name">AI 데이터 클러스터</h3>
                 <p class="dz-h">국가대표급 하이퍼스케일 AI 데이터 클러스터</p>
-                <p class="dz-s">최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI · 바이오 데이터센터 구축</p>
+                <p class="dz-s">최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축</p>
               </div>
 
               <div class="dz-body">
@@ -887,6 +890,7 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <dl class="dz-spec">
+                    <div><dt>클러스터명</dt><dd>AI 데이터 클러스터</dd></div>
                     <div><dt>부지 면적</dt><dd>207,486㎡ (61,264평)</dd></div>
                     <div><dt>수전 용량</dt><dd>최대 330MW (IT Load 240MW)</dd></div>
                     <div><dt>수전 방식</dt><dd>154kV 직접수전</dd></div>
@@ -1113,7 +1117,7 @@
                         <caption class="sr-only">바이오MICE 클러스터 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th><th scope="col">용도지역</th><th scope="col">용적률</th><th scope="col">비고</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">Bio1</th><td class="is-num">23,993</td><td class="is-num">7,528</td><td>제2종 일반주거지역</td><td>250%</td><td>과학자마을</td></tr>
+                          <tr><th scope="row">Bio1</th><td class="is-num">23,993</td><td class="is-num">7,258</td><td>제2종 일반주거지역</td><td>250%</td><td>과학자마을</td></tr>
                           <tr><th scope="row">Bio2</th><td class="is-num">22,917</td><td class="is-num">6,932</td><td>준주거지역</td><td>500%</td><td>의료시설</td></tr>
                           <tr><th scope="row">Bio3</th><td class="is-num">44,011</td><td class="is-num">13,313</td><td>준주거지역</td><td>500%</td><td>MICE 복합용지</td></tr>
                           <tr><th scope="row">Bio4</th><td class="is-num">37,713</td><td class="is-num">11,409</td><td>준공업지역</td><td>400%</td><td>—</td></tr>
@@ -1149,7 +1153,7 @@
                 <p class="dz-cat"><b>05</b>콤플렉스</p>
                 <h3 class="dz-name">비즈니스 콤플렉스</h3>
                 <p class="dz-h">상업 · 업무 · 문화가 융합된 강원 관문</p>
-                <p class="dz-s">B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점</p>
+                <p class="dz-s">B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점 · 직 · 주 · 락 중심 주민친화적 상권 조성</p>
               </div>
 
               <div class="dz-body">
@@ -1240,7 +1244,7 @@
                   <dl class="dz-spec">
                     <div><dt>부지 면적</dt><dd>321,307㎡ (97,195평)</dd></div>
                     <div><dt>구역 구성</dt><dd>단독주택 · 공동주택 · 근린생활시설 · 주상복합</dd></div>
-                    <div><dt>계획 세대수</dt><dd>6,366세대</dd></div>
+                    <div><dt>계획 세대수</dt><dd>6,366세대 (공동주택 4,000 · 시니어하우징 2,000)</dd></div>
                     <div><dt>계획 인구</dt><dd>15,917명</dd></div>
                   </dl>
 
@@ -1286,7 +1290,7 @@
               <div class="dz-head">
                 <p class="dz-cat"><b>07</b>콤플렉스</p>
                 <h3 class="dz-name">에듀 콤플렉스</h3>
-                <p class="dz-h">생애 전주기 교육하는 ‘생각하는 도시’</p>
+                <p class="dz-h">생애 전주기 교육하는 ‘생각하는 도시’ 글로벌</p>
                 <p class="dz-s">춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성 · 유입</p>
               </div>
 

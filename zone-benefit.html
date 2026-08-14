@@ -356,6 +356,9 @@
     .iv-gauge-scale span:nth-child(2) { flex: 0 0 25%; }
     .iv-gauge-scale span:nth-child(3) { flex: 0 0 25%; }
     .iv-gauge-scale span:nth-child(4) { flex: 0 0 0; margin-left: auto; }
+    /* 확보율의 산정 기준 각주 — 게이지 바로 아래, 눈금과 겹치지 않게 */
+    .iv-gauge-note { margin: clamp(12px, 1.2vw, 18px) 0 0; text-align: right;
+      font-size: 11.5px; color: var(--color-text-muted); }
 
     /* ── 특구 블록 (특구별 혜택) ───────────────────────────────────────── */
     .iv-cat { margin: 0 0 14px; display: flex; align-items: baseline; gap: 16px;
