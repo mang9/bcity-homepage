@@ -139,43 +139,47 @@
         <div class="tr-block rv">
           <div class="sub-h"><h3 class="sub-t">관련 공식 문서</h3></div>
           <p class="sub-d">사업의 각 단계는 정부·지자체의 공식 문서로 확인됩니다.</p>
-          <!-- [보기] 를 누르면 **같은 화면에서** 문서 이미지를 확대해 보여 준다(2026-08-14 지시).
+          <!-- [보기] 를 누르면 **같은 화면에서** 공문 이미지를 확대해 보여 준다.
                갤러리·홍보영상과 같은 컴포넌트(src/sub/js/lightbox.js)를 쓴다.
                  data-lb="image" + data-src="이미지 경로" + data-title="설명"
                ⚠ 캡션 속성은 **`data-title`** 이다. `data-cap` 은 lightbox.js 가 읽지 않아
-                 캡션이 빈 채로 열린다(2026-08-14 실측으로 확인).
-               ⚠ **문서 이미지가 아직 없다.** IM 부록의 공문 이미지를 `assets/doc/` 에 넣고
-                 아래 각 항목의 `data-src` 를 채우면 그대로 동작한다. 그때까지는
-                 `<span class="doc-view is-off">` 로 두어 **누를 수 없다는 것이 보이게** 한다 —
-                 링크만 걸어 두고 404 를 띄우는 것보다 낫다. -->
+                 캡션이 빈 채로 열린다(2026-08-14 실측).
+               ⚠ 이미지 출처는 **IM 부록**(260803_B-CITY_IM (면적수정).pptx slide34~37)이다.
+                 원본 PNG 은 1400~1750px 폭이고 assets/doc/ 에 1200px AVIF 로 굽혀 두었다.
+                 IM 이 갱신되면 같은 슬라이드에서 다시 뽑는다 — 대응은 CLAUDE.md §11.30 참고. -->
           <ul class="docs">
             <li>
               <time datetime="2024-03-27">2024.03.27</time>
               <span class="doc-n">국토교통부 기업혁신파크 선도사업 선정 공문</span>
-              <span class="doc-view is-off" aria-disabled="true">보기</span>
+              <button type="button" class="doc-view" data-lb="image"
+                      data-src="assets/doc/molit-selection-2024-03-27.avif" data-title="국토교통부 기업혁신파크 선도사업 선정 공문">보기</button>
             </li>
             <li>
               <time datetime="2024-09-09">2024.09.09</time>
               <span class="doc-n">강원특별자치도 · 춘천시 출자지분 확정 공문</span>
-              <span class="doc-view is-off" aria-disabled="true">보기</span>
+              <button type="button" class="doc-view" data-lb="image"
+                      data-src="assets/doc/gangwon-equity-2024-09-09.avif" data-title="강원특별자치도 · 춘천시 출자지분 확정 공문">보기</button>
             </li>
             <li>
               <time datetime="2024-03-18">2024.03.18</time>
               <span class="doc-n">강원특별자치도 토지거래허가구역 지정 공고</span>
-              <span class="doc-view is-off" aria-disabled="true">보기</span>
+              <button type="button" class="doc-view" data-lb="image"
+                      data-src="assets/doc/land-permit-zone-2024-03-18.avif" data-title="강원특별자치도 토지거래허가구역 지정 공고">보기</button>
             </li>
             <li>
               <time datetime="2024-08-29">2024.08.29</time>
               <span class="doc-n">춘천시 개발행위허가 제한지역 지정 고시</span>
-              <span class="doc-view is-off" aria-disabled="true">보기</span>
+              <button type="button" class="doc-view" data-lb="image"
+                      data-src="assets/doc/dev-restrict-2024-08-29.avif" data-title="춘천시 개발행위허가 제한지역 지정 고시">보기</button>
             </li>
             <li>
               <time datetime="2025-09-11">2025.09.11</time>
               <span class="doc-n">춘천 기업혁신파크 선도사업 개발구역 지정 공동제안 사항 공고</span>
-              <span class="doc-view is-off" aria-disabled="true">보기</span>
+              <button type="button" class="doc-view" data-lb="image"
+                      data-src="assets/doc/joint-proposal-2025-09-11.avif" data-title="춘천 기업혁신파크 선도사업 개발구역 지정 공동제안 사항 공고">보기</button>
             </li>
           </ul>
-          <p class="docs-note">※ 공문 원본은 준비되는 대로 [보기]에서 열람하실 수 있습니다.</p>
+          <p class="docs-note">※ [보기]를 누르면 공문 원본을 확대해 보실 수 있습니다.</p>
         </div>
       </div>
     </section>
