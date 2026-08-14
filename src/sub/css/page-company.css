@@ -146,11 +146,15 @@
 .bs-holder-l em { font-style: normal; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(13px, 1.15vw, 17px); font-variant-numeric: tabular-nums;
   color: var(--bs-out); white-space: nowrap; }
-/* 미확정(CI · SI) — 파선으로 드러내고 값은 약하게 */
-.bs-holder--tbd { border-style: dashed; }
+/* 미확정(CI · SI) — **테두리는 다른 카드와 같은 실선**이다(2026-08-14 지시).
+   ⚠ 파선으로 두면 다섯 칸 중 둘만 형태가 달라 임시로 끼워 넣은 것처럼 보인다.
+     '확정 전'은 값(TBD)이 회색이라는 것만으로 충분히 읽힌다. */
 .bs-holder--tbd .bs-holder-l em { color: var(--color-text-muted); }
 
-.bs-cap { margin: clamp(12px, 1.2vw, 18px) 0 0; font-size: 12px; color: var(--color-text-muted); }
+/* 구조도 밑 설명 — 기획서 slide43 의 PFV · AMC 정의 두 줄 */
+.bs-cap { display: grid; gap: 5px; margin: clamp(14px, 1.4vw, 20px) 0 0;
+  font-size: 12.5px; line-height: 1.7; color: var(--color-text-muted); word-break: keep-all; }
+.bs-cap b { font-family: var(--font-display); font-weight: 700; color: var(--color-primary); }
 
 /* CI 도급 관계 문구 */
 .orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
@@ -194,9 +198,6 @@
   .bs-fund { width: 100%; }
 }
 
-.pfv-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 13.5px; line-height: 1.7;
-  color: var(--color-text-muted); }
-.pfv-note b { color: var(--color-text); font-weight: 700; }
 
 /* ── 다섯 가지 강점 ────────────────────────────────────────────────────
    카드(테두리 박스)에서 **번호 + 상단 룰의 편집형**으로 바꿨다(2026-08-10 지시).
