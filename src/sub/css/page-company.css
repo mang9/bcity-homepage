@@ -18,6 +18,10 @@
       --bs-edge: #d9e5f3;        /* 카드 테두리 */
       --bs-ink: #14243b;         /* 제목 */
       --bs-sub: #34455c;         /* 보조 설명 */
+      /* 세 끝단 박스(수분양자 · 토지소유주 · 금융기관)의 크기 — **셋이 같아야 한다**(지시).
+         한 곳에서 정하고 세 군데가 같이 쓴다. 모바일에서는 폭만 풀어 준다. */
+      --bs-node-w: clamp(150px, 15vw, 220px);
+      --bs-node-h: clamp(58px, 5.4vw, 78px);
       margin: clamp(28px, 2.8vw, 44px) 0 0; }
 
 /* ── 방사형 배치 ─────────────────────────────────────────────────── */
@@ -31,8 +35,10 @@
 .bs-side--fin { grid-area: fin; }
 .bs-core { grid-area: core; }
 
-/* 끝단 박스 — 초록 테두리(시안) */
-.bs-node { margin: 0; padding: clamp(16px, 1.8vw, 26px) clamp(12px, 1.2vw, 18px);
+/* 끝단 박스 — 초록 테두리(시안). 셋의 폭·높이가 같다 */
+.bs-node { display: grid; place-items: center; margin: 0;
+  width: var(--bs-node-w); min-height: var(--bs-node-h);
+  padding: 10px clamp(10px, 1.1vw, 16px);
   border: 2px solid var(--bs-in); border-radius: var(--radius-lg);
   background: var(--color-surface); text-align: center;
   font-family: var(--font-display); font-weight: 700;
@@ -54,11 +60,11 @@
 
 /* 왼쪽 끝단(토지소유주) — [박스][흐름] 이고 화살표는 오른쪽(코어)을 향한다 */
 .bs-side--land, .bs-side--fin { display: grid; align-items: center;
-  grid-template-columns: minmax(0, auto) minmax(90px, 1fr);
+  grid-template-columns: var(--bs-node-w) minmax(70px, 1fr);
   gap: clamp(8px, 1vw, 16px); }
 /* 오른쪽 끝단(금융기관) — 순서를 뒤집어 [흐름][박스] 로 보인다.
    ⚠ 마크업은 그대로 두고 order 로만 뒤집는다(낭독 순서 유지) */
-.bs-side--fin { grid-template-columns: minmax(90px, 1fr) minmax(0, auto); }
+.bs-side--fin { grid-template-columns: minmax(70px, 1fr) var(--bs-node-w); }
 .bs-side--fin .bs-node { order: 2; }
 .bs-side--fin .bs-flows { order: 1; }
 /* ⚠ 화살표가 향하는 쪽은 **`.bs-arw` 의 flex-direction** 이 정한다.
@@ -72,7 +78,6 @@
 
 /* 위 끝단(수분양자) — 세로 화살표 */
 .bs-side--buyer { display: grid; justify-items: center; gap: clamp(6px, .8vw, 12px); }
-.bs-side--buyer .bs-node { min-width: min(100%, 260px); }
 .bs-side--buyer .bs-flows { grid-auto-flow: column; gap: clamp(14px, 1.8vw, 30px); }
 .bs-side--buyer .bs-flow { flex-direction: column; gap: 4px; }
 .bs-side--buyer .bs-arw { flex-direction: column; min-width: 0; min-height: 30px; }
@@ -152,6 +157,11 @@
   .bs-radial { grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "buyer" "land" "fin" "core"; }
   .bs-side--land, .bs-side--fin { grid-template-columns: minmax(0, 1fr); }
+  /* 좁은 화면에서는 세 박스 모두 전체 폭(지시). 높이 하한은 그대로 둔다.
+     ⚠ 수분양자 칸은 `justify-items: center` 라 `width: auto` 만으로는 내용 폭으로 쪼그라든다
+       (실측 76px vs 나머지 350px). stretch 로 함께 풀어 준다. */
+  .bs-node { width: auto; }
+  .bs-side--buyer { justify-items: stretch; }
   .bs-side--fin .bs-node { order: 0; }
   .bs-side--fin .bs-flows { order: 1; }
   /* 세로 배치에서는 세 끝단 모두 아래(유입) · 위(유출) 화살표를 쓴다.
