@@ -37,14 +37,18 @@ const SYMBOL = (() => {
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /* ── 좌측 메뉴 — 기획서 slide 105 의 5개 + 파트너사(사용자 추가) ───────── */
+/* `desc` 는 대시보드 타일의 숫자 아래 문구다.
+   ⚠ 전에는 '등록된 게시물' · '기획서 외 · 추가 요청' 이었는데, 뒤엣것은 기획 메모라
+   화면에서 읽을 말이 아니었다(2026-08-18 지적). 담당자가 타일만 보고 **지금 무엇을
+   손봐야 하는지** 알 수 있는 문구로 바꿨다 — 공개 수와 손볼 거리를 함께 보여 준다. */
 const NAV = [
   { key: 'dashboard', label: '대시보드', file: 'index.html' },
-  { key: 'notice', label: '공지사항', file: 'notice.html', n: 12 },
-  { key: 'press', label: '언론보도', file: 'press.html', n: 34 },
-  { key: 'video', label: '홍보영상', file: 'video.html', n: 8 },
-  { key: 'gallery', label: '갤러리', file: 'gallery.html', n: 26 },
-  { key: 'publication', label: '발행물', file: 'publication.html', n: 5 },
-  { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, extra: true },
+  { key: 'notice', label: '공지사항', file: 'notice.html', n: 12, desc: '공개 11 · 예약 1' },
+  { key: 'press', label: '언론보도', file: 'press.html', n: 34, desc: '공개 33 · 비공개 1' },
+  { key: 'video', label: '홍보영상', file: 'video.html', n: 8, desc: '공개 6 · 메인 노출 4 / 4' },
+  { key: 'gallery', label: '갤러리', file: 'gallery.html', n: 26, desc: '공개 25 · 예약 1' },
+  { key: 'publication', label: '발행물', file: 'publication.html', n: 5, desc: '공개 4 · 다운로드 허용 3' },
+  { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, desc: '공개 7 · 확정 전 2' },
 ];
 
 /* ⚠ 상단 "DESIGN ONLY" 띠는 2026-08-18 지시로 제거했다.
@@ -167,12 +171,17 @@ ${pager()}
         </div>`;
 }
 
-/** 폼 한 줄 — 기획서의 필드 타입 표기를 배지로 그대로 남긴다 */
+/** 폼 한 줄.
+ *  ⚠ 전에는 컨트롤 위에 회색 배지로 필드 타입(INPUT · TEXT EDITOR …)을 찍었는데
+ *  2026-08-18 지시로 화면에서 뺐다. **`type` 인자는 그대로 받는다** — 값이 사라지면
+ *  개발 쪽에 넘길 근거가 없어지므로, 빌드 시 `admin/README.md` 의 필드 명세표로 나간다.
+ *  화면에서 지웠다고 명세를 지운 것은 아니다. */
+const FIELD_SPEC = [];
 function field({ label, req, type, control, hint }) {
+  FIELD_SPEC.push({ label, req: !!req, type, hint: hint || '' });
   return `          <div class="ad-row">
             <p class="ad-lb">${esc(label)}${req ? '<i>*</i>' : ''}</p>
             <div class="ad-fd">
-              <span class="ad-type">${esc(type)}</span>
               ${control}
               ${hint ? `<p class="ad-hint">${hint}</p>` : ''}
             </div>
@@ -207,7 +216,9 @@ const thumbs = (n) => `<div class="ad-thumbs">${Array.from({ length: n }, (_, i)
   `<div class="ad-thumb"><b>${i + 1}</b><i>드래그</i></div>`).join('')}</div>`;
 
 /* slug: 목록 화면으로 돌아갈 대상. preview: 공개 사이트에서 미리 볼 페이지(새 창). */
+const SPEC_BY_SCREEN = {};
 function formCard({ title, fields, note, slug, preview }) {
+  SPEC_BY_SCREEN[slug] = FIELD_SPEC.splice(0);
   return `        <div class="ad-card">
           <div class="ad-card-h"><h2>${esc(title)}</h2>
             <a class="ad-btn ad-btn--sm" href="${slug}.html">‹ 목록으로</a></div>
@@ -283,7 +294,7 @@ pages['index.html'] = shell({
   body: `        <div class="ad-tiles">
 ${NAV.filter((n) => n.n).map((n) => `          <a class="ad-tile" href="${n.file}">
             <b>${esc(n.label)}</b><strong>${n.n}</strong>
-            <span>${n.extra ? '기획서 외 · 추가 요청' : '등록된 게시물'}</span></a>`).join('\n')}
+            <span>${esc(n.desc)}</span></a>`).join('\n')}
         </div>
         <div class="ad-card" style="margin-top:18px">
           <div class="ad-card-h"><h2>최근 등록</h2>
@@ -335,9 +346,10 @@ pages['notice-form.html'] = shell({
       field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '필수 · 최대 100자' }),
       field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '리치 텍스트 에디터 · 이미지 삽입 가능' }),
       field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '다중 첨부 · 파일당 최대 20MB')
-        + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]) }),
+        + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
+        hint: '다중 첨부 · 파일당 최대 20MB' }),
       field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '목록 최상단에 [공지] 배지와 함께 노출됩니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', control: radios(['공개', '비공개', '예약'], 1) }),
+      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 1) }),
     ],
   }),
 });
@@ -376,10 +388,10 @@ pages['press-form.html'] = shell({
     note: '※ 링크를 클릭하면 해당 기사 URL 로 이동합니다(새 창).',
     fields: [
       field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '필수 · 최대 200자' }),
-      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스') }),
+      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '목록의 매체명 필터에 그대로 쓰입니다.' }),
       field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '원 기사 게재일' }),
       field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 웹사이트 URL · http(s):// 로 시작' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', control: radios(['공개', '비공개', '예약'], 2) }),
+      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 2) }),
     ],
   }),
 });
@@ -415,13 +427,13 @@ pages['video-form.html'] = shell({
     slug: 'video', preview: '../video.html',
     note: '※ 메인 노출은 최대 4편까지 지정할 수 있습니다.',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목') }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '카드 썸네일 아래 노출' }),
       field({ label: '영상 소스', req: true, type: 'SELECT + URL',
         control: `<div style="display:flex;gap:8px;flex-wrap:wrap">${sel(['YouTube', '직접 업로드'])}
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
         hint: 'YouTube 링크 · 썸네일은 링크에서 자동 추출' }),
       field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 노출 · 초과 지정 시 경고' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', control: radios(['공개', '비공개', '예약'], 3) }),
+      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 3) }),
     ],
   }),
 });
@@ -458,15 +470,16 @@ pages['gallery-form.html'] = shell({
     slug: 'gallery', preview: '../gallery.html',
     note: '※ 다중 이미지 업로드 및 드래그로 순서를 조정합니다.',
     fields: [
-      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']) }),
-      field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목') }),
+      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 — 갤러리 분류 탭 기준' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '앨범 단위 제목' }),
       field({ label: '대표 이미지', req: true, type: 'IMAGE UPLOAD',
         control: drop('썸네일 · 리스트 대표 이미지', '권장 1600×900 이상 · JPG · PNG · WebP')
-          + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))"><div class="ad-thumb"><b>대표</b></div></div>' }),
+          + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))"><div class="ad-thumb"><b>대표</b></div></div>',
+        hint: '권장 1600×900 이상 · JPG · PNG · WebP' }),
       field({ label: '이미지 업로드', req: true, type: 'MULTI UPLOAD',
         control: drop('여러 장을 한 번에 끌어다 놓으세요', '드래그 앤 드롭 · 순서 조정 가능') + thumbs(8),
         hint: '썸네일을 끌어 순서를 바꿉니다. 순서가 화면 노출 순서입니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', control: radios(['공개', '비공개', '예약'], 4) }),
+      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 4) }),
     ],
   }),
 });
@@ -501,16 +514,18 @@ pages['publication-form.html'] = shell({
     slug: 'publication', preview: '../publication.html',
     note: '※ PDF 우선 · 파일당 최대 100MB.',
     fields: [
-      field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']) }),
-      field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목') }),
+      field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']), hint: '표지 왼쪽 위 배지로 노출됩니다.' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목'), hint: '목록에서 두 줄까지 노출됩니다.' }),
       field({ label: '표지 이미지', type: 'IMAGE UPLOAD',
         control: drop('발행물 표지 이미지', '권장 세로형 4:5 · 비우면 기본 표지가 생성됩니다')
-          + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"><div class="ad-thumb" style="aspect-ratio:4/5"><b>표지</b></div></div>' }),
+          + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"><div class="ad-thumb" style="aspect-ratio:4/5"><b>표지</b></div></div>',
+        hint: '권장 세로형 4:5 · 비우면 기본 표지가 자동 생성됩니다.' }),
       field({ label: '파일 업로드', req: true, type: 'FILE UPLOAD',
         control: drop('PDF 파일을 끌어다 놓으세요', 'PDF 우선 · 최대 100MB')
-          + fileList([['bcity-im.pdf', '12.4MB']]) }),
+          + fileList([['bcity-im.pdf', '12.4MB']]),
+        hint: 'PDF 우선 · 파일당 최대 100MB' }),
       field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '끄면 [보기]만 노출되고 [다운로드] 버튼이 숨습니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', control: radios(['공개', '비공개', '예약'], 5) }),
+      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 5) }),
     ],
   }),
 });
@@ -550,9 +565,9 @@ pages['partner-form.html'] = shell({
     slug: 'partner', preview: '../company.html',
     note: '※ 로고는 면적 기준으로 자동 정규화됩니다(높이만 맞추면 크기가 달라 보입니다).',
     fields: [
-      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']) }),
+      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 파트너 그룹과 구조도 위치를 결정합니다.' }),
       field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지 카드와 구조도에 함께 쓰입니다.' }),
-      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon') }),
+      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: 'EN 페이지 대비 · 비워도 됩니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 여백은 자동 트리밍')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
@@ -563,7 +578,7 @@ pages['partner-form.html'] = shell({
       field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 띠에 노출'), hint: '끄면 사업주체 페이지에만 노출됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', control: radios(['공개', '비공개', '예약'], 6) }),
+      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 6) }),
     ],
   }),
 });
@@ -576,5 +591,23 @@ for (const [file, html] of Object.entries(pages)) {
   console.log(`  → admin/${file} (${(html.length / 1024).toFixed(1)} KB)`);
   n++;
 }
+/* 필드 명세표 — 화면에서 뺀 타입 정보를 README 로 옮긴다(개발 인계용 근거) */
+const LABEL = { notice: '공지사항', press: '언론보도', video: '홍보영상',
+                gallery: '갤러리', publication: '발행물', partner: '파트너사' };
+let spec = '\n## 필드 명세 (등록 / 수정 화면)\n\n'
+  + '화면에는 컨트롤만 두고 타입 표기는 여기로 옮겼습니다. `*` 는 필수입니다.\n';
+for (const [slug, rows] of Object.entries(SPEC_BY_SCREEN)) {
+  spec += `\n### ${LABEL[slug] || slug} — \`${slug}-form.html\`\n\n`
+    + '| 항목 | 타입 | 제약 · 비고 |\n|---|---|---|\n'
+    + rows.map((r) => `| ${r.label}${r.req ? ' *' : ''} | \`${r.type}\` | ${r.hint.replace(/\|/g, '\\|') || '—'} |`).join('\n')
+    + '\n';
+}
+const RM = join(OUT, 'README.md');
+if (existsSync(RM)) {
+  const cur = readFileSync(RM, 'utf8').split('\n## 필드 명세 (등록 / 수정 화면)')[0].replace(/\s*$/, '');
+  writeFileSync(RM, cur + '\n' + spec);
+  console.log('  → admin/README.md (필드 명세표 갱신)');
+}
+
 console.log(`\n  관리자 화면 ${n}개 생성 완료 — admin/login.html 부터 보세요.`);
 console.log('  ⚠ 디자인 인계용입니다. 기능은 구현하지 않았고 admin/ 은 배포에서 제외됩니다.');
