@@ -451,6 +451,12 @@
        무슨 분류인지 사라진다 — 배지는 표지 위에 얹힌 라벨이지 오버레이의 일부가 아니다.
        갤러리(.pr-thumb)에서는 오버레이가 없어 이 문제가 없었다. */
     .pub-thumb .pr-badge { z-index: 1; }
+    /* ⚠ 이미지가 없는 **책자 표지**에서는 배지를 제본 등 오른쪽으로 물린다.
+       기본 위치(왼쪽 10px)는 등(0~14px)과 접지선(15px)에 4px 걸쳐 선을 끊어 놓는다(실측).
+       등 15px + 이미지 표지와 같은 여백 10px = 25px.
+       `.pub-blank` 는 마크업에서 배지 **앞**에 오므로 일반 형제 결합자로 잡힌다 —
+       `:has()` 가 필요 없다(빌더의 `<span class="pub-thumb">{표지}{배지}` 순서에 의존한다). */
+    .pub-blank ~ .pr-badge { left: 25px; }
     .pub-ov { position: absolute; inset: 0; display: flex; align-items: center;
       justify-content: center; gap: 10px;
       background: rgb(var(--navy-rgb) / .52);
