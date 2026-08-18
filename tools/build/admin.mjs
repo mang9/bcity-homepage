@@ -103,6 +103,15 @@ ${body}
     </div>
   </div>
 ${modal}
+  <script>
+    /* 토글만 실제로 동작한다. 저장은 하지 않는다 — 값이 어디로도 가지 않는다. */
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('.ad-toggle');
+      if (!t) return;
+      var on = t.classList.toggle('is-on');
+      t.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  </script>
 </body>
 </html>
 `;
@@ -191,7 +200,10 @@ function field({ label, req, type, control, hint }) {
 const input = (ph) => `<input class="ad-in" type="text" placeholder="${esc(ph)}" />`;
 const sel = (opts) => `<select class="ad-sel">${opts.map((o) => `<option>${esc(o)}</option>`).join('')}</select>`;
 const date = () => '<input class="ad-in" type="date" style="max-width:220px" />';
-const toggle = (on, t) => `<div class="ad-toggle${on ? ' is-on' : ''}"><span class="ad-toggle-t"></span><b>${esc(t)}</b></div>`;
+/* 토글은 실제로 눌린다(2026-08-18 지시). `<div>` 가 아니라 `<button aria-pressed>` 로
+   내야 키보드·스크린리더에서도 상태가 읽힌다 — 상태 전환은 셸의 인라인 스크립트가 맡는다. */
+const toggle = (on, t) => `<button type="button" class="ad-toggle${on ? ' is-on' : ''}"`
+  + ` aria-pressed="${on ? 'true' : 'false'}"><span class="ad-toggle-t"></span><b>${esc(t)}</b></button>`;
 const radios = (arr, openIdx) => `<div class="ad-radios">${arr.map((a, i) =>
   `<label><input type="radio" name="st${openIdx ?? ''}"${i === 0 ? ' checked' : ''} />${esc(a)}</label>`).join('')}</div>
               <div class="ad-when is-open"><input class="ad-in" type="date" style="max-width:200px" />
@@ -208,8 +220,10 @@ const editor = () => `<div class="ad-editor">
 const drop = (t, s) => `<div class="ad-drop"><b>${esc(t)}</b><span>${esc(s)}</span>
                 <button type="button" class="ad-btn ad-btn--sm">파일 선택</button></div>`;
 
+/* 용량은 파일명 **바로 옆**에 붙인다(2026-08-18 지시).
+   전에는 flex 로 양끝에 밀려 파일명과 용량이 멀찍이 떨어져 짝이 안 읽혔다. */
 const fileList = (arr) => `<ul class="ad-files">${arr.map((f) =>
-  `<li><span>${esc(f[0])}</span><span style="color:var(--color-text-muted)">${esc(f[1])}</span>
+  `<li><span class="ad-file-n">${esc(f[0])} <i>${esc(f[1])}</i></span>
     <button type="button" class="ad-btn ad-btn--sm ad-btn--danger">삭제</button></li>`).join('')}</ul>`;
 
 const thumbs = (n) => `<div class="ad-thumbs">${Array.from({ length: n }, (_, i) =>
@@ -517,14 +531,14 @@ pages['publication-form.html'] = shell({
       field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']), hint: '표지 왼쪽 위 배지로 노출됩니다.' }),
       field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목'), hint: '목록에서 두 줄까지 노출됩니다.' }),
       field({ label: '표지 이미지', type: 'IMAGE UPLOAD',
-        control: drop('발행물 표지 이미지', '권장 세로형 4:5 · 비우면 기본 표지가 생성됩니다')
+        control: drop('발행물 표지 이미지', '권장 세로형 4:5 · 등록하지 않으면 기본 표지가 생성됩니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"><div class="ad-thumb" style="aspect-ratio:4/5"><b>표지</b></div></div>',
-        hint: '권장 세로형 4:5 · 비우면 기본 표지가 자동 생성됩니다.' }),
+        hint: '권장 세로형 4:5 · 등록하지 않으면 기본 표지가 자동 생성됩니다.' }),
       field({ label: '파일 업로드', req: true, type: 'FILE UPLOAD',
         control: drop('PDF 파일을 끌어다 놓으세요', 'PDF 우선 · 최대 100MB')
           + fileList([['bcity-im.pdf', '12.4MB']]),
         hint: 'PDF 우선 · 파일당 최대 100MB' }),
-      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '끄면 [보기]만 노출되고 [다운로드] 버튼이 숨습니다.' }),
+      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '끄면 [보기]만 노출되고 [다운로드] 버튼이 안 보입니다.' }),
       field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 5) }),
     ],
   }),
@@ -567,15 +581,15 @@ pages['partner-form.html'] = shell({
     fields: [
       field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 파트너 그룹과 구조도 위치를 결정합니다.' }),
       field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지 카드와 구조도에 함께 쓰입니다.' }),
-      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: 'EN 페이지 대비 · 비워도 됩니다.' }),
+      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: 'EN 페이지 대비 · 선택 항목입니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 여백은 자동 트리밍')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
-        hint: '흰 배경이 박힌 JPG 는 어두운 면에서 흰 박스로 보입니다 — 알파 채널 파일을 권장합니다.' }),
+        hint: '흰배경의 JPG 는 어두운 배경에서 흰 박스로 보입니다 — 투명 png 파일을 권장합니다.' }),
       field({ label: '지분율', type: 'INPUT', control: '<input class="ad-in" type="text" placeholder="예: 37.3" style="max-width:160px" />',
         hint: '비우면 구조도에 표기하지 않습니다. 확정 전이면 TBD 로 표시됩니다.' }),
-      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '구조도 노드에 상호 아래 작게 붙습니다.' }),
-      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 띠에 노출'), hint: '끄면 사업주체 페이지에만 노출됩니다.' }),
+      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '구조도 상호 아래 설명 부분입니다.' }),
+      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '설정을 끄면 사업주체 페이지에만 노출됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
       field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 6) }),

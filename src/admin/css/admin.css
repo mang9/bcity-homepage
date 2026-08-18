@@ -188,6 +188,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ad-files li { display: flex; align-items: center; justify-content: space-between;
   gap: 10px; padding: 8px 12px; border: 1px solid var(--color-line);
   border-radius: var(--radius-sm); background: var(--color-surface); font-size: 12.5px; }
+/* 용량은 파일명 바로 옆이다 — 양끝 정렬로 떼어 놓으면 어느 파일의 용량인지 안 읽힌다 */
+.ad-file-n { min-width: 0; overflow-wrap: anywhere; }
+.ad-file-n i { font-style: normal; margin-left: 6px; color: var(--color-text-muted); }
 
 .ad-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
   gap: 10px; margin-top: 10px; }
@@ -206,14 +209,23 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ad-when { display: none; gap: 8px; margin-top: 10px; }
 .ad-when.is-open { display: flex; }
 
-/* 토글 — 실제 동작은 없다. 형태만 전달한다 */
-.ad-toggle { display: inline-flex; align-items: center; gap: 9px; padding-top: 8px; }
+/* 토글 — **실제로 눌린다**(2026-08-18 지시). `<button aria-pressed>` 로 나가고
+   상태 전환은 셸의 인라인 스크립트가 한다. 값은 저장되지 않는다.
+   ⚠ button 이므로 브라우저 기본 테두리·배경·패딩을 반드시 지운다 — 안 지우면
+     OS 기본 버튼 모양이 남아 토글로 보이지 않는다.
+   켜진 색은 민트 → **프라이머리**로 바꿨다(지시). 사이트 버튼 색과 같아진다. */
+.ad-toggle { display: inline-flex; align-items: center; gap: 9px; margin-top: 8px;
+  padding: 0; border: 0; background: none; cursor: pointer; appearance: none; }
 .ad-toggle-t { width: 42px; height: 24px; border-radius: 999px; background: var(--ad-toggle-off);
-  position: relative; flex: none; }
+  position: relative; flex: none; transition: background .18s; }
 .ad-toggle-t::after { content: ""; position: absolute; left: 3px; top: 3px;
-  width: 18px; height: 18px; border-radius: 50%; background: #fff; }
-.ad-toggle.is-on .ad-toggle-t { background: var(--color-mint); }
-.ad-toggle.is-on .ad-toggle-t::after { left: auto; right: 3px; }
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  transition: transform .18s; }
+.ad-toggle.is-on .ad-toggle-t { background: var(--color-primary); }
+.ad-toggle.is-on .ad-toggle-t::after { transform: translateX(18px); }
+.ad-toggle:hover .ad-toggle-t { filter: brightness(.96); }
+.ad-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px;
+  border-radius: var(--radius-sm); }
 .ad-toggle b { font-size: 13px; font-weight: 700; }
 
 .ad-foot { display: flex; gap: 8px; justify-content: flex-end; padding: 16px 18px;
