@@ -7,6 +7,7 @@
     "build": "npm run build:css && npm run build:pages",
     "build:css": "tailwindcss -i src/css/app.css -o assets/css/app.css --minify",
     "build:pages": "node tools/build/pages.mjs",
+    "build:admin": "node tools/build/admin.mjs",
     "build:check": "node tools/build/pages.mjs --check && node tools/build/lint-classes.mjs",
     "build:deploy": "SHOW_SAMPLES=0 node tools/build/pages.mjs && SHOW_SAMPLES=0 node tools/build/pages.mjs --check && node tools/build/lint-classes.mjs",
     "commit:prep": "npm run build:deploy && git add -A && npm run build:pages && echo \"  인덱스=배포본 · 작업트리=샘플 — 이제 git commit 하세요\"",
