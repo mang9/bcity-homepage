@@ -7,6 +7,8 @@ import Foundation
 let args = CommandLine.arguments
 let inURL = URL(fileURLWithPath: args[1]), outURL = URL(fileURLWithPath: args[2])
 let W = Int(args[3])!, H = Int(args[4])!, kbps = Int(args[5])!
+// 7번째 인수(선택): "hevc" 를 주면 HEVC 로 굽는다(§4.2 듀얼 코덱)
+let useHEVC = args.count > 7 && args[7] == "hevc"
 // 6번째 인수(선택): 가운데를 이 가로세로비로 먼저 잘라낸다.
 // 슬롯이 세로인데 소스가 21:9 라 어차피 안 보이는 폭을 인코딩에서 빼기 위한 것이다.
 let cropAR: CGFloat? = args.count > 6 ? CGFloat(Double(args[6])!) : nil
@@ -23,14 +25,19 @@ reader.add(rOut)
 
 let writer = try! AVAssetWriter(outputURL: outURL, fileType: .mp4)
 let wIn = AVAssetWriterInput(mediaType: .video, outputSettings: [
-  AVVideoCodecKey: AVVideoCodecType.h264,
+  AVVideoCodecKey: useHEVC ? AVVideoCodecType.hevc : AVVideoCodecType.h264,
   AVVideoWidthKey: W, AVVideoHeightKey: H,
   AVVideoCompressionPropertiesKey: [
     AVVideoAverageBitRateKey: kbps * 1000,
     AVVideoMaxKeyFrameIntervalKey: 48,     // 24fps → 2초마다 키프레임(루프·시킹 대비)
-    AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel,
   ]])
 wIn.expectsMediaDataInRealTime = false
+/* ⚠ **반드시 켤 것.** 끄면 moov 아톰이 파일 **끝**에 놓여, 브라우저가 파일을 통째로
+     내려받기 전에는 첫 프레임도 못 띄운다(4.8MB 클립이면 전부 받아야 시작).
+     2026-08-18 에 실제로 이걸 빠뜨려 구역 영상 8개가 faststart 를 잃었다 —
+     교체 전 영상은 ftyp·moov·mdat 였는데 새로 구운 것은 ftyp·mdat·moov 였다.
+   검증: 최상위 아톰 순서에서 moov 가 mdat **앞**에 있어야 한다. */
+writer.shouldOptimizeForNetworkUse = true
 writer.add(wIn)
 
 // ⚠ adaptor.pixelBufferPool 은 startWriting 전에는 nil 이다. 풀을 직접 만든다.
