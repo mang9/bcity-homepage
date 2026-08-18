@@ -311,16 +311,20 @@ function renderPubs(rows) {
     `<a class="pub-ov-btn" href="${esc(href)}"${attrs} title="${esc(label)}">`
     + `${icon}<span class="sr">${esc(label)}</span></a>`;
 
+  /* 분류는 **표지 왼쪽 위 배지**다(2026-08-18 지시 — 갤러리와 같은 형태).
+     전에는 날짜 옆에 `2026.06.30 · 카달로그` 로 붙어 있었는데, 같은 홍보센터 안에서
+     갤러리는 배지·발행물은 텍스트라 분류를 읽는 방법이 목록마다 달랐다.
+     클래스도 갤러리와 **같은 `.pr-badge`** 를 쓴다 — 모양이 갈라지지 않게 하기 위함이다. */
   const cards = '        <ul class="pub-list">\n' + rows.map((r) => {
     const acts =
       (r.url ? ovBtn(r.url, ' target="_blank" rel="noopener"', ICON.eye, `${r.title} 새 창으로 보기`) : '') +
       (r.file ? ovBtn(r.file, ' download', ICON.down, `${r.title} 내려받기`) : '');
-    const meta = [fmtDate(r.date), KIND[r.kind]].filter(Boolean).join(' · ');
+    const badge = KIND[r.kind] ? `<span class="pr-badge">${esc(KIND[r.kind])}</span>` : '';
     return `          <li class="pub-item" data-cat="${esc(r.kind || '')}">\n` +
-      `            <span class="pub-thumb">${pubCover(r)}` +
+      `            <span class="pub-thumb">${pubCover(r)}${badge}` +
       (acts ? `<span class="pub-ov">${acts}</span>` : '') + '</span>\n' +
       `            <p class="pr-title">${esc(r.title)}</p>\n` +
-      `            <p class="pr-row-meta">${esc(meta)}</p>\n` +
+      `            <p class="pr-row-meta"><time datetime="${esc(r.date)}">${fmtDate(r.date)}</time></p>\n` +
       '          </li>';
   }).join('\n') + '\n        </ul>';
 
