@@ -18,7 +18,7 @@
  *   {{key}}        치환. 값이 없으면 빌드를 실패시킨다(조용한 빈칸 방지)
  *   {{> partial}}  src/sub/partials/<partial>.html|svg 삽입 (1단 중첩까지)
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -111,8 +111,29 @@ const SHOW_LIST_FILTERS = false;
    ⚠ **로컬 확인용 빌드는 저장소가 아니라 미러에서 돌린다.** 그래야 저장소의 산출물은
      깨끗한 상태로 남아 실수로 커밋되지 않는다(§7.3 · 아래 npm run preview:samples).
    ⚠ `visible: false` 와 혼동하지 말 것 — visible 은 '이 글을 내릴지'이고
-     _sample 은 '이건 진짜 게시물이 아니다'라는 표시다. 둘은 독립이다. */
-const SHOW_SAMPLES = process.env.SHOW_SAMPLES === '1';
+     _sample 은 '이건 진짜 게시물이 아니다'라는 표시다. 둘은 독립이다.
+
+   ── `.claude/SAMPLES` 표식 ──────────────────────────────────────────
+   환경변수만으로는 **미러에서 무심코 기본 빌드를 돌리는 순간 샘플이 전부 사라진다.**
+   실제로 두 번 발생했다(검증하느라 `node tools/build/pages.mjs` 를 돌린 뒤 복구를 잊음
+   · 2026-08-14 사용자 신고 "홍보센터 샘플이 다 사라졌어").
+   그래서 **그 사본이 로컬 확인용인지를 사본 자신이 들고 있게** 했다.
+
+     touch .claude/SAMPLES     # 이 사본에서는 어떤 빌드든 샘플을 포함한다
+
+   `.claude/` 는 `.gitignore` 에도 있고 §7.3 rsync 의 `--exclude` 대상이기도 하다.
+   즉 이 표식은 **미러 밖으로 나갈 수 없다** — 저장소·배포본은 영향받지 않는다.
+
+   ⚠ **표식이 있는 사본에서 커밋하려면 반드시 배포 빌드를 먼저 돌린다.**
+     `SHOW_SAMPLES=0` 이 표식을 이긴다. 한 번에 하려면:
+
+       npm run build:deploy   # SHOW_SAMPLES=0 으로 빌드 + 검사 (커밋 직전)
+       …커밋·푸시…
+       npm run build:pages    # 표식이 샘플을 되살린다
+
+     Desktop 원본에 접근할 수 없어 **미러에서 커밋하는 동안**은 이 순서가 유일한 방어선이다. */
+const SHOW_SAMPLES = process.env.SHOW_SAMPLES === '0' ? false
+  : (process.env.SHOW_SAMPLES === '1' || existsSync(join(ROOT, '.claude', 'SAMPLES')));
 
 const SAMPLE_WARNINGS = [];
 
@@ -281,16 +302,25 @@ function renderPubs(rows) {
   const CAT = Object.entries(KIND);
   const filters = filterTabs(CAT, rows, (r) => r.kind || '', '발행물 분류') + '\n';
 
+  /* 보기·다운로드는 **표지 위 오버레이**다(2026-08-14 지시).
+     ⚠ 호버로만 나타나는 컨트롤은 키보드·터치에서 닿지 않는다. 두 가지로 막았다.
+       · 키보드 — 버튼이 표지 안에 있으므로 CSS 의 `:focus-within` 으로 함께 뜬다
+       · 터치   — `@media (hover: none)` 에서 **항상 보인다**(page-pr.css)
+     ⚠ 아이콘만 두므로 이름은 `.sr` 로 낭독에 남긴다. `title` 은 마우스 툴팁용이다. */
+  const ovBtn = (href, attrs, icon, label) =>
+    `<a class="pub-ov-btn" href="${esc(href)}"${attrs} title="${esc(label)}">`
+    + `${icon}<span class="sr">${esc(label)}</span></a>`;
+
   const cards = '        <ul class="pub-list">\n' + rows.map((r) => {
     const acts =
-      (r.url ? `<a class="pub-act" href="${esc(r.url)}" target="_blank" rel="noopener">보기</a>` : '') +
-      (r.file ? `<a class="pub-act pub-act--solid" href="${esc(r.file)}" download>다운로드</a>` : '');
+      (r.url ? ovBtn(r.url, ' target="_blank" rel="noopener"', ICON.eye, `${r.title} 새 창으로 보기`) : '') +
+      (r.file ? ovBtn(r.file, ' download', ICON.down, `${r.title} 내려받기`) : '');
     const meta = [fmtDate(r.date), KIND[r.kind]].filter(Boolean).join(' · ');
     return `          <li class="pub-item" data-cat="${esc(r.kind || '')}">\n` +
-      `            <span class="pub-thumb">${pubCover(r)}</span>\n` +
+      `            <span class="pub-thumb">${pubCover(r)}` +
+      (acts ? `<span class="pub-ov">${acts}</span>` : '') + '</span>\n' +
       `            <p class="pr-title">${esc(r.title)}</p>\n` +
       `            <p class="pr-row-meta">${esc(meta)}</p>\n` +
-      (acts ? `            <p class="pub-acts">${acts}</p>\n` : '') +
       '          </li>';
   }).join('\n') + '\n        </ul>';
 
@@ -611,6 +641,33 @@ const detailTemplates = readdirSync(join(SUB, 'pages'))
 let stale = 0;
 const jobs = files.map((f) => build(f));
 for (const t of detailTemplates) jobs.push(...buildDetails(t));
+
+/* ── 남겨진 상세 페이지(고아) 검출 ────────────────────────────────────
+   빌더는 파일을 **만들기만 하고 지우지 않는다.** 그래서 샘플 빌드가 만든 상세 페이지가
+   배포 빌드 뒤에도 디스크에 남고, 그대로 커밋되면 **목록에서는 안 보이는데 URL 로는
+   열리는 페이지**가 된다. 2026-08-15 에 실제로 확인됐다 — 샘플 상세 16개가 저장소에
+   커밋돼 라이브 사이트에 공개돼 있었다(§11.16 이 경고했던 바로 그 상태).
+
+   ⚠ 목록이 비어 있으면 안전하다고 볼 수 없다. 링크가 없을 뿐 접근은 된다.
+
+   지우는 대상은 **빌더가 만든 것이 확실한 파일뿐**이다 — 상세 접두어와 이름이 맞고,
+   선두에 생성물 배너가 있는 파일. 손으로 만든 파일은 배너가 없어 절대 지워지지 않는다. */
+const detailPrefixes = [...new Set(detailTemplates
+  .map((t) => JSON.parse(read(SUB, 'pages', t).match(/^<!--build\s*([\s\S]*?)-->/)[1]).slugPrefix))];
+const wanted = new Set(jobs.map((j) => basename(j.out)));
+const orphans = readdirSync(ROOT)
+  .filter((f) => f.endsWith('.html') && !wanted.has(f)
+    && detailPrefixes.some((p) => f.startsWith(p + '-'))
+    && readFileSync(join(ROOT, f), 'utf8').startsWith('<!-- 생성물이다.'));
+
+if (orphans.length) {
+  if (CHECK) {
+    stale += orphans.length;
+    orphans.forEach((f) => console.log(`  ✗ ${f} — 이번 빌드가 만들지 않은 상세 페이지가 남아 있다`));
+  } else {
+    orphans.forEach((f) => { rmSync(join(ROOT, f)); console.log(`  ✕ ${f} (남겨진 상세 페이지 — 삭제)`); });
+  }
+}
 
 for (const { out, html, slug } of jobs) {
   const prev = existsSync(out) ? readFileSync(out, 'utf8') : null;

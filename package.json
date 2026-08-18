@@ -8,6 +8,7 @@
     "build:css": "tailwindcss -i src/css/app.css -o assets/css/app.css --minify",
     "build:pages": "node tools/build/pages.mjs",
     "build:check": "node tools/build/pages.mjs --check && node tools/build/lint-classes.mjs",
+    "build:deploy": "SHOW_SAMPLES=0 node tools/build/pages.mjs && SHOW_SAMPLES=0 node tools/build/pages.mjs --check && node tools/build/lint-classes.mjs",
     "dev": "tailwindcss -i src/css/app.css -o assets/css/app.css --watch",
     "build:pretty": "tailwindcss -i src/css/app.css -o assets/css/app.css",
     "lint:classes": "node tools/build/lint-classes.mjs"
