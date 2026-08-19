@@ -1,6 +1,6 @@
 # B-CITY 관리자 화면 시안 (개발 인계용)
 
-**정적 HTML 14개.** 기능은 구현하지 않았습니다 — 화면과 필드 명세를 전달하는 것이 목적입니다.
+**정적 HTML 20개.** 기능은 구현하지 않았습니다 — 화면과 필드 명세를 전달하는 것이 목적입니다.
 `login.html` 부터 열어 보세요. 좌측 메뉴로 전 화면이 서로 연결돼 있습니다.
 
 ## 화면 목록
@@ -8,7 +8,9 @@
 | 파일 | 화면 | 기획서 |
 |---|---|---|
 | `login.html` | 로그인 | **기획서에 없음** · 요청으로 신규 설계 |
-| `password-reset.html` → `-sent.html` → `-new.html` | 비밀번호 재설정 3단계 | **기획서에 없음** · 로그인의 죽은 링크를 채운 화면 |
+| `password-reset.html` | 비밀번호 재설정 ① 아이디 입력 | **기획서에 없음** · 로그인의 죽은 링크를 채운 화면 |
+| `password-reset-sent.html` | 비밀번호 재설정 ② 발송 안내 | 〃 |
+| `password-reset-new.html` | 비밀번호 재설정 ③ 새 비밀번호 설정 | 〃 |
 | `index.html` | 대시보드 | slide 105 (관리자 페이지 목차) |
 | `notice.html` / `notice-form.html` | 공지사항 목록 / 등록·수정 | slide 106 / 107 |
 | `press.html` / `press-form.html` | 언론보도 | slide 108 / 109 |
