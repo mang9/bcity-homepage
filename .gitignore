@@ -27,6 +27,7 @@ node_modules/
 # 원본·미러 양쪽에 각각 두고 rsync 로는 넘기지 않는다(CLAUDE.md §11.9).
 .claude/
 
-# 관리자 화면 시안 — 디자인 인계용이며 공개 배포에 포함하지 않는다(tools/build/admin.mjs).
-# 로그인처럼 보이는 화면이 실서비스 도메인에 올라가면 막는 것이 없는데도 막힌 것처럼 보인다.
-/admin/
+# ⚠ 이 분기(admin-design)에서만 admin/ 을 추적한다.
+#   main 에서는 계속 제외한다 — GitHub Pages 가 main 루트를 그대로 서비스하므로,
+#   main 에 넣으면 막는 것이 없는 로그인 화면이 실서비스 도메인에 공개된다.
+#   Pages 설정: source_branch=main, path=/ (2026-08-18 확인) → 이 분기는 공개되지 않는다.

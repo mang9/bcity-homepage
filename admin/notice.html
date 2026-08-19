@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>공지사항 · B-CITY 관리자</title>
+<link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml" />
+<style>
+/* ===== DESIGN.md 토큰 (index.html 과 동일 정본) =====
+   ⚠ DESIGN.md 가 바뀌면 여기와 src/css/app.css 를 **둘 다** 고친다.
+      서브페이지는 Tailwind 를 쓰지 않으므로 @theme 트리셰이킹(§1.3)은 해당 없다. */
+:root {
+  --color-primary: #344198;
+  --color-primary-hover: #2a3680;
+  --color-navy: #002742;
+  --color-mint: #3dbfa8;
+  --color-azure: #4e7ac7;
+  --color-light-blue: #bbccf0;
+  --color-bg: #f4f8fe;
+  --color-surface: #ffffff;
+  --color-text: #111111;
+  --color-text-muted: #5b6b82;
+  --color-line: #d8e3f2;
+
+  /* 8대 권역 식별색 — DESIGN.md 에 있는 토큰인데 서브페이지 사본에는 빠져 있었다.
+     구역소개 페이지가 쓰기 시작하면서 채워 넣는다. 흰색 대비 전부 4.62 이상(DESIGN.md §색).
+     ⚠ index.html 은 이 값을 @theme 과 :root 양쪽에 갖는다(§1.3 트리셰이킹). */
+  --color-district-ai: #344198;
+  --color-district-bio: #288074;
+  --color-district-food: #a1662b;
+  --color-district-mice: #337aa3;
+  --color-district-biz: #7758ad;
+  --color-district-housing: #877240;
+  --color-district-edu: #667d31;
+  --color-district-golf: #378152;
+
+  /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
+     여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
+  --color-logo: #2c3e91;
+  /* 브랜드 정본 3색(스토리보드 slide51 — Pantone 까지 지정돼 있다). 사이트 UI 토큰과 **다르다**:
+       Indigo #2C3E91 = --color-logo (UI 의 --color-primary #344198 과 다름)
+       Mint   #3DBFA8 = --color-mint (일치)
+       Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-azure #4E7AC7 은 아이브로우용 다른 색)
+     brand.html 만 쓴다. UI 색을 이걸로 바꾸지 말 것 — 대비·톤이 전부 다시 계산돼야 한다. */
+  --brand-azure: #0095d9;
+  --scrim-rgb: 0 17 34;
+  --navy-rgb: 0 39 66;
+  --primary-rgb: 52 65 152;
+
+  /* DESIGN.md rounded 스케일 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font-display: "Paperlogy", "Pretendard", "Noto Sans KR", sans-serif;
+  --font-body: "Inter", "Pretendard", sans-serif;
+
+  --wrap: 1320px;
+  --gnb-h: 64px;
+  --lnb-h: 58px;
+}
+/* 큰 화면: index.html 과 같은 단계로 컨테이너·타이포를 키운다 */
+@media (min-width: 1800px) { :root { --wrap: 1560px; } }
+@media (min-width: 2300px) { :root { --wrap: 1720px; } }
+
+/* B-CITY 관리자 화면 — **디자인 전달용 정적 HTML** (기획서 slide 105~115)
+   ⚠ 기능은 구현하지 않는다. 개발 인계용 화면이며 저장·인증·업로드는 백엔드 몫이다.
+   사이트 토큰(src/sub/css/00-tokens.css)을 인라인해 쓰고, 관리자에만 필요한
+   상태색·크롬 색은 아래 :root 블록에 따로 모았다. */
+
+/* ── 관리자 전용 토큰 ─────────────────────────────────────────────────
+   ⚠ DESIGN.md 팔레트는 **공개 사이트용**이라 관리자 도구에 필요한 상태색
+   (성공 · 경고 · 위험)과 UI 크롬 색이 없다. 리터럴을 화면 곳곳에 흩뿌리면
+   드리프트가 되므로 **여기 한 곳에만** 둔다. 색을 조정할 때는 이 블록만 본다.
+   공개 사이트에는 쓰지 않는다 — 이 파일은 admin/*.html 만 싣는다. */
+:root {
+  --ad-danger: #c0392b;       /* 삭제 · 필수 표시 */
+  --ad-ok-fg: #1d7a68;        /* 공개 상태 */
+  --ad-ok-bg: rgb(61 191 168 / .16);
+  --ad-off-fg: #4a5769;       /* 비공개 상태 */
+  --ad-off-bg: rgb(91 107 130 / .14);
+  --ad-wait-fg: #91600a;      /* 예약 상태 */
+  --ad-wait-bg: rgb(255 176 32 / .18);
+  --ad-warn-bg: #fff7e6;      /* 주의 안내 박스 */
+  --ad-warn-line: #ffe0a3;
+  --ad-warn-fg: #6b4c00;
+  --ad-chrome: #f7f9fd;       /* 표 머리글 · 에디터 바 */
+  --ad-chrome-2: #f9fbfe;     /* 폼 바닥 */
+  --ad-chrome-3: #fbfdff;     /* 드롭존 */
+  --ad-mute: #9aa7ba;         /* placeholder */
+  --ad-mute-2: #46557a;       /* 에디터 툴바 글자 */
+  --ad-dash: #c3d2e8;         /* 드롭존 파선 */
+  --ad-swatch: #eef3fb;       /* 썸네일 자리표시 */
+  --ad-swatch-2: #dfe8f6;
+  --ad-toggle-off: #cfdaea;
+  --ad-row-hover: #fafcff;   /* 표 행 호버 */
+  --ad-login-1: #0b3a5c;      /* 로그인 배경 그라데이션 */
+  --ad-login-2: #10527d;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: "Pretendard", "Inter", system-ui, sans-serif;
+  background: var(--color-bg); color: var(--color-text);
+  font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+
+/* ── 셸 ───────────────────────────────────────────────────────────── */
+.ad-shell { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+.ad-side { background: var(--color-navy); color: #fff; padding: 22px 0 30px; }
+/* 로고는 심볼만이 아니라 **글자까지 있는 정본**이다(2026-08-18 지시).
+   가로로 긴 락업(2518×421 · 비율 5.98)이라 높이가 아니라 **폭**으로 크기를 잡는다. */
+.ad-brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 0 20px 20px; border-bottom: 1px solid rgb(255 255 255 / .12); }
+.ad-logo { display: block; }
+.ad-logo svg { display: block; width: 112px; height: auto; }
+/* ADMIN 태그 — 로고에 글자가 생겼으니 여기서는 '관리자'라는 사실만 표시한다 */
+.ad-tag { padding: 2px 7px; border-radius: var(--radius-sm);
+  background: rgb(255 255 255 / .14); color: var(--color-light-blue);
+  font-size: 10.5px; font-weight: 800; letter-spacing: .1em; }
+.ad-nav { padding: 16px 12px 0; }
+.ad-nav-h { padding: 0 8px 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  color: rgb(187 204 240 / .75); }
+.ad-nav a { display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 600;
+  color: rgb(255 255 255 / .82); }
+.ad-nav a:hover { background: rgb(255 255 255 / .08); color: #fff; }
+.ad-nav a.is-on { background: var(--color-primary); color: #fff; }
+.ad-nav a em { font-style: normal; font-size: 11px; font-weight: 700;
+  padding: 1px 6px; border-radius: 999px; background: rgb(255 255 255 / .16); }
+
+.ad-main { display: flex; flex-direction: column; min-width: 0; }
+.ad-top { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 26px; background: var(--color-surface);
+  border-bottom: 1px solid var(--color-line); }
+.ad-crumb { font-size: 12.5px; color: var(--color-text-muted); }
+.ad-crumb b { color: var(--color-text); font-weight: 700; }
+.ad-me { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+/* 이름을 누르면 내 비밀번호 변경으로 간다 — 그러지 않으면 그 화면에 닿을 길이 없다 */
+.ad-me-n { font-weight: 700; border-bottom: 1px solid transparent; }
+.ad-me-n:hover { color: var(--color-primary); border-bottom-color: currentColor; }
+.ad-body { padding: 24px 26px 60px; min-width: 0; }
+.ad-h1 { margin: 0 0 4px; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+/* ⚠ 제목줄 아래 간격은 **.ad-head** 가 갖는다. 전에는 없애 버린 설명문(.ad-sub)의
+   margin-bottom 이 그 역할을 하고 있어서, 설명을 지우자 제목·버튼이 카드에 붙었다
+   (2026-08-18 지적 "버튼 아래 간격이 없어"). 카드 사이 간격(16px)보다 조금 크게 준다. */
+.ad-head { display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+
+/* ── 버튼 ─────────────────────────────────────────────────────────── */
+.ad-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 16px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
+  background: var(--color-surface); font-size: 13px; font-weight: 700; cursor: pointer;
+  appearance: none; white-space: nowrap; }
+.ad-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.ad-btn--primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.ad-btn--primary:hover { background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover); color: #fff; }
+.ad-btn--sm { padding: 5px 10px; font-size: 12px; }
+.ad-btn--danger:hover { border-color: var(--ad-danger); color: var(--ad-danger); }
+.ad-btn svg { width: 15px; height: 15px; }
+
+/* ── 카드 · 필터 ──────────────────────────────────────────────────── */
+.ad-card { background: var(--color-surface); border: 1px solid var(--color-line);
+  border-radius: var(--radius-md); }
+.ad-card + .ad-card { margin-top: 16px; }
+.ad-card-h { display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--color-line); }
+.ad-card-h h2 { margin: 0; font-size: 15px; font-weight: 800; }
+.ad-card-b { padding: 18px; }
+
+.ad-filter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 14px 18px; border-bottom: 1px solid var(--color-line); }
+.ad-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.ad-chip { padding: 6px 13px; border-radius: 999px; border: 1px solid var(--color-line);
+  background: var(--color-surface); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.ad-chip.is-on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.ad-search { margin-left: auto; display: flex; gap: 6px; }
+.ad-search input { width: clamp(160px, 22vw, 280px); padding: 8px 12px;
+  border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-surface); }
+.ad-search input::placeholder { color: var(--color-text-muted); }
+.ad-sel { padding: 8px 12px; border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm); background: var(--color-surface); font-weight: 600; }
+
+/* ── 표 ───────────────────────────────────────────────────────────── */
+.ad-scroll { overflow-x: auto; }
+.ad-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ad-tbl th, .ad-tbl td { padding: 12px 14px; text-align: left;
+  border-bottom: 1px solid var(--color-line); white-space: nowrap; }
+.ad-tbl th { background: var(--ad-chrome); font-weight: 700; font-size: 12.5px;
+  color: var(--color-text-muted); }
+.ad-tbl td.is-title { white-space: normal; min-width: 260px; font-weight: 600; }
+.ad-tbl td.is-num, .ad-tbl th.is-num { text-align: right; font-variant-numeric: tabular-nums; }
+.ad-tbl td.is-ctr, .ad-tbl th.is-ctr { text-align: center; }
+.ad-tbl tbody tr:hover { background: var(--ad-row-hover); }
+.ad-acts { display: flex; gap: 6px; justify-content: center; }
+
+.ad-state { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px;
+  border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+.ad-state::before { content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; }
+.ad-state--on { background: var(--ad-ok-bg); color: var(--ad-ok-fg); }
+.ad-state--off { background: var(--ad-off-bg); color: var(--ad-off-fg); }
+.ad-state--wait { background: var(--ad-wait-bg); color: var(--ad-wait-fg); }
+.ad-pin { display: inline-block; padding: 2px 7px; border-radius: var(--radius-sm);
+  background: rgb(var(--primary-rgb) / .1); color: var(--color-primary);
+  font-size: 11px; font-weight: 800; }
+
+.ad-page { display: flex; gap: 6px; justify-content: center; padding: 16px; }
+.ad-page button { min-width: 32px; height: 32px; border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line); background: var(--color-surface);
+  font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.ad-page button.is-on { background: var(--color-primary);
+  border-color: var(--color-primary); color: #fff; }
+
+/* ── 폼 ───────────────────────────────────────────────────────────── */
+.ad-form { display: grid; gap: 0; }
+.ad-row { display: grid; grid-template-columns: 150px 1fr; gap: 18px;
+  padding: 18px; border-bottom: 1px solid var(--color-line); align-items: start; }
+.ad-row:last-child { border-bottom: 0; }
+.ad-lb { padding-top: 9px; font-size: 13.5px; font-weight: 700; }
+.ad-lb i { display: inline-block; margin-left: 4px; color: var(--ad-danger); font-style: normal; }
+.ad-fd { min-width: 0; }
+.ad-in { width: 100%; padding: 9px 12px; border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm); background: var(--color-surface); }
+.ad-in::placeholder { color: var(--ad-mute); }
+.ad-hint { margin: 6px 0 0; font-size: 12px; color: var(--color-text-muted); }
+/* .ad-type(회색 필드 타입 배지)는 2026-08-18 지시로 제거했다.
+   타입 정보는 화면이 아니라 admin/README.md 의 필드 명세표가 갖는다 —
+   `field()` 가 빌드할 때 그 표를 자동으로 갱신하므로 명세가 사라지지 않는다. */
+
+.ad-editor { border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-surface); overflow: hidden; }
+.ad-editor-bar { display: flex; gap: 4px; flex-wrap: wrap; padding: 8px 10px;
+  border-bottom: 1px solid var(--color-line); background: var(--ad-chrome); }
+.ad-editor-bar span { min-width: 28px; height: 26px; display: inline-flex;
+  align-items: center; justify-content: center; border-radius: 4px;
+  border: 1px solid var(--color-line); background: #fff;
+  font-size: 12px; font-weight: 700; color: var(--ad-mute-2); }
+.ad-editor-area { min-height: 220px; padding: 14px; color: var(--ad-mute); }
+
+.ad-drop { display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 26px; border: 1.5px dashed var(--ad-dash); border-radius: var(--radius-sm);
+  background: var(--ad-chrome-3); text-align: center; }
+.ad-drop b { font-size: 13.5px; }
+.ad-drop span { font-size: 12px; color: var(--color-text-muted); }
+.ad-files { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.ad-files li { display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 8px 12px; border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm); background: var(--color-surface); font-size: 12.5px; }
+/* 용량은 파일명 바로 옆이다 — 양끝 정렬로 떼어 놓으면 어느 파일의 용량인지 안 읽힌다 */
+.ad-file-n { min-width: 0; overflow-wrap: anywhere; }
+.ad-file-n i { font-style: normal; margin-left: 6px; color: var(--color-text-muted); }
+
+.ad-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px; margin-top: 10px; }
+.ad-thumb { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line);
+  background: linear-gradient(150deg, var(--ad-swatch), var(--ad-swatch-2)); }
+.ad-thumb b { position: absolute; left: 6px; top: 6px; padding: 1px 6px;
+  border-radius: 999px; background: rgb(var(--navy-rgb) / .8); color: #fff;
+  font-size: 10.5px; font-weight: 800; }
+.ad-thumb i { position: absolute; right: 6px; bottom: 6px; font-style: normal;
+  font-size: 10.5px; font-weight: 700; color: var(--color-text-muted); }
+
+.ad-radios { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 8px; }
+.ad-radios label { display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13.5px; font-weight: 600; }
+.ad-when { display: none; gap: 8px; margin-top: 10px; }
+.ad-when.is-open { display: flex; }
+
+/* 토글 — **실제로 눌린다**(2026-08-18 지시). `<button aria-pressed>` 로 나가고
+   상태 전환은 셸의 인라인 스크립트가 한다. 값은 저장되지 않는다.
+   ⚠ button 이므로 브라우저 기본 테두리·배경·패딩을 반드시 지운다 — 안 지우면
+     OS 기본 버튼 모양이 남아 토글로 보이지 않는다.
+   켜진 색은 민트 → **프라이머리**로 바꿨다(지시). 사이트 버튼 색과 같아진다. */
+.ad-toggle { display: inline-flex; align-items: center; gap: 9px; margin-top: 8px;
+  padding: 0; border: 0; background: none; cursor: pointer; appearance: none; }
+.ad-toggle-t { width: 42px; height: 24px; border-radius: 999px; background: var(--ad-toggle-off);
+  position: relative; flex: none; transition: background .18s; }
+.ad-toggle-t::after { content: ""; position: absolute; left: 3px; top: 3px;
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  transition: transform .18s; }
+.ad-toggle.is-on .ad-toggle-t { background: var(--color-primary); }
+.ad-toggle.is-on .ad-toggle-t::after { transform: translateX(18px); }
+.ad-toggle:hover .ad-toggle-t { filter: brightness(.96); }
+.ad-toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px;
+  border-radius: var(--radius-sm); }
+.ad-toggle b { font-size: 13px; font-weight: 700; }
+
+.ad-foot { display: flex; gap: 8px; justify-content: flex-end; padding: 16px 18px;
+  border-top: 1px solid var(--color-line); background: var(--ad-chrome-2);
+  border-radius: 0 0 var(--radius-md) var(--radius-md); }
+.ad-foot .ad-note { margin-right: auto; align-self: center;
+  font-size: 12px; color: var(--color-text-muted); }
+
+/* ── 대시보드 ─────────────────────────────────────────────────────── */
+/* 타일 폭 — **개수에 따라 다르게** 다뤄야 한다.
+   · 홍보센터 5개: 한 줄에 들어가야 하므로 `1fr` 로 늘려 채운다(지시)
+   · 1~2개 그룹: `1fr` 로 두면 **가로로 쭉 늘어난다** → 그리드 자체의 max-width 로 막는다
+   열에 상한(240px)을 걸었더니 5개가 본문 폭을 넘어 4+1 로 줄바꿈했다.
+   ⚠ 최소폭 148px 은 **6개가 1280px 데스크톱에서 한 줄에 들어가도록** 잡은 값이다
+     (본문 = 뷰포트 − 사이드바 232 − 패딩 52. 6×148 + gap 5×14 = 958 ≤ 996).
+     168px 이면 1362px 이상에서만 한 줄이 된다. 1100px 이하는 본문이 좁아 줄바꿈이 정상이다. */
+.ad-tiles { display: grid; gap: 14px; justify-content: start;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); }
+.ad-tiles[data-n="1"] { max-width: 240px; }
+.ad-tiles[data-n="2"] { max-width: 494px; }
+.ad-tile { display: block; padding: 18px; background: var(--color-surface);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md); }
+.ad-tile:hover { border-color: var(--color-primary); }
+.ad-tile b { display: block; font-size: 13.5px; font-weight: 800; }
+.ad-tile strong { display: block; margin: 8px 0 2px; font-size: 28px; font-weight: 800;
+  letter-spacing: -.02em; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.ad-tile span { font-size: 12px; color: var(--color-text-muted); }
+
+/* ── 로그인 ───────────────────────────────────────────────────────── */
+/* ⚠ flex/grid 중앙정렬은 자식이 뷰포트보다 크면 **위쪽이 잘려 스크롤로 닿지 않는다**.
+   자식에 `margin: auto` 를 주는 방식은 그 문제가 없다. */
+.ad-login { display: flex; min-height: 100vh; padding: 32px 24px;
+  background: linear-gradient(160deg, var(--color-navy) 0%, var(--ad-login-1) 52%, var(--ad-login-2) 100%); }
+/* 권장안이 8항목이라 400px 상자에 넣으면 눌린다 → 데스크톱은 폼 | 권장안 2단 */
+.ad-login-wrap { margin: auto; display: grid; gap: 20px; align-items: start;
+  grid-template-columns: 400px minmax(0, 420px); }
+@media (max-width: 880px) { .ad-login-wrap { grid-template-columns: min(400px, 100%); } }
+.ad-login-box { width: 100%; padding: 34px 30px 28px;
+  background: var(--color-surface); border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px rgb(0 17 34 / .34); }
+.ad-login-brand { display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-bottom: 26px; text-align: center; }
+/* 흰 상자 위이므로 원본 색 그대로다(워드마크 대비 9.52) */
+.ad-login-brand svg { display: block; width: min(168px, 56%); height: auto; }
+.ad-login-brand span { font-size: 11.5px; font-weight: 700; letter-spacing: .1em;
+  color: var(--color-text-muted); }
+.ad-login-f { display: grid; gap: 14px; }
+.ad-login-f label { display: grid; gap: 6px; font-size: 12.5px; font-weight: 700; }
+.ad-login-opt { display: flex; align-items: center; justify-content: space-between;
+  font-size: 12.5px; }
+.ad-login-opt a { color: var(--color-primary); font-weight: 700; }
+.ad-login-f .ad-btn { width: 100%; padding: 12px; font-size: 14px; }
+/* 하단 안내 — '협의 필요' 대신 **권장안을 제시**한다(2026-08-18 지시).
+   개발 쪽이 읽고 바로 검토·확정할 수 있어야 하므로 항목·값·이유를 함께 적는다. */
+.ad-login-note { margin: 0; padding: 16px 18px; border-radius: var(--radius-sm);
+  background: var(--ad-warn-bg); border: 1px solid var(--ad-warn-line);
+  font-size: 12px; line-height: 1.6; color: var(--ad-warn-fg); }
+.ad-login-note p { margin: 0; }
+.ad-login-note b { font-weight: 800; }
+.ad-login-note-h { margin-top: 10px !important; padding-top: 10px;
+  border-top: 1px solid var(--ad-warn-line); font-weight: 700; }
+.ad-rec { margin: 8px 0 0; display: grid; grid-template-columns: auto 1fr;
+  gap: 5px 12px; font-size: 11.5px; }
+.ad-rec dt { font-weight: 800; white-space: nowrap; }
+.ad-rec dd { margin: 0; }
+.ad-rec dd i { display: block; font-style: normal; opacity: .78; }
+
+@media (max-width: 900px) {
+  .ad-shell { grid-template-columns: 1fr; }
+  .ad-side { display: flex; flex-wrap: wrap; gap: 4px; padding: 14px; }
+  .ad-brand { border-bottom: 0; padding: 0 12px 0 0; }
+  .ad-logo svg { width: 96px; }
+  .ad-nav { padding: 0; display: flex; gap: 4px; flex-wrap: wrap; }
+  .ad-nav-h { display: none; }
+  .ad-row { grid-template-columns: 1fr; gap: 8px; }
+  .ad-lb { padding-top: 0; }
+}
+
+/* ── 확인 모달 ────────────────────────────────────────────────────────
+   [삭제] · [임시 저장] 처럼 **결과를 알려야 하는 동작**의 형태만 보여 준다.
+   실제로 지우거나 저장하지 않는다(2026-08-18 지시 — 기능 구현 없음).
+   `<dialog>` 를 쓰므로 ESC · 배경 클릭 · 포커스 트랩이 브라우저 기본으로 동작한다. */
+.ad-dlg { width: min(400px, calc(100vw - 32px)); padding: 24px;
+  border: 0; border-radius: var(--radius-md); background: var(--color-surface);
+  color: var(--color-text); box-shadow: 0 20px 50px rgb(0 17 34 / .3); }
+.ad-dlg::backdrop { background: rgb(var(--scrim-rgb) / .5); }
+.ad-dlg h3 { margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+.ad-dlg p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
+.ad-dlg-f { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+/* ── 계정 관리 ─────────────────────────────────────────────────────────
+   기획서에 없는 화면이다(2026-08-18 요청). 권한 등급 구성은 제안이며 확정이 필요하다.
+   ⚠ 화면의 권한 체크는 **표시**일 뿐이다 — 서버에서 막지 않으면 아무 의미가 없다. */
+.ad-perm th, .ad-perm td { padding: 9px 12px; }
+.ad-perm input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--color-primary); }
+
+/* 비밀번호 규칙 — 입력에 따라 실시간으로 색이 바뀐다(클라이언트만으로 가능한 부분) */
+.ad-rules { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.ad-rules li { position: relative; padding-left: 18px; font-size: 12px;
+  color: var(--color-text-muted); }
+.ad-rules li::before { content: "○"; position: absolute; left: 0; font-size: 11px; }
+.ad-rules li.is-ok { color: var(--ad-ok-fg); }
+.ad-rules li.is-ok::before { content: "●"; }
+.ad-rules li.is-bad { color: var(--ad-danger); }
+.ad-rules li.is-bad::before { content: "●"; }
+.ad-hint.is-ok { color: var(--ad-ok-fg); font-weight: 700; }
+.ad-hint.is-bad { color: var(--ad-danger); font-weight: 700; }
+
+/* .ad-group-h(대시보드 타일 그룹 머리글)는 2026-08-18 지시로 제거했다 —
+   타일은 한 줄 6개다. 그룹 구분은 좌측 메뉴가 담당한다. */
+
+/* ── 입력 포커스 ───────────────────────────────────────────────────────
+   ⚠ `.ad-in` 에 포커스 스타일이 없어서 **브라우저 기본 아웃라인**이 그대로 나왔다.
+   날짜·시간 입력은 내부에 스피너·달력 버튼이 있어 그 검은 테두리가 특히 두껍게 보인다
+   (2026-08-18 지적). 아웃라인을 없애지 말고 **얇은 프라이머리 링**으로 바꾼다 —
+   지우면 키보드 사용자가 어디에 있는지 알 수 없다. */
+.ad-in:focus-visible, .ad-sel:focus-visible, .ad-search input:focus-visible {
+  outline: none; border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(var(--primary-rgb) / .16); }
+/* 마우스로 눌렀을 때도 테두리만 살짝 짙어지게 한다(링은 키보드에만) */
+.ad-in:focus, .ad-sel:focus, .ad-search input:focus { outline: none; border-color: var(--color-primary); }
+/* 날짜·시간의 달력·스피너 아이콘도 톤을 맞춘다 */
+.ad-in[type="date"], .ad-in[type="time"] { accent-color: var(--color-primary); }
+.ad-in[type="date"]::-webkit-calendar-picker-indicator,
+.ad-in[type="time"]::-webkit-calendar-picker-indicator { opacity: .55; cursor: pointer; }
+.ad-in[type="date"]::-webkit-calendar-picker-indicator:hover,
+.ad-in[type="time"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+.ad-in[type="date"]::-webkit-inner-spin-button,
+.ad-in[type="time"]::-webkit-inner-spin-button { display: none; }
+
+/* ── 파트너사 순서 드래그 ──────────────────────────────────────────────
+   순서를 실제로 바꿀 수 있다(2026-08-18 지시). 재정렬은 셸의 스크립트가 한다.
+   ⚠ 손잡이는 `<button>` 이다 — div 로 두면 키보드로 잡을 수 없어 마우스 없이는
+     순서를 못 바꾼다. 위·아래 화살표로도 옮길 수 있게 해 뒀다. */
+.ad-drag { display: inline-flex; align-items: center; gap: 7px; padding: 4px 8px;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: none; cursor: grab; font: inherit; color: var(--color-text-muted); }
+.ad-drag:hover { border-color: var(--color-line); background: var(--color-surface); }
+.ad-drag:focus-visible { outline: none; border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(var(--primary-rgb) / .16); }
+.ad-drag:active { cursor: grabbing; }
+.ad-ord { font-weight: 700; color: var(--color-text); font-variant-numeric: tabular-nums; }
+/* 끌고 있는 행 · 놓일 자리 */
+.ad-tbl tr.is-dragging { opacity: .4; }
+.ad-tbl tr.is-over td { box-shadow: inset 0 2px 0 var(--color-primary); }
+.ad-tbl tr.is-moved { animation: adMoved .9s ease-out; }
+@keyframes adMoved {
+  from { background: rgb(var(--primary-rgb) / .12); }
+  to { background: transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .ad-tbl tr.is-moved { animation: none; } }
+
+/* 한 줄에 컨트롤 두 개 — 지분율(숫자 + 단위)과 '확정 전' 체크박스 */
+.ad-inline { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.ad-unit { display: inline-flex; align-items: center; gap: 6px; }
+.ad-unit .ad-in { width: 110px; }
+.ad-unit i { font-style: normal; font-size: 13px; color: var(--color-text-muted); }
+.ad-cb { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; }
+.ad-cb input { width: 16px; height: 16px; accent-color: var(--color-primary); }
+.ad-in:disabled { background: var(--ad-chrome); color: var(--ad-mute); cursor: not-allowed; }
+
+/* 로그인 계열 보조 문구 — 로그인 · 비밀번호 재설정이 함께 쓴다 */
+.ad-login-h { margin: 0 0 6px; font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+.ad-login-d { margin: 0 0 18px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+.ad-login-alt { margin: 16px 0 0; text-align: center; font-size: 12.5px; }
+.ad-login-alt a { color: var(--color-primary); font-weight: 700; }
+.ad-login-alt a:hover { text-decoration: underline; }
+/* 오른쪽 권장안 패널이 없는 화면(재설정 계열)은 한 칸으로 */
+.ad-login-wrap.is-single { grid-template-columns: min(400px, 100%); }
+</style>
+</head>
+<body>
+  <div class="ad-shell">
+    <aside class="ad-side">
+      <div class="ad-brand">
+        <a class="ad-logo" href="index.html"><svg viewBox="0 0 2518 421" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="B-CITY"><path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z" fill="#ffffff"/><path d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z" fill="#3DBFA8"/><path d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z" fill="#0095D9"/><path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z" fill="#ffffff"/><path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z" fill="#ffffff"/><path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z" fill="#ffffff"/><path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z" fill="#ffffff"/></svg></a>
+        <span class="ad-tag">ADMIN</span>
+      </div>
+      <nav class="ad-nav">
+        <a href="index.html">대시보드</a>
+        <p class="ad-nav-h">홍보센터</p>
+        <a href="notice.html" class="is-on">공지사항<em>12</em></a>
+        <a href="press.html">언론보도<em>34</em></a>
+        <a href="video.html">홍보영상<em>8</em></a>
+        <a href="gallery.html">갤러리<em>26</em></a>
+        <a href="publication.html">발행물<em>12</em></a>
+        <p class="ad-nav-h">사이트 콘텐츠</p>
+        <a href="partner.html">파트너사<em>9</em></a>
+        <p class="ad-nav-h">설정</p>
+        <a href="account.html">계정 관리<em>4</em></a>
+      </nav>
+    </aside>
+    <div class="ad-main">
+      <header class="ad-top">
+        <p class="ad-crumb">관리자 <span aria-hidden="true">›</span> <b>공지사항</b></p>
+        <div class="ad-me"><a class="ad-me-n" href="password.html">홍보담당자</a><a class="ad-btn ad-btn--sm" href="login.html">로그아웃</a></div>
+      </header>
+      <main class="ad-body">
+        <div class="ad-head">
+          <div>
+            <h1 class="ad-h1">공지사항 관리</h1>
+          </div>
+          <div style="display:flex;gap:8px"><a class="ad-btn ad-btn--primary" href="notice-form.html">+ 공지사항 등록</a></div>
+        </div>
+        <div class="ad-card">
+          <div class="ad-filter"><div class="ad-chips"><button type="button" class="ad-chip is-on">전체</button><button type="button" class="ad-chip">공지</button><button type="button" class="ad-chip">일반</button></div><div class="ad-search"><input type="search" placeholder="제목 · 내용 검색" /><button type="button" class="ad-btn">검색</button></div></div>
+          <div class="ad-scroll">
+            <table class="ad-tbl">
+              <thead><tr><th class="is-num">No.</th><th class="is-title">제목</th><th>작성자</th><th>등록일</th>
+                <th class="is-num">조회수</th><th class="is-ctr">상태</th><th class="is-ctr">관리</th></tr></thead>
+              <tbody>
+                <tr><td class="is-num">12</td><td class="is-title"><span class="ad-pin">공지</span> 통합개발계획 접수 안내</td><td>홍보담당자</td><td>2026.07.02</td><td class="is-num">1,284</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">11</td><td class="is-title"><span class="ad-pin">공지</span> 홈페이지 개편 안내</td><td>홍보담당자</td><td>2026.06.24</td><td class="is-num">842</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">10</td><td class="is-title">국가첨단전략산업 특화단지 지정 관련 안내</td><td>홍보담당자</td><td>2026.06.11</td><td class="is-num">1,036</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">9</td><td class="is-title">토지거래허가구역 지정 공고 안내</td><td>홍보담당자</td><td>2026.05.28</td><td class="is-num">774</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">8</td><td class="is-title">B-CITY 공식 홈페이지 오픈</td><td>홍보담당자</td><td>2026.05.02</td><td class="is-num">932</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">7</td><td class="is-title">2026 상반기 사업 추진 현황 공유</td><td>홍보담당자</td><td>2026.04.22</td><td class="is-num">618</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">6</td><td class="is-title">바이오테크이노밸리피에프브이㈜ 설립 완료</td><td>홍보담당자</td><td>2026.04.03</td><td class="is-num">610</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">5</td><td class="is-title">개발행위허가 제한지역 지정 고시 안내</td><td>홍보담당자</td><td>2026.03.27</td><td class="is-num">405</td><td class="is-ctr"><span class="ad-state ad-state--on">공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">4</td><td class="is-title">하반기 사업 설명회 일정</td><td>홍보담당자</td><td>2026.03.20</td><td class="is-num">0</td><td class="is-ctr"><span class="ad-state ad-state--wait">예약</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+                <tr><td class="is-num">3</td><td class="is-title">입주 문의 접수 채널 안내</td><td>홍보담당자</td><td>2026.03.06</td><td class="is-num">289</td><td class="is-ctr"><span class="ad-state ad-state--off">비공개</span></td><td class="is-ctr"><div class="ad-acts"><a class="ad-btn ad-btn--sm" href="notice-form.html">수정</a><button type="button" class="ad-btn ad-btn--sm ad-btn--danger" onclick="document.getElementById('delDlg').showModal()">삭제</button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        <div class="ad-page"><button type="button">‹</button><button type="button" class="is-on">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><button type="button">›</button></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <dialog id="delDlg" class="ad-dlg">
+    <h3>삭제할까요?</h3>
+    <p>게시글과 목록에서 모두 삭제됩니다.</p>
+    <!-- DEV: 삭제 정책 확인 — 소프트 삭제(휴지통) 여부 · 보관 기간 · 복구 권한 등급. 화면 문구는 복구 가능성을 단정하지 않는다. -->
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn" onclick="this.closest('dialog').close()">취소</button>
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">삭제</button>
+    </div>
+  </dialog>
+  <dialog id="saveDlg" class="ad-dlg">
+    <h3>임시 저장했습니다</h3>
+    <p>작성 중인 내용을 임시 보관합니다. 목록에는 노출되지 않습니다.</p>
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
+    </div>
+  </dialog>
+  <dialog id="pwDlg" class="ad-dlg">
+    <h3>임시 비밀번호 발급</h3>
+    <p>본인 메일로 보냈습니다. 첫 로그인에서 변경해야 합니다</p>
+    <!-- DEV: 임시 비밀번호 확인 — 유효 기간(권장 24시간) · 발송 메일 문안 · 재발급 제한. -->
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
+    </div>
+  </dialog>
+  <script>
+    /* 토글만 실제로 동작한다. 저장은 하지 않는다 — 값이 어디로도 가지 않는다. */
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('.ad-toggle');
+      if (!t) return;
+      var on = t.classList.toggle('is-on');
+      t.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+
+    /* 비밀번호 규칙·일치 검사 — 클라이언트만으로 되는 부분이라 실제로 동작시킨다.
+       ⚠ **서버 검증을 대체하지 않는다.** 화면 검사는 개발자 도구로 우회할 수 있다. */
+    (function () {
+      var p1 = document.getElementById('pw1'), p2 = document.getElementById('pw2');
+      if (!p1) return;
+      var rules = document.getElementById('pwRules'), msg = document.getElementById('pwMatch');
+      var check = {
+        len: function (v) { return v.length >= 10; },
+        mix: function (v) { return /[A-Za-z]/.test(v) && /[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v); },
+        seq: function (v) { return v.length > 0 && !/(.)\1\1/.test(v); }
+      };
+      function paint() {
+        var v = p1.value;
+        [].slice.call(rules.children).forEach(function (li) {
+          var ok = check[li.dataset.rule](v);
+          li.classList.toggle('is-ok', ok);
+          li.classList.toggle('is-bad', !ok && v.length > 0);
+        });
+        if (!p2.value) { msg.textContent = '두 입력이 같아야 합니다.'; msg.className = 'ad-hint'; return; }
+        var same = p1.value === p2.value;
+        msg.textContent = same ? '두 입력이 같습니다.' : '두 입력이 다릅니다.';
+        msg.className = 'ad-hint ' + (same ? 'is-ok' : 'is-bad');
+      }
+      p1.addEventListener('input', paint);
+      p2.addEventListener('input', paint);
+    })();
+
+    /* 지분율 — '확정 전' 을 체크하면 숫자 입력을 잠근다.
+       두 값이 동시에 채워지면 구조도에 무엇을 넣을지 정해지지 않는다. */
+    (function () {
+      var cb = document.getElementById('eqTbd'), eq = document.getElementById('eq');
+      if (!cb || !eq) return;
+      cb.addEventListener('change', function () {
+        eq.disabled = cb.checked;
+        if (cb.checked) eq.value = '';
+        eq.placeholder = cb.checked ? 'TBD' : '37.3';
+      });
+    })();
+
+    /* 파트너사 순서 재정렬 — 드래그앤드롭 + 키보드(위·아래 화살표).
+       라이브러리 없이 HTML5 Drag and Drop 만 쓴다. 저장은 하지 않는다.
+       ⚠ 드래그만 두면 키보드·터치 사용자가 순서를 못 바꾼다 → 화살표 이동을 함께 둔다.
+       ⚠ 행을 옮긴 뒤 **순서 번호를 다시 매겨야** 한다. 안 하면 화면의 번호와 실제
+         순서가 어긋나 어느 쪽이 맞는지 알 수 없다. */
+    (function () {
+      var tb = document.querySelector('[data-reorder] tbody');
+      if (!tb) return;
+      var dragging = null;
+
+      function renumber() {
+        [].slice.call(tb.rows).forEach(function (tr, i) {
+          var b = tr.querySelector('.ad-ord');
+          if (b) b.textContent = i + 1;
+          var h = tr.querySelector('.ad-drag');
+          if (h) h.setAttribute('aria-label',
+            '순서 ' + (i + 1) + ' — 끌어서 옮기거나 위·아래 화살표를 누르세요');
+        });
+      }
+      function flash(tr) {
+        tr.classList.remove('is-moved');
+        void tr.offsetWidth;              // 같은 행을 연속으로 옮길 때 애니메이션을 다시 걸기 위함
+        tr.classList.add('is-moved');
+      }
+
+      tb.addEventListener('dragstart', function (e) {
+        var h = e.target.closest('.ad-drag');
+        if (!h) { e.preventDefault(); return; }
+        dragging = h.closest('tr');
+        dragging.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', '');   // Firefox 는 데이터가 없으면 드래그를 시작하지 않는다
+      });
+      tb.addEventListener('dragover', function (e) {
+        if (!dragging) return;
+        e.preventDefault();
+        var tr = e.target.closest('tr');
+        if (!tr || tr === dragging) return;
+        [].slice.call(tb.rows).forEach(function (r) { r.classList.remove('is-over'); });
+        tr.classList.add('is-over');
+      });
+      tb.addEventListener('drop', function (e) {
+        if (!dragging) return;
+        e.preventDefault();
+        var tr = e.target.closest('tr');
+        if (tr && tr !== dragging) {
+          var rows = [].slice.call(tb.rows);
+          // 아래로 옮길 때는 대상 **다음**에, 위로 옮길 때는 대상 **앞**에 넣는다
+          tb.insertBefore(dragging, rows.indexOf(dragging) < rows.indexOf(tr) ? tr.nextSibling : tr);
+          renumber(); flash(dragging);
+        }
+        [].slice.call(tb.rows).forEach(function (r) { r.classList.remove('is-over'); });
+      });
+      tb.addEventListener('dragend', function () {
+        if (dragging) dragging.classList.remove('is-dragging');
+        [].slice.call(tb.rows).forEach(function (r) { r.classList.remove('is-over'); });
+        dragging = null;
+      });
+
+      tb.addEventListener('keydown', function (e) {
+        var h = e.target.closest('.ad-drag');
+        if (!h) return;
+        var d = e.key === 'ArrowUp' ? -1 : (e.key === 'ArrowDown' ? 1 : 0);
+        if (!d) return;
+        e.preventDefault();
+        var tr = h.closest('tr');
+        var sib = d < 0 ? tr.previousElementSibling : tr.nextElementSibling;
+        if (!sib) return;
+        tb.insertBefore(d < 0 ? tr : sib, d < 0 ? sib : tr);
+        renumber(); flash(tr);
+        h.focus();                        // 옮긴 뒤에도 같은 손잡이에 초점을 유지한다
+      });
+    })();
+  </script>
+</body>
+</html>
