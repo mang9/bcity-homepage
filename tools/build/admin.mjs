@@ -70,7 +70,7 @@ const NAV = [
   { key: 'press', label: '언론보도', file: 'press.html', n: 34, desc: '공개 33 · 비공개 1', group: '홍보센터' },
   { key: 'video', label: '홍보영상', file: 'video.html', n: 8, desc: '공개 6 · 메인 노출 4 / 4', group: '홍보센터' },
   { key: 'gallery', label: '갤러리', file: 'gallery.html', n: 26, desc: '공개 25 · 예약 1', group: '홍보센터' },
-  { key: 'publication', label: '발행물', file: 'publication.html', n: 5, desc: '공개 4 · 다운로드 허용 3', group: '홍보센터' },
+  { key: 'publication', label: '발행물', file: 'publication.html', n: 12, desc: '공개 11 · 다운로드 허용 9', group: '홍보센터' },
   { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, desc: '공개 7 · 확정 전 2', group: '사이트 콘텐츠' },
   { key: 'account', label: '계정 관리', file: 'account.html', n: 4, desc: '활성 3 · 잠금 1', group: '설정' },
 ];
@@ -169,6 +169,80 @@ ${modal}
       p1.addEventListener('input', paint);
       p2.addEventListener('input', paint);
     })();
+
+    /* 파트너사 순서 재정렬 — 드래그앤드롭 + 키보드(위·아래 화살표).
+       라이브러리 없이 HTML5 Drag and Drop 만 쓴다. 저장은 하지 않는다.
+       ⚠ 드래그만 두면 키보드·터치 사용자가 순서를 못 바꾼다 → 화살표 이동을 함께 둔다.
+       ⚠ 행을 옮긴 뒤 **순서 번호를 다시 매겨야** 한다. 안 하면 화면의 번호와 실제
+         순서가 어긋나 어느 쪽이 맞는지 알 수 없다. */
+    (function () {
+      var tb = document.querySelector('[data-reorder] tbody');
+      if (!tb) return;
+      var dragging = null;
+
+      function renumber() {
+        [].slice.call(tb.rows).forEach(function (tr, i) {
+          var b = tr.querySelector('.ad-ord');
+          if (b) b.textContent = i + 1;
+          var h = tr.querySelector('.ad-drag');
+          if (h) h.setAttribute('aria-label',
+            '순서 ' + (i + 1) + ' — 끌어서 옮기거나 위·아래 화살표를 누르세요');
+        });
+      }
+      function flash(tr) {
+        tr.classList.remove('is-moved');
+        void tr.offsetWidth;              // 같은 행을 연속으로 옮길 때 애니메이션을 다시 걸기 위함
+        tr.classList.add('is-moved');
+      }
+
+      tb.addEventListener('dragstart', function (e) {
+        var h = e.target.closest('.ad-drag');
+        if (!h) { e.preventDefault(); return; }
+        dragging = h.closest('tr');
+        dragging.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', '');   // Firefox 는 데이터가 없으면 드래그를 시작하지 않는다
+      });
+      tb.addEventListener('dragover', function (e) {
+        if (!dragging) return;
+        e.preventDefault();
+        var tr = e.target.closest('tr');
+        if (!tr || tr === dragging) return;
+        [].slice.call(tb.rows).forEach(function (r) { r.classList.remove('is-over'); });
+        tr.classList.add('is-over');
+      });
+      tb.addEventListener('drop', function (e) {
+        if (!dragging) return;
+        e.preventDefault();
+        var tr = e.target.closest('tr');
+        if (tr && tr !== dragging) {
+          var rows = [].slice.call(tb.rows);
+          // 아래로 옮길 때는 대상 **다음**에, 위로 옮길 때는 대상 **앞**에 넣는다
+          tb.insertBefore(dragging, rows.indexOf(dragging) < rows.indexOf(tr) ? tr.nextSibling : tr);
+          renumber(); flash(dragging);
+        }
+        [].slice.call(tb.rows).forEach(function (r) { r.classList.remove('is-over'); });
+      });
+      tb.addEventListener('dragend', function () {
+        if (dragging) dragging.classList.remove('is-dragging');
+        [].slice.call(tb.rows).forEach(function (r) { r.classList.remove('is-over'); });
+        dragging = null;
+      });
+
+      tb.addEventListener('keydown', function (e) {
+        var h = e.target.closest('.ad-drag');
+        if (!h) return;
+        var d = e.key === 'ArrowUp' ? -1 : (e.key === 'ArrowDown' ? 1 : 0);
+        if (!d) return;
+        e.preventDefault();
+        var tr = h.closest('tr');
+        var sib = d < 0 ? tr.previousElementSibling : tr.nextElementSibling;
+        if (!sib) return;
+        tb.insertBefore(d < 0 ? tr : sib, d < 0 ? sib : tr);
+        renumber(); flash(tr);
+        h.focus();                        // 옮긴 뒤에도 같은 손잡이에 초점을 유지한다
+      });
+    })();
   </script>
 </body>
 </html>
@@ -178,8 +252,8 @@ ${modal}
 
 const MODALS = `  <dialog id="delDlg" class="ad-dlg">
     <h3>삭제할까요?</h3>
-    <p>게시글과 목록에서 모두 삭제되며, 삭제 후에는 복구할 수 없습니다.</p>
-    ${dev('삭제 정책 확인 — 화면 문구가 \'복구할 수 없습니다\' 로 단정한다. 소프트 삭제(휴지통)를 도입하면 이 문구도 함께 고쳐야 한다.')}
+    <p>게시글과 목록에서 모두 삭제됩니다.</p>
+    ${dev('삭제 정책 확인 — 소프트 삭제(휴지통) 여부 · 보관 기간 · 복구 권한 등급. 화면 문구는 복구 가능성을 단정하지 않는다.')}
     <div class="ad-dlg-f">
       <button type="button" class="ad-btn" onclick="this.closest('dialog').close()">취소</button>
       <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">삭제</button>
@@ -207,6 +281,20 @@ const state = (k) => ({
   off: '<span class="ad-state ad-state--off">비공개</span>',
   wait: '<span class="ad-state ad-state--wait">예약</span>',
 }[k]);
+
+/* 표 본문 — 행을 손으로 쓰면 10행 × 5화면이 되어 읽기도 고치기도 어렵다(2026-08-18 감사).
+   `cells` 배열과 열 정렬 클래스만 주면 헬퍼가 만든다. 목록 한 쪽은 **10행**이다(지시). */
+const PAGE_ROWS = 10;
+
+/* 파트너사 순서 셀 — 손잡이 + 순서 번호. 실제 재정렬은 셸의 스크립트가 한다(지시로 구현).
+   ⚠ 손잡이를 `<button>` 으로 낸다. div 로 두면 키보드로 잡을 수 없어
+     드래그밖에 방법이 없는 컨트롤이 된다(마우스 없이는 순서를 못 바꾼다). */
+const drag = (n) => '<button type="button" class="ad-drag" draggable="true" '
+  + `aria-label="순서 ${n} — 끌어서 옮기거나 위·아래 화살표를 누르세요">`
+  + `<span aria-hidden="true">⋮⋮</span><b class="ad-ord">${n}</b></button>`;
+const tbody = (rows, cls) => rows.map((r) =>
+  '                <tr>' + r.map((c, i) => `<td${cls[i] ? ` class="${cls[i]}"` : ''}>${c}</td>`).join('') + '</tr>'
+).join('\n');
 
 /* 목록 행의 [수정] 은 폼 화면으로 실제 이동하고, [삭제] 는 확인 모달을 띄운다.
    ⚠ 기능은 없다(2026-08-18 지시) — 화면 전환만 확인할 수 있게 한 것이다.
@@ -420,10 +508,18 @@ pages['notice.html'] = shell({
               <thead><tr><th class="is-num">No.</th><th class="is-title">제목</th><th>작성자</th><th>등록일</th>
                 <th class="is-num">조회수</th><th class="is-ctr">상태</th><th class="is-ctr">관리</th></tr></thead>
               <tbody>
-                <tr><td class="is-num">4</td><td class="is-title"><span class="ad-pin">공지</span> 통합개발계획 접수 안내</td><td>홍보담당자</td><td>2026.07.02</td><td class="is-num">1,284</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('notice')}</td></tr>
-                <tr><td class="is-num">3</td><td class="is-title">B-CITY 공식 홈페이지 오픈</td><td>홍보담당자</td><td>2026.05.02</td><td class="is-num">932</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('notice')}</td></tr>
-                <tr><td class="is-num">2</td><td class="is-title">바이오테크이노밸리피에프브이㈜ 설립 완료</td><td>홍보담당자</td><td>2026.04.03</td><td class="is-num">610</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('notice')}</td></tr>
-                <tr><td class="is-num">1</td><td class="is-title">하반기 사업 설명회 일정</td><td>홍보담당자</td><td>2026.03.20</td><td class="is-num">0</td><td class="is-ctr">${state('wait')}</td><td class="is-ctr">${rowActs('notice')}</td></tr>
+${tbody([
+                  ['12', '<span class="ad-pin">공지</span> 통합개발계획 접수 안내', '홍보담당자', '2026.07.02', '1,284', state('on'), rowActs('notice')],
+                  ['11', '<span class="ad-pin">공지</span> 홈페이지 개편 안내', '홍보담당자', '2026.06.24', '842', state('on'), rowActs('notice')],
+                  ['10', '국가첨단전략산업 특화단지 지정 관련 안내', '홍보담당자', '2026.06.11', '1,036', state('on'), rowActs('notice')],
+                  ['9', '토지거래허가구역 지정 공고 안내', '홍보담당자', '2026.05.28', '774', state('on'), rowActs('notice')],
+                  ['8', 'B-CITY 공식 홈페이지 오픈', '홍보담당자', '2026.05.02', '932', state('on'), rowActs('notice')],
+                  ['7', '2026 상반기 사업 추진 현황 공유', '홍보담당자', '2026.04.22', '618', state('on'), rowActs('notice')],
+                  ['6', '바이오테크이노밸리피에프브이㈜ 설립 완료', '홍보담당자', '2026.04.03', '610', state('on'), rowActs('notice')],
+                  ['5', '개발행위허가 제한지역 지정 고시 안내', '홍보담당자', '2026.03.27', '405', state('on'), rowActs('notice')],
+                  ['4', '하반기 사업 설명회 일정', '홍보담당자', '2026.03.20', '0', state('wait'), rowActs('notice')],
+                  ['3', '입주 문의 접수 채널 안내', '홍보담당자', '2026.03.06', '289', state('off'), rowActs('notice')],
+                ], ['is-num', 'is-title', '', '', 'is-num', 'is-ctr', 'is-ctr'])}
               </tbody>
             </table>
           </div>
@@ -463,10 +559,18 @@ pages['press.html'] = shell({
               <thead><tr><th class="is-num">No.</th><th class="is-title">제목</th><th>매체명</th><th>보도일자</th>
                 <th class="is-ctr">상태</th><th class="is-ctr">관리</th></tr></thead>
               <tbody>
-                <tr><td class="is-num">34</td><td class="is-title">춘천 기업혁신파크, 국토부 선도사업 최종 선정</td><td>강원일보</td><td>2026.04.18</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('press')}</td></tr>
-                <tr><td class="is-num">33</td><td class="is-title">더존비즈온, 춘천 AI 데이터센터 앵커기업 참여</td><td>파이낸셜뉴스</td><td>2026.04.02</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('press')}</td></tr>
-                <tr><td class="is-num">32</td><td class="is-title">강원 바이오·헬스 초광역 경제권 구축 본격화</td><td>한국경제</td><td>2026.03.11</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('press')}</td></tr>
-                <tr><td class="is-num">31</td><td class="is-title">기업혁신파크 토지거래허가구역 지정</td><td>연합뉴스</td><td>2026.02.27</td><td class="is-ctr">${state('off')}</td><td class="is-ctr">${rowActs('press')}</td></tr>
+${tbody([
+                  ['34', '춘천 기업혁신파크, 국토부 선도사업 최종 선정', '강원일보', '2026.04.18', state('on'), rowActs('press')],
+                  ['33', '더존비즈온, 춘천 AI 데이터센터 앵커기업 참여', '파이낸셜뉴스', '2026.04.02', state('on'), rowActs('press')],
+                  ['32', '강원 바이오·헬스 초광역 경제권 구축 본격화', '한국경제', '2026.03.11', state('on'), rowActs('press')],
+                  ['31', '기업혁신파크 토지거래허가구역 지정', '연합뉴스', '2026.02.27', state('off'), rowActs('press')],
+                  ['30', '춘천에 330MW 하이퍼스케일 데이터센터', '전자신문', '2026.02.14', state('on'), rowActs('press')],
+                  ['29', '국가첨단전략산업 특화단지 강원 선정', '강원도민일보', '2026.01.30', state('on'), rowActs('press')],
+                  ['28', 'GTX-B 연장 논의, 춘천 접근성 개선 기대', '매일경제', '2026.01.16', state('on'), rowActs('press')],
+                  ['27', '중소형 CDMO 거점으로 주목받는 춘천', '히트뉴스', '2025.12.19', state('on'), rowActs('press')],
+                  ['26', '기업도시개발특별법 적용 사업 현황', '건설경제', '2025.12.04', state('on'), rowActs('press')],
+                  ['25', '춘천시·강원특별자치도 출자 지분 확정', 'MBC강원', '2025.11.21', state('on'), rowActs('press')],
+                ], ['is-num', 'is-title', '', '', 'is-ctr', 'is-ctr'])}
               </tbody>
             </table>
           </div>
@@ -590,10 +694,18 @@ pages['publication.html'] = shell({
               <thead><tr><th class="is-num">No.</th><th>구분</th><th class="is-title">제목</th><th>파일</th>
                 <th class="is-ctr">다운로드</th><th>등록일</th><th class="is-ctr">상태</th><th class="is-ctr">관리</th></tr></thead>
               <tbody>
-                <tr><td class="is-num">5</td><td>IM</td><td class="is-title">B-CITY 사업 소개 IM</td><td>bcity-im.pdf · 12.4MB</td><td class="is-ctr">허용</td><td>2026.07.16</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('publication')}</td></tr>
-                <tr><td class="is-num">4</td><td>카달로그</td><td class="is-title">춘천기업혁신파크 카달로그</td><td>catalog.pdf · 8.1MB</td><td class="is-ctr">허용</td><td>2026.06.30</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('publication')}</td></tr>
-                <tr><td class="is-num">3</td><td>브로슈어</td><td class="is-title">투자 유치 브로슈어</td><td>brochure.pdf · 4.6MB</td><td class="is-ctr">미허용</td><td>2026.06.02</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('publication')}</td></tr>
-                <tr><td class="is-num">2</td><td>리포트</td><td class="is-title">2026 상반기 사업 추진 리포트</td><td>report.pdf · 3.2MB</td><td class="is-ctr">허용</td><td>2026.05.20</td><td class="is-ctr">${state('off')}</td><td class="is-ctr">${rowActs('publication')}</td></tr>
+${tbody([
+                  ['12', 'IM', 'B-CITY 사업 소개 IM', 'bcity-im.pdf · 12.4MB', '허용', '2026.07.16', state('on'), rowActs('publication')],
+                  ['11', '카달로그', '춘천기업혁신파크 카달로그', 'catalog.pdf · 8.1MB', '허용', '2026.06.30', state('on'), rowActs('publication')],
+                  ['10', '브로슈어', '투자 유치 브로슈어', 'brochure.pdf · 4.6MB', '미허용', '2026.06.02', state('on'), rowActs('publication')],
+                  ['9', '리포트', '2026 상반기 사업 추진 리포트', 'report.pdf · 3.2MB', '허용', '2026.05.20', state('off'), rowActs('publication')],
+                  ['8', '카달로그', '8대 권역 안내 카달로그', 'zones.pdf · 6.8MB', '허용', '2026.04.11', state('on'), rowActs('publication')],
+                  ['7', '리포트', 'AI 데이터센터 사업성 리포트', 'dc-report.pdf · 5.4MB', '허용', '2026.03.28', state('on'), rowActs('publication')],
+                  ['6', '브로슈어', '특구별 혜택 안내 브로슈어', 'benefit.pdf · 2.9MB', '허용', '2026.03.05', state('on'), rowActs('publication')],
+                  ['5', 'IM', '골프레저 콤플렉스 IM', 'golf-im.pdf · 9.7MB', '미허용', '2026.02.19', state('on'), rowActs('publication')],
+                  ['4', '카달로그', '정주환경 안내 카달로그', 'living.pdf · 4.1MB', '허용', '2026.01.24', state('on'), rowActs('publication')],
+                  ['3', '리포트', '2025 하반기 추진 리포트', 'report-2025h2.pdf · 3.0MB', '허용', '2025.12.12', state('wait'), rowActs('publication')],
+                ], ['is-num', '', 'is-title', '', 'is-ctr', '', 'is-ctr', 'is-ctr'])}
               </tbody>
             </table>
           </div>
@@ -633,18 +745,22 @@ pages['partner.html'] = shell({
   actions: NEW_BTN('파트너사 등록', 'partner-form.html'),
   body: `        <div class="ad-card">
           <div class="ad-filter">${chips(['전체', '앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공'])}${search('상호 검색')}</div>
-          <div class="ad-scroll">
+          <div class="ad-scroll" data-reorder>
             <table class="ad-tbl">
               <thead><tr><th class="is-ctr">순서</th><th>분류</th><th class="is-title">상호</th><th>로고</th>
                 <th class="is-num">지분율</th><th class="is-ctr">푸터 노출</th><th class="is-ctr">상태</th><th class="is-ctr">관리</th></tr></thead>
               <tbody>
-                <tr><td class="is-ctr">⋮⋮ 1</td><td>앵커기업</td><td class="is-title">더존비즈온</td><td>partner-douzone.png</td><td class="is-num">37.3%</td><td class="is-ctr">노출</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
-                <tr><td class="is-ctr">⋮⋮ 2</td><td>자산관리</td><td class="is-title">바이오테크이노밸리자산관리 (AMC)</td><td>partner-amc.jpg</td><td class="is-num">0.2%</td><td class="is-ctr">노출</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
-                <tr><td class="is-ctr">⋮⋮ 3</td><td>공공</td><td class="is-title">강원특별자치도</td><td>partner-gangwon.svg</td><td class="is-num">4.9%</td><td class="is-ctr">노출</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
-                <tr><td class="is-ctr">⋮⋮ 4</td><td>공공</td><td class="is-title">춘천시</td><td>partner-chuncheon.svg</td><td class="is-num">4.9%</td><td class="is-ctr">노출</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
-                <tr><td class="is-ctr">⋮⋮ 5</td><td>금융</td><td class="is-title">IBK투자증권</td><td>partner-ibk.png</td><td class="is-num">5.0%</td><td class="is-ctr">노출</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
-                <tr><td class="is-ctr">⋮⋮ 6</td><td>시공</td><td class="is-title">부지조성공사 등 (TBD)</td><td>—</td><td class="is-num">—</td><td class="is-ctr">미노출</td><td class="is-ctr">${state('off')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
-                <tr><td class="is-ctr">⋮⋮ 7</td><td>전략적 투자자</td><td class="is-title">에스에너지</td><td>partner-senergy.jpg</td><td class="is-num">—</td><td class="is-ctr">미노출</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('partner')}</td></tr>
+${tbody([
+                  [drag(1), '앵커기업', '더존비즈온', 'partner-douzone.png', '37.3%', '노출', state('on'), rowActs('partner')],
+                  [drag(2), '자산관리', '바이오테크이노밸리자산관리 (AMC)', 'partner-amc.jpg', '0.2%', '노출', state('on'), rowActs('partner')],
+                  [drag(3), '공공', '강원특별자치도', 'partner-gangwon.svg', '4.9%', '노출', state('on'), rowActs('partner')],
+                  [drag(4), '공공', '춘천시', 'partner-chuncheon.svg', '4.9%', '노출', state('on'), rowActs('partner')],
+                  [drag(5), '금융', 'IBK투자증권', 'partner-ibk.png', '5.0%', '노출', state('on'), rowActs('partner')],
+                  [drag(6), '시공', '부지조성공사 등 (TBD)', '—', '—', '미노출', state('off'), rowActs('partner')],
+                  [drag(7), '전략적 투자자', '에스에너지', 'partner-senergy.jpg', '—', '미노출', state('on'), rowActs('partner')],
+                  [drag(8), '전략적 투자자', '프로티움사이언스', 'partner-protium.png', '—', '미노출', state('on'), rowActs('partner')],
+                  [drag(9), '공공', '국토교통부', 'partner-molit.svg', '—', '노출', state('on'), rowActs('partner')],
+                ], ['is-ctr', '', 'is-title', '', 'is-num', 'is-ctr', 'is-ctr', 'is-ctr'])}
               </tbody>
             </table>
           </div>
@@ -756,7 +872,7 @@ pages['account-form.html'] = shell({
   h1: '계정 등록 / 수정',
   body: formCard({
     title: '계정 등록 / 수정', slug: 'account', preview: 'account.html',
-    note: '등급을 바꾸면 메뉴 권한이 기본값으로 다시 채워집니다',
+    note: '※ 등급을 바꾸면 메뉴 권한이 기본값으로 다시 채워집니다',
     dev: '권한 집행 확인 — 화면 체크는 표시일 뿐이다. 서버가 막지 않으면 URL 직접 입력으로 모두 접근된다.',
     fields: [
       field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
@@ -809,7 +925,7 @@ pages['password.html'] = shell({
             </div>
           </div>
           <div class="ad-foot">
-            <p class="ad-note">변경하면 다른 기기에서는 다시 로그인해야 합니다</p>
+            <p class="ad-note">※ 변경하면 다른 기기에서는 다시 로그인해야 합니다</p>
             ${dev('비밀번호 검사 확인 — 화면 검사는 우회 가능하다. 서버에서 같은 규칙을 반드시 재검증할 것.')}
             <a class="ad-btn" href="account.html">취소</a>
             <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">변경</button>

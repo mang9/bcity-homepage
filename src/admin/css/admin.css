@@ -353,3 +353,25 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ad-in[type="time"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 .ad-in[type="date"]::-webkit-inner-spin-button,
 .ad-in[type="time"]::-webkit-inner-spin-button { display: none; }
+
+/* ── 파트너사 순서 드래그 ──────────────────────────────────────────────
+   순서를 실제로 바꿀 수 있다(2026-08-18 지시). 재정렬은 셸의 스크립트가 한다.
+   ⚠ 손잡이는 `<button>` 이다 — div 로 두면 키보드로 잡을 수 없어 마우스 없이는
+     순서를 못 바꾼다. 위·아래 화살표로도 옮길 수 있게 해 뒀다. */
+.ad-drag { display: inline-flex; align-items: center; gap: 7px; padding: 4px 8px;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: none; cursor: grab; font: inherit; color: var(--color-text-muted); }
+.ad-drag:hover { border-color: var(--color-line); background: var(--color-surface); }
+.ad-drag:focus-visible { outline: none; border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(var(--primary-rgb) / .16); }
+.ad-drag:active { cursor: grabbing; }
+.ad-ord { font-weight: 700; color: var(--color-text); font-variant-numeric: tabular-nums; }
+/* 끌고 있는 행 · 놓일 자리 */
+.ad-tbl tr.is-dragging { opacity: .4; }
+.ad-tbl tr.is-over td { box-shadow: inset 0 2px 0 var(--color-primary); }
+.ad-tbl tr.is-moved { animation: adMoved .9s ease-out; }
+@keyframes adMoved {
+  from { background: rgb(var(--primary-rgb) / .12); }
+  to { background: transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .ad-tbl tr.is-moved { animation: none; } }
