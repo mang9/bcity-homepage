@@ -1104,12 +1104,17 @@ for (const [slug, rows] of Object.entries(SPEC_BY_SCREEN)) {
     + rows.map((r) => `| ${r.label}${r.req ? ' *' : ''} | \`${r.type}\` | ${r.hint.replace(/\|/g, '\\|') || '—'} |`).join('\n')
     + '\n';
 }
+/* ⚠ README 는 **항상 새로 쓴다.** 전에는 `existsSync` 로 있을 때만 갱신했는데,
+   `admin/` 이 main 에서 무시 대상이라 분기를 오가면 폴더째 지워지고 → 빌드가 조용히
+   건너뛰어 **README 만 사라진 상태**가 됐다(2026-08-18 실제 발생).
+   원본은 `src/admin/README.md`(main 에 추적됨)이고 여기서 산출물을 만든다. */
 const RM = join(OUT, 'README.md');
-if (existsSync(RM)) {
-  const cur = readFileSync(RM, 'utf8').split('\n## 필드 명세 (등록 / 수정 화면)')[0].replace(/\s*$/, '');
-  writeFileSync(RM, cur + '\n' + spec);
-  console.log('  → admin/README.md (필드 명세표 갱신)');
-}
+const rmSrc = read('src', 'admin', 'README.md')
+  .replace(/^<!--[\s\S]*?-->\n\n/, '')          // 원본 전용 주석은 산출물에 넣지 않는다
+  .replace(/\{\{COUNT\}\}/g, String(n))
+  .replace(/\s*$/, '');
+writeFileSync(RM, rmSrc + '\n' + spec);
+console.log(`  → admin/README.md (원본 + 필드 명세표 · 화면 ${n}개)`);
 
 console.log(`\n  관리자 화면 ${n}개 생성 완료 — admin/login.html 부터 보세요.`);
 console.log('  ⚠ 디자인 인계용입니다. 기능은 구현하지 않았고 admin/ 은 배포에서 제외됩니다.');
