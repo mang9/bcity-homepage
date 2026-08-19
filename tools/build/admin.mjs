@@ -134,7 +134,45 @@ ${body}
     </div>
   </div>
 ${modal}
-  <script>
+${SCRIPTS}
+</body>
+</html>
+`;
+}
+
+
+const MODALS = `  <dialog id="delDlg" class="ad-dlg">
+    <h3>삭제할까요?</h3>
+    <p>게시글과 목록에서 모두 삭제됩니다.</p>
+    ${dev('삭제 정책 확인 — 소프트 삭제(휴지통) 여부 · 보관 기간 · 복구 권한 등급. 화면 문구는 복구 가능성을 단정하지 않는다.')}
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn" onclick="this.closest('dialog').close()">취소</button>
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">삭제</button>
+    </div>
+  </dialog>
+  <dialog id="saveDlg" class="ad-dlg">
+    <h3>임시 저장했습니다</h3>
+    <p>작성 중인 내용을 임시 보관합니다. 목록에는 노출되지 않습니다.</p>
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
+    </div>
+  </dialog>
+  <dialog id="pwDlg" class="ad-dlg">
+    <h3>임시 비밀번호 발급</h3>
+    <p>본인 메일로 보냈습니다. 첫 로그인에서 변경해야 합니다</p>
+    ${dev('임시 비밀번호 확인 — 유효 기간(권장 24시간) · 발송 메일 문안 · 재발급 제한.')}
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
+    </div>
+  </dialog>`;
+
+/* ── 화면 스크립트 ─────────────────────────────────────────────────────
+   ⚠ **두 껍데기(shell · loginShell)가 함께 쓴다.** 전에는 shell() 안에만 있어서
+     loginShell 로 만든 비밀번호 재설정 화면에서 규칙 검사가 돌지 않았다
+     (2026-08-18 자체 검증에서 잡았다). 상수로 빼서 한 곳만 고치면 되게 한다.
+   ⚠ 이 문자열은 **템플릿 리터럴 안**이다 — \d 는 d 로 붕괴하고 \1 은 빌드를 죽인다.
+     정규식은 이스케이프가 필요 없는 형태([0-9])로 쓴다. */
+const SCRIPTS = `  <script>
     /* 토글만 실제로 동작한다. 저장은 하지 않는다 — 값이 어디로도 가지 않는다. */
     document.addEventListener('click', function (e) {
       var t = e.target.closest('.ad-toggle');
@@ -168,6 +206,18 @@ ${modal}
       }
       p1.addEventListener('input', paint);
       p2.addEventListener('input', paint);
+    })();
+
+    /* 지분율 — '확정 전' 을 체크하면 숫자 입력을 잠근다.
+       두 값이 동시에 채워지면 구조도에 무엇을 넣을지 정해지지 않는다. */
+    (function () {
+      var cb = document.getElementById('eqTbd'), eq = document.getElementById('eq');
+      if (!cb || !eq) return;
+      cb.addEventListener('change', function () {
+        eq.disabled = cb.checked;
+        if (cb.checked) eq.value = '';
+        eq.placeholder = cb.checked ? 'TBD' : '37.3';
+      });
     })();
 
     /* 파트너사 순서 재정렬 — 드래그앤드롭 + 키보드(위·아래 화살표).
@@ -243,37 +293,7 @@ ${modal}
         h.focus();                        // 옮긴 뒤에도 같은 손잡이에 초점을 유지한다
       });
     })();
-  </script>
-</body>
-</html>
-`;
-}
-
-
-const MODALS = `  <dialog id="delDlg" class="ad-dlg">
-    <h3>삭제할까요?</h3>
-    <p>게시글과 목록에서 모두 삭제됩니다.</p>
-    ${dev('삭제 정책 확인 — 소프트 삭제(휴지통) 여부 · 보관 기간 · 복구 권한 등급. 화면 문구는 복구 가능성을 단정하지 않는다.')}
-    <div class="ad-dlg-f">
-      <button type="button" class="ad-btn" onclick="this.closest('dialog').close()">취소</button>
-      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">삭제</button>
-    </div>
-  </dialog>
-  <dialog id="saveDlg" class="ad-dlg">
-    <h3>임시 저장했습니다</h3>
-    <p>작성 중인 내용을 임시 보관합니다. 목록에는 노출되지 않습니다.</p>
-    <div class="ad-dlg-f">
-      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
-    </div>
-  </dialog>
-  <dialog id="pwDlg" class="ad-dlg">
-    <h3>임시 비밀번호 발급</h3>
-    <p>본인 메일로 보냈습니다. 첫 로그인에서 변경해야 합니다</p>
-    ${dev('임시 비밀번호 확인 — 유효 기간(권장 24시간) · 발송 메일 문안 · 재발급 제한.')}
-    <div class="ad-dlg-f">
-      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
-    </div>
-  </dialog>`;
+  </script>`;
 
 /* ── 조각 ─────────────────────────────────────────────────────────── */
 const state = (k) => ({
@@ -398,17 +418,17 @@ ${fields.join('\n')}
 
 const NEW_BTN = (t, href) => `<a class="ad-btn ad-btn--primary" href="${href}">+ ${esc(t)}</a>`;
 
-/* ── 화면 ─────────────────────────────────────────────────────────── */
-const pages = {};
-
-/* 로그인 — 기획서에 명세가 없어 새로 설계했다(사용자 요청). */
-pages['login.html'] = `<!doctype html>
+/* 로그인 계열 화면(로그인 · 비밀번호 재설정)의 공통 껍데기.
+   ⚠ 이전에는 로그인 화면 HTML 을 통째로 문자열로 갖고 있었다. 재설정 화면이 생기면서
+     같은 <head>·배경·상자를 두 번 쓰게 되므로 헬퍼로 묶는다(중복 방지). */
+function loginShell({ title, body, aside = '' }) {
+  return `<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>로그인 · B-CITY 관리자</title>
+<title>${esc(title)} · B-CITY 관리자</title>
 <link rel="icon" href="../assets/favicon/favicon.svg" type="image/svg+xml" />
 <style>
 ${TOKENS.trim()}
@@ -418,13 +438,30 @@ ${ADMIN.trim()}
 </head>
 <body>
   <div class="ad-login">
-   <div class="ad-login-wrap">
+   <div class="ad-login-wrap${aside ? '' : ' is-single'}">
     <div class="ad-login-box">
       <div class="ad-login-brand">
         ${LOGO_LIGHT}
         <span>PR CENTER ADMIN</span>
       </div>
-      <form class="ad-login-f" onsubmit="return false">
+${body}
+    </div>
+${aside}
+   </div>
+  </div>
+${SCRIPTS}
+</body>
+</html>
+`;
+}
+
+/* ── 화면 ─────────────────────────────────────────────────────────── */
+const pages = {};
+
+/* 로그인 — 기획서에 명세가 없어 새로 설계했다(사용자 요청). */
+pages['login.html'] = loginShell({
+  title: '로그인',
+  body: `      <form class="ad-login-f" onsubmit="return false">
         <label>아이디
           <input class="ad-in" type="text" autocomplete="username" placeholder="관리자 아이디" />
         </label>
@@ -434,12 +471,11 @@ ${ADMIN.trim()}
         <div class="ad-login-opt">
           <label style="display:flex;gap:6px;align-items:center;font-weight:600">
             <input type="checkbox" /> 아이디 기억하기</label>
-          <a href="#">비밀번호를 잊으셨나요?</a>
         </div>
         <a class="ad-btn ad-btn--primary" href="index.html">로그인</a>
       </form>
-    </div>
-    <aside class="ad-login-note">
+      <p class="ad-login-alt"><a href="password-reset.html">비밀번호를 잊으셨나요?</a></p>`,
+  aside: `    <aside class="ad-login-note">
         <p class="ad-login-note-h">아래는 <b>권장안</b>입니다. 검토 후 확정해 주세요.</p>
         <dl class="ad-rec">
           <dt>비밀번호 정책</dt>
@@ -461,12 +497,8 @@ ${ADMIN.trim()}
           <dt>감사 로그</dt>
           <dd>로그인 · 권한 변경 · 게시물 삭제 기록 <i>누가 · 언제 · 무엇을 · 어디서(IP).</i></dd>
       </dl>
-    </aside>
-   </div>
-  </div>
-</body>
-</html>
-`;
+    </aside>`,
+});
 
 /* 대시보드 — 기획서 slide 105(관리자 페이지 목차)를 화면으로 옮긴 것 */
 pages['index.html'] = shell({
@@ -783,8 +815,16 @@ pages['partner-form.html'] = shell({
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 여백은 자동 트리밍')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
         hint: '흰배경의 JPG 는 어두운 배경에서 흰 박스로 보입니다 — 투명 png 파일을 권장합니다.' }),
-      field({ label: '지분율', type: 'INPUT', control: '<input class="ad-in" type="text" placeholder="예: 37.3" style="max-width:160px" />',
-        hint: '비우면 구조도에 표기하지 않습니다. 확정 전이면 TBD 로 표시됩니다.' }),
+      /* 지분율은 상태가 **세 가지**다 — 확정된 값 / 확정 전(TBD) / 표기 안 함.
+         텍스트 입력 하나로는 구분되지 않아 '확정 전' 체크박스를 함께 둔다.
+         (2026-08-18 지적: 문구만 보면 입력칸에 '확정 전' 이라고 적는 것처럼 읽힌다) */
+      field({ label: '지분율', type: 'INPUT + CHECKBOX',
+        control: `<div class="ad-inline">
+                <span class="ad-unit"><input class="ad-in" type="number" step="0.1" min="0" max="100"
+                  placeholder="37.3" id="eq" /><i>%</i></span>
+                <label class="ad-cb"><input type="checkbox" id="eqTbd" /> 확정 전 (TBD 로 표시)</label>
+              </div>`,
+        hint: '확정된 지분율만 숫자로 적습니다. 확정 전이면 체크하세요 — 구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율을 표기하지 않습니다.' }),
       field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '구조도 상호 아래 설명 부분입니다.' }),
       field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '비활성화하면 사업주체 페이지에만 노출됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
@@ -931,6 +971,61 @@ pages['password.html'] = shell({
             <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">변경</button>
           </div>
         </div>`,
+});
+
+/* ── 비밀번호 재설정 — **기획서에 없다.** 로그인의 '비밀번호를 잊으셨나요?' 가
+   `href="#"` 으로 아무 데도 가지 않던 것을 채운 화면이다(2026-08-18 질문).
+
+   절차: ① 아이디 입력 → 재설정 메일 발송  ② 메일의 링크로 새 비밀번호 설정  ③ 로그인
+   ⚠ ①의 응답은 계정이 있든 없든 **같아야 한다.** 다르면 어떤 메일이 관리자 계정인지
+     알아낼 수 있다(계정 열거). 그래서 화면 문구도 '있으면 보냈다' 로 쓰지 않는다. */
+pages['password-reset.html'] = loginShell({
+  title: '비밀번호 재설정',
+  body: `      <p class="ad-login-h">비밀번호 재설정</p>
+      <p class="ad-login-d">가입한 아이디(메일)를 입력하면 재설정 링크를 보내 드립니다.</p>
+      <form class="ad-login-f" onsubmit="return false">
+        <label>아이디
+          <input class="ad-in" type="email" autocomplete="username" placeholder="name@biotech-iv.com" />
+        </label>
+        <a class="ad-btn ad-btn--primary" href="password-reset-sent.html">재설정 링크 받기</a>
+      </form>
+      <p class="ad-login-alt"><a href="login.html">‹ 로그인으로 돌아가기</a></p>`
+    + dev('계정 열거 방지 — 계정이 없어도 같은 응답을 보낼 것. 요청 횟수 제한(권장 5분에 3회)도 필요하다.'),
+});
+
+pages['password-reset-sent.html'] = loginShell({
+  title: '재설정 메일 발송',
+  body: `      <p class="ad-login-h">메일을 확인해 주세요</p>
+      <p class="ad-login-d">입력한 주소로 재설정 링크를 보냈습니다. 링크는 30분 동안만 쓸 수 있습니다.
+        메일이 오지 않으면 스팸함을 확인해 주세요.</p>
+      <div class="ad-login-f">
+        <a class="ad-btn ad-btn--primary" href="password-reset-new.html">링크를 눌렀을 때 화면 보기</a>
+        <a class="ad-btn" href="password-reset.html">다시 보내기</a>
+      </div>
+      <p class="ad-login-alt"><a href="login.html">‹ 로그인으로 돌아가기</a></p>`
+    + dev("'링크를 눌렀을 때 화면 보기' 는 시안 확인용 버튼이다. 실제로는 메일의 링크로만 다음 화면에 들어간다."),
+});
+
+pages['password-reset-new.html'] = loginShell({
+  title: '새 비밀번호 설정',
+  body: `      <p class="ad-login-h">새 비밀번호 설정</p>
+      <p class="ad-login-d">앞으로 사용할 비밀번호를 입력해 주세요.</p>
+      <form class="ad-login-f" onsubmit="return false">
+        <label>새 비밀번호
+          <input class="ad-in" type="password" id="pw1" autocomplete="new-password" />
+        </label>
+        <ul class="ad-rules" id="pwRules">
+          <li data-rule="len">10자 이상</li>
+          <li data-rule="mix">영문 · 숫자 · 특수문자를 모두 포함</li>
+          <li data-rule="seq">같은 문자 3회 이상 반복 없음</li>
+        </ul>
+        <label>새 비밀번호 확인
+          <input class="ad-in" type="password" id="pw2" autocomplete="new-password" />
+        </label>
+        <p class="ad-hint" id="pwMatch">두 입력이 같아야 합니다.</p>
+        <a class="ad-btn ad-btn--primary" href="login.html">변경하고 로그인</a>
+      </form>`
+    + dev('토큰 검증 — 1회용 · 30분 유효 · 사용 후 즉시 폐기. 만료·재사용 시 별도 안내 화면이 필요하다.'),
 });
 
 /* ── 자가 점검 ─────────────────────────────────────────────────────────

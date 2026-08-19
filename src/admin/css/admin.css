@@ -375,3 +375,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
   to { background: transparent; }
 }
 @media (prefers-reduced-motion: reduce) { .ad-tbl tr.is-moved { animation: none; } }
+
+/* 한 줄에 컨트롤 두 개 — 지분율(숫자 + 단위)과 '확정 전' 체크박스 */
+.ad-inline { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.ad-unit { display: inline-flex; align-items: center; gap: 6px; }
+.ad-unit .ad-in { width: 110px; }
+.ad-unit i { font-style: normal; font-size: 13px; color: var(--color-text-muted); }
+.ad-cb { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; }
+.ad-cb input { width: 16px; height: 16px; accent-color: var(--color-primary); }
+.ad-in:disabled { background: var(--ad-chrome); color: var(--ad-mute); cursor: not-allowed; }
+
+/* 로그인 계열 보조 문구 — 로그인 · 비밀번호 재설정이 함께 쓴다 */
+.ad-login-h { margin: 0 0 6px; font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+.ad-login-d { margin: 0 0 18px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+.ad-login-alt { margin: 16px 0 0; text-align: center; font-size: 12.5px; }
+.ad-login-alt a { color: var(--color-primary); font-weight: 700; }
+.ad-login-alt a:hover { text-decoration: underline; }
+/* 오른쪽 권장안 패널이 없는 화면(재설정 계열)은 한 칸으로 */
+.ad-login-wrap.is-single { grid-template-columns: min(400px, 100%); }
