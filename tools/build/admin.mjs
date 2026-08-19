@@ -330,6 +330,7 @@ ${ADMIN.trim()}
 </head>
 <body>
   <div class="ad-login">
+   <div class="ad-login-wrap">
     <div class="ad-login-box">
       <div class="ad-login-brand">
         ${LOGO_LIGHT}
@@ -349,13 +350,36 @@ ${ADMIN.trim()}
         </div>
         <a class="ad-btn ad-btn--primary" href="index.html">로그인</a>
       </form>
-      <p class="ad-login-note">
-        <b>이 화면은 시안입니다.</b> 인증은 서버에서 처리해야 합니다 —
-        정적 호스팅에서는 클라이언트 검증이 소스만 열면 우회되므로,
-        로그인·세션·권한은 개발 단계에서 백엔드로 구현해 주세요.
-        비밀번호 정책 · 실패 횟수 제한 · 2단계 인증 여부는 별도 협의가 필요합니다.
-      </p>
     </div>
+    <aside class="ad-login-note">
+        <p><b>이 화면은 시안입니다.</b> 인증은 서버에서 처리해야 합니다 —
+          정적 호스팅에서는 클라이언트 검증이 소스만 열면 우회되므로,
+          로그인 · 세션 · 권한은 백엔드로 구현해 주세요.</p>
+        <p class="ad-login-note-h">아래는 <b>권장안</b>입니다. 검토 후 확정해 주세요.</p>
+        <dl class="ad-rec">
+          <dt>비밀번호 정책</dt>
+          <dd>10자 이상 · 영문 · 숫자 · 특수문자 조합 · 같은 문자 3회 반복 금지
+            <i>비밀번호 변경 화면에 이 규칙으로 구현해 뒀습니다. 서버에서도 같은 규칙을 다시 검사해야 합니다.</i></dd>
+          <dt>주기적 변경 강제</dt>
+          <dd>두지 않음 <i>주기적 강제 변경은 오히려 단순한 비밀번호를 쓰게 만든다는 것이
+            현재 보안 지침(NIST SP 800-63B)의 권고입니다. 대신 유출 대응에 집중합니다.</i></dd>
+          <dt>비밀번호 저장</dt>
+          <dd>Argon2id 또는 bcrypt 해시 <i>평문 · 단순 SHA 계열은 쓰지 않습니다.</i></dd>
+          <dt>로그인 실패 제한</dt>
+          <dd>5회 실패 시 10분 잠금 · 이후 시도마다 지연 증가
+            <i>계정 잠금만 두면 남의 계정을 일부러 잠그는 공격이 가능하므로, IP 단위 지연을 함께 둡니다.</i></dd>
+          <dt>2단계 인증</dt>
+          <dd>최고관리자 <b>필수</b> · 편집자 선택 <i>인증 앱(TOTP) 기준. SMS 는 권장하지 않습니다.</i></dd>
+          <dt>세션</dt>
+          <dd>비활동 30분 만료 · 최대 12시간 <i>httpOnly · Secure · SameSite=Lax 쿠키.</i></dd>
+          <dt>임시 비밀번호</dt>
+          <dd>서버 생성 후 본인 메일 발송 · 24시간 유효 · 첫 로그인에서 변경 강제
+            <i>화면에 표시하지 않습니다.</i></dd>
+          <dt>감사 로그</dt>
+          <dd>로그인 · 권한 변경 · 게시물 삭제 기록 <i>누가 · 언제 · 무엇을 · 어디서(IP).</i></dd>
+      </dl>
+    </aside>
+   </div>
   </div>
 </body>
 </html>
@@ -600,7 +624,7 @@ pages['publication-form.html'] = shell({
         control: drop('PDF 파일을 끌어다 놓으세요', 'PDF 우선 · 최대 100MB')
           + fileList([['bcity-im.pdf', '12.4MB']]),
         hint: 'PDF 우선 · 파일당 최대 100MB' }),
-      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '끄면 [보기]만 노출되고 [다운로드] 버튼이 안 보입니다.' }),
+      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '비활성화하면 [보기]만 노출되고 [다운로드] 버튼이 안 보입니다.' }),
       field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 5) }),
     ],
   }),
@@ -651,7 +675,7 @@ pages['partner-form.html'] = shell({
       field({ label: '지분율', type: 'INPUT', control: '<input class="ad-in" type="text" placeholder="예: 37.3" style="max-width:160px" />',
         hint: '비우면 구조도에 표기하지 않습니다. 확정 전이면 TBD 로 표시됩니다.' }),
       field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '구조도 상호 아래 설명 부분입니다.' }),
-      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '설정을 끄면 사업주체 페이지에만 노출됩니다.' }),
+      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '비활성화하면 사업주체 페이지에만 노출됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
       field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 6) }),
@@ -752,7 +776,7 @@ pages['account-form.html'] = shell({
       field({ label: '메뉴 권한', type: 'CHECKBOX MATRIX', control: permMatrix('편집자'),
         hint: '등급 기본값에서 개별 조정할 수 있습니다. 계정 관리 삭제 권한은 최고관리자만 갖습니다.' }),
       field({ label: '계정 상태', type: 'TOGGLE', control: toggle(true, '활성'),
-        hint: '끄면 로그인할 수 없습니다. 삭제하지 않고 잠글 때 씁니다.' }),
+        hint: '비활성화하면 로그인할 수 없습니다. 삭제하지 않고 잠글 때 씁니다.' }),
     ],
   }),
 });
