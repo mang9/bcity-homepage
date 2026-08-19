@@ -45,6 +45,12 @@ const logo = (reverse) => {
 const LOGO_DARK = logo(true);    // 네이비 사이드바용
 const LOGO_LIGHT = logo(false);  // 흰 면(로그인)용
 
+/* 개발 쪽에 확인·협의가 필요한 내용은 **화면에 쓰지 않는다**(2026-08-18 지시).
+   운영자가 읽을 기능 설명과 섞이면 화면 문구인지 개발 메모인지 구분되지 않는다.
+   대신 HTML 주석으로 남긴다 — 소스를 여는 개발자에게는 그대로 보인다.
+   예외: 로그인 화면의 보안 권장안 패널은 화면에 그대로 둔다(지시). */
+const dev = (t) => `<!-- DEV: ${String(t).replace(/--+>/g, '- ->')} -->`;
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /* ── 좌측 메뉴 — 기획서 slide 105 의 5개 + 파트너사(사용자 추가) ───────── */
@@ -172,7 +178,8 @@ ${modal}
 
 const MODALS = `  <dialog id="delDlg" class="ad-dlg">
     <h3>삭제할까요?</h3>
-    <p>삭제한 게시물은 목록에서 사라집니다. 되돌릴 수 있는지는 개발 시 정책이 필요합니다.</p>
+    <p>삭제하면 목록과 홈페이지에서 바로 사라집니다.</p>
+    ${dev('삭제 정책 확인 — 소프트 삭제(휴지통) 여부 · 보관 기간 · 복구 권한 등급.')}
     <div class="ad-dlg-f">
       <button type="button" class="ad-btn" onclick="this.closest('dialog').close()">취소</button>
       <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">삭제</button>
@@ -187,8 +194,8 @@ const MODALS = `  <dialog id="delDlg" class="ad-dlg">
   </dialog>
   <dialog id="pwDlg" class="ad-dlg">
     <h3>임시 비밀번호 발급</h3>
-    <p>서버가 임시 비밀번호를 만들어 본인 메일로 보냅니다. 화면에는 표시하지 않으며,
-       첫 로그인에서 변경을 강제합니다. 유효 기간과 발송 메일 문안은 개발 시 협의가 필요합니다.</p>
+    <p>임시 비밀번호를 본인 메일로 보냈습니다. 첫 로그인에서 새 비밀번호로 바꿔야 합니다.</p>
+    ${dev('임시 비밀번호 확인 — 유효 기간(권장 24시간) · 발송 메일 문안 · 재발급 제한.')}
     <div class="ad-dlg-f">
       <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
     </div>
@@ -221,24 +228,8 @@ const chips = (arr) => '<div class="ad-chips">'
 const search = (ph) => `<div class="ad-search"><input type="search" placeholder="${esc(ph)}" />`
   + '<button type="button" class="ad-btn">검색</button></div>';
 
-function table({ cols, rows }) {
-  const th = cols.map((c) => `<th${c.cls ? ` class="${c.cls}"` : ''}>${esc(c.t)}</th>`).join('');
-  const tb = rows.map((r) => '<tr>' + r.map((c, i) => {
-    const cls = cols[i].cls ? ` class="${cols[i].cls}"` : '';
-    return `<td${cls}>${c}</td>`;
-  }).join('') + '</tr>').join('\n            ');
-  return `        <div class="ad-card">
-          <div class="ad-scroll">
-            <table class="ad-tbl">
-              <thead><tr>${th}</tr></thead>
-              <tbody>
-            ${tb}
-              </tbody>
-            </table>
-          </div>
-${pager()}
-        </div>`;
-}
+/* ⚠ table({cols, rows}) 헬퍼가 있었지만 **한 번도 호출되지 않았다**(2026-08-18 감사).
+   각 화면이 열 구성과 정렬이 달라 직접 만드는 편이 읽기 쉬웠다. 지웠다. */
 
 /** 폼 한 줄.
  *  ⚠ 전에는 컨트롤 위에 회색 배지로 필드 타입(INPUT · TEXT EDITOR …)을 찍었는데
@@ -269,6 +260,14 @@ const radios = (arr, openIdx) => `<div class="ad-radios">${arr.map((a, i) =>
               <div class="ad-when is-open"><input class="ad-in" type="date" style="max-width:200px" />
                 <input class="ad-in" type="time" style="max-width:150px" /></div>`;
 
+/* 게시 상태 — 6개 폼이 **완전히 같은 필드**를 반복하고 있었다(2026-08-18 감사).
+   문구를 한 번만 고치면 되도록 헬퍼로 묶는다. radios 의 name 만 화면마다 달라진다. */
+const pubState = (i) => field({
+  label: '게시 상태', req: true, type: 'RADIO BUTTONS',
+  hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.',
+  control: radios(['공개', '비공개', '예약'], i),
+});
+
 const editor = () => `<div class="ad-editor">
                 <div class="ad-editor-bar">
                   <span>B</span><span>I</span><span>U</span><span>H2</span><span>H3</span>
@@ -291,7 +290,7 @@ const thumbs = (n) => `<div class="ad-thumbs">${Array.from({ length: n }, (_, i)
 
 /* slug: 목록 화면으로 돌아갈 대상. preview: 공개 사이트에서 미리 볼 페이지(새 창). */
 const SPEC_BY_SCREEN = {};
-function formCard({ title, fields, note, slug, preview }) {
+function formCard({ title, fields, note, slug, preview, dev: devNote }) {
   SPEC_BY_SCREEN[slug] = FIELD_SPEC.splice(0);
   return `        <div class="ad-card">
           <div class="ad-card-h"><h2>${esc(title)}</h2>
@@ -299,6 +298,7 @@ function formCard({ title, fields, note, slug, preview }) {
           <div class="ad-form">
 ${fields.join('\n')}
           </div>
+          ${devNote ? dev(devNote) : ''}
           <div class="ad-foot">
             ${note ? `<p class="ad-note">${note}</p>` : ''}
             <button type="button" class="ad-btn" onclick="document.getElementById('saveDlg').showModal()">임시 저장</button>
@@ -444,7 +444,7 @@ pages['notice-form.html'] = shell({
         + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
         hint: '다중 첨부 · 파일당 최대 20MB' }),
       field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '목록 최상단에 [공지] 배지와 함께 노출됩니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 1) }),
+      pubState(1),
     ],
   }),
 });
@@ -486,7 +486,7 @@ pages['press-form.html'] = shell({
       field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '목록의 매체명 필터에 그대로 쓰입니다.' }),
       field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '원 기사 게재일' }),
       field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 웹사이트 URL · http(s):// 로 시작' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 2) }),
+      pubState(2),
     ],
   }),
 });
@@ -528,7 +528,7 @@ pages['video-form.html'] = shell({
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
         hint: 'YouTube 링크 · 썸네일은 링크에서 자동 추출' }),
       field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 노출 · 초과 지정 시 경고' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 3) }),
+      pubState(3),
     ],
   }),
 });
@@ -574,7 +574,7 @@ pages['gallery-form.html'] = shell({
       field({ label: '이미지 업로드', req: true, type: 'MULTI UPLOAD',
         control: drop('여러 장을 한 번에 끌어다 놓으세요', '드래그 앤 드롭 · 순서 조정 가능') + thumbs(8),
         hint: '썸네일을 끌어 순서를 바꿉니다. 순서가 화면 노출 순서입니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 4) }),
+      pubState(4),
     ],
   }),
 });
@@ -620,7 +620,7 @@ pages['publication-form.html'] = shell({
           + fileList([['bcity-im.pdf', '12.4MB']]),
         hint: 'PDF 우선 · 파일당 최대 100MB' }),
       field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '비활성화하면 [보기]만 노출되고 [다운로드] 버튼이 안 보입니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 5) }),
+      pubState(5),
     ],
   }),
 });
@@ -673,7 +673,7 @@ pages['partner-form.html'] = shell({
       field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '비활성화하면 사업주체 페이지에만 노출됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
-      field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 6) }),
+      pubState(6),
     ],
   }),
 });
@@ -747,7 +747,7 @@ ${ROLES.map((r) => `                <tr><td><b>${esc(r)}</b></td>`
               </tbody>
             </table>
           </div>
-          <div class="ad-foot"><p class="ad-note">※ 기획서에 없는 항목이라 등급 구성은 제안입니다. 운영 정책과 함께 확정해 주세요.</p></div>
+          ${dev('권한 등급 확인 — 기획서에 계정·권한 명세가 없어 이 구성은 제안이다. 운영 정책과 함께 확정 필요.')}
         </div>`,
 });
 
@@ -756,13 +756,15 @@ pages['account-form.html'] = shell({
   h1: '계정 등록 / 수정',
   body: formCard({
     title: '계정 등록 / 수정', slug: 'account', preview: 'account.html',
-    note: '※ 권한 체크는 화면 표시입니다. 실제 차단은 서버에서 해야 합니다.',
+    note: '※ 등급을 바꾸면 아래 메뉴 권한이 기본값으로 다시 채워집니다.',
+    dev: '권한 집행 확인 — 화면 체크는 표시일 뿐이다. 서버가 막지 않으면 URL 직접 입력으로 모두 접근된다.',
     fields: [
       field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
         hint: '목록과 게시물 작성자에 표시됩니다.' }),
       field({ label: '아이디', req: true, type: 'EMAIL INPUT',
         control: '<input class="ad-in" type="email" placeholder="name@biotech-iv.com" />',
-        hint: '회사 메일(@biotech-iv.com)만 허용할지는 개발 시 결정이 필요합니다.' }),
+        hint: '로그인 아이디로 쓰입니다.' }),
+      // DEV: 아이디 정책 확인 — 회사 메일(@biotech-iv.com) 도메인만 허용할지 결정 필요.
       field({ label: '임시 비밀번호', req: true, type: 'BUTTON',
         control: '<button type="button" class="ad-btn" onclick="document.getElementById(\'pwDlg\').showModal()">임시 비밀번호 발급</button>',
         hint: '서버가 생성해 본인 메일로 보내고, 첫 로그인에서 변경을 강제합니다.' }),
@@ -807,17 +809,75 @@ pages['password.html'] = shell({
             </div>
           </div>
           <div class="ad-foot">
-            <p class="ad-note">※ 규칙 검사는 화면에서 동작합니다. 서버에서도 반드시 다시 검사해야 합니다.</p>
+            <p class="ad-note">※ 변경하면 다른 기기에서는 다시 로그인해야 합니다.</p>
+            ${dev('비밀번호 검사 확인 — 화면 검사는 우회 가능하다. 서버에서 같은 규칙을 반드시 재검증할 것.')}
             <a class="ad-btn" href="account.html">취소</a>
             <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">변경</button>
           </div>
         </div>`,
 });
 
+/* ── 자가 점검 ─────────────────────────────────────────────────────────
+   빌드마다 돈다(2026-08-18 지시 "소스에 문제가 없는지 계속 체크해야 해").
+   운영·개발이 이어서 손볼 때 죽은 코드와 중복이 쌓이지 않게 하는 것이 목적이다.
+   실제로 이 점검으로 table() 미사용 · .ad-flag/.ad-checks 죽은 CSS ·
+   게시 상태 필드 6중복을 찾아냈다.
+
+   ⚠ CSS 는 **주석을 벗기고 선택자에서만** 클래스를 뽑아야 한다. 주석에 적어 둔
+     '.ad-type 은 제거했다' 같은 문구까지 정의로 세면 오탐이 난다(실제로 겪었다). */
+function selfCheck(outputs) {
+  const strip = (t) => t.replace(/\/\*[\s\S]*?\*\//g, '');
+  const cssNc = strip(ADMIN);
+  const selectors = (cssNc.match(/[^{}]+(?=\{)/g) || []).join(' ');
+  const defined = new Set([...selectors.matchAll(/\.(ad-[\w-]+)/g)].map((m) => m[1]));
+
+  const used = new Set();
+  for (const html of outputs) {
+    const body = html.split('</style>').pop();
+    for (const m of body.matchAll(/class="([^"]+)"/g)) {
+      for (const c of m[1].split(/\s+/)) if (c.startsWith('ad-')) used.add(c);
+    }
+  }
+  const dead = [...defined].filter((c) => !used.has(c)).sort();
+  const undef = [...used].filter((c) => !defined.has(c)).sort();
+
+  const dv = new Set([...cssNc.matchAll(/(--ad-[\w-]+)\s*:/g)].map((m) => m[1]));
+  const uv = new Set([...cssNc.matchAll(/var\((--ad-[\w-]+)/g)].map((m) => m[1]));
+  const deadVar = [...dv].filter((v) => !uv.has(v)).sort();
+
+  /* 화면에 남은 개발자 문구 — 로그인의 보안 권장안 패널은 지시로 남긴다 */
+  const DEVWORDS = ['개발 시', '협의가 필요', '서버에서 해야', '다시 검사해야',
+                    '결정이 필요', '정책이 필요', '기획서에 없', '구현해 주세요'];
+  const leaked = [];
+  outputs.forEach((html, i) => {
+    if (files[i] === 'login.html') return;
+    const body = html.split('</style>').pop().replace(/<!--[\s\S]*?-->/g, '');
+    const hit = DEVWORDS.filter((w) => body.includes(w));
+    if (hit.length) leaked.push(`${files[i]} — ${hit.join(' · ')}`);
+  });
+
+  const rows = [
+    ['죽은 CSS', dead], ['정의 없는 클래스', undef],
+    ['안 쓰는 토큰', deadVar], ['화면에 남은 개발자 문구', leaked],
+  ];
+  const bad = rows.filter((r) => r[1].length);
+  console.log('\n  ── 자가 점검 ──');
+  for (const [label, list] of rows) {
+    console.log(`  ${list.length ? '✗' : '·'} ${label}: ${list.length ? list.join(', ') : '없음'}`);
+  }
+  if (bad.length) {
+    console.log('\n  ⚠ 위 항목을 정리하고 다시 빌드하세요.');
+    process.exitCode = 1;
+  }
+}
+
 /* ── 출력 ─────────────────────────────────────────────────────────── */
 if (!existsSync(OUT)) mkdirSync(OUT, { recursive: true });
 let n = 0;
+const files = Object.keys(pages);
+const outputs = [];
 for (const [file, html] of Object.entries(pages)) {
+  outputs.push(html);
   writeFileSync(join(OUT, file), html);
   console.log(`  → admin/${file} (${(html.length / 1024).toFixed(1)} KB)`);
   n++;
@@ -842,3 +902,5 @@ if (existsSync(RM)) {
 
 console.log(`\n  관리자 화면 ${n}개 생성 완료 — admin/login.html 부터 보세요.`);
 console.log('  ⚠ 디자인 인계용입니다. 기능은 구현하지 않았고 admin/ 은 배포에서 제외됩니다.');
+
+selfCheck(outputs);
