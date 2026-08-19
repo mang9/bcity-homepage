@@ -26,13 +26,24 @@ const read = (...p) => readFileSync(join(ROOT, ...p), 'utf8');
 const TOKENS = read('src', 'sub', 'css', '00-tokens.css');
 const ADMIN = read('src', 'admin', 'css', 'admin.css');
 
-/* 브랜드 심볼 — 파비콘과 같은 정본에서 패스만 가져온다(assets/favicon/favicon.svg) */
-const SYMBOL = (() => {
-  const svg = read('assets', 'favicon', 'favicon.svg');
-  const vb = svg.match(/viewBox="([^"]+)"/)[1];
-  const paths = svg.match(/<path[^>]+\/>/g).join('');
-  return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${paths}</svg>`;
-})();
+/* 로고 — **심볼만이 아니라 글자까지 있는 정본**을 쓴다(2026-08-18 지시).
+   출처는 `assets/logo/bcity-logo.svg`(2518×421 · 패스 7개)이며, 사용자가 보내 준
+   `B·CITY Logo.svg` 와 패스·색·viewBox 가 완전히 같아 파일을 새로 넣지 않았다.
+
+   ⚠ **두 벌이 필요하다.** 워드마크 글자색 `#2C3E91` 은 네이비 사이드바(`#002742`) 위에서
+     대비 **1.61** 로 사실상 보이지 않는다(실측). 사이드바에는 글자를 흰색으로 바꾼
+     리버스 변형을 쓰고, 흰 면인 로그인 상자에는 원본 색을 그대로 쓴다.
+     심볼 두 색(민트 6.73 · 애저 4.60)은 네이비 위에서도 충분하므로 건드리지 않는다. */
+const LOGO_SRC = read('assets', 'logo', 'bcity-logo.svg');
+const logo = (reverse) => {
+  const vb = LOGO_SRC.match(/viewBox="([^"]+)"/)[1];
+  let paths = LOGO_SRC.match(/<path[^>]+\/>/g).join('');
+  if (reverse) paths = paths.replace(/fill="#2C3E91"/gi, 'fill="#ffffff"');
+  return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" `
+    + `aria-label="B-CITY">${paths}</svg>`;
+};
+const LOGO_DARK = logo(true);    // 네이비 사이드바용
+const LOGO_LIGHT = logo(false);  // 흰 면(로그인)용
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -78,8 +89,8 @@ ${ADMIN.trim()}
   <div class="ad-shell">
     <aside class="ad-side">
       <div class="ad-brand">
-        ${SYMBOL}
-        <div><span>B-CITY</span><i>ADMIN</i></div>
+        <a class="ad-logo" href="index.html">${LOGO_DARK}</a>
+        <span class="ad-tag">ADMIN</span>
       </div>
       <nav class="ad-nav">
         <p class="ad-nav-h">홍보센터</p>
@@ -272,8 +283,7 @@ ${ADMIN.trim()}
   <div class="ad-login">
     <div class="ad-login-box">
       <div class="ad-login-brand">
-        ${SYMBOL}
-        <b>B-CITY 관리자</b>
+        ${LOGO_LIGHT}
         <span>PR CENTER ADMIN</span>
       </div>
       <form class="ad-login-f" onsubmit="return false">

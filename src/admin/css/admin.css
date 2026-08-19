@@ -53,12 +53,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* ── 셸 ───────────────────────────────────────────────────────────── */
 .ad-shell { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
 .ad-side { background: var(--color-navy); color: #fff; padding: 22px 0 30px; }
-.ad-brand { display: flex; align-items: center; gap: 9px; padding: 0 20px 22px;
-  border-bottom: 1px solid rgb(255 255 255 / .12); }
-.ad-brand svg { width: 26px; height: 26px; flex: none; }
-.ad-brand span { font-weight: 800; letter-spacing: -.01em; font-size: 15px; }
-.ad-brand i { display: block; font-style: normal; font-size: 11px; font-weight: 600;
-  color: var(--color-light-blue); letter-spacing: .08em; }
+/* 로고는 심볼만이 아니라 **글자까지 있는 정본**이다(2026-08-18 지시).
+   가로로 긴 락업(2518×421 · 비율 5.98)이라 높이가 아니라 **폭**으로 크기를 잡는다. */
+.ad-brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 0 20px 20px; border-bottom: 1px solid rgb(255 255 255 / .12); }
+.ad-logo { display: block; }
+.ad-logo svg { display: block; width: 128px; height: auto; }
+/* ADMIN 태그 — 로고에 글자가 생겼으니 여기서는 '관리자'라는 사실만 표시한다 */
+.ad-tag { padding: 2px 7px; border-radius: var(--radius-sm);
+  background: rgb(255 255 255 / .14); color: var(--color-light-blue);
+  font-size: 10.5px; font-weight: 800; letter-spacing: .1em; }
 .ad-nav { padding: 16px 12px 0; }
 .ad-nav-h { padding: 0 8px 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em;
   color: rgb(187 204 240 / .75); }
@@ -250,10 +254,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ad-login-box { width: min(400px, 100%); padding: 34px 30px 28px;
   background: var(--color-surface); border-radius: var(--radius-lg);
   box-shadow: 0 24px 60px rgb(0 17 34 / .34); }
-.ad-login-brand { display: flex; flex-direction: column; align-items: center; gap: 10px;
-  margin-bottom: 24px; text-align: center; }
-.ad-login-brand svg { width: 40px; height: 40px; }
-.ad-login-brand b { font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+.ad-login-brand { display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-bottom: 26px; text-align: center; }
+/* 흰 상자 위이므로 원본 색 그대로다(워드마크 대비 9.52) */
+.ad-login-brand svg { display: block; width: min(190px, 60%); height: auto; }
 .ad-login-brand span { font-size: 11.5px; font-weight: 700; letter-spacing: .1em;
   color: var(--color-text-muted); }
 .ad-login-f { display: grid; gap: 14px; }
@@ -271,6 +275,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .ad-shell { grid-template-columns: 1fr; }
   .ad-side { display: flex; flex-wrap: wrap; gap: 4px; padding: 14px; }
   .ad-brand { border-bottom: 0; padding: 0 12px 0 0; }
+  .ad-logo svg { width: 108px; }
   .ad-nav { padding: 0; display: flex; gap: 4px; flex-wrap: wrap; }
   .ad-nav-h { display: none; }
   .ad-row { grid-template-columns: 1fr; gap: 8px; }
