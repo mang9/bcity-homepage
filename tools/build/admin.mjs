@@ -352,9 +352,6 @@ ${ADMIN.trim()}
       </form>
     </div>
     <aside class="ad-login-note">
-        <p><b>이 화면은 시안입니다.</b> 인증은 서버에서 처리해야 합니다 —
-          정적 호스팅에서는 클라이언트 검증이 소스만 열면 우회되므로,
-          로그인 · 세션 · 권한은 백엔드로 구현해 주세요.</p>
         <p class="ad-login-note-h">아래는 <b>권장안</b>입니다. 검토 후 확정해 주세요.</p>
         <dl class="ad-rec">
           <dt>비밀번호 정책</dt>
@@ -363,8 +360,6 @@ ${ADMIN.trim()}
           <dt>주기적 변경 강제</dt>
           <dd>두지 않음 <i>주기적 강제 변경은 오히려 단순한 비밀번호를 쓰게 만든다는 것이
             현재 보안 지침(NIST SP 800-63B)의 권고입니다. 대신 유출 대응에 집중합니다.</i></dd>
-          <dt>비밀번호 저장</dt>
-          <dd>Argon2id 또는 bcrypt 해시 <i>평문 · 단순 SHA 계열은 쓰지 않습니다.</i></dd>
           <dt>로그인 실패 제한</dt>
           <dd>5회 실패 시 10분 잠금 · 이후 시도마다 지연 증가
             <i>계정 잠금만 두면 남의 계정을 일부러 잠그는 공격이 가능하므로, IP 단위 지연을 함께 둡니다.</i></dd>
@@ -388,14 +383,15 @@ ${ADMIN.trim()}
 /* 대시보드 — 기획서 slide 105(관리자 페이지 목차)를 화면으로 옮긴 것 */
 pages['index.html'] = shell({
   title: '대시보드', navKey: 'dashboard', crumb: '대시보드', h1: '대시보드',
-  /* 타일도 좌측 메뉴와 **같은 그룹**으로 묶는다. 한 줄에 몰아 두면 파트너사·계정 관리가
-     홍보센터 게시물과 같은 성격으로 읽힌다(2026-08-18 지적의 화면 쪽 짝). */
-  body: `${[...new Set(NAV.filter((n) => n.n).map((n) => n.group))].map((g) => `        <p class="ad-group-h">${esc(g)}</p>
-        <div class="ad-tiles">
-${NAV.filter((n) => n.n && n.group === g).map((n) => `          <a class="ad-tile" href="${n.file}">
+  /* 타일은 **한 줄에 6개**다(2026-08-18 지시 — 홍보센터 5 + 파트너사).
+     그룹 머리글은 두지 않는다. 그룹 구분은 좌측 메뉴가 담당하고, 대시보드는 현황을
+     한눈에 훑는 곳이라 줄을 나누면 오히려 보기 어렵다.
+     ⚠ **설정(계정 관리)은 타일로 두지 않는다** — 콘텐츠 현황이 아니라 운영 설정이다. */
+  body: `        <div class="ad-tiles" data-n="6">
+${NAV.filter((n) => n.n && n.group !== '설정').map((n) => `          <a class="ad-tile" href="${n.file}">
             <b>${esc(n.label)}</b><strong>${n.n}</strong>
             <span>${esc(n.desc)}</span></a>`).join('\n')}
-        </div>`).join('\n')}
+        </div>
         <div class="ad-card" style="margin-top:18px">
           <div class="ad-card-h"><h2>최근 등록</h2>
             <a class="ad-btn ad-btn--sm" href="notice.html">전체 보기</a></div>
@@ -441,7 +437,6 @@ pages['notice-form.html'] = shell({
   body: formCard({
     title: '공지사항 등록 / 수정',
     slug: 'notice', preview: '../notice.html',
-    note: '※ 예약을 고르면 날짜 · 시간 선택이 나타납니다.',
     fields: [
       field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '필수 · 최대 100자' }),
       field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '리치 텍스트 에디터 · 이미지 삽입 가능' }),

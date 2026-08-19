@@ -241,10 +241,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-size: 12px; color: var(--color-text-muted); }
 
 /* ── 대시보드 ─────────────────────────────────────────────────────── */
-/* ⚠ `1fr` 상한을 두지 않으면 **타일이 하나인 그룹에서 가로로 쭉 늘어난다**
-   (사이트 콘텐츠 · 설정 그룹이 각 1개다). 상한을 주고 왼쪽으로 모은다. */
+/* 타일 폭 — **개수에 따라 다르게** 다뤄야 한다.
+   · 홍보센터 5개: 한 줄에 들어가야 하므로 `1fr` 로 늘려 채운다(지시)
+   · 1~2개 그룹: `1fr` 로 두면 **가로로 쭉 늘어난다** → 그리드 자체의 max-width 로 막는다
+   열에 상한(240px)을 걸었더니 5개가 본문 폭을 넘어 4+1 로 줄바꿈했다.
+   ⚠ 최소폭 148px 은 **6개가 1280px 데스크톱에서 한 줄에 들어가도록** 잡은 값이다
+     (본문 = 뷰포트 − 사이드바 232 − 패딩 52. 6×148 + gap 5×14 = 958 ≤ 996).
+     168px 이면 1362px 이상에서만 한 줄이 된다. 1100px 이하는 본문이 좁아 줄바꿈이 정상이다. */
 .ad-tiles { display: grid; gap: 14px; justify-content: start;
-  grid-template-columns: repeat(auto-fit, minmax(196px, 240px)); }
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); }
+.ad-tiles[data-n="1"] { max-width: 240px; }
+.ad-tiles[data-n="2"] { max-width: 494px; }
 .ad-tile { display: block; padding: 18px; background: var(--color-surface);
   border: 1px solid var(--color-line); border-radius: var(--radius-md); }
 .ad-tile:hover { border-color: var(--color-primary); }
@@ -333,8 +340,24 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ad-hint.is-ok { color: var(--ad-ok-fg); font-weight: 700; }
 .ad-hint.is-bad { color: var(--ad-danger); font-weight: 700; }
 
-/* 대시보드 타일 그룹 머리글 — 좌측 메뉴 그룹과 짝이다.
-   파트너사·계정 관리가 홍보센터 게시물과 같은 성격으로 읽히지 않게 나눈다. */
-.ad-group-h { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .06em;
-  color: var(--color-text-muted); }
-.ad-tiles + .ad-group-h { margin-top: 24px; }
+/* .ad-group-h(대시보드 타일 그룹 머리글)는 2026-08-18 지시로 제거했다 —
+   타일은 한 줄 6개다. 그룹 구분은 좌측 메뉴가 담당한다. */
+
+/* ── 입력 포커스 ───────────────────────────────────────────────────────
+   ⚠ `.ad-in` 에 포커스 스타일이 없어서 **브라우저 기본 아웃라인**이 그대로 나왔다.
+   날짜·시간 입력은 내부에 스피너·달력 버튼이 있어 그 검은 테두리가 특히 두껍게 보인다
+   (2026-08-18 지적). 아웃라인을 없애지 말고 **얇은 프라이머리 링**으로 바꾼다 —
+   지우면 키보드 사용자가 어디에 있는지 알 수 없다. */
+.ad-in:focus-visible, .ad-sel:focus-visible, .ad-search input:focus-visible {
+  outline: none; border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(var(--primary-rgb) / .16); }
+/* 마우스로 눌렀을 때도 테두리만 살짝 짙어지게 한다(링은 키보드에만) */
+.ad-in:focus, .ad-sel:focus, .ad-search input:focus { outline: none; border-color: var(--color-primary); }
+/* 날짜·시간의 달력·스피너 아이콘도 톤을 맞춘다 */
+.ad-in[type="date"], .ad-in[type="time"] { accent-color: var(--color-primary); }
+.ad-in[type="date"]::-webkit-calendar-picker-indicator,
+.ad-in[type="time"]::-webkit-calendar-picker-indicator { opacity: .55; cursor: pointer; }
+.ad-in[type="date"]::-webkit-calendar-picker-indicator:hover,
+.ad-in[type="time"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+.ad-in[type="date"]::-webkit-inner-spin-button,
+.ad-in[type="time"]::-webkit-inner-spin-button { display: none; }
