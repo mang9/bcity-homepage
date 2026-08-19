@@ -52,23 +52,33 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
    ⚠ 전에는 '등록된 게시물' · '기획서 외 · 추가 요청' 이었는데, 뒤엣것은 기획 메모라
    화면에서 읽을 말이 아니었다(2026-08-18 지적). 담당자가 타일만 보고 **지금 무엇을
    손봐야 하는지** 알 수 있는 문구로 바꿨다 — 공개 수와 손볼 거리를 함께 보여 준다. */
+/* `group` 으로 좌측 메뉴를 나눈다. 계정 관리는 홍보센터 콘텐츠가 아니라 설정이다. */
 const NAV = [
-  { key: 'dashboard', label: '대시보드', file: 'index.html' },
-  { key: 'notice', label: '공지사항', file: 'notice.html', n: 12, desc: '공개 11 · 예약 1' },
-  { key: 'press', label: '언론보도', file: 'press.html', n: 34, desc: '공개 33 · 비공개 1' },
-  { key: 'video', label: '홍보영상', file: 'video.html', n: 8, desc: '공개 6 · 메인 노출 4 / 4' },
-  { key: 'gallery', label: '갤러리', file: 'gallery.html', n: 26, desc: '공개 25 · 예약 1' },
-  { key: 'publication', label: '발행물', file: 'publication.html', n: 5, desc: '공개 4 · 다운로드 허용 3' },
-  { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, desc: '공개 7 · 확정 전 2' },
+  { key: 'dashboard', label: '대시보드', file: 'index.html', group: '' },
+  { key: 'notice', label: '공지사항', file: 'notice.html', n: 12, desc: '공개 11 · 예약 1', group: '홍보센터' },
+  { key: 'press', label: '언론보도', file: 'press.html', n: 34, desc: '공개 33 · 비공개 1', group: '홍보센터' },
+  { key: 'video', label: '홍보영상', file: 'video.html', n: 8, desc: '공개 6 · 메인 노출 4 / 4', group: '홍보센터' },
+  { key: 'gallery', label: '갤러리', file: 'gallery.html', n: 26, desc: '공개 25 · 예약 1', group: '홍보센터' },
+  { key: 'publication', label: '발행물', file: 'publication.html', n: 5, desc: '공개 4 · 다운로드 허용 3', group: '홍보센터' },
+  { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, desc: '공개 7 · 확정 전 2', group: '홍보센터' },
+  { key: 'account', label: '계정 관리', file: 'account.html', n: 4, desc: '활성 3 · 잠금 1', group: '설정' },
 ];
 
 /* ⚠ 상단 "DESIGN ONLY" 띠는 2026-08-18 지시로 제거했다.
    인계용이라는 표시는 화면이 아니라 admin/README.md 와 meta robots noindex 가 담당한다. */
+/* ⚠ 아래 반환값은 **템플릿 문자열**이다. 그 안의 <script> 를 쓸 때 이스케이프에 주의한다.
+     · \d 는 출력에서 d 로 붕괴한다 — 비밀번호 '숫자 포함' 검사가 이 때문에 오작동했다
+     · \1 은 8진 이스케이프로 취급돼 **빌드가 죽는다**
+   실제로 둘 다 겪었다. 정규식은 이스케이프가 필요 없는 형태([0-9])로 쓰거나
+   \\ 로 이중 이스케이프한다. 고친 뒤에는 반드시 **빌드 산출물**을 grep 해서 확인한다. */
 function shell({ title, navKey, crumb, h1, body, actions = '', modal = MODALS }) {
+  let last = null;
   const nav = NAV.map((n) => {
     const on = n.key === navKey ? ' class="is-on"' : '';
     const badge = n.n ? `<em>${n.n}</em>` : '';
-    return `        <a href="${n.file}"${on}>${esc(n.label)}${badge}</a>`;
+    const head = n.group && n.group !== last ? `        <p class="ad-nav-h">${esc(n.group)}</p>\n` : '';
+    last = n.group || last;
+    return `${head}        <a href="${n.file}"${on}>${esc(n.label)}${badge}</a>`;
   }).join('\n');
 
   return `<!doctype html>
@@ -93,14 +103,13 @@ ${ADMIN.trim()}
         <span class="ad-tag">ADMIN</span>
       </div>
       <nav class="ad-nav">
-        <p class="ad-nav-h">홍보센터</p>
 ${nav}
       </nav>
     </aside>
     <div class="ad-main">
       <header class="ad-top">
         <p class="ad-crumb">관리자 <span aria-hidden="true">›</span> <b>${esc(crumb)}</b></p>
-        <div class="ad-me"><span>홍보담당자</span><a class="ad-btn ad-btn--sm" href="login.html">로그아웃</a></div>
+        <div class="ad-me"><a class="ad-me-n" href="password.html">홍보담당자</a><a class="ad-btn ad-btn--sm" href="login.html">로그아웃</a></div>
       </header>
       <main class="ad-body">
         <div class="ad-head">
@@ -122,6 +131,33 @@ ${modal}
       var on = t.classList.toggle('is-on');
       t.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
+
+    /* 비밀번호 규칙·일치 검사 — 클라이언트만으로 되는 부분이라 실제로 동작시킨다.
+       ⚠ **서버 검증을 대체하지 않는다.** 화면 검사는 개발자 도구로 우회할 수 있다. */
+    (function () {
+      var p1 = document.getElementById('pw1'), p2 = document.getElementById('pw2');
+      if (!p1) return;
+      var rules = document.getElementById('pwRules'), msg = document.getElementById('pwMatch');
+      var check = {
+        len: function (v) { return v.length >= 10; },
+        mix: function (v) { return /[A-Za-z]/.test(v) && /[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v); },
+        seq: function (v) { return v.length > 0 && !/(.)\\1\\1/.test(v); }
+      };
+      function paint() {
+        var v = p1.value;
+        [].slice.call(rules.children).forEach(function (li) {
+          var ok = check[li.dataset.rule](v);
+          li.classList.toggle('is-ok', ok);
+          li.classList.toggle('is-bad', !ok && v.length > 0);
+        });
+        if (!p2.value) { msg.textContent = '두 입력이 같아야 합니다.'; msg.className = 'ad-hint'; return; }
+        var same = p1.value === p2.value;
+        msg.textContent = same ? '두 입력이 같습니다.' : '두 입력이 다릅니다.';
+        msg.className = 'ad-hint ' + (same ? 'is-ok' : 'is-bad');
+      }
+      p1.addEventListener('input', paint);
+      p2.addEventListener('input', paint);
+    })();
   </script>
 </body>
 </html>
@@ -140,6 +176,14 @@ const MODALS = `  <dialog id="delDlg" class="ad-dlg">
   <dialog id="saveDlg" class="ad-dlg">
     <h3>임시 저장했습니다</h3>
     <p>작성 중인 내용을 임시 보관합니다. 목록에는 노출되지 않습니다.</p>
+    <div class="ad-dlg-f">
+      <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
+    </div>
+  </dialog>
+  <dialog id="pwDlg" class="ad-dlg">
+    <h3>임시 비밀번호 발급</h3>
+    <p>서버가 임시 비밀번호를 만들어 본인 메일로 보냅니다. 화면에는 표시하지 않으며,
+       첫 로그인에서 변경을 강제합니다. 유효 기간과 발송 메일 문안은 개발 시 협의가 필요합니다.</p>
     <div class="ad-dlg-f">
       <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
     </div>
@@ -605,6 +649,142 @@ pages['partner-form.html'] = shell({
       field({ label: '게시 상태', req: true, type: 'RADIO BUTTONS', hint: '예약을 고르면 날짜 · 시간 선택이 나타납니다.', control: radios(['공개', '비공개', '예약'], 6) }),
     ],
   }),
+});
+
+/* ── 계정 관리 — **기획서에 없다.** 2026-08-18 요청으로 추가 ─────────────
+   slide 105 는 홍보센터 5개 메뉴뿐이고 계정·권한 명세는 없다(slide 74 의 '회원권'은
+   골프장 회원권으로 무관). 그래서 권한 등급과 정책은 **여기서 제안한 안**이며
+   개발·운영과 확정이 필요하다.
+
+   ⚠ 화면에서 동작하는 것과 서버가 해야 하는 것을 섞지 않는다.
+     · 동작함(클라이언트만으로 가능) — 권한 체크 매트릭스, 상태 토글,
+       비밀번호 규칙·일치 실시간 검사
+     · 서버 몫 — 실제 인증, 세션, **권한 집행**, 비밀번호 해시·정책 강제,
+       임시 비밀번호 발급·발송, 로그인 실패 잠금, 감사 로그
+     화면의 권한 체크는 **표시**일 뿐이고, 서버에서 막지 않으면 아무 의미가 없다. */
+const ROLES = ['최고관리자', '편집자', '열람전용'];
+const MENUS = ['공지사항', '언론보도', '홍보영상', '갤러리', '발행물', '파트너사', '계정 관리'];
+
+/* 권한 매트릭스 — 등급별 기본값. 개발 인계용 기준표이기도 하다. */
+const ROLE_DEFAULT = {
+  '최고관리자': MENUS.map(() => 'edit'),
+  '편집자': ['edit', 'edit', 'edit', 'edit', 'edit', 'edit', 'none'],
+  '열람전용': MENUS.map(() => 'read'),
+};
+
+const permMatrix = (role) => `<div class="ad-scroll">
+                <table class="ad-tbl ad-perm">
+                  <thead><tr><th>메뉴</th><th class="is-ctr">열람</th><th class="is-ctr">등록 · 수정</th><th class="is-ctr">삭제</th></tr></thead>
+                  <tbody>
+${MENUS.map((m, i) => {
+  const lv = ROLE_DEFAULT[role][i];
+  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''} />`;
+  return `                    <tr><td>${esc(m)}</td>`
+    + `<td class="is-ctr">${ck(lv !== 'none')}</td>`
+    + `<td class="is-ctr">${ck(lv === 'edit')}</td>`
+    + `<td class="is-ctr">${ck(lv === 'edit' && m !== '계정 관리')}</td></tr>`;
+}).join('\n')}
+                  </tbody>
+                </table>
+              </div>`;
+
+pages['account.html'] = shell({
+  title: '계정 관리', navKey: 'account', crumb: '계정 관리', h1: '계정 관리',
+  actions: NEW_BTN('계정 등록', 'account-form.html'),
+  body: `        <div class="ad-card">
+          <div class="ad-filter">${chips(['전체', ...ROLES, '잠금'])}${search('이름 · 아이디 검색')}</div>
+          <div class="ad-scroll">
+            <table class="ad-tbl">
+              <thead><tr><th class="is-num">No.</th><th class="is-title">이름</th><th>아이디</th><th>권한</th>
+                <th>최근 로그인</th><th>등록일</th><th class="is-ctr">상태</th><th class="is-ctr">관리</th></tr></thead>
+              <tbody>
+                <tr><td class="is-num">4</td><td class="is-title">김담당</td><td>pr@biotech-iv.com</td><td>최고관리자</td><td>2026.08.18 09:12</td><td>2026.03.02</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('account')}</td></tr>
+                <tr><td class="is-num">3</td><td class="is-title">이홍보</td><td>media@biotech-iv.com</td><td>편집자</td><td>2026.08.17 17:40</td><td>2026.04.11</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('account')}</td></tr>
+                <tr><td class="is-num">2</td><td class="is-title">박대리</td><td>assist@biotech-iv.com</td><td>편집자</td><td>2026.08.11 11:05</td><td>2026.05.20</td><td class="is-ctr">${state('on')}</td><td class="is-ctr">${rowActs('account')}</td></tr>
+                <tr><td class="is-num">1</td><td class="is-title">최열람</td><td>view@biotech-iv.com</td><td>열람전용</td><td>—</td><td>2026.06.02</td><td class="is-ctr">${state('off')}</td><td class="is-ctr">${rowActs('account')}</td></tr>
+              </tbody>
+            </table>
+          </div>
+${pager(2)}
+        </div>
+        <div class="ad-card">
+          <div class="ad-card-h"><h2>권한 등급 기준</h2>
+            <a class="ad-btn ad-btn--sm" href="account-form.html">등급별 권한 편집</a></div>
+          <div class="ad-scroll">
+            <table class="ad-tbl">
+              <thead><tr><th>등급</th>${MENUS.map((m) => `<th class="is-ctr">${esc(m)}</th>`).join('')}</tr></thead>
+              <tbody>
+${ROLES.map((r) => `                <tr><td><b>${esc(r)}</b></td>`
+  + ROLE_DEFAULT[r].map((lv) => `<td class="is-ctr">${lv === 'edit' ? '등록 · 수정' : (lv === 'read' ? '열람' : '—')}</td>`).join('')
+  + '</tr>').join('\n')}
+              </tbody>
+            </table>
+          </div>
+          <div class="ad-foot"><p class="ad-note">※ 기획서에 없는 항목이라 등급 구성은 제안입니다. 운영 정책과 함께 확정해 주세요.</p></div>
+        </div>`,
+});
+
+pages['account-form.html'] = shell({
+  title: '계정 등록', navKey: 'account', crumb: '계정 관리 › 등록 / 수정',
+  h1: '계정 등록 / 수정',
+  body: formCard({
+    title: '계정 등록 / 수정', slug: 'account', preview: 'account.html',
+    note: '※ 권한 체크는 화면 표시입니다. 실제 차단은 서버에서 해야 합니다.',
+    fields: [
+      field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
+        hint: '목록과 게시물 작성자에 표시됩니다.' }),
+      field({ label: '아이디', req: true, type: 'EMAIL INPUT',
+        control: '<input class="ad-in" type="email" placeholder="name@biotech-iv.com" />',
+        hint: '회사 메일(@biotech-iv.com)만 허용할지는 개발 시 결정이 필요합니다.' }),
+      field({ label: '임시 비밀번호', req: true, type: 'BUTTON',
+        control: '<button type="button" class="ad-btn" onclick="document.getElementById(\'pwDlg\').showModal()">임시 비밀번호 발급</button>',
+        hint: '서버가 생성해 본인 메일로 보내고, 첫 로그인에서 변경을 강제합니다.' }),
+      field({ label: '권한 등급', req: true, type: 'SELECT', control: sel(ROLES),
+        hint: '등급을 고르면 아래 메뉴 권한이 기본값으로 채워집니다.' }),
+      field({ label: '메뉴 권한', type: 'CHECKBOX MATRIX', control: permMatrix('편집자'),
+        hint: '등급 기본값에서 개별 조정할 수 있습니다. 계정 관리 삭제 권한은 최고관리자만 갖습니다.' }),
+      field({ label: '계정 상태', type: 'TOGGLE', control: toggle(true, '활성'),
+        hint: '끄면 로그인할 수 없습니다. 삭제하지 않고 잠글 때 씁니다.' }),
+    ],
+  }),
+});
+
+pages['password.html'] = shell({
+  title: '비밀번호 변경', navKey: 'account', crumb: '계정 관리 › 내 비밀번호',
+  h1: '비밀번호 변경',
+  body: `        <div class="ad-card" style="max-width:620px">
+          <div class="ad-card-h"><h2>내 비밀번호</h2>
+            <a class="ad-btn ad-btn--sm" href="account.html">‹ 목록으로</a></div>
+          <div class="ad-form">
+            <div class="ad-row">
+              <p class="ad-lb">현재 비밀번호<i>*</i></p>
+              <div class="ad-fd"><input class="ad-in" type="password" autocomplete="current-password" /></div>
+            </div>
+            <div class="ad-row">
+              <p class="ad-lb">새 비밀번호<i>*</i></p>
+              <div class="ad-fd">
+                <input class="ad-in" type="password" id="pw1" autocomplete="new-password" />
+                <ul class="ad-rules" id="pwRules">
+                  <li data-rule="len">10자 이상</li>
+                  <li data-rule="mix">영문 · 숫자 · 특수문자를 모두 포함</li>
+                  <li data-rule="seq">같은 문자 3회 이상 반복 없음</li>
+                </ul>
+              </div>
+            </div>
+            <div class="ad-row">
+              <p class="ad-lb">새 비밀번호 확인<i>*</i></p>
+              <div class="ad-fd">
+                <input class="ad-in" type="password" id="pw2" autocomplete="new-password" />
+                <p class="ad-hint" id="pwMatch">두 입력이 같아야 합니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ad-foot">
+            <p class="ad-note">※ 규칙 검사는 화면에서 동작합니다. 서버에서도 반드시 다시 검사해야 합니다.</p>
+            <a class="ad-btn" href="account.html">취소</a>
+            <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">변경</button>
+          </div>
+        </div>`,
 });
 
 /* ── 출력 ─────────────────────────────────────────────────────────── */
