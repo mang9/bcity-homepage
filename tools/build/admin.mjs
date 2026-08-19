@@ -52,7 +52,12 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
    ⚠ 전에는 '등록된 게시물' · '기획서 외 · 추가 요청' 이었는데, 뒤엣것은 기획 메모라
    화면에서 읽을 말이 아니었다(2026-08-18 지적). 담당자가 타일만 보고 **지금 무엇을
    손봐야 하는지** 알 수 있는 문구로 바꿨다 — 공개 수와 손볼 거리를 함께 보여 준다. */
-/* `group` 으로 좌측 메뉴를 나눈다. 계정 관리는 홍보센터 콘텐츠가 아니라 설정이다. */
+/* `group` 으로 좌측 메뉴를 나눈다.
+   ⚠ **파트너사는 홍보센터가 아니다**(2026-08-18 지적). 홍보센터는 게시물(공지·언론·영상·
+     갤러리·발행물)이고, 파트너사는 **사업주체 페이지와 메인 푸터에 들어가는 사이트 콘텐츠**다.
+     '사이트 콘텐츠' 그룹은 앞으로 관리로 옮길 항목(구조도 지분율 · 공식문서 목록 ·
+     추진일정 · 권역 면적 · KPI)이 들어갈 자리이기도 하다.
+   계정 관리도 콘텐츠가 아니라 설정이라 따로 둔다. */
 const NAV = [
   { key: 'dashboard', label: '대시보드', file: 'index.html', group: '' },
   { key: 'notice', label: '공지사항', file: 'notice.html', n: 12, desc: '공개 11 · 예약 1', group: '홍보센터' },
@@ -60,7 +65,7 @@ const NAV = [
   { key: 'video', label: '홍보영상', file: 'video.html', n: 8, desc: '공개 6 · 메인 노출 4 / 4', group: '홍보센터' },
   { key: 'gallery', label: '갤러리', file: 'gallery.html', n: 26, desc: '공개 25 · 예약 1', group: '홍보센터' },
   { key: 'publication', label: '발행물', file: 'publication.html', n: 5, desc: '공개 4 · 다운로드 허용 3', group: '홍보센터' },
-  { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, desc: '공개 7 · 확정 전 2', group: '홍보센터' },
+  { key: 'partner', label: '파트너사', file: 'partner.html', n: 9, desc: '공개 7 · 확정 전 2', group: '사이트 콘텐츠' },
   { key: 'account', label: '계정 관리', file: 'account.html', n: 4, desc: '활성 3 · 잠금 1', group: '설정' },
 ];
 
@@ -359,11 +364,14 @@ ${ADMIN.trim()}
 /* 대시보드 — 기획서 slide 105(관리자 페이지 목차)를 화면으로 옮긴 것 */
 pages['index.html'] = shell({
   title: '대시보드', navKey: 'dashboard', crumb: '대시보드', h1: '대시보드',
-  body: `        <div class="ad-tiles">
-${NAV.filter((n) => n.n).map((n) => `          <a class="ad-tile" href="${n.file}">
+  /* 타일도 좌측 메뉴와 **같은 그룹**으로 묶는다. 한 줄에 몰아 두면 파트너사·계정 관리가
+     홍보센터 게시물과 같은 성격으로 읽힌다(2026-08-18 지적의 화면 쪽 짝). */
+  body: `${[...new Set(NAV.filter((n) => n.n).map((n) => n.group))].map((g) => `        <p class="ad-group-h">${esc(g)}</p>
+        <div class="ad-tiles">
+${NAV.filter((n) => n.n && n.group === g).map((n) => `          <a class="ad-tile" href="${n.file}">
             <b>${esc(n.label)}</b><strong>${n.n}</strong>
             <span>${esc(n.desc)}</span></a>`).join('\n')}
-        </div>
+        </div>`).join('\n')}
         <div class="ad-card" style="margin-top:18px">
           <div class="ad-card-h"><h2>최근 등록</h2>
             <a class="ad-btn ad-btn--sm" href="notice.html">전체 보기</a></div>

@@ -241,7 +241,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-size: 12px; color: var(--color-text-muted); }
 
 /* ── 대시보드 ─────────────────────────────────────────────────────── */
-.ad-tiles { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(196px, 1fr)); }
+/* ⚠ `1fr` 상한을 두지 않으면 **타일이 하나인 그룹에서 가로로 쭉 늘어난다**
+   (사이트 콘텐츠 · 설정 그룹이 각 1개다). 상한을 주고 왼쪽으로 모은다. */
+.ad-tiles { display: grid; gap: 14px; justify-content: start;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 240px)); }
 .ad-tile { display: block; padding: 18px; background: var(--color-surface);
   border: 1px solid var(--color-line); border-radius: var(--radius-md); }
 .ad-tile:hover { border-color: var(--color-primary); }
@@ -313,3 +316,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ad-rules li.is-bad::before { content: "●"; }
 .ad-hint.is-ok { color: var(--ad-ok-fg); font-weight: 700; }
 .ad-hint.is-bad { color: var(--ad-danger); font-weight: 700; }
+
+/* 대시보드 타일 그룹 머리글 — 좌측 메뉴 그룹과 짝이다.
+   파트너사·계정 관리가 홍보센터 게시물과 같은 성격으로 읽히지 않게 나눈다. */
+.ad-group-h { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .06em;
+  color: var(--color-text-muted); }
+.ad-tiles + .ad-group-h { margin-top: 24px; }
