@@ -178,8 +178,8 @@ ${modal}
 
 const MODALS = `  <dialog id="delDlg" class="ad-dlg">
     <h3>삭제할까요?</h3>
-    <p>삭제하면 목록과 홈페이지에서 바로 사라집니다.</p>
-    ${dev('삭제 정책 확인 — 소프트 삭제(휴지통) 여부 · 보관 기간 · 복구 권한 등급.')}
+    <p>게시글과 목록에서 모두 삭제되며, 삭제 후에는 복구할 수 없습니다.</p>
+    ${dev('삭제 정책 확인 — 화면 문구가 \'복구할 수 없습니다\' 로 단정한다. 소프트 삭제(휴지통)를 도입하면 이 문구도 함께 고쳐야 한다.')}
     <div class="ad-dlg-f">
       <button type="button" class="ad-btn" onclick="this.closest('dialog').close()">취소</button>
       <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">삭제</button>
@@ -194,7 +194,7 @@ const MODALS = `  <dialog id="delDlg" class="ad-dlg">
   </dialog>
   <dialog id="pwDlg" class="ad-dlg">
     <h3>임시 비밀번호 발급</h3>
-    <p>임시 비밀번호를 본인 메일로 보냈습니다. 첫 로그인에서 새 비밀번호로 바꿔야 합니다.</p>
+    <p>본인 메일로 보냈습니다. 첫 로그인에서 변경해야 합니다</p>
     ${dev('임시 비밀번호 확인 — 유효 기간(권장 24시간) · 발송 메일 문안 · 재발급 제한.')}
     <div class="ad-dlg-f">
       <button type="button" class="ad-btn ad-btn--primary" onclick="this.closest('dialog').close()">확인</button>
@@ -756,20 +756,20 @@ pages['account-form.html'] = shell({
   h1: '계정 등록 / 수정',
   body: formCard({
     title: '계정 등록 / 수정', slug: 'account', preview: 'account.html',
-    note: '※ 등급을 바꾸면 아래 메뉴 권한이 기본값으로 다시 채워집니다.',
+    note: '등급을 바꾸면 메뉴 권한이 기본값으로 다시 채워집니다',
     dev: '권한 집행 확인 — 화면 체크는 표시일 뿐이다. 서버가 막지 않으면 URL 직접 입력으로 모두 접근된다.',
     fields: [
       field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
         hint: '목록과 게시물 작성자에 표시됩니다.' }),
       field({ label: '아이디', req: true, type: 'EMAIL INPUT',
         control: '<input class="ad-in" type="email" placeholder="name@biotech-iv.com" />',
-        hint: '로그인 아이디로 쓰입니다.' }),
+        hint: '로그인 아이디로 사용됩니다' }),
       // DEV: 아이디 정책 확인 — 회사 메일(@biotech-iv.com) 도메인만 허용할지 결정 필요.
       field({ label: '임시 비밀번호', req: true, type: 'BUTTON',
         control: '<button type="button" class="ad-btn" onclick="document.getElementById(\'pwDlg\').showModal()">임시 비밀번호 발급</button>',
         hint: '서버가 생성해 본인 메일로 보내고, 첫 로그인에서 변경을 강제합니다.' }),
-      field({ label: '권한 등급', req: true, type: 'SELECT', control: sel(ROLES),
-        hint: '등급을 고르면 아래 메뉴 권한이 기본값으로 채워집니다.' }),
+      // 힌트를 두지 않는다 — 같은 내용이 폼 하단 안내에 있어 한 화면에서 두 번 읽혔다(2026-08-18 감사).
+      field({ label: '권한 등급', req: true, type: 'SELECT', control: sel(ROLES) }),
       field({ label: '메뉴 권한', type: 'CHECKBOX MATRIX', control: permMatrix('편집자'),
         hint: '등급 기본값에서 개별 조정할 수 있습니다. 계정 관리 삭제 권한은 최고관리자만 갖습니다.' }),
       field({ label: '계정 상태', type: 'TOGGLE', control: toggle(true, '활성'),
@@ -809,7 +809,7 @@ pages['password.html'] = shell({
             </div>
           </div>
           <div class="ad-foot">
-            <p class="ad-note">※ 변경하면 다른 기기에서는 다시 로그인해야 합니다.</p>
+            <p class="ad-note">변경하면 다른 기기에서는 다시 로그인해야 합니다</p>
             ${dev('비밀번호 검사 확인 — 화면 검사는 우회 가능하다. 서버에서 같은 규칙을 반드시 재검증할 것.')}
             <a class="ad-btn" href="account.html">취소</a>
             <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">변경</button>
