@@ -1,19 +1,23 @@
 /* ===== 브랜드 (도시소개) =====
-   내용은 스토리보드 v2 slide49~51(도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
+   내용 구성은 클로드 디자인 기획(와이어프레임 p.48~50 · 도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
    자산 출처는 assets/brand/README 대신 이 주석 — symbol.svg 는 assets/logo/bcity-logo.svg 에서
    민트·애저 패스만 뽑은 것이고, 워드마크는 partials/brand-defs.svg 의 <symbol id="wm"> 한 벌을
    <use> 로 돌려 쓴다(로고 변형 6종이 같은 도형을 색만 바꿔 쓰기 때문). */
 
 /* ---------- 1. 브랜드 네임 ---------- */
 
-/* 워드마크는 크게 보여 주는 것이 목적이라 흰 면 위에 넉넉한 여백을 준다.
-   ⚠ 폭을 100% 로 두면 2518x421 원본이 화면 폭까지 늘어나 글자가 얇아 보인다 — 상한을 둔다. */
-.br-hero { margin: clamp(34px, 4vw, 64px) 0 0; padding: clamp(34px, 4.4vw, 76px) clamp(20px, 4vw, 64px);
-  background: var(--color-surface); border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg); text-align: center; }
-.br-hero img { display: block; width: 100%; max-width: 720px; height: auto; margin-inline: auto; }
-.br-hero figcaption { margin-top: clamp(16px, 1.6vw, 26px); font-size: 12.5px;
-  letter-spacing: .2em; color: var(--color-text-muted); }
+/* 상단 — **박스를 쓰지 않는다**(2026-08-20 지시). 로고를 놓고 바로 아래에 두 줄 카피를 둔다.
+   ⚠ 로고 폭을 100% 로 두면 2518x421 원본이 화면 폭까지 늘어나 글자가 얇아 보인다 — 상한을 둔다. */
+.br-name { margin: clamp(30px, 3.6vw, 58px) 0 0; text-align: center; }
+.br-name-logo { display: block; width: 100%; max-width: 620px; height: auto; margin-inline: auto; }
+/* 카피가 이 섹션의 제목이다 — 로고 아래에서 두 줄로 읽힌다.
+   ⚠ `word-break: keep-all` 은 body 에서 상속받는다. `<br>` 로 잡은 줄바꿈만 유지된다. */
+/* ⚠ 폭을 묶지 않는다 — `<br>` 이 잡은 두 줄이 곧 카피의 형태다.
+     `max-width: 30ch` 를 줬더니 둘째 줄이 한 번 더 접혀 세 줄이 됐다(첨부 이미지는 두 줄). */
+.br-name-copy { margin: clamp(22px, 2.4vw, 38px) auto 0;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(19px, 1.9vw, 30px); line-height: 1.45; letter-spacing: -.02em;
+  color: var(--color-logo); }
 
 .br-lead { max-width: 74ch; margin: clamp(30px, 3.2vw, 52px) 0 0;
   font-size: clamp(15px, 1.05vw, 18px); line-height: 1.75; color: var(--color-text-muted); }
@@ -47,6 +51,12 @@
   letter-spacing: -.015em; }
 .br-h3 span { margin-left: 12px; font-family: var(--font-body); font-weight: 700;
   font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
+/* 블록 안의 소제목 — `.br-h3` 보다 한 단 작고 위 여백도 좁다 */
+.br-h4 { margin: clamp(26px, 2.8vw, 44px) 0 clamp(14px, 1.4vw, 20px);
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.25vw, 19px);
+  letter-spacing: -.015em; }
+.br-h4 span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
+  font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
 
 /* 워드마크 비율 분석 — 위아래 점선이 캡 하이트를 표시한다.
    ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다. */
@@ -65,22 +75,26 @@
 .br-wm-spec dt { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--color-primary); }
 .br-wm-spec dd { margin: 0; font-size: 14px; line-height: 1.6; color: var(--color-text); }
 
-.br-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 1.4vw, 22px); margin-top: clamp(14px, 1.4vw, 22px); }
-.br-two > * { padding: clamp(22px, 2vw, 32px); background: var(--color-bg); border-radius: var(--radius-lg); }
-.br-two .sub-t { margin: 0 0 clamp(14px, 1.4vw, 20px); }
-.br-two .sub-t span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
+/* 블록 하나가 한 줄을 차지한다 — 기획의 [기본 로고타입] · [시그니처 조합] · [사용 규정 · 여백]
+   세 덩어리를 나란히 두지 않고 위아래로 쌓기 때문이다(전에는 2단 `.br-two` 였다). */
+.br-panel { padding: clamp(22px, 2vw, 32px); background: var(--color-bg);
+  border-radius: var(--radius-lg); }
+.br-panel .sub-t { margin: 0 0 clamp(14px, 1.4vw, 20px);
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.25vw, 19px);
+  letter-spacing: -.015em; }
+.br-panel .sub-t span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
   font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
-.br-rules dl { margin: 0; display: grid; gap: 12px; }
-.br-rules dl div { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: baseline;
+/* 사용 규정 — 한 줄을 쓰므로 2열로 벌린다. 1열이면 오른쪽이 통째로 빈다. */
+.br-rules dl { margin: 0; display: grid; gap: 12px clamp(20px, 2.4vw, 40px);
+  grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.br-rules dl div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: baseline;
   padding-bottom: 12px; border-bottom: 1px solid var(--color-line); }
-.br-rules dl div:last-child { padding-bottom: 0; border-bottom: 0; }
+/* ⚠ 2열이라 '마지막 줄' 은 마지막 두 칸이다 — `:last-child` 만 쓰면 왼쪽 칸에 선이 남는다 */
+.br-rules dl div:nth-last-child(-n + 2) { padding-bottom: 0; border-bottom: 0; }
 .br-rules dt { font-size: 13px; font-weight: 700; color: var(--color-primary); }
 .br-rules dd { margin: 0; font-size: 14px; line-height: 1.6; }
-/* 두 칸의 높이를 맞춘다 — 규칙 쪽이 3줄이라 심볼 칸만 짧으면 아래가 들쭉날쭉하다 */
-.br-symmark { display: flex; flex-direction: column; }
-.br-symmark-in { flex: 1; display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 1.8vw, 28px);
-  align-items: center; }
+.br-symmark-in { display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(18px, 1.8vw, 28px); align-items: center; }
 .br-symmark-in img { display: block; width: clamp(64px, 6vw, 92px); height: auto; }
 .br-symmark-in p { margin: 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
 
@@ -166,7 +180,10 @@
 @media (max-width: 1023px) {
   .br-sym { grid-template-columns: 1fr; }
   .br-wm { grid-template-columns: 1fr; }
-  .br-two { grid-template-columns: 1fr; }
+  .br-rules dl { grid-template-columns: 1fr; }
+  /* 1열로 접히면 '마지막 줄' 은 마지막 하나뿐이다 */
+  .br-rules dl div:nth-last-child(2) { padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-line); }
   /* 색 카드는 [스와치+사양] 한 줄 / 설명 한 줄로 접는다 */
   .br-color { grid-template-columns: minmax(150px, .9fr) minmax(180px, 1fr); }
   .br-color-tx { grid-column: 1 / -1; }

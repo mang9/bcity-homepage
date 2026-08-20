@@ -11,20 +11,19 @@
 -->
     {{> brand-defs}}
 
-    <!-- ===== 1. 브랜드 네임 · 심볼 (스토리보드 v2 slide49) ===== -->
+    <!-- ===== 1. Brand name — 기획 p.48 ===== -->
     <section class="sec" id="name">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND NAME</b><span>브랜드 네임</span></p>
-        <h2 class="h2 rv">도시와 바이오가 <em>하나가 되는 곳</em></h2>
-        <p class="lede rv">바이오와 도시 인프라가 만나 새로운 가치를 만듭니다</p>
 
-        <!-- 워드마크는 원본 SVG 를 그대로 쓴다. 색이 브랜드 정본(인디고·민트·애저)이라
+        <!-- 상단 — **박스 없이** 로고를 두고 바로 아래에 두 줄 카피를 놓는다(2026-08-20 지시 · 첨부 이미지).
+             워드마크는 원본 SVG 를 그대로 쓴다. 색이 브랜드 정본(인디고·민트·애저)이라
              currentColor 로 바꾸면 오히려 정보가 줄어든다. -->
-        <figure class="br-hero rv">
-          <img src="assets/logo/bcity-logo.svg" width="2518" height="421"
+        <div class="br-name rv">
+          <img class="br-name-logo" src="assets/logo/bcity-logo.svg" width="2518" height="421"
                alt="B·CITY 로고 — 인디고 워드마크 가운데에 민트와 애저가 교차하는 심볼" />
-          <figcaption>B · CITY — Bio City, By Design</figcaption>
-        </figure>
+          <h2 class="br-name-copy">도시와 바이오가 하나가 되는 곳,<br />바이오와 도시 인프라가 만나 새로운 가치를 만듭니다</h2>
+        </div>
 
         <p class="br-lead rv">B-CITY의 심볼은 두 개의 알파벳 “B” 구조를 기반으로 설계되었습니다.
           좌우의 형태는 서로 독립된 산업과 기능을 의미하며, 중앙의 유기적인 연결 구조를 통해
@@ -57,12 +56,16 @@
       </div>
     </section>
 
-    <!-- ===== 2. 브랜드 로고타입 (스토리보드 v2 slide50) ===== -->
+    <!-- ===== 2. Brand Logotype — 기획 p.49 (기본 로고타입 · 시그니처 조합 · 사용 규정 · 여백) ===== -->
     <section class="sec sec--surface" id="logotype">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND LOGOTYPE</b><span>브랜드 로고타입</span></p>
         <h2 class="h2 rv">전용 서체로 다시 그린 <em>B·CITY 워드마크</em></h2>
         <p class="lede rv">기존 서체를 가져다 쓰지 않고, 브랜드 전용으로 수정한 기하학적 산세리프입니다</p>
+
+        <!-- 기획(클로드 디자인 와이어프레임 p.49)의 세 블록 순서를 그대로 따른다 —
+             [기본 로고타입] → [시그니처 조합] → [사용 규정 · 여백]. -->
+        <h3 class="br-h3 rv">기본 로고타입 <span>PRIMARY LOGOTYPE</span></h3>
 
         <!-- 워드마크 분석 — 가로세로 비율 가이드를 점선으로 얹는다.
              ⚠ 점선은 CSS 의사요소다. 이미지에 구워 넣으면 로고를 갈아끼울 때 같이 어긋난다. -->
@@ -78,27 +81,7 @@
           </dl>
         </div>
 
-        <div class="br-two">
-          <div class="br-rules rv">
-            <h3 class="sub-t">사용 규칙 <span>USAGE RULES</span></h3>
-            <dl>
-              <div><dt>최소 크기</dt><dd>120px / 32mm 이상</dd></div>
-              <div><dt>여백</dt><dd>심볼 높이의 1배 여백 확보</dd></div>
-              <div><dt>색상</dt><dd>3색 컬러 / 단색 네이비 / 흰색 반전만 허용</dd></div>
-            </dl>
-          </div>
-          <div class="br-symmark rv">
-            <h3 class="sub-t">심볼 마크 <span>SYMBOL MARK</span></h3>
-            <div class="br-symmark-in">
-              <img src="assets/brand/symbol.svg" width="308" height="332"
-                   alt="B·CITY 심볼 마크 — 민트와 애저 두 레이어가 교차한다" />
-              <p>두 개의 레이어가 교차하는 추상 심볼 — 민트(#3DBFA8)와 애저(#0095D9)의
-                교차점이 혁신과 연결을 상징합니다.</p>
-            </div>
-          </div>
-        </div>
-
-        <h3 class="br-h3 rv">레터 애너토미 <span>LETTER ANATOMY</span></h3>
+        <h4 class="br-h4 rv">레터 애너토미 <span>LETTER ANATOMY</span></h4>
         <ul class="br-anat rv">
             <li class="br-anat-i">
               <span class="br-anat-g"><svg class="br-glyph" viewBox="0 0 52.5899 44.2085" fill="currentColor" aria-hidden="true"><path d="M36.9854 0.5C41.8029 0.500048 45.263 1.52137 47.4668 3.4668L47.4736 3.47266C49.705 5.37003 50.8613 8.25978 50.8613 12.2422C50.8613 16.2033 49.5572 19.0187 47.0195 20.7988L46.3623 21.2598L47.0654 21.6455C48.7904 22.5925 50.0467 23.8443 50.8564 25.3965L50.8584 25.4004C51.6672 26.9122 52.0898 28.9048 52.0898 31.4092C52.0898 35.4755 50.9332 38.4991 48.6885 40.5635C46.4851 42.5866 43.0275 43.6465 38.2139 43.6465H38.2129L0.5 43.708V0.62207L36.9854 0.5ZM9.33008 36.7324H37.0469C38.9811 36.7324 40.5248 36.2729 41.584 35.2656C42.6479 34.2537 43.1367 32.7712 43.1367 30.915C43.1367 29.097 42.6463 27.6439 41.5801 26.6533C40.5207 25.6692 38.9785 25.2217 37.0469 25.2217H9.33008V36.7324ZM9.33008 18.3066H35.8174C37.7465 18.3066 39.2872 17.8709 40.3467 16.9102C41.4154 15.941 41.9081 14.5175 41.9082 12.7373C41.9082 11.0318 41.4103 9.66713 40.3369 8.74121C39.2777 7.82762 37.7412 7.41406 35.8174 7.41406H9.33008V18.3066Z"/></svg></span>
@@ -127,7 +110,19 @@
             </li>
         </ul>
 
-        <h3 class="br-h3 rv">로고 변형 <span>LOGO VARIATIONS</span></h3>
+        <h3 class="br-h3 rv">시그니처 조합 <span>SIGNATURE LOCKUPS</span></h3>
+
+        <div class="br-panel rv">
+          <h4 class="sub-t">심볼 마크 <span>SYMBOL MARK</span></h4>
+          <div class="br-symmark-in">
+            <img src="assets/brand/symbol.svg" width="308" height="332"
+                 alt="B·CITY 심볼 마크 — 민트와 애저 두 레이어가 교차한다" />
+            <p>두 개의 레이어가 교차하는 추상 심볼 — 민트(#3DBFA8)와 애저(#0095D9)의
+              교차점이 혁신과 연결을 상징합니다. 워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다.</p>
+          </div>
+        </div>
+
+        <h4 class="br-h4 rv">허용 조합 <span>APPROVED LOCKUPS</span></h4>
         <ul class="br-vars rv">
             <li class="br-var br-var--main">
               <span class="br-var-fig"><img src="assets/logo/bcity-logo.svg" alt="B·CITY 기본 로고 — 인디고 워드마크에 민트·애저 심볼" width="2518" height="421" /></span>
@@ -154,10 +149,20 @@
               <span class="br-var-cap"><i>06</i><b>Symbol Only</b><span>파비콘 · 작은 매체 · 패턴</span></span>
             </li>
         </ul>
+
+        <h3 class="br-h3 rv">사용 규정 · 여백 <span>USAGE &amp; CLEAR SPACE</span></h3>
+        <div class="br-panel br-rules rv">
+          <dl>
+            <div><dt>최소 크기</dt><dd>120px / 32mm 이상 — 이보다 작으면 심볼 단독형을 쓴다</dd></div>
+            <div><dt>여백</dt><dd>사방으로 심볼 높이의 1배 이상 — 다른 요소를 이 안에 두지 않는다</dd></div>
+            <div><dt>색상</dt><dd>3색 컬러 / 단색 네이비 / 단색 검정 / 흰색 반전만 허용</dd></div>
+            <div><dt>금지</dt><dd>비율 변경 · 회전 · 그림자 · 임의 색 · 배경과 대비가 부족한 배치</dd></div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <!-- ===== 3. 브랜드 컬러 (스토리보드 v2 slide51) ===== -->
+    <!-- ===== 3. Brand Color — 기획 p.50 ===== -->
     <section class="sec" id="color">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND COLOR</b><span>브랜드 컬러</span></p>
