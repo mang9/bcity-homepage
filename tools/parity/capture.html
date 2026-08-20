@@ -1,0 +1,85 @@
+<!doctype html><meta charset="utf-8"><title>pending</title>
+<!-- 전체 페이지 캡처 하네스 — tools/parity/viewport.html 과 같은 계열이다.
+     같은 출처여야 iframe 안에 오버라이드를 넣을 수 있어 저장소에 두고 localhost 로 연다.
+     쓰는 법: http://localhost:8893/tools/parity/capture.html?p=index.html&mode=main[&y=900]
+       mode=main 은 스크럽 런웨이를 접고 영상을 포스터로 바꾼다(§8.2).
+       y 를 주면 그 위치로 스크롤한다. 없으면 문서 높이만 재서 <title> 로 알려 준다.
+     ⚠ 뷰포트를 문서 높이로 키우지 말 것 — 그것이 곧 100vh 라서 vh 섹션이 발산한다. -->
+<style>html,body{margin:0;padding:0;background:#fff;overflow:hidden}
+iframe{display:block;border:0;width:1440px;height:900px}</style>
+<iframe id="f"></iframe>
+<script>
+/* 전체 페이지 캡처 하네스 — **프레임을 1440x900 으로 고정**하고 스크롤해서 나눠 찍는다.
+   ⚠ 프레임을 문서 높이만큼 키우면 안 된다. 그 높이가 곧 내부의 100vh 라서
+     vh 기반 섹션이 다시 커지고 → 문서가 더 커지고 → 발산한다(메인에서 464만 px 까지 갔다).
+   ?p=<페이지>&mode=<main|sub>&y=<스크롤오프셋>   y 가 없으면 높이만 재서 알려 준다. */
+const q = new URLSearchParams(location.search);
+const page = q.get('p'), mode = q.get('mode') || 'sub', Y = q.get('y');
+const f = document.getElementById('f');
+f.src = '../../' + page;
+
+f.onload = async () => {
+  const d = f.contentDocument, w = f.contentWindow;
+
+  const st = d.createElement('style');
+  st.textContent = `
+    *,*::before,*::after{transition:none!important;animation:none!important}
+    .rv,.reveal,.lr .lr-inner,.cine-page .cp-el,.anim{opacity:1!important;transform:none!important}
+    .cn-card,.cn-hub,.cn-dot,.cn-ic{opacity:1!important;transform:none!important}
+    .cn-ring,.cn-conn{stroke-dashoffset:0!important}
+    [data-poster]{opacity:1!important}
+    html{scroll-behavior:auto!important}`;
+  d.head.appendChild(st);
+  d.querySelectorAll('.rv,.reveal,.cn-dia,.bc-panel').forEach(e => e.classList.add('in'));
+
+  /* ⚠ sticky · fixed 는 **조각마다 화면에 따라와 중복 촬영된다.**
+     - sticky  → relative (흐름으로 되돌린다)
+     - fixed   → GNB 만 문서 맨 위에 absolute 로 고정하고, 나머지(플로팅 독 · 점 내비 ·
+                 스크롤 표시 등 뷰포트 UI)는 **숨긴다.** 페이지 콘텐츠가 아니다.
+     이 처리를 빼면 GNB 가 한 페이지에 8번 찍힌다(2026-08-20 실제로 겪었다). */
+  const KEEP_FIXED = ['gnb'];
+  d.querySelectorAll('*').forEach(e => {
+    const pos = w.getComputedStyle(e).position;
+    if (pos === 'sticky') { e.style.position = 'relative'; return; }
+    if (pos !== 'fixed') return;
+    if (KEEP_FIXED.includes(e.id)) {
+      e.style.position = 'absolute';
+      e.style.top = '0';
+      e.style.left = '0';
+      e.style.right = '0';
+    } else {
+      e.style.display = 'none';
+    }
+  });
+
+  if (mode === 'main') {
+    const st2 = d.createElement('style');
+    st2.textContent = `
+      .cine,.dz{height:auto!important;min-height:0!important}
+      .cine-stage,.dz-stage{position:relative!important;height:900px!important}`;
+    d.head.appendChild(st2);
+    d.querySelectorAll('video').forEach(v => {
+      const po = v.getAttribute('poster');
+      if (!po) { v.remove(); return; }
+      const i = d.createElement('img');
+      i.src = po; i.className = v.className;
+      v.parentNode.replaceChild(i, v);
+    });
+  }
+
+  d.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
+  d.querySelectorAll('img[data-src]').forEach(i => { if (!i.src) i.src = i.dataset.src; });
+  await Promise.all([...d.images].map(i => i.complete ? 0 : new Promise(r => {
+    i.onload = r; i.onerror = r; setTimeout(r, 6000);
+  })));
+  await new Promise(r => setTimeout(r, 600));
+
+  const h = Math.max(d.documentElement.scrollHeight, d.body.scrollHeight);
+  if (Y !== null) {
+    w.scrollTo(0, +Y);
+    await new Promise(r => setTimeout(r, 450));
+  }
+  const broken = [...d.images].filter(i => i.complete && i.naturalWidth === 0).length;
+  document.title = `H=${h} y=${Y ?? '-'} at=${Math.round(w.scrollY)} imgs=${d.images.length} broken=${broken}`;
+};
+</script>
