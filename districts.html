@@ -629,26 +629,34 @@
     .dz-sec-h span { font-size: clamp(12.5px, .95vw, 14px); font-weight: 600;
       color: var(--color-text-muted); }
 
-    /* 탭 — 밑줄만. 아래 라인에 **여백 없이 붙어** 선택된 항목이 콘텐츠로 이어진다. */
-    .dz-tabline { display: flex; flex-wrap: wrap; gap: clamp(18px, 2.2vw, 40px);
+    /* 탭 — **전체 폭을 4등분한 박스**(2026-08-20 지시). 번호는 넣지 않는다 —
+       권역 번호는 아래 제목(`.dz-name b`)이 이미 말해 주고, 탭에서는 이름만 읽히는 편이 낫다.
+       ⚠ 선택된 탭은 아래 라인을 **덮어** 콘텐츠로 이어진다:
+         비활성은 옅은 면 + 아래 라인, 활성은 흰 면 + 아래 라인 제거(`border-bottom-color: transparent`).
+         `margin-bottom: -1px` 로 tabline 의 1px 라인 위에 겹쳐 앉는다. */
+    .dz-tabline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
       border-bottom: 1px solid var(--color-line); }
-    .dz-tab { appearance: none; border: 0; background: none; cursor: pointer;
-      display: inline-flex; align-items: baseline; gap: 8px;
-      padding: 0 0 clamp(11px, 1.1vw, 15px); margin-bottom: -1px;
-      border-bottom: 2px solid transparent;
+    .dz-tab { appearance: none; cursor: pointer; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      min-height: clamp(46px, 4vw, 58px); padding: 10px clamp(10px, 1.2vw, 18px);
+      margin-bottom: -1px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-line); border-bottom-color: var(--color-line);
       font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.15vw, 18px); letter-spacing: -.01em;
+      font-size: clamp(13.5px, 1.1vw, 17px); letter-spacing: -.01em; text-align: center;
       color: var(--color-text-muted); word-break: keep-all;
-      transition: color .18s, border-color .18s; }
-    .dz-tab i { font-style: normal; font-family: var(--font-body); font-size: 11.5px;
-      font-weight: 700; color: var(--color-line); transition: color .18s; }
-    .dz-tab:hover { color: var(--color-text); }
-    .dz-tab:hover i { color: var(--color-text-muted); }
-    /* 선택 — 권역 색 밑줄. 색만으로 구분하지 않는다(번호와 이름이 항상 함께 있다) */
-    .dz-tab.is-on { color: var(--c); border-bottom-color: var(--c); }
-    .dz-tab.is-on i { color: var(--c); }
-    .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px;
-      border-radius: 2px; }
+      transition: color .18s, background-color .18s, border-color .18s; }
+    /* 이웃한 박스가 라인을 나눠 갖는다 — 가운데가 2px 로 굵어지지 않게 */
+    .dz-tab + .dz-tab { border-left: 0; }
+    .dz-tabline .dz-tab:first-child { border-top-left-radius: var(--radius-sm); }
+    .dz-tabline .dz-tab:last-child { border-top-right-radius: var(--radius-sm); }
+    .dz-tab:hover { color: var(--color-text); background: var(--color-surface); }
+    /* 선택 — 흰 면 + 권역 색 윗줄. 색만으로 구분하지 않는다(이름이 항상 함께 있다) */
+    .dz-tab.is-on { color: var(--c); background: var(--color-surface);
+      border-top: 2px solid var(--c); border-bottom-color: transparent;
+      padding-top: 9px; }
+    .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -3px;
+      z-index: 1; }
 
     /* 패널 — 배경 박스 없음. 위 라인과의 간격은 패딩 하나로만 잡는다. */
     .dz-panel[hidden] { display: none; }
@@ -667,22 +675,26 @@
       gap: clamp(10px, 1vw, 16px);
       font-family: var(--font-display); font-weight: 800;
       font-size: clamp(24px, 2.4vw, 38px); line-height: 1.2; letter-spacing: -.02em; }
+    /* 번호와 이름은 **같은 크기**로 둔다 — 크기가 다르면 두 조각으로 읽힌다(2026-08-20 지시).
+       구분은 색(권역 색)만으로 한다. */
     .dz-name b { font-weight: 800; color: var(--c);
-      font-size: clamp(18px, 1.7vw, 26px); font-variant-numeric: tabular-nums; }
+      font-size: 1em; font-variant-numeric: tabular-nums; }
     .dz-area-big { grid-column: 2; grid-row: 1; margin: 0; white-space: nowrap;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(14px, 1.15vw, 18px); color: var(--color-text-muted); }
     .dz-head .dz-h, .dz-head .dz-s { grid-column: 1 / -1; }
 
-    /* 성격 지표 — 권역마다 다른 값을 앞에 세운다. 이게 없으면 8권역이 같은 화면으로 읽힌다. */
-    .dz-stats { list-style: none; margin: clamp(20px, 2.2vw, 32px) 0 0; padding: 0;
-      display: flex; flex-wrap: wrap; gap: clamp(20px, 2.6vw, 48px);
-      padding-top: clamp(16px, 1.6vw, 22px); border-top: 1px solid var(--color-line); }
+    /* 성격 지표 — 권역마다 다른 값. **부지 개요 맨 앞**에 세운다(2026-08-20 지시로 우측 이동).
+       이게 없으면 8권역이 같은 화면으로 읽힌다. 값만 권역 색으로 키워 개요 안에서도 눈에 든다. */
+    .dz-stats { list-style: none; margin: 0 0 12px; padding: 0 0 12px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px clamp(16px, 1.8vw, 28px); border-bottom: 1px solid var(--color-line); }
     .dz-stats li { min-width: 0; }
-    .dz-stats b { display: block; margin-bottom: 5px; font-size: 11.5px; font-weight: 700;
-      letter-spacing: .08em; color: var(--color-text-muted); }
+    .dz-stats b { display: block; margin-bottom: 4px; font-size: 11.5px; font-weight: 700;
+      letter-spacing: .06em; color: var(--color-text-muted); }
     .dz-stats span { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.3vw, 21px); letter-spacing: -.01em; color: var(--c); }
+      font-size: clamp(14px, 1.15vw, 18px); letter-spacing: -.01em; line-height: 1.4;
+      color: var(--c); word-break: keep-all; }
     .dz-h { margin: 10px 0 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55;
       font-weight: 700; color: var(--c); word-break: keep-all; }
     .dz-s { margin: 10px 0 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
@@ -690,8 +702,12 @@
 
     /* [토지이용계획도] | [부지 개요 + 구역별 면적] — 오른쪽 한 열에 표까지 함께 둔다.
        같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다(2026-08-13 지시). */
-    .dz-body { display: grid; grid-template-columns: minmax(240px, .85fr) minmax(0, 1.15fr);
-      gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: start; }
+    /* ⚠ `align-items: stretch` + 계획도 상자가 칸 높이를 채우는 구조 — 두 칸이 **같은 줄에서
+         끝난다**. 전에는 계획도 높이가 이미지 비율로 고정(508px 폭 → 653px)이라 표 행 수가
+         적은 권역(02 · 05)에서 오른쪽 아래가 282px 씩 비었다(2026-08-20 지적).
+         이제 줄 높이는 **오른쪽 칸(개요 + 면적표)** 이 정하고 계획도가 거기에 맞춘다. */
+    .dz-body { display: grid; grid-template-columns: minmax(200px, .66fr) minmax(0, 1.34fr);
+      gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: stretch; }
     /* ⚠ min-width:0 — 없으면 안쪽 표가 이 칸을 밀어내 페이지가 가로로 넘친다(.dz-area 와 같은 이유) */
     .dz-info { min-width: 0; }
     .dz-spec { margin: 0; display: grid; gap: 10px; }
@@ -716,10 +732,20 @@
          둘 다 `object-fit: contain` 이라 같은 방식으로 레터박싱되어 정합이 유지된다.
        ⚠ `<picture>` 로 감싸지 말 것 — inline 요소가 흐름에 끼어들어 absolute 겹침 전제를 깬다
          (§11.5-4 의 실제 회귀 이력). AVIF 는 `<img src>` 에 그대로 넣으면 된다. */
-    .dz-map { margin: 0; }
-    .dz-map-in { position: relative; display: block; padding: clamp(10px, 1.2vw, 18px);
+    /* ⚠ 두 이미지 **모두** absolute + `object-fit: contain` 이다. 상자 높이가 오른쪽 칸에
+         따라 달라져도 똑같은 방식으로 레터박싱되므로 정합이 유지된다.
+         (예전에는 배경만 `width:100%; height:auto` 여서 상자 높이를 이미지가 정했다.)
+       ⚠ `min-height` 를 명시해 둔다 — flex 기준이 0 이라 이게 상자의 최소 높이다. */
+    .dz-map { margin: 0; display: flex; flex-direction: column; min-height: 0; }
+    .dz-map-in { position: relative; display: block; flex: 1 1 0; min-height: 300px;
+      aspect-ratio: 880 / 1100;
+      padding: clamp(10px, 1.2vw, 18px);
       background: var(--color-bg); border-radius: var(--radius-md); }
-    .dz-map-base { display: block; width: 100%; height: auto; opacity: .5; }
+    .dz-map-base { position: absolute; inset: clamp(10px, 1.2vw, 18px);
+      width: auto; height: auto; max-width: none;
+      inline-size: calc(100% - 2 * clamp(10px, 1.2vw, 18px));
+      block-size: calc(100% - 2 * clamp(10px, 1.2vw, 18px)); object-fit: contain;
+      opacity: .5; }
     .dz-map-hl { position: absolute; inset: clamp(10px, 1.2vw, 18px);
       width: auto; height: auto; max-width: none;
       inline-size: calc(100% - 2 * clamp(10px, 1.2vw, 18px));
@@ -768,8 +794,10 @@
        ⚠ 한 문장 요약(.dz-value)만으로는 내용이 통째로 빠진다(2026-08-13 사용자 지적). */
     .dz-keys { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: clamp(12px, 1.2vw, 20px); margin: clamp(16px, 1.6vw, 24px) 0 0; padding: 0; }
-    .dz-key { padding: clamp(18px, 1.8vw, 26px); background: var(--color-bg);
-      border-radius: var(--radius-md); border-top: 2px solid var(--c); }
+    /* 카드 — 색 윗줄을 쓰지 않는다(2026-08-20 지시). 흰 면 + 사방 회색 라인으로만 구획한다.
+       권역 색은 활성 탭 · 제목 번호 · 항목 번호가 이미 말해 준다. */
+    .dz-key { padding: clamp(18px, 1.8vw, 26px); background: var(--color-surface);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md); }
     .dz-key-t { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(14px, 1.15vw, 17px); letter-spacing: -.012em; word-break: keep-all; }
@@ -840,7 +868,13 @@
       .lv-list { grid-template-columns: minmax(0, 1fr); }
       /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
       .dz-body { grid-template-columns: minmax(0, 1fr); }
-      .dz-map { max-width: 380px; margin-inline: auto; }
+      /* 1단에서는 계획도가 채울 칸 높이가 없다 — 흐름으로 돌려 aspect-ratio 가 높이를 정한다 */
+      .dz-map { display: block; }
+      .dz-map-in { min-height: 0; }
+      /* ⚠ 폭을 **명시**한다. `margin-inline: auto` 는 그리드 항목의 남는 폭을 마진이 먹으면서
+           크기를 fit-content 로 바꾼다. 배경 이미지를 absolute 로 뺀 뒤에는 흐름에 남은 것이
+           캡션뿐이어서 계획도가 74px 로 쪼그라들었다(실측으로 잡았다). */
+      .dz-map { inline-size: min(100%, 380px); margin-inline: auto; }
     }
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
@@ -977,16 +1011,16 @@
         <div class="dz-tabline rv" role="tablist" aria-label="클러스터 권역">
             <button type="button" class="dz-tab is-on" id="tab-01" data-tab="01"
                     role="tab" aria-selected="true" aria-controls="panel-01"
-                    style="--c: var(--color-district-ai)"><i>01</i>AI 데이터</button>
+                    style="--c: var(--color-district-ai)">AI 데이터</button>
             <button type="button" class="dz-tab" id="tab-02" data-tab="02"
                     role="tab" aria-selected="false" aria-controls="panel-02"
-                    style="--c: var(--color-district-bio)"><i>02</i>첨단 바이오</button>
+                    style="--c: var(--color-district-bio)">첨단 바이오</button>
             <button type="button" class="dz-tab" id="tab-03" data-tab="03"
                     role="tab" aria-selected="false" aria-controls="panel-03"
-                    style="--c: var(--color-district-food)"><i>03</i>푸드 물류</button>
+                    style="--c: var(--color-district-food)">푸드 물류</button>
             <button type="button" class="dz-tab" id="tab-04" data-tab="04"
                     role="tab" aria-selected="false" aria-controls="panel-04"
-                    style="--c: var(--color-district-mice)"><i>04</i>바이오MICE</button>
+                    style="--c: var(--color-district-mice)">바이오MICE</button>
         </div>
         <div class="dz-panel" id="panel-01" role="tabpanel" aria-labelledby="tab-01" data-group="01" tabindex="0">
             <div class="dz-zone rv" id="z01" style="--c: var(--color-district-ai)">
@@ -997,9 +1031,6 @@
                 <p class="dz-s">최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>수전 용량</b><span>최대 330MW (IT Load 240MW)</span></li><li><b>목표 PUE</b><span>1.2</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1018,6 +1049,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>수전 용량</b><span>최대 330MW (IT Load 240MW)</span></li><li><b>목표 PUE</b><span>1.2</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>수전 방식</dt><dd>154kV 직접수전</dd></div>
                     <div><dt>용도지역</dt><dd>준공업지역</dd></div>
@@ -1071,9 +1106,6 @@
                 <p class="dz-s">미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>구역 구성</b><span>HT1 · HT2 (2개 구역)</span></li><li><b>용도지역</b><span>일반공업지역 / 준공업지역</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1092,6 +1124,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>구역 구성</b><span>HT1 · HT2 (2개 구역)</span></li><li><b>용도지역</b><span>일반공업지역 / 준공업지역</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율 / 용적률</dt><dd>70% / 350~400%</dd></div>
                   </dl>
@@ -1139,9 +1175,6 @@
                 <p class="dz-s">AI 데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>주요 시설</b><span>물류유통시설</span></li><li><b>구역 구성</b><span>FL1 · FL2 · FL3 · FL4 (4개 구역)</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1160,6 +1193,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>주요 시설</b><span>물류유통시설</span></li><li><b>구역 구성</b><span>FL1 · FL2 · FL3 · FL4 (4개 구역)</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>용도지역</dt><dd>준공업지역</dd></div>
                     <div><dt>건폐율 / 용적률</dt><dd>70% / 400%</dd></div>
@@ -1210,9 +1247,6 @@
                 <p class="dz-s">일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>주요 시설</b><span>과학자마을 · 의료시설 · MICE 복합용지</span></li><li><b>구역 구성</b><span>Bio1 · Bio2 · Bio3 · Bio4 (4개 구역)</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1231,6 +1265,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>주요 시설</b><span>과학자마을 · 의료시설 · MICE 복합용지</span></li><li><b>구역 구성</b><span>Bio1 · Bio2 · Bio3 · Bio4 (4개 구역)</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율</dt><dd>70%</dd></div>
                   </dl>
@@ -1282,16 +1320,16 @@
         <div class="dz-tabline rv" role="tablist" aria-label="콤플렉스 권역">
             <button type="button" class="dz-tab" id="tab-05" data-tab="05"
                     role="tab" aria-selected="false" aria-controls="panel-05"
-                    style="--c: var(--color-district-biz)"><i>05</i>비즈니스</button>
+                    style="--c: var(--color-district-biz)">비즈니스</button>
             <button type="button" class="dz-tab" id="tab-06" data-tab="06"
                     role="tab" aria-selected="false" aria-controls="panel-06"
-                    style="--c: var(--color-district-housing)"><i>06</i>하우징</button>
+                    style="--c: var(--color-district-housing)">하우징</button>
             <button type="button" class="dz-tab" id="tab-07" data-tab="07"
                     role="tab" aria-selected="false" aria-controls="panel-07"
-                    style="--c: var(--color-district-edu)"><i>07</i>에듀</button>
+                    style="--c: var(--color-district-edu)">에듀</button>
             <button type="button" class="dz-tab" id="tab-08" data-tab="08"
                     role="tab" aria-selected="false" aria-controls="panel-08"
-                    style="--c: var(--color-district-golf)"><i>08</i>골프레저</button>
+                    style="--c: var(--color-district-golf)">골프레저</button>
         </div>
         <div class="dz-panel" id="panel-05" role="tabpanel" aria-labelledby="tab-05" data-group="05" tabindex="0">
             <div class="dz-zone rv" id="z05" style="--c: var(--color-district-biz)">
@@ -1302,9 +1340,6 @@
                 <p class="dz-s">B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점 · 직 · 주 · 락 중심 주민친화적 상권 조성</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>구역 구성</b><span>업무시설 · 상업시설 · 문화시설</span></li><li><b>용도지역</b><span>일반상업지역</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1323,6 +1358,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>구역 구성</b><span>업무시설 · 상업시설 · 문화시설</span></li><li><b>용도지역</b><span>일반상업지역</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율 / 용적률</dt><dd>80% / 600%</dd></div>
                   </dl>
@@ -1370,9 +1409,6 @@
                 <p class="dz-s">AI · 로보틱스 · 자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>계획 세대수</b><span>6,366세대 (공동주택 4,000 · 시니어하우징 2,000)</span></li><li><b>계획 인구</b><span>15,917명</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1391,6 +1427,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>계획 세대수</b><span>6,366세대 (공동주택 4,000 · 시니어하우징 2,000)</span></li><li><b>계획 인구</b><span>15,917명</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>구역 구성</dt><dd>단독주택 · 공동주택 · 근린생활시설 · 주상복합</dd></div>
                   </dl>
@@ -1440,9 +1480,6 @@
                 <p class="dz-s">춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성 · 유입</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>연계 특구</b><span>에듀포레스트 교육발전특구 춘천</span></li><li><b>구역 구성</b><span>유치원 · 초 · 중 · 고등학교 · 외국교육기관</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1461,6 +1498,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>연계 특구</b><span>에듀포레스트 교육발전특구 춘천</span></li><li><b>구역 구성</b><span>유치원 · 초 · 중 · 고등학교 · 외국교육기관</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율</dt><dd>50%</dd></div>
                   </dl>
@@ -1511,9 +1552,6 @@
                 <p class="dz-s">친환경 그린 인프라에서 경험하는 로봇 캐디 · 메디컬 케어 등 미래형 라이프스타일 플랫폼 완성</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>종류</b><span>대중형 18홀 (파72)</span></li><li><b>연장</b><span>6,570m</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -1532,6 +1570,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>종류</b><span>대중형 18홀 (파72)</span></li><li><b>연장</b><span>6,570m</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>주요 시설</dt><dd>클럽하우스 · 그늘집 · 관리동 · 연습시설</dd></div>
                   </dl>

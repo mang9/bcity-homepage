@@ -36,16 +36,16 @@
         <div class="dz-tabline rv" role="tablist" aria-label="클러스터 권역">
             <button type="button" class="dz-tab is-on" id="tab-01" data-tab="01"
                     role="tab" aria-selected="true" aria-controls="panel-01"
-                    style="--c: var(--color-district-ai)"><i>01</i>AI 데이터</button>
+                    style="--c: var(--color-district-ai)">AI 데이터</button>
             <button type="button" class="dz-tab" id="tab-02" data-tab="02"
                     role="tab" aria-selected="false" aria-controls="panel-02"
-                    style="--c: var(--color-district-bio)"><i>02</i>첨단 바이오</button>
+                    style="--c: var(--color-district-bio)">첨단 바이오</button>
             <button type="button" class="dz-tab" id="tab-03" data-tab="03"
                     role="tab" aria-selected="false" aria-controls="panel-03"
-                    style="--c: var(--color-district-food)"><i>03</i>푸드 물류</button>
+                    style="--c: var(--color-district-food)">푸드 물류</button>
             <button type="button" class="dz-tab" id="tab-04" data-tab="04"
                     role="tab" aria-selected="false" aria-controls="panel-04"
-                    style="--c: var(--color-district-mice)"><i>04</i>바이오MICE</button>
+                    style="--c: var(--color-district-mice)">바이오MICE</button>
         </div>
         <div class="dz-panel" id="panel-01" role="tabpanel" aria-labelledby="tab-01" data-group="01" tabindex="0">
             <div class="dz-zone rv" id="z01" style="--c: var(--color-district-ai)">
@@ -56,9 +56,6 @@
                 <p class="dz-s">최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>수전 용량</b><span>최대 330MW (IT Load 240MW)</span></li><li><b>목표 PUE</b><span>1.2</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -77,6 +74,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>수전 용량</b><span>최대 330MW (IT Load 240MW)</span></li><li><b>목표 PUE</b><span>1.2</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>수전 방식</dt><dd>154kV 직접수전</dd></div>
                     <div><dt>용도지역</dt><dd>준공업지역</dd></div>
@@ -130,9 +131,6 @@
                 <p class="dz-s">미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>구역 구성</b><span>HT1 · HT2 (2개 구역)</span></li><li><b>용도지역</b><span>일반공업지역 / 준공업지역</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -151,6 +149,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>구역 구성</b><span>HT1 · HT2 (2개 구역)</span></li><li><b>용도지역</b><span>일반공업지역 / 준공업지역</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율 / 용적률</dt><dd>70% / 350~400%</dd></div>
                   </dl>
@@ -198,9 +200,6 @@
                 <p class="dz-s">AI 데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>주요 시설</b><span>물류유통시설</span></li><li><b>구역 구성</b><span>FL1 · FL2 · FL3 · FL4 (4개 구역)</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -219,6 +218,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>주요 시설</b><span>물류유통시설</span></li><li><b>구역 구성</b><span>FL1 · FL2 · FL3 · FL4 (4개 구역)</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>용도지역</dt><dd>준공업지역</dd></div>
                     <div><dt>건폐율 / 용적률</dt><dd>70% / 400%</dd></div>
@@ -269,9 +272,6 @@
                 <p class="dz-s">일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>주요 시설</b><span>과학자마을 · 의료시설 · MICE 복합용지</span></li><li><b>구역 구성</b><span>Bio1 · Bio2 · Bio3 · Bio4 (4개 구역)</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -290,6 +290,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>주요 시설</b><span>과학자마을 · 의료시설 · MICE 복합용지</span></li><li><b>구역 구성</b><span>Bio1 · Bio2 · Bio3 · Bio4 (4개 구역)</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율</dt><dd>70%</dd></div>
                   </dl>
@@ -341,16 +345,16 @@
         <div class="dz-tabline rv" role="tablist" aria-label="콤플렉스 권역">
             <button type="button" class="dz-tab" id="tab-05" data-tab="05"
                     role="tab" aria-selected="false" aria-controls="panel-05"
-                    style="--c: var(--color-district-biz)"><i>05</i>비즈니스</button>
+                    style="--c: var(--color-district-biz)">비즈니스</button>
             <button type="button" class="dz-tab" id="tab-06" data-tab="06"
                     role="tab" aria-selected="false" aria-controls="panel-06"
-                    style="--c: var(--color-district-housing)"><i>06</i>하우징</button>
+                    style="--c: var(--color-district-housing)">하우징</button>
             <button type="button" class="dz-tab" id="tab-07" data-tab="07"
                     role="tab" aria-selected="false" aria-controls="panel-07"
-                    style="--c: var(--color-district-edu)"><i>07</i>에듀</button>
+                    style="--c: var(--color-district-edu)">에듀</button>
             <button type="button" class="dz-tab" id="tab-08" data-tab="08"
                     role="tab" aria-selected="false" aria-controls="panel-08"
-                    style="--c: var(--color-district-golf)"><i>08</i>골프레저</button>
+                    style="--c: var(--color-district-golf)">골프레저</button>
         </div>
         <div class="dz-panel" id="panel-05" role="tabpanel" aria-labelledby="tab-05" data-group="05" tabindex="0">
             <div class="dz-zone rv" id="z05" style="--c: var(--color-district-biz)">
@@ -361,9 +365,6 @@
                 <p class="dz-s">B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점 · 직 · 주 · 락 중심 주민친화적 상권 조성</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>구역 구성</b><span>업무시설 · 상업시설 · 문화시설</span></li><li><b>용도지역</b><span>일반상업지역</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -382,6 +383,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>구역 구성</b><span>업무시설 · 상업시설 · 문화시설</span></li><li><b>용도지역</b><span>일반상업지역</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율 / 용적률</dt><dd>80% / 600%</dd></div>
                   </dl>
@@ -429,9 +434,6 @@
                 <p class="dz-s">AI · 로보틱스 · 자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>계획 세대수</b><span>6,366세대 (공동주택 4,000 · 시니어하우징 2,000)</span></li><li><b>계획 인구</b><span>15,917명</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -450,6 +452,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>계획 세대수</b><span>6,366세대 (공동주택 4,000 · 시니어하우징 2,000)</span></li><li><b>계획 인구</b><span>15,917명</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>구역 구성</dt><dd>단독주택 · 공동주택 · 근린생활시설 · 주상복합</dd></div>
                   </dl>
@@ -499,9 +505,6 @@
                 <p class="dz-s">춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성 · 유입</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>연계 특구</b><span>에듀포레스트 교육발전특구 춘천</span></li><li><b>구역 구성</b><span>유치원 · 초 · 중 · 고등학교 · 외국교육기관</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -520,6 +523,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>연계 특구</b><span>에듀포레스트 교육발전특구 춘천</span></li><li><b>구역 구성</b><span>유치원 · 초 · 중 · 고등학교 · 외국교육기관</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>건폐율</dt><dd>50%</dd></div>
                   </dl>
@@ -570,9 +577,6 @@
                 <p class="dz-s">친환경 그린 인프라에서 경험하는 로봇 캐디 · 메디컬 케어 등 미래형 라이프스타일 플랫폼 완성</p>
               </div>
 
-              <!-- 성격 지표 — 권역마다 다른 값을 개요에서 끌어올려 앞에 세운다.
-                   표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-              <ul class="dz-stats"><li><b>종류</b><span>대중형 18홀 (파72)</span></li><li><b>연장</b><span>6,570m</span></li></ul>
 
               <div class="dz-body">
                 <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
@@ -591,6 +595,10 @@
                 <!-- 부지 개요 + 구역별 면적 — 계획도 오른쪽 한 열에 위아래로 둔다(2026-08-13 지시).
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
+                  <p class="dz-area-h">부지 개요</p>
+                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
+                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
+                  <ul class="dz-stats"><li><b>종류</b><span>대중형 18홀 (파72)</span></li><li><b>연장</b><span>6,570m</span></li></ul>
                   <dl class="dz-spec">
                     <div><dt>주요 시설</dt><dd>클럽하우스 · 그늘집 · 관리동 · 연습시설</dd></div>
                   </dl>
