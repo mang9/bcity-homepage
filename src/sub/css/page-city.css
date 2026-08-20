@@ -213,6 +213,8 @@
   padding-top: clamp(18px, 1.8vw, 26px); border-top: 1px solid var(--color-line); }
 /* 부지 개요 아래에 바로 붙으므로 표 자체의 위 여백은 상자가 갖는다 */
 .dz-area .iv-scroll { margin-top: 0; }
+/* 표 각주 — 페이지 하단 각주(.dz-note)와 같은 서체, 간격만 표에 붙게 좁힌다 */
+.dz-area .dz-note { margin-top: 10px; }
 .dz-area-h { margin: 0 0 10px; font-size: 12.5px; font-weight: 700; letter-spacing: .04em;
   color: var(--color-text-muted); }
 
