@@ -401,10 +401,20 @@
     .br-h3 span { margin-left: 12px; font-family: var(--font-body); font-weight: 700;
       font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
     /* 기본 로고타입 — [워드마크 비율 분석 | 심볼 마크] 2단(2026-08-20 지시).
-       워드마크 쪽이 넓어야 비율 점선이 읽히므로 1.2 : 1 로 기울인다. */
+       워드마크 쪽이 넓어야 비율 점선이 읽히므로 1.2 : 1 로 기울인다.
+       **제목도 이 그리드 안에 있다** — 박스 밖 첫 줄이고, 각자 자기 칸에 정렬된다.
+       ⚠ 자리를 `grid-area` 로 명시한다. DOM 은 [제목1][박스1][제목2][박스2] 순이라
+         좁은 화면에서 열 정의만 1열로 바꾸면 자동 흐름이 그대로 올바른 순서가 된다.
+         `order` 로 돌리는 방식은 쓰지 않는다 — 읽기 순서가 화면 순서와 달라진다. */
     .br-primary { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
-      gap: clamp(14px, 1.4vw, 22px); margin-top: clamp(24px, 2.6vw, 40px);
-      align-items: stretch; }
+      column-gap: clamp(14px, 1.4vw, 22px); row-gap: clamp(16px, 1.6vw, 24px);
+      margin-top: clamp(44px, 4.6vw, 78px); align-items: stretch; }
+    .br-primary > :nth-child(1) { grid-area: 1 / 1; }   /* 제목 · 기본 로고타입 */
+    .br-primary > :nth-child(2) { grid-area: 2 / 1; }   /* 워드마크 박스 */
+    .br-primary > :nth-child(3) { grid-area: 1 / 2; }   /* 제목 · 심볼 마크 */
+    .br-primary > :nth-child(4) { grid-area: 2 / 2; }   /* 심볼 박스 */
+    /* 그리드 안 제목은 자기 여백을 갖지 않는다 — 줄 간격은 `row-gap` 이 만든다 */
+    .br-primary .br-h3 { margin: 0; align-self: end; }
 
     /* 워드마크 비율 분석 — 위아래 점선이 캡 하이트를 표시한다.
        ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다.
@@ -443,12 +453,30 @@
     .br-rules dt { font-size: 13px; font-weight: 700; color: var(--color-primary); }
     .br-rules dd { margin: 0; font-size: 14px; line-height: 1.6; }
     /* 2단의 오른쪽 칸 — 높이를 왼쪽(워드마크)과 함께 쓰므로 내용을 가운데로 모은다 */
-    .br-primary .br-panel { display: flex; flex-direction: column; }
-    .br-symmark-in { flex: 1; display: grid; grid-template-columns: auto minmax(0, 1fr);
-      gap: clamp(18px, 1.8vw, 28px); align-items: center; align-content: center; }
+    .br-primary .br-panel { display: flex; flex-direction: column; justify-content: center;
+      gap: clamp(16px, 1.6vw, 24px); }
+    .br-symmark-in { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      gap: clamp(18px, 1.8vw, 28px); align-items: center; }
     /* 심볼을 더 크게(2026-08-20 지시) — 2단 왼쪽의 워드마크와 무게가 맞아야 한다 */
     .br-symmark-in img { display: block; width: clamp(96px, 9.5vw, 148px); height: auto; }
-    .br-symmark-in p { margin: 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
+
+    /* 심볼 풀이 — 화살표로 도형의 각 부분을 짚는다(2026-08-20 지시).
+       문장으로 흘려 두면 어느 부분이 무엇인지 짝이 지어지지 않는다.
+       ⚠ 색 이름 항목은 원색이 아니라 **텍스트용 변종**(`--a`)을 마크업에서 받는다.
+         원색은 이 면 위에서 Mint 2.14 · Azure 3.13 이라 본문 크기 대비를 못 맞춘다.
+       ⚠ 그리고 컬러 카드의 `--ct`(#298272 · #007CB4)를 그대로 가져오면 안 된다 —
+         그 값은 **흰 면** 기준(4.64 · 4.62)이고 이 패널은 `--color-bg` 라 4.35 · 4.34 로
+         떨어진다(실측). 이 면에 맞춰 #287E6F · #0077AE 로 다시 잡았다(4.58 · 4.64). */
+    .br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .br-anno li { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 8px; align-items: baseline; }
+    .br-anno li::before { content: "\2192"; grid-row: span 2; font-weight: 700;
+      color: var(--a, var(--color-text-muted)); }
+    .br-anno b { grid-column: 2; font-size: 13.5px; letter-spacing: -.01em;
+      color: var(--a, var(--color-text)); }
+    .br-anno span { grid-column: 2; margin-top: 2px; font-size: 12.5px; line-height: 1.6;
+      color: var(--color-text-muted); }
+    .br-symmark-d { margin: 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
     /* 로고 변형 6종 — 변형마다 배경이 다르므로 그림 영역과 설명을 분리한다 */
     .br-vars { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr);
@@ -526,7 +554,13 @@
     }
     @media (max-width: 1023px) {
       .br-sym { grid-template-columns: 1fr; }
-      .br-primary { grid-template-columns: minmax(0, 1fr); }
+      /* 1단 — 열 정의를 1열로 돌리고 `grid-area` 를 풀면 DOM 순서
+         [제목1][박스1][제목2][박스2] 가 그대로 화면 순서가 된다. */
+      .br-primary { grid-template-columns: minmax(0, 1fr); row-gap: clamp(14px, 1.4vw, 20px); }
+      .br-primary > :nth-child(1), .br-primary > :nth-child(2),
+      .br-primary > :nth-child(3), .br-primary > :nth-child(4) { grid-area: auto; }
+      /* 박스 뒤에 오는 제목은 위 여백을 더 갖는다 — 앞 박스와 붙어 보인다 */
+      .br-primary > :nth-child(3) { margin-top: clamp(18px, 1.8vw, 26px); }
       .br-rules dl { grid-template-columns: 1fr; }
       /* 1열로 접히면 '마지막 줄' 은 마지막 하나뿐이다 */
       .br-rules dl div:nth-last-child(2) { padding-bottom: 12px;
@@ -711,12 +745,15 @@
 
         <!-- 기획(클로드 디자인 와이어프레임 p.49)의 세 블록 순서를 그대로 따른다 —
              [기본 로고타입] → [시그니처 조합] → [사용 규정 · 여백]. -->
-        <h3 class="br-h3 rv">기본 로고타입 <span>PRIMARY LOGOTYPE</span></h3>
-
-        <!-- 기본 로고타입 — [워드마크 비율 분석 | 심볼 마크] 2단(2026-08-20 지시).
+        <!-- [기본 로고타입 | 심볼 마크] 2단. **제목도 박스 밖 같은 줄**에 온다(2026-08-20 지시).
+             ⚠ 제목과 박스를 **한 그리드**에 넣고 CSS 의 `grid-area` 로 자리를 명시한다.
+               컨테이너를 둘로 나눠 열 정의를 두 번 쓰면 한쪽만 바뀔 때 어긋나고,
+               `order` 로 돌리면 좁은 화면에서 **읽기 순서**가 제목1·제목2·박스1·박스2 로 꼬인다.
+               DOM 순서는 [제목1][박스1][제목2][박스2] 라 어느 폭에서도 그대로 읽힌다.
              ⚠ 워드마크 위아래 점선은 CSS 의사요소다. 이미지에 구워 넣으면 로고를
                갈아끼울 때 선만 어긋난 채 남는다. -->
         <div class="br-primary rv">
+          <h3 class="br-h3">기본 로고타입 <span>PRIMARY LOGOTYPE</span></h3>
           <div class="br-wm">
             <div class="br-wm-stage">
               <img src="assets/logo/bcity-logo.svg" width="2518" height="421"
@@ -728,14 +765,21 @@
               <div><dt>구성</dt><dd>B(Letter) + Symbol(Mint × Azure) + CITY</dd></div>
             </dl>
           </div>
+          <h3 class="br-h3">심볼 마크 <span>SYMBOL MARK</span></h3>
           <div class="br-panel">
-            <h4 class="sub-t">심볼 마크 <span>SYMBOL MARK</span></h4>
+            <!-- 심볼을 화살표로 풀어 준다(2026-08-20 지시) — 도형의 어느 부분이 무엇인지
+                 문장으로 흘려 두는 대신 세 항목으로 세운다. 색 이름은 실제 브랜드 색으로 칠한다. -->
             <div class="br-symmark-in">
               <img src="assets/brand/symbol.svg" width="308" height="332"
                    alt="B·CITY 심볼 마크 — 민트와 애저 두 레이어가 교차한다" />
-              <p>두 개의 레이어가 교차하는 추상 심볼 — 민트(#3DBFA8)와 애저(#0095D9)의
-                교차점이 혁신과 연결을 상징합니다. 워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다.</p>
+              <ul class="br-anno">
+                <li style="--a: #287E6F"><b>민트 레이어</b><span>바이오 · 생명의 흐름</span></li>
+                <li style="--a: #0077AE"><b>애저 레이어</b><span>AI · 데이터의 광채</span></li>
+                <li><b>두 레이어의 교차점</b><span>혁신과 연결</span></li>
+              </ul>
             </div>
+            <p class="br-symmark-d">두 개의 레이어가 교차하는 추상 심볼입니다.<br />
+              워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다.</p>
           </div>
         </div>
 

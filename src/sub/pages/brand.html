@@ -64,12 +64,15 @@
 
         <!-- 기획(클로드 디자인 와이어프레임 p.49)의 세 블록 순서를 그대로 따른다 —
              [기본 로고타입] → [시그니처 조합] → [사용 규정 · 여백]. -->
-        <h3 class="br-h3 rv">기본 로고타입 <span>PRIMARY LOGOTYPE</span></h3>
-
-        <!-- 기본 로고타입 — [워드마크 비율 분석 | 심볼 마크] 2단(2026-08-20 지시).
+        <!-- [기본 로고타입 | 심볼 마크] 2단. **제목도 박스 밖 같은 줄**에 온다(2026-08-20 지시).
+             ⚠ 제목과 박스를 **한 그리드**에 넣고 CSS 의 `grid-area` 로 자리를 명시한다.
+               컨테이너를 둘로 나눠 열 정의를 두 번 쓰면 한쪽만 바뀔 때 어긋나고,
+               `order` 로 돌리면 좁은 화면에서 **읽기 순서**가 제목1·제목2·박스1·박스2 로 꼬인다.
+               DOM 순서는 [제목1][박스1][제목2][박스2] 라 어느 폭에서도 그대로 읽힌다.
              ⚠ 워드마크 위아래 점선은 CSS 의사요소다. 이미지에 구워 넣으면 로고를
                갈아끼울 때 선만 어긋난 채 남는다. -->
         <div class="br-primary rv">
+          <h3 class="br-h3">기본 로고타입 <span>PRIMARY LOGOTYPE</span></h3>
           <div class="br-wm">
             <div class="br-wm-stage">
               <img src="assets/logo/bcity-logo.svg" width="2518" height="421"
@@ -81,14 +84,21 @@
               <div><dt>구성</dt><dd>B(Letter) + Symbol(Mint × Azure) + CITY</dd></div>
             </dl>
           </div>
+          <h3 class="br-h3">심볼 마크 <span>SYMBOL MARK</span></h3>
           <div class="br-panel">
-            <h4 class="sub-t">심볼 마크 <span>SYMBOL MARK</span></h4>
+            <!-- 심볼을 화살표로 풀어 준다(2026-08-20 지시) — 도형의 어느 부분이 무엇인지
+                 문장으로 흘려 두는 대신 세 항목으로 세운다. 색 이름은 실제 브랜드 색으로 칠한다. -->
             <div class="br-symmark-in">
               <img src="assets/brand/symbol.svg" width="308" height="332"
                    alt="B·CITY 심볼 마크 — 민트와 애저 두 레이어가 교차한다" />
-              <p>두 개의 레이어가 교차하는 추상 심볼 — 민트(#3DBFA8)와 애저(#0095D9)의
-                교차점이 혁신과 연결을 상징합니다. 워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다.</p>
+              <ul class="br-anno">
+                <li style="--a: #287E6F"><b>민트 레이어</b><span>바이오 · 생명의 흐름</span></li>
+                <li style="--a: #0077AE"><b>애저 레이어</b><span>AI · 데이터의 광채</span></li>
+                <li><b>두 레이어의 교차점</b><span>혁신과 연결</span></li>
+              </ul>
             </div>
+            <p class="br-symmark-d">두 개의 레이어가 교차하는 추상 심볼입니다.<br />
+              워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다.</p>
           </div>
         </div>
 
