@@ -30,12 +30,12 @@
 .br-sym-card { display: flex; flex-direction: column; padding: clamp(22px, 2vw, 32px);
   background: var(--color-surface); border: 1px solid var(--color-line);
   border-top: 2px solid var(--color-primary); border-radius: var(--radius-md); }
-.br-sym-h { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; margin: 0; align-items: baseline; }
-.br-sym-h i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(26px, 2.2vw, 34px); line-height: 1; color: var(--color-light-blue); }
-.br-sym-h b { font-family: var(--font-display); font-weight: 700;
+/* 번호(01·02·03)는 넣지 않는다(2026-08-20 지시) — 세 장이 나란히 있어 순서가 이미 보인다.
+   번호가 빠지면서 2열 그리드가 필요 없어졌다: 이름 위, 부제 아래인 블록이다. */
+.br-sym-h { margin: 0; }
+.br-sym-h b { display: block; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(17.5px, 1.35vw, 22px); letter-spacing: -.015em; }
-.br-sym-h span { grid-column: 2; margin-top: 4px; font-size: 13px; font-weight: 700;
+.br-sym-h span { display: block; margin-top: 4px; font-size: 13px; font-weight: 700;
   color: var(--color-primary); }
 .br-sym-d { margin: 16px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
 
@@ -87,8 +87,9 @@
 /* 워드마크 비율 분석 — 위아래 점선이 캡 하이트를 표시한다.
    ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다.
    ⚠ 2단 안으로 들어왔으므로 안쪽은 **한 열**이다 — 스테이지 아래에 사양을 쌓는다. */
+/* 안쪽 여백을 넉넉히(2026-08-20 지시) — 스테이지 ↔ 사양, 그리고 박스 자체 패딩 */
 .br-wm { display: flex; flex-direction: column; justify-content: center;
-  gap: clamp(22px, 2.4vw, 38px); padding: clamp(24px, 2.6vw, 40px);
+  gap: clamp(30px, 3.2vw, 54px); padding: clamp(28px, 3vw, 48px);
   background: var(--color-bg); border-radius: var(--radius-lg); }
 .br-wm-stage { position: relative; padding-block: 18px; }
 .br-wm-stage::before, .br-wm-stage::after { content: ""; position: absolute; left: 0; right: 0;
@@ -96,7 +97,7 @@
 .br-wm-stage::before { top: 18px; }
 .br-wm-stage::after { bottom: 18px; }
 .br-wm-stage img { display: block; width: 100%; height: auto; }
-.br-wm-spec { margin: 0; display: grid; gap: 12px; }
+.br-wm-spec { margin: 0; display: grid; gap: 15px; }
 .br-wm-spec div { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px;
   align-items: baseline; }
 .br-wm-spec dt { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--color-primary); }
@@ -122,9 +123,9 @@
 .br-rules dd { margin: 0; font-size: 14px; line-height: 1.6; }
 /* 2단의 오른쪽 칸 — 높이를 왼쪽(워드마크)과 함께 쓰므로 내용을 가운데로 모은다 */
 .br-primary .br-panel { display: flex; flex-direction: column; justify-content: center;
-  gap: clamp(16px, 1.6vw, 24px); }
+  gap: clamp(24px, 2.6vw, 40px); padding: clamp(28px, 3vw, 48px); }
 .br-symmark-in { display: grid; grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(18px, 1.8vw, 28px); align-items: center; }
+  gap: clamp(24px, 2.6vw, 42px); align-items: center; }
 /* 심볼을 더 크게(2026-08-20 지시) — 2단 왼쪽의 워드마크와 무게가 맞아야 한다 */
 .br-symmark-in img { display: block; width: clamp(96px, 9.5vw, 148px); height: auto; }
 
@@ -135,7 +136,7 @@
    ⚠ 그리고 컬러 카드의 `--ct`(#298272 · #007CB4)를 그대로 가져오면 안 된다 —
      그 값은 **흰 면** 기준(4.64 · 4.62)이고 이 패널은 `--color-bg` 라 4.35 · 4.34 로
      떨어진다(실측). 이 면에 맞춰 #287E6F · #0077AE 로 다시 잡았다(4.58 · 4.64). */
-.br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 15px; }
 .br-anno li { display: grid; grid-template-columns: auto minmax(0, 1fr);
   column-gap: 8px; align-items: baseline; }
 .br-anno li::before { content: "\2192"; grid-row: span 2; font-weight: 700;

@@ -362,12 +362,12 @@
     .br-sym-card { display: flex; flex-direction: column; padding: clamp(22px, 2vw, 32px);
       background: var(--color-surface); border: 1px solid var(--color-line);
       border-top: 2px solid var(--color-primary); border-radius: var(--radius-md); }
-    .br-sym-h { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; margin: 0; align-items: baseline; }
-    .br-sym-h i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(26px, 2.2vw, 34px); line-height: 1; color: var(--color-light-blue); }
-    .br-sym-h b { font-family: var(--font-display); font-weight: 700;
+    /* 번호(01·02·03)는 넣지 않는다(2026-08-20 지시) — 세 장이 나란히 있어 순서가 이미 보인다.
+       번호가 빠지면서 2열 그리드가 필요 없어졌다: 이름 위, 부제 아래인 블록이다. */
+    .br-sym-h { margin: 0; }
+    .br-sym-h b { display: block; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(17.5px, 1.35vw, 22px); letter-spacing: -.015em; }
-    .br-sym-h span { grid-column: 2; margin-top: 4px; font-size: 13px; font-weight: 700;
+    .br-sym-h span { display: block; margin-top: 4px; font-size: 13px; font-weight: 700;
       color: var(--color-primary); }
     .br-sym-d { margin: 16px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
 
@@ -419,8 +419,9 @@
     /* 워드마크 비율 분석 — 위아래 점선이 캡 하이트를 표시한다.
        ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다.
        ⚠ 2단 안으로 들어왔으므로 안쪽은 **한 열**이다 — 스테이지 아래에 사양을 쌓는다. */
+    /* 안쪽 여백을 넉넉히(2026-08-20 지시) — 스테이지 ↔ 사양, 그리고 박스 자체 패딩 */
     .br-wm { display: flex; flex-direction: column; justify-content: center;
-      gap: clamp(22px, 2.4vw, 38px); padding: clamp(24px, 2.6vw, 40px);
+      gap: clamp(30px, 3.2vw, 54px); padding: clamp(28px, 3vw, 48px);
       background: var(--color-bg); border-radius: var(--radius-lg); }
     .br-wm-stage { position: relative; padding-block: 18px; }
     .br-wm-stage::before, .br-wm-stage::after { content: ""; position: absolute; left: 0; right: 0;
@@ -428,7 +429,7 @@
     .br-wm-stage::before { top: 18px; }
     .br-wm-stage::after { bottom: 18px; }
     .br-wm-stage img { display: block; width: 100%; height: auto; }
-    .br-wm-spec { margin: 0; display: grid; gap: 12px; }
+    .br-wm-spec { margin: 0; display: grid; gap: 15px; }
     .br-wm-spec div { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px;
       align-items: baseline; }
     .br-wm-spec dt { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--color-primary); }
@@ -454,9 +455,9 @@
     .br-rules dd { margin: 0; font-size: 14px; line-height: 1.6; }
     /* 2단의 오른쪽 칸 — 높이를 왼쪽(워드마크)과 함께 쓰므로 내용을 가운데로 모은다 */
     .br-primary .br-panel { display: flex; flex-direction: column; justify-content: center;
-      gap: clamp(16px, 1.6vw, 24px); }
+      gap: clamp(24px, 2.6vw, 40px); padding: clamp(28px, 3vw, 48px); }
     .br-symmark-in { display: grid; grid-template-columns: auto minmax(0, 1fr);
-      gap: clamp(18px, 1.8vw, 28px); align-items: center; }
+      gap: clamp(24px, 2.6vw, 42px); align-items: center; }
     /* 심볼을 더 크게(2026-08-20 지시) — 2단 왼쪽의 워드마크와 무게가 맞아야 한다 */
     .br-symmark-in img { display: block; width: clamp(96px, 9.5vw, 148px); height: auto; }
 
@@ -467,7 +468,7 @@
        ⚠ 그리고 컬러 카드의 `--ct`(#298272 · #007CB4)를 그대로 가져오면 안 된다 —
          그 값은 **흰 면** 기준(4.64 · 4.62)이고 이 패널은 `--color-bg` 라 4.35 · 4.34 로
          떨어진다(실측). 이 면에 맞춰 #287E6F · #0077AE 로 다시 잡았다(4.58 · 4.64). */
-    .br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 15px; }
     .br-anno li { display: grid; grid-template-columns: auto minmax(0, 1fr);
       column-gap: 8px; align-items: baseline; }
     .br-anno li::before { content: "\2192"; grid-row: span 2; font-weight: 700;
@@ -712,21 +713,21 @@
 
         <ul class="br-sym">
           <li class="br-sym-card rv">
-            <p class="br-sym-h"><i>01</i><b>Double B</b><span>Bio + Big Data 구조</span></p>
+            <p class="br-sym-h"><b>Double B</b><span>Bio + Big Data 구조</span></p>
             <span class="br-motif" aria-hidden="true"><svg viewBox="0 0 112.801 83" fill="currentColor" aria-hidden="true"><path d="M22.5732 0.231445C27.3649 0.231445 31.5202 1.12988 35.0391 2.92676C38.5954 4.6862 41.3281 7.13867 43.2373 10.2832C45.1838 13.4277 46.1572 17.0399 46.1572 21.1201C46.1572 24.1897 45.6149 27.0723 44.5293 29.7676C43.4437 32.4629 42.002 34.7839 40.2051 36.7305C39.2699 37.7436 38.2827 38.6026 37.2461 39.3115C39.5768 40.1757 41.6682 41.3179 43.5186 42.7393C46.1013 44.7232 48.1039 47.1942 49.5264 50.1514C50.9488 53.0712 51.6602 56.4214 51.6602 60.2021C51.6602 64.6569 50.6312 68.6068 48.5723 72.0508C46.5509 75.4572 43.7055 78.1335 40.0371 80.0801C36.4059 82.0267 32.1566 83 27.29 83H0V0.231445H22.5732ZM112.801 0V82.7686H90.2275C85.4359 82.7686 81.2806 81.8701 77.7617 80.0732C74.2055 78.3139 71.4726 75.8621 69.5635 72.7178C67.6169 69.5732 66.6436 65.9603 66.6436 61.8799C66.6436 58.8102 67.1868 55.9277 68.2725 53.2324C69.3581 50.5372 70.7989 48.2161 72.5957 46.2695C73.5308 45.2565 74.5172 44.3964 75.5537 43.6875C73.2237 42.8234 71.1332 41.6826 69.2832 40.2617C66.7003 38.2778 64.6969 35.8068 63.2744 32.8496C61.8519 29.9297 61.1406 26.5788 61.1406 22.7979C61.1406 18.3432 62.1706 14.3942 64.2295 10.9502C66.251 7.54362 69.096 4.86654 72.7646 2.91992C76.3957 0.973443 80.6444 0 85.5107 0H112.801ZM9.88281 73.791H27.4023C31.6698 73.791 35.114 72.5373 37.7344 70.0293C40.3548 67.5212 41.665 64.0205 41.665 59.5283C41.665 55.0361 40.2799 51.5547 37.5098 49.084C34.7396 46.6133 31.071 45.3779 26.5039 45.3779H9.88281V73.791ZM89.3291 46.6064C86.8211 46.6064 84.594 47.2055 82.6475 48.4033C80.7008 49.6012 79.1842 51.2484 78.0986 53.3447C76.9756 55.4411 76.4141 57.8369 76.4141 60.5322C76.4141 64.7998 77.6686 68.0384 80.1768 70.2471C82.6474 72.4554 85.8854 73.5596 89.8906 73.5596H102.918V46.6064H89.3291ZM85.3984 9.20898C81.1309 9.20898 77.6868 10.4635 75.0664 12.9717C72.4461 15.4798 71.1357 18.9796 71.1357 23.4717C71.1357 27.9639 72.5208 31.4453 75.291 33.916C78.0612 36.3867 81.7298 37.6221 86.2969 37.6221H102.918V9.20898H85.3984ZM9.88281 36.3936H23.4717C25.9798 36.3936 28.2077 35.7946 30.1543 34.5967C32.1007 33.3988 33.6166 31.7515 34.7021 29.6553C35.8252 27.5589 36.3867 25.1631 36.3867 22.4678C36.3867 18.2005 35.1328 14.9626 32.625 12.7539C30.1543 10.5452 26.9157 9.44043 22.9102 9.44043H9.88281V36.3936Z"/></svg></span>
             <p class="br-sym-d">두 개의 B 구조는 Bio와 Big Data처럼 서로 다른 산업과 기능이 연결되는
               미래 도시 시스템을 상징합니다. 각 구조는 독립적으로 존재하지만 중앙 흐름을 통해
               하나의 생태계로 연결됩니다.</p>
           </li>
           <li class="br-sym-card rv">
-            <p class="br-sym-h"><i>02</i><b>DNA Helix</b><span>생명과 데이터 흐름의 상징</span></p>
+            <p class="br-sym-h"><b>DNA Helix</b><span>생명과 데이터 흐름의 상징</span></p>
             <span class="br-motif" aria-hidden="true"><span class="br-motif-mask"></span></span>
             <p class="br-sym-d">중앙의 연결 구조는 DNA Double Helix의 흐름을 추상화한 네거티브 공간입니다.
               이는 바이오 기술과 데이터 기반 산업이 끊임없이 연결되고 순환하는 도시 구조를 의미합니다.
               직접적인 DNA 표현이 아닌 브랜드 심볼 내부에 녹아든 “Bio Flow” 개념으로 구현되었습니다.</p>
           </li>
           <li class="br-sym-card rv">
-            <p class="br-sym-h"><i>03</i><b>Connected Core</b><span>도시 인프라의 연결 허브</span></p>
+            <p class="br-sym-h"><b>Connected Core</b><span>도시 인프라의 연결 허브</span></p>
             <span class="br-motif" aria-hidden="true"><svg viewBox="0 0 108.794 150.328" fill="currentColor" aria-hidden="true"><path d="M97.0753 7.49596C76.6552 29.3294 55.1517 32.875 27.2347 32.875C49.7801 74.646 39.8236 111.173 14.5475 138.198C53.8839 107.743 86.8766 119.164 86.8766 119.164C39.3836 78.9543 73.3391 32.875 97.0753 7.49596Z"/><line x1="45.0641" y1="60.2253" x2="103.875" y2="1.41421" stroke="currentColor" stroke-width="4"/><line x1="1.41421" y1="148.914" x2="60.2253" y2="90.1031" stroke="currentColor" stroke-width="4"/></svg></span>
             <p class="br-sym-d">심볼의 곡선 흐름은 춘천의 자연 환경과 미래 산업 구조가 연결되는
               도시 비전을 상징합니다. 유기적인 흐름은 B-CITY의 핵심 철학인
