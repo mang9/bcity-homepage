@@ -24,8 +24,9 @@
   font-size: clamp(15px, 1.05vw, 18px); line-height: 1.75; color: var(--color-text-muted); }
 
 /* 심볼 해석 3카드. 모티프는 카드 바닥에 옅게 깔아 '해설 + 도형' 을 한 덩어리로 읽힌다 */
+/* 위 여백을 넉넉히 — 서브 카피(가운데 정렬)와 카드 줄이 붙어 보였다(2026-08-20 지시) */
 .br-sym { list-style: none; display: grid; gap: clamp(14px, 1.4vw, 22px);
-  grid-template-columns: repeat(3, 1fr); margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; }
+  grid-template-columns: repeat(3, 1fr); margin: clamp(44px, 5vw, 84px) 0 0; padding: 0; }
 .br-sym-card { display: flex; flex-direction: column; padding: clamp(22px, 2vw, 32px);
   background: var(--color-surface); border: 1px solid var(--color-line);
   border-top: 2px solid var(--color-primary); border-radius: var(--radius-md); }
@@ -43,20 +44,22 @@
    ⚠ 세 도형의 비율이 전혀 다르다(01 은 96x44 로 납작, 03 은 109x150 으로 길다).
      전에는 **높이만** 맞춰서 01 이 03 보다 3배 넓어 보였다(2026-08-20 지적).
      그래서 **같은 정사각 상자**에 넣고 각자 안에서 contain 으로 맞춘다. */
-.br-motif { display: flex; align-items: flex-end; justify-content: center;
-  margin-top: auto; padding-top: clamp(24px, 2.6vw, 40px); color: var(--color-text-muted); opacity: .38; }
+/* 위치 — **타이틀과 설명 사이**다(2026-08-20 지시). 전에는 `margin-top: auto` 로
+   카드 바닥에 붙여 뒀다. 이제 흐름 중간이므로 위아래 여백을 스스로 갖는다. */
+.br-motif { display: flex; align-items: center; justify-content: center;
+  margin: clamp(18px, 1.8vw, 26px) 0; color: var(--color-text-muted); opacity: .38; }
 .br-motif > * { display: block; inline-size: clamp(84px, 8vw, 118px);
   block-size: clamp(84px, 8vw, 118px); }
 /* ⚠ 안쪽 SVG 에 따로 `width: 100%; height: 100%` 를 주지 말 것.
      `inline-size` 와 `width` 는 같은 속성이라 뒤에 온 쪽이 이겨 위의 정사각 상자가 풀린다
      (실측에서 115x115 가 아니라 335x154 로 나왔다). 상자는 `.br-motif > *` 하나로 정하고,
      viewBox 의 기본 preserveAspectRatio(xMidYMid meet)가 그 안에서 contain 을 해 준다. */
-/* ⚠ 02 만 래스터다(검정 800x800 + 알파). `<img>` 로는 색을 맞출 수 없어
-     **마스크**로 currentColor 를 입힌다 — 이러면 01 · 03 의 인라인 SVG 와 같은 색이 된다.
-     CSS 는 문서에 인라인되므로 url() 은 페이지(루트) 기준이다. */
+/* ⚠ 02 만 **파일**이다. path 가 10KB 라 페이지에 인라인하지 않고 SVG 로 두고,
+     **마스크**로 currentColor 를 입힌다 — 이러면 01 · 03 의 인라인 SVG 와 색이 같아진다.
+     `<img>` 로는 색을 맞출 수 없다. CSS 는 문서에 인라인되므로 url() 은 페이지(루트) 기준이다. */
 .br-motif-mask { background: currentColor;
-  -webkit-mask: url(assets/brand/motif-dna.avif) center / contain no-repeat;
-          mask: url(assets/brand/motif-dna.avif) center / contain no-repeat; }
+  -webkit-mask: url(assets/brand/motif-dna.svg) center / contain no-repeat;
+          mask: url(assets/brand/motif-dna.svg) center / contain no-repeat; }
 
 /* ---------- 2. 로고타입 ---------- */
 
@@ -111,7 +114,8 @@
 .br-primary .br-panel { display: flex; flex-direction: column; }
 .br-symmark-in { flex: 1; display: grid; grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(18px, 1.8vw, 28px); align-items: center; align-content: center; }
-.br-symmark-in img { display: block; width: clamp(64px, 6vw, 92px); height: auto; }
+/* 심볼을 더 크게(2026-08-20 지시) — 2단 왼쪽의 워드마크와 무게가 맞아야 한다 */
+.br-symmark-in img { display: block; width: clamp(96px, 9.5vw, 148px); height: auto; }
 .br-symmark-in p { margin: 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
 
 /* 로고 변형 6종 — 변형마다 배경이 다르므로 그림 영역과 설명을 분리한다 */
