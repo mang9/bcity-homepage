@@ -13,35 +13,29 @@
     <!-- ===== 구역 소개 (스토리보드 v2 slide58~75) ===== -->
     <section class="sec" id="districts">
       <div class="wrap" data-tabs="districts">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>DISTRICTS</b><span>구역 소개</span></p>
-        <h2 class="h2 rv">110만평, <em>계획된 미래 도시의 청사진</em></h2>
-        <p class="lede rv">산업 · 주거 · 상업 · 공공이 유기적으로 어우러지는 거대 융합도시, B-CITY</p>
-
-        <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">8개 권역이 하나의 도시 생태계를 완성합니다</h3></div>
-          <p class="sub-d">AI · BIO · FOOD · MICE 4대 클러스터와 주거 · 교육 · 업무 · 레저 4대 콤플렉스,
-            권역 부지 약 65.2만평을 포함해 총 약 110만평 규모입니다.</p>
-
-          <!-- 권역별 면적 — 색은 8대 권역 식별색(--color-district-*)을 그대로 쓴다.
-               ⚠ 흰 면 위 텍스트라 DESIGN.md 가 보증한 대비(전부 4.62 이상)가 그대로 유효하다. -->
-          <ul class="dz-sums">
-            <li class="dz-sum-i" style="--c: var(--color-district-ai)"><b>AI 데이터</b><em>6.3만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-bio)"><b>바이오</b><em>8.2만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-food)"><b>푸드</b><em>4.2만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-mice)"><b>바이오 MICE</b><em>3.9만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-housing)"><b>주거</b><em>9.7만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-edu)"><b>교육</b><em>2.7만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-biz)"><b>비즈니스</b><em>1.7만평</em></li>
-            <li class="dz-sum-i" style="--c: var(--color-district-golf)"><b>골프 · 레저</b><em>28.5만평</em></li>
-          </ul>
-          <p class="dz-sums-total"><b>합계</b> 권역 부지 약 65.2만평 <span>·</span> 총 약 110만평</p>
-          <p class="dz-note">※ 하천 · 공원 · 녹지 등 47.9만평 제외 기준입니다.</p>
+        <!-- 인트로 — **풀블리드 조감도 배경 위 카피만**(2026-08-20 지시).
+             전에는 8대 권역 면적 카드 8칸이 여기 있었는데, 같은 면적이 아래 권역별
+             패널에 다시 나오므로 첫 화면에서는 도시 전체 그림과 문장만 남긴다.
+             ⚠ 흰 글자를 사진 위에 올리므로 스크림이 필수다 — 대비를 실측해 맞췄다.
+             ⚠ 100vh 를 그대로 쓰지 않는다. 세로가 짧은 창에서 카피가 잘린다. -->
+        <div class="dz-intro rv">
+          <img class="dz-intro-bg" src="assets/img/districts-aerial.avif" alt=""
+               loading="lazy" decoding="async" />
+          <div class="dz-intro-in">
+            <p class="eyebrow"><i aria-hidden="true"></i><b>DISTRICTS</b><span>구역 소개</span></p>
+            <h2 class="dz-intro-h">110만평,<br /><em>계획된 미래 도시의 청사진</em></h2>
+            <p class="dz-intro-d">산업 · 주거 · 상업 · 공공이 유기적으로 어우러지는 거대 융합도시.<br />
+              AI · BIO · FOOD · MICE 4대 클러스터와 주거 · 교육 · 업무 · 레저 4대 콤플렉스로
+              구성된 <b>8개 권역</b>이 하나의 도시 생태계를 완성합니다.</p>
+            <p class="dz-intro-m"><span><b>권역 부지</b>약 65.2만평</span><span><b>총 사업면적</b>약 110만평</span></p>
+          </div>
         </div>
 
         <!-- 권역 탭 — 8개 권역을 하나씩 고른다. 기획서 slide60~75 의 좌측 목록과 같은 구성이며
              클러스터(산업) / 콤플렉스(생활) 두 묶음으로 나뉜다.
              ⚠ 8개 패널이 모두 마크업에 있다. 감추는 일은 dztab.js 가 한다(JS 없으면 전부 보인다). -->
-      <div class="dz-tabs rv">
+      <div class="dz-board rv">
+        <div class="dz-tabs">
         <div class="dz-tabgrp">
           <p class="dz-tabgrp-h">클러스터</p>
           <div class="dz-tablist" role="tablist" aria-label="클러스터 권역">
@@ -76,13 +70,13 @@
                     style="--c: var(--color-district-golf)"><i>08</i>골프레저</button>
           </div>
         </div>
-      </div>
+        </div>
+        <div class="dz-panels">
 
         <div class="dz-panel" id="panel-01" role="tabpanel" aria-labelledby="tab-01" data-group="01" tabindex="0">
             <div class="dz-zone rv" id="z01" style="--c: var(--color-district-ai)">
               <div class="dz-head">
-                <p class="dz-cat"><b>01</b>클러스터</p>
-                <h3 class="dz-name">AI 데이터 클러스터</h3>
+                <h3 class="dz-name"><b>01</b>AI 데이터 클러스터</h3>
                 <p class="dz-h">국가대표급 하이퍼스케일 AI 데이터 클러스터</p>
                 <p class="dz-s">최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축</p>
               </div>
@@ -130,7 +124,10 @@
                         </tbody>
                       </table>
                     </div>
-                    <p class="dz-note">※ 5개의 데이터센터 부지로 구성된 집적 단지</p>
+                    </div>
+        </div>
+
+        <p class="dz-note">※ 5개의 데이터센터 부지로 구성된 집적 단지</p>
                   </div>
                 </div>
               </div>
@@ -156,8 +153,7 @@
         <div class="dz-panel" id="panel-02" role="tabpanel" aria-labelledby="tab-02" data-group="02" tabindex="0">
             <div class="dz-zone rv" id="z02" style="--c: var(--color-district-bio)">
               <div class="dz-head">
-                <p class="dz-cat"><b>02</b>클러스터</p>
-                <h3 class="dz-name">첨단 바이오 클러스터</h3>
+                <h3 class="dz-name"><b>02</b>첨단 바이오 클러스터</h3>
                 <p class="dz-h">AI 기반 신약 R&amp;D 및 중소형 CDMO 거점</p>
                 <p class="dz-s">미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축</p>
               </div>
@@ -224,8 +220,7 @@
         <div class="dz-panel" id="panel-03" role="tabpanel" aria-labelledby="tab-03" data-group="03" tabindex="0">
             <div class="dz-zone rv" id="z03" style="--c: var(--color-district-food)">
               <div class="dz-head">
-                <p class="dz-cat"><b>03</b>클러스터</p>
-                <h3 class="dz-name">푸드 물류 클러스터</h3>
+                <h3 class="dz-name"><b>03</b>푸드 물류 클러스터</h3>
                 <p class="dz-h">AI 콜드체인 허브이자 군 급식 수요 대응 거점</p>
                 <p class="dz-s">AI 데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응</p>
               </div>
@@ -295,8 +290,7 @@
         <div class="dz-panel" id="panel-04" role="tabpanel" aria-labelledby="tab-04" data-group="04" tabindex="0">
             <div class="dz-zone rv" id="z04" style="--c: var(--color-district-mice)">
               <div class="dz-head">
-                <p class="dz-cat"><b>04</b>클러스터</p>
-                <h3 class="dz-name">바이오MICE 클러스터</h3>
+                <h3 class="dz-name"><b>04</b>바이오MICE 클러스터</h3>
                 <p class="dz-h">지속가능한 바이오 · 헬스 산업 커뮤니티 조성</p>
                 <p class="dz-s">일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성</p>
               </div>
@@ -365,8 +359,7 @@
         <div class="dz-panel" id="panel-05" role="tabpanel" aria-labelledby="tab-05" data-group="05" tabindex="0">
             <div class="dz-zone rv" id="z05" style="--c: var(--color-district-biz)">
               <div class="dz-head">
-                <p class="dz-cat"><b>05</b>콤플렉스</p>
-                <h3 class="dz-name">비즈니스 콤플렉스</h3>
+                <h3 class="dz-name"><b>05</b>비즈니스 콤플렉스</h3>
                 <p class="dz-h">상업 · 업무 · 문화가 융합된 강원 관문</p>
                 <p class="dz-s">B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점 · 직 · 주 · 락 중심 주민친화적 상권 조성</p>
               </div>
@@ -433,8 +426,7 @@
         <div class="dz-panel" id="panel-06" role="tabpanel" aria-labelledby="tab-06" data-group="06" tabindex="0">
             <div class="dz-zone rv" id="z06" style="--c: var(--color-district-housing)">
               <div class="dz-head">
-                <p class="dz-cat"><b>06</b>콤플렉스</p>
-                <h3 class="dz-name">하우징 콤플렉스</h3>
+                <h3 class="dz-name"><b>06</b>하우징 콤플렉스</h3>
                 <p class="dz-h">첨단 기술과 자연을 누리는 하우징 · 시니어 하우징</p>
                 <p class="dz-s">AI · 로보틱스 · 자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징</p>
               </div>
@@ -503,8 +495,7 @@
         <div class="dz-panel" id="panel-07" role="tabpanel" aria-labelledby="tab-07" data-group="07" tabindex="0">
             <div class="dz-zone rv" id="z07" style="--c: var(--color-district-edu)">
               <div class="dz-head">
-                <p class="dz-cat"><b>07</b>콤플렉스</p>
-                <h3 class="dz-name">에듀 콤플렉스</h3>
+                <h3 class="dz-name"><b>07</b>에듀 콤플렉스</h3>
                 <p class="dz-h">생애 전주기 교육하는 ‘생각하는 도시’ 글로벌</p>
                 <p class="dz-s">춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성 · 유입</p>
               </div>
@@ -574,8 +565,7 @@
         <div class="dz-panel" id="panel-08" role="tabpanel" aria-labelledby="tab-08" data-group="08" tabindex="0">
             <div class="dz-zone rv" id="z08" style="--c: var(--color-district-golf)">
               <div class="dz-head">
-                <p class="dz-cat"><b>08</b>콤플렉스</p>
-                <h3 class="dz-name">골프레저 콤플렉스</h3>
+                <h3 class="dz-name"><b>08</b>골프레저 콤플렉스</h3>
                 <p class="dz-h">바이오 스마트 · 피지컬 AI 기반 웰니스</p>
                 <p class="dz-s">친환경 그린 인프라에서 경험하는 로봇 캐디 · 메디컬 케어 등 미래형 라이프스타일 플랫폼 완성</p>
               </div>
@@ -618,7 +608,10 @@
                         </tbody>
                       </table>
                     </div>
-                    <p class="dz-note">※ 골프장 부지는 원형지 공급 예정이며, 파크골프장 부지는 검토 중입니다.</p>
+                    </div>
+        </div>
+
+        <p class="dz-note">※ 골프장 부지는 원형지 공급 예정이며, 파크골프장 부지는 검토 중입니다.</p>
                   </div>
                 </div>
               </div>
@@ -647,5 +640,9 @@
         </div>
 
         <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
+        </div>
+        </div>
+
+        <p class="dz-note">※ 면적은 국토교통부 통합개발계획 접수(안) 기준이며, 총 사업면적 약 110만평은 하천 · 공원 · 녹지 등을 포함한 값입니다.</p>
       </div>
     </section>

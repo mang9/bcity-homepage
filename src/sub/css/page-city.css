@@ -65,67 +65,111 @@
 /* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
 
 /* 권역별 면적 8칸 — 색은 권역 식별색이다. ⚠ 색만으로 구분하지 않는다(이름을 항상 함께 쓴다) */
-.dz-sums { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(10px, 1vw, 16px); margin: clamp(20px, 2vw, 30px) 0 0; padding: 0; }
-.dz-sum-i { display: flex; flex-direction: column; gap: 4px;
-  padding: clamp(14px, 1.4vw, 20px) clamp(12px, 1.2vw, 18px);
-  background: var(--color-surface); border: 1px solid var(--color-line);
-  border-left: 3px solid var(--c); border-radius: var(--radius-sm); }
-.dz-sum-i b { font-size: 13px; font-weight: 700; color: var(--color-text); }
-.dz-sum-i em { font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(16px, 1.3vw, 20px); font-variant-numeric: tabular-nums; color: var(--c); }
-.dz-sums-total { margin: clamp(14px, 1.4vw, 20px) 0 0; font-size: clamp(14px, 1.05vw, 16px);
-  color: var(--color-text); }
-.dz-sums-total b { font-family: var(--font-display); color: var(--color-primary); margin-right: 8px; }
-.dz-sums-total span { margin: 0 6px; color: var(--color-line); }
-.dz-note { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+/* ── 구역 소개 ─────────────────────────────────────────────────────────
+   2026-08-20 에 레이아웃을 다시 잡았다. 바뀐 것과 이유:
+     · 인트로의 8대 권역 면적 카드 8칸을 없애고 **풀블리드 조감도 + 카피**만 남겼다
+       (같은 면적이 아래 권역 패널에 다시 나와 두 번 읽혔다)
+     · 탭 두 묶음을 좌우 → **위아래**로 놓고, 탭과 패널을 **하나의 카드**로 붙였다
+     · `border-left` 로 권역 색을 표시하던 방식(탭 · 존)을 없앴다.
+       색은 활성 탭의 채움과 패널 상단 얇은 띠가 담당한다 — 선이 사라지니 훨씬 정돈된다
+     · 권역 머리를 `01 / 클러스터` + 이름 두 줄에서 **`01 AI 데이터 클러스터` 한 줄**로
+       합치고 크기를 올렸다. '클러스터/콤플렉스' 는 이미 탭 묶음 이름에 있다 */
 
-/* 권역 탭 — 8개를 클러스터 / 콤플렉스 두 묶음으로 나눠 세운다.
-   기획서 slide60~75 의 좌측 목록과 같은 구성이다.
-   ⚠ 마크업에는 8개 패널이 모두 있고 감추는 일은 dztab.js 가 한다. JS 가 없으면 전부 보인다.
-   ⚠ 컨트롤(`data-tab`)과 데이터(`data-group`)의 속성 이름을 다르게 둔다 — 같으면 셀렉터가
-     탭 자신까지 잡는다(§11.10 의 실제 사고). */
-.dz-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 1.6vw, 28px); margin: clamp(34px, 3.6vw, 60px) 0 clamp(20px, 2.2vw, 32px);
-  padding-bottom: clamp(16px, 1.6vw, 24px); border-bottom: 1px solid var(--color-line); }
-/* 묶음 하나 — 제목 + 탭 목록. ⚠ min-width:0 이 없으면 긴 권역 이름이 칸을 밀어낸다 */
-.dz-tabgrp { min-width: 0; }
-.dz-tabgrp-h { margin: 0 0 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
+/* 인트로 — 조감도 위 카피. ⚠ 100vh 를 쓰지 않는다(세로 짧은 창에서 카피가 잘린다). */
+.dz-intro { position: relative; isolation: isolate; overflow: hidden;
+  margin-inline: calc(50% - 50vw); width: 100vw;
+  min-height: clamp(460px, 64vh, 760px);
+  display: grid; align-items: end;
+  padding-block: clamp(48px, 6vw, 96px) clamp(34px, 3.6vw, 56px); }
+/* ⚠ 음수 z-index 를 쓰지 않는다. `isolation: isolate` 로 만든 쌓임 문맥에서
+   z-index:-2 인 이미지가 화면에 나타나지 않았다(2026-08-20 실측 — 이미지는 로드·렌더
+   되는데 안 보였다). 배경 0 · 스크림 1 · 카피 2 로 양수만 쓴다. */
+.dz-intro-bg { position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%; object-fit: cover; }
+/* 스크림 — **아래로 어두워지는 세로 그라데이션**이고 카피는 아래에 앉는다.
+   좌우 방향으로 덮어 봤더니 이 조감도는 하늘·흰 건물이 많아 밝은 지점에서 대비가
+   3.2 까지 떨어졌다. 위를 비워 두면 조감도가 그대로 보이고 카피도 안전하다.
+   ⚠ 실측값(캔버스에 사진+그라데이션을 같은 값으로 합성해 측정):
+     1440 / 1920 / 1024 / 390 폭에서 흰 글자 7.87~8.08 · 보조 글자 4.88~5.01 → 전부 AA 통과.
+   ⚠ **사진을 갈아끼우면 반드시 다시 재라.** 밝은 사진으로 바꾸면 그대로 미달이 된다
+     (§11.20 에서 실제로 6.98 → 4.67 로 떨어진 적이 있다). */
+.dz-intro::before { content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgb(var(--scrim-rgb) / .16) 0%,
+    rgb(var(--scrim-rgb) / .66) 41%, rgb(var(--scrim-rgb) / .95) 100%); }
+.dz-intro-in { position: relative; z-index: 2;
+  width: min(var(--wrap, 1320px), 100% - clamp(28px, 4.4vw, 72px) * 2);
+  margin-inline: auto; color: #ffffff; }
+.dz-intro-h { margin: 10px 0 0; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(30px, 3.4vw, 52px); line-height: 1.2; letter-spacing: -.02em; }
+.dz-intro-h em { font-style: normal; color: var(--color-mint); }
+.dz-intro-d { margin: clamp(16px, 1.6vw, 24px) 0 0; max-width: 62ch;
+  font-size: clamp(14px, 1.05vw, 17px); line-height: 1.75; color: var(--color-light-blue); }
+.dz-intro-d b { color: #ffffff; font-weight: 700; }
+.dz-intro-m { display: flex; flex-wrap: wrap; gap: clamp(14px, 2vw, 34px);
+  margin: clamp(22px, 2.2vw, 32px) 0 0; padding-top: clamp(18px, 1.8vw, 26px);
+  border-top: 1px solid rgb(255 255 255 / .22); }
+.dz-intro-m span { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(17px, 1.5vw, 24px); letter-spacing: -.01em; }
+.dz-intro-m b { display: block; margin-bottom: 3px; font-family: var(--font-body);
+  font-size: 11.5px; font-weight: 700; letter-spacing: .1em;
+  color: var(--color-light-blue); }
+
+/* 어두운 배경 위 아이브로우 — 새 모디파이어 클래스를 만들지 않고 자손 선택자로 덮는다
+   (page-location.css 의 `.inf-hero .eyebrow` 와 같은 방식). */
+.dz-intro .eyebrow { color: var(--color-light-blue); }
+.dz-intro .eyebrow b { color: #ffffff; }
+.dz-intro .eyebrow i { background: var(--color-mint); }
+
+/* 각주 — 면적 표가 패널 안에 있으므로 섹션 맨 끝에 둔다 */
+.dz-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 12.5px; line-height: 1.7;
   color: var(--color-text-muted); }
-.dz-tablist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-/* 왼쪽 색 띠가 권역 식별색이다. ⚠ 색만으로 구분하지 않는다 — 번호와 이름이 항상 함께 있다 */
+
+/* ── 탭 + 패널을 한 장의 카드로 ─────────────────────────────────────
+   ⚠ 탭과 패널을 **같은 테두리 안**에 둬야 붙어 보인다. 따로 두면 사이에 틈이 생기고
+     활성 탭이 어느 패널을 여는지 시각적으로 끊긴다(2026-08-20 지시). */
+.dz-board { margin-top: clamp(32px, 3.4vw, 56px);
+  border: 1px solid var(--color-line); border-radius: var(--radius-lg);
+  background: var(--color-surface); overflow: hidden; }
+.dz-tabs { display: grid; gap: 0; background: #f7f9fd;
+  border-bottom: 1px solid var(--color-line); }
+.dz-tabgrp { display: grid; grid-template-columns: auto minmax(0, 1fr);
+  align-items: center; gap: clamp(12px, 1.4vw, 22px);
+  padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 22px); min-width: 0; }
+.dz-tabgrp + .dz-tabgrp { border-top: 1px solid var(--color-line); }
+.dz-tabgrp-h { margin: 0; font-size: 11.5px; font-weight: 800; letter-spacing: .12em;
+  color: var(--color-text-muted); white-space: nowrap; }
+.dz-tablist { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .dz-tab { appearance: none; display: grid; grid-template-columns: auto minmax(0, 1fr);
-  align-items: baseline; gap: 8px; width: 100%; cursor: pointer; text-align: left;
-  padding: clamp(9px, .9vw, 13px) clamp(11px, 1.1vw, 15px);
-  border: 1px solid var(--color-line); border-left: 3px solid var(--c);
-  background: var(--color-surface);
-  font-family: var(--font-display); font-weight: 700; font-size: clamp(12.5px, 1vw, 14.5px);
-  letter-spacing: -.012em; color: var(--color-text-muted); word-break: keep-all; }
-.dz-tab i { font-style: normal; font-family: var(--font-body); font-size: 11px;
-  color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
-.dz-tab:hover { color: var(--color-text); border-color: var(--c); }
+  align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-text);
+  font-size: clamp(12.5px, .95vw, 14px); font-weight: 700; text-align: left;
+  word-break: keep-all; transition: background .18s, color .18s, border-color .18s; }
+.dz-tab:hover { border-color: var(--c); color: var(--c); }
+.dz-tab i { font-style: normal; font-family: var(--font-display); font-size: 12px;
+  font-weight: 800; color: var(--c); }
 .dz-tab.is-on { background: var(--c); border-color: var(--c); color: #ffffff; }
-.dz-tab.is-on i { color: rgba(255, 255, 255, .8); }
+.dz-tab.is-on i { color: rgb(255 255 255 / .82); }
 .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
-/* ⚠ `hidden` 은 dztab.js 가 붙인다. CSS 로 감추지 않는 이유는 JS 가 없을 때 8개가
-     모두 보여야 하기 때문이다(마크업이 진실, JS 는 동작만 얹는다). */
+.dz-panels { min-width: 0; }
 .dz-panel[hidden] { display: none; }
-.dz-panel:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
-/* JS 가 살아 있으면 한 번에 하나만 보이므로 패널끼리의 위 여백이 필요 없다.
-   JS 가 없어 8개가 다 보일 때만 간격이 생기도록 인접 형제에만 준다. */
-.dz-panel + .dz-panel { margin-top: clamp(28px, 3vw, 50px); }
+.dz-panel:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -3px; }
+/* JS 가 없으면 8개가 모두 보인다 — 그때만 서로 구분선이 필요하다 */
+.dz-panel + .dz-panel { border-top: 1px solid var(--color-line); }
 
-/* 권역 블록 — 왼쪽 굵은 색 띠가 권역을 구분한다 */
-.dz-zone { padding: clamp(24px, 2.6vw, 40px);
-  padding-left: clamp(22px, 2.4vw, 38px);
-  background: var(--color-surface); border: 1px solid var(--color-line);
-  border-left: 4px solid var(--c); border-radius: var(--radius-lg); }
-/* 제목 묶음 — 아래 본문(스펙·면적표)과 성격이 달라 최대 폭을 따로 잡는다 */
+/* 권역 색은 패널 **상단 얇은 띠**가 표시한다(좌측 굵은 선을 대체) */
+.dz-zone { position: relative; padding: clamp(24px, 2.8vw, 44px); }
+.dz-zone::before { content: ""; position: absolute; left: 0; right: 0; top: 0;
+  height: 3px; background: var(--c); }
+
 .dz-head { max-width: 96ch; }
-.dz-cat b { color: var(--c); }
-.dz-name { margin: 0; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(20px, 1.8vw, 26px); letter-spacing: -.02em; }
+/* 넘버 + 권역명 한 줄 — '클러스터/콤플렉스' 는 탭 묶음 이름이 이미 말해 준다 */
+.dz-name { margin: 0; display: flex; align-items: baseline; gap: clamp(10px, 1vw, 16px);
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(24px, 2.4vw, 38px); line-height: 1.2; letter-spacing: -.02em; }
+.dz-name b { font-weight: 800; color: var(--c);
+  font-size: clamp(18px, 1.7vw, 26px); font-variant-numeric: tabular-nums; }
 .dz-h { margin: 10px 0 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55;
   font-weight: 700; color: var(--c); word-break: keep-all; }
 .dz-s { margin: 10px 0 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
@@ -197,9 +241,11 @@
 /* 문자열 값은 줄바꿈을 허용한다 — 숫자만 한 줄로 붙잡아 둔다 */
 .dz-tbl td:not(.is-num) { white-space: normal; }
 
-/* 핵심 가치 — 권역마다 한 문장. 인용처럼 굵은 색 선을 왼쪽에 둔다 */
-.dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0; padding-left: clamp(14px, 1.4vw, 20px);
-  border-left: 3px solid var(--c);
+/* 핵심 가치 — 권역마다 한 문장. 왼쪽 색 선을 쓰지 않는다(2026-08-20 지시) —
+   권역 색은 패널 상단 띠와 활성 탭이 이미 말해 준다. 옅게 칠한 면으로 구획만 잡는다. */
+.dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0;
+  padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 24px);
+  border-radius: var(--radius-md); background: color-mix(in srgb, var(--c) 7%, transparent);
   font-size: clamp(14px, 1.1vw, 17px); line-height: 1.75; color: var(--color-text); }
 .dz-value em { font-style: normal; font-weight: 700; color: var(--c); }
 
