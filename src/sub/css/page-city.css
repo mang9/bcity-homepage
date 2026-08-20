@@ -124,52 +124,69 @@
 .dz-note { margin: clamp(16px, 1.6vw, 24px) 0 0; font-size: 12.5px; line-height: 1.7;
   color: var(--color-text-muted); }
 
-/* ── 탭 + 패널을 한 장의 카드로 ─────────────────────────────────────
-   ⚠ 탭과 패널을 **같은 테두리 안**에 둬야 붙어 보인다. 따로 두면 사이에 틈이 생기고
-     활성 탭이 어느 패널을 여는지 시각적으로 끊긴다(2026-08-20 지시). */
-.dz-board { margin-top: clamp(32px, 3.4vw, 56px);
-  border: 1px solid var(--color-line); border-radius: var(--radius-lg);
-  background: var(--color-surface); overflow: hidden; }
-.dz-tabs { display: grid; gap: 0; background: #f7f9fd;
+/* ── 클러스터 / 콤플렉스 — **영역 자체를 분리한다** ─────────────────
+   2026-08-20 지시. 전에는 탭 두 묶음을 한 카드에 2단으로 넣었는데, 그러면 8개가
+   한 덩어리로 읽혀 산업(클러스터)과 생활(콤플렉스)의 구분이 사라진다.
+   지금은 섹션이 둘이고 각자 자기 탭과 패널을 갖는다(tabs.js 의 `[data-tabs]` 범위 한정).
+   ⚠ 흰 배경 박스로 감싸지 않는다. 탭도 박스가 아니라 **밑줄**로만 표시한다. */
+.dz-sec { margin-top: clamp(44px, 4.6vw, 84px); }
+.dz-sec-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 clamp(14px, 1.4vw, 20px); }
+.dz-sec-h b { font-family: var(--font-display); font-size: clamp(15px, 1.3vw, 19px);
+  font-weight: 800; letter-spacing: .06em; color: var(--color-primary); }
+.dz-sec-h span { font-size: clamp(12.5px, .95vw, 14px); font-weight: 600;
+  color: var(--color-text-muted); }
+
+/* 탭 — 밑줄만. 아래 라인에 **여백 없이 붙어** 선택된 항목이 콘텐츠로 이어진다. */
+.dz-tabline { display: flex; flex-wrap: wrap; gap: clamp(18px, 2.2vw, 40px);
   border-bottom: 1px solid var(--color-line); }
-.dz-tabgrp { display: grid; grid-template-columns: auto minmax(0, 1fr);
-  align-items: center; gap: clamp(12px, 1.4vw, 22px);
-  padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 22px); min-width: 0; }
-.dz-tabgrp + .dz-tabgrp { border-top: 1px solid var(--color-line); }
-.dz-tabgrp-h { margin: 0; font-size: 11.5px; font-weight: 800; letter-spacing: .12em;
-  color: var(--color-text-muted); white-space: nowrap; }
-.dz-tablist { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.dz-tab { appearance: none; display: grid; grid-template-columns: auto minmax(0, 1fr);
-  align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer;
-  border: 1px solid transparent; border-radius: var(--radius-sm);
-  background: var(--color-surface); color: var(--color-text);
-  font-size: clamp(12.5px, .95vw, 14px); font-weight: 700; text-align: left;
-  word-break: keep-all; transition: background .18s, color .18s, border-color .18s; }
-.dz-tab:hover { border-color: var(--c); color: var(--c); }
-.dz-tab i { font-style: normal; font-family: var(--font-display); font-size: 12px;
-  font-weight: 800; color: var(--c); }
-.dz-tab.is-on { background: var(--c); border-color: var(--c); color: #ffffff; }
-.dz-tab.is-on i { color: rgb(255 255 255 / .82); }
-.dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.dz-tab { appearance: none; border: 0; background: none; cursor: pointer;
+  display: inline-flex; align-items: baseline; gap: 8px;
+  padding: 0 0 clamp(11px, 1.1vw, 15px); margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(14px, 1.15vw, 18px); letter-spacing: -.01em;
+  color: var(--color-text-muted); word-break: keep-all;
+  transition: color .18s, border-color .18s; }
+.dz-tab i { font-style: normal; font-family: var(--font-body); font-size: 11.5px;
+  font-weight: 700; color: var(--color-line); transition: color .18s; }
+.dz-tab:hover { color: var(--color-text); }
+.dz-tab:hover i { color: var(--color-text-muted); }
+/* 선택 — 권역 색 밑줄. 색만으로 구분하지 않는다(번호와 이름이 항상 함께 있다) */
+.dz-tab.is-on { color: var(--c); border-bottom-color: var(--c); }
+.dz-tab.is-on i { color: var(--c); }
+.dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px;
+  border-radius: 2px; }
 
-.dz-panels { min-width: 0; }
+/* 패널 — 배경 박스 없음. 위 라인과의 간격은 패딩 하나로만 잡는다. */
 .dz-panel[hidden] { display: none; }
-.dz-panel:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -3px; }
-/* JS 가 없으면 8개가 모두 보인다 — 그때만 서로 구분선이 필요하다 */
+.dz-panel:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
+/* JS 가 없으면 8개가 다 보인다 — 그때만 서로 구분선이 필요하다 */
 .dz-panel + .dz-panel { border-top: 1px solid var(--color-line); }
+.dz-zone { padding: clamp(26px, 3vw, 44px) 0 0; }
 
-/* 권역 색은 패널 **상단 얇은 띠**가 표시한다(좌측 굵은 선을 대체) */
-.dz-zone { position: relative; padding: clamp(24px, 2.8vw, 44px); }
-.dz-zone::before { content: ""; position: absolute; left: 0; right: 0; top: 0;
-  height: 3px; background: var(--c); }
-
-.dz-head { max-width: 96ch; }
-/* 넘버 + 권역명 한 줄 — '클러스터/콤플렉스' 는 탭 묶음 이름이 이미 말해 준다 */
-.dz-name { margin: 0; display: flex; align-items: baseline; gap: clamp(10px, 1vw, 16px);
+/* 제목 줄 — 번호 + 권역명 한 줄, 오른쪽에 부지 면적 */
+.dz-head { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline; gap: clamp(12px, 1.6vw, 28px); }
+.dz-name { grid-column: 1; margin: 0; display: flex; align-items: baseline;
+  gap: clamp(10px, 1vw, 16px);
   font-family: var(--font-display); font-weight: 800;
   font-size: clamp(24px, 2.4vw, 38px); line-height: 1.2; letter-spacing: -.02em; }
 .dz-name b { font-weight: 800; color: var(--c);
   font-size: clamp(18px, 1.7vw, 26px); font-variant-numeric: tabular-nums; }
+.dz-area-big { grid-column: 2; grid-row: 1; margin: 0; white-space: nowrap;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(14px, 1.15vw, 18px); color: var(--color-text-muted); }
+.dz-head .dz-h, .dz-head .dz-s { grid-column: 1 / -1; }
+
+/* 성격 지표 — 권역마다 다른 값을 앞에 세운다. 이게 없으면 8권역이 같은 화면으로 읽힌다. */
+.dz-stats { list-style: none; margin: clamp(20px, 2.2vw, 32px) 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: clamp(20px, 2.6vw, 48px);
+  padding-top: clamp(16px, 1.6vw, 22px); border-top: 1px solid var(--color-line); }
+.dz-stats li { min-width: 0; }
+.dz-stats b { display: block; margin-bottom: 5px; font-size: 11.5px; font-weight: 700;
+  letter-spacing: .08em; color: var(--color-text-muted); }
+.dz-stats span { font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.3vw, 21px); letter-spacing: -.01em; color: var(--c); }
 .dz-h { margin: 10px 0 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55;
   font-weight: 700; color: var(--c); word-break: keep-all; }
 .dz-s { margin: 10px 0 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
