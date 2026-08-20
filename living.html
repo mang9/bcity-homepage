@@ -487,8 +487,6 @@
       transition: color .18s, background-color .18s, border-color .18s; }
     /* 이웃한 박스가 라인을 나눠 갖는다 — 가운데가 2px 로 굵어지지 않게 */
     .dz-tab + .dz-tab { border-left: 0; }
-    .dz-tabline .dz-tab:first-child { border-top-left-radius: var(--radius-sm); }
-    .dz-tabline .dz-tab:last-child { border-top-right-radius: var(--radius-sm); }
     .dz-tab:hover { color: var(--color-text); background: var(--color-surface); }
     /* 선택 — 흰 면 + 권역 색 윗줄. 색만으로 구분하지 않는다(이름이 항상 함께 있다) */
     .dz-tab.is-on { color: var(--c); background: var(--color-surface);
@@ -505,11 +503,18 @@
          border-top 을 갖게 되어 탭과 콘텐츠 사이에 **1px 틈**이 생긴다(실측으로 잡았다).
          `:not([hidden])` 두 개를 걸면 '둘 다 보이는' 경우 = JS 없음 에서만 매칭된다. */
     .dz-panel:not([hidden]) + .dz-panel:not([hidden]) { border-top: 1px solid var(--color-line); }
-    .dz-zone { padding: clamp(26px, 3vw, 44px) 0 0; }
+    /* 콘텐츠 — **흰 박스**로 활성 탭과 이어진다(2026-08-20 지시).
+       페이지 바탕이 `--color-bg`(옅은 청회색)이라 흰 면만으로 박스가 선다.
+       위 라인은 `.dz-tabline` 의 아래 라인이 대신하므로 `border-top` 을 두지 않는다 —
+       두면 활성 탭 아래에 1px 이 겹쳐 탭과 콘텐츠가 끊어져 보인다. */
+    .dz-zone { background: var(--color-surface);
+      border: 1px solid var(--color-line); border-top: 0;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      padding: clamp(22px, 2.4vw, 40px); }
 
-    /* 제목 줄 — 번호 + 권역명 한 줄, 오른쪽에 부지 면적 */
-    .dz-head { display: grid; grid-template-columns: minmax(0, 1fr) auto;
-      align-items: baseline; gap: clamp(12px, 1.6vw, 28px); }
+    /* 제목 줄 — 번호 + 권역명 한 줄. 부지 면적은 개요의 [부지 면적] 칸으로 옮겼다(2026-08-20 지시). */
+    .dz-head { display: grid; grid-template-columns: minmax(0, 1fr);
+      gap: clamp(7px, .7vw, 11px); }
     .dz-name { grid-column: 1; margin: 0; display: flex; align-items: baseline;
       gap: clamp(10px, 1vw, 16px);
       font-family: var(--font-display); font-weight: 800;
@@ -518,25 +523,31 @@
        구분은 색(권역 색)만으로 한다. */
     .dz-name b { font-weight: 800; color: var(--c);
       font-size: 1em; font-variant-numeric: tabular-nums; }
-    .dz-area-big { grid-column: 2; grid-row: 1; margin: 0; white-space: nowrap;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.15vw, 18px); color: var(--color-text-muted); }
     .dz-head .dz-h, .dz-head .dz-s { grid-column: 1 / -1; }
 
-    /* 성격 지표 — 권역마다 다른 값. **부지 개요 맨 앞**에 세운다(2026-08-20 지시로 우측 이동).
-       이게 없으면 8권역이 같은 화면으로 읽힌다. 값만 권역 색으로 키워 개요 안에서도 눈에 든다. */
-    .dz-stats { list-style: none; margin: 0 0 12px; padding: 0 0 12px;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px clamp(16px, 1.8vw, 28px); border-bottom: 1px solid var(--color-line); }
-    .dz-stats li { min-width: 0; }
-    .dz-stats b { display: block; margin-bottom: 4px; font-size: 11.5px; font-weight: 700;
+    /* 부지 개요 — IM 정본(260803) s22~29 의 4칸 형식이다: **라벨 · 큰 값 · 보조값**.
+       큰 값을 권역 색으로 키워 표 안에 묻히지 않게 한다(그래야 8권역이 같은 화면으로 안 읽힌다).
+       ⚠ 2x2 로 둔다. IM 은 4칸을 한 줄에 놓지만 웹에서는 칸이 200px 아래로 좁아져
+         `국가첨단전략산업` 같은 값이 세 줄로 접힌다. */
+    .dz-ov { list-style: none; margin: 0 0 clamp(18px, 1.8vw, 26px); padding: 0;
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(14px, 1.6vw, 22px) clamp(16px, 2vw, 32px); }
+    .dz-ov li { min-width: 0; padding-bottom: clamp(12px, 1.2vw, 16px);
+      border-bottom: 1px solid var(--color-line); }
+    /* ⚠ 마지막 줄(2칸)은 선을 뺀다 — 바로 아래 `.dz-area` 가 자기 `border-top` 을 갖고 있어
+         그대로 두면 선이 두 겹으로 겹친다(실측으로 잡았다). */
+    .dz-ov li:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+    .dz-ov b { display: block; margin-bottom: 6px; font-size: 11.5px; font-weight: 700;
       letter-spacing: .06em; color: var(--color-text-muted); }
-    .dz-stats span { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.15vw, 18px); letter-spacing: -.01em; line-height: 1.4;
+    .dz-ov strong { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.3vw, 20px); line-height: 1.35; letter-spacing: -.015em;
       color: var(--c); word-break: keep-all; }
-    .dz-h { margin: 10px 0 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55;
+    .dz-ov span { display: block; margin-top: 5px; font-size: 12.5px; line-height: 1.55;
+      color: var(--color-text-muted); word-break: keep-all; }
+
+    .dz-h { margin: 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.5;
       font-weight: 700; color: var(--c); word-break: keep-all; }
-    .dz-s { margin: 10px 0 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
+    .dz-s { margin: 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.7;
       color: var(--color-text-muted); word-break: keep-all; }
 
     /* [토지이용계획도] | [부지 개요 + 구역별 면적] — 오른쪽 한 열에 표까지 함께 둔다.
@@ -549,12 +560,6 @@
       gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: stretch; }
     /* ⚠ min-width:0 — 없으면 안쪽 표가 이 칸을 밀어내 페이지가 가로로 넘친다(.dz-area 와 같은 이유) */
     .dz-info { min-width: 0; }
-    .dz-spec { margin: 0; display: grid; gap: 10px; }
-    .dz-spec div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;
-      align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid var(--color-line); }
-    .dz-spec div:last-child { padding-bottom: 0; border-bottom: 0; }
-    .dz-spec dt { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
-    .dz-spec dd { margin: 0; font-size: 13.5px; line-height: 1.55; word-break: keep-all; }
     /* 면적표 칸 — ⚠ min-width:0 이 없으면 표가 그리드 칸을 밀어내 페이지가 가로로 넘친다.
        `.iv-scroll` 은 부모가 좁아져야 스크롤을 만드는데, 그리드 기본값(auto)은 안 좁아진다. */
     .dz-area { min-width: 0; margin-top: clamp(20px, 2.2vw, 32px);
@@ -623,11 +628,14 @@
 
     /* 핵심 가치 — 권역마다 한 문장. 왼쪽 색 선을 쓰지 않는다(2026-08-20 지시) —
        권역 색은 패널 상단 띠와 활성 탭이 이미 말해 준다. 옅게 칠한 면으로 구획만 잡는다. */
+    /* 한 줄 정리 — 권역의 결론이다. **가장 큰 본문**으로 두어 눈에 먼저 든다(2026-08-20 지시). */
     .dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0;
-      padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 24px);
+      padding: clamp(18px, 1.8vw, 26px) clamp(20px, 2vw, 30px);
       border-radius: var(--radius-md); background: color-mix(in srgb, var(--c) 7%, transparent);
-      font-size: clamp(14px, 1.1vw, 17px); line-height: 1.75; color: var(--color-text); }
-    .dz-value em { font-style: normal; font-weight: 700; color: var(--c); }
+      font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(15.5px, 1.35vw, 21px); line-height: 1.65; letter-spacing: -.015em;
+      color: var(--color-text); }
+    .dz-value em { font-style: normal; font-weight: 800; color: var(--c); }
 
     /* 핵심 가치 3항목 — 기획서의 [핵심 가치] 슬라이드에 있는 3열 표를 그대로 옮긴 것이다.
        ⚠ 한 문장 요약(.dz-value)만으로는 내용이 통째로 빠진다(2026-08-13 사용자 지적). */
@@ -704,6 +712,10 @@
       /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */
       .dz-tabs { grid-template-columns: minmax(0, 1fr); }
       .dz-keys { grid-template-columns: minmax(0, 1fr); }
+      .dz-ov { grid-template-columns: minmax(0, 1fr); }
+      /* 1칸이므로 '마지막 줄' 은 마지막 하나뿐이다 */
+      .dz-ov li:nth-last-child(2) { border-bottom: 1px solid var(--color-line);
+        padding-bottom: clamp(12px, 1.2vw, 16px); }
       .lv-list { grid-template-columns: minmax(0, 1fr); }
       /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
       .dz-body { grid-template-columns: minmax(0, 1fr); }
@@ -723,7 +735,6 @@
         border: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
         border-top: 9px solid var(--color-mint); }
       .dz-tablist { grid-template-columns: minmax(0, 1fr); }
-      .dz-spec div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
     }
   </style>
 </head>

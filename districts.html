@@ -648,8 +648,6 @@
       transition: color .18s, background-color .18s, border-color .18s; }
     /* 이웃한 박스가 라인을 나눠 갖는다 — 가운데가 2px 로 굵어지지 않게 */
     .dz-tab + .dz-tab { border-left: 0; }
-    .dz-tabline .dz-tab:first-child { border-top-left-radius: var(--radius-sm); }
-    .dz-tabline .dz-tab:last-child { border-top-right-radius: var(--radius-sm); }
     .dz-tab:hover { color: var(--color-text); background: var(--color-surface); }
     /* 선택 — 흰 면 + 권역 색 윗줄. 색만으로 구분하지 않는다(이름이 항상 함께 있다) */
     .dz-tab.is-on { color: var(--c); background: var(--color-surface);
@@ -666,11 +664,18 @@
          border-top 을 갖게 되어 탭과 콘텐츠 사이에 **1px 틈**이 생긴다(실측으로 잡았다).
          `:not([hidden])` 두 개를 걸면 '둘 다 보이는' 경우 = JS 없음 에서만 매칭된다. */
     .dz-panel:not([hidden]) + .dz-panel:not([hidden]) { border-top: 1px solid var(--color-line); }
-    .dz-zone { padding: clamp(26px, 3vw, 44px) 0 0; }
+    /* 콘텐츠 — **흰 박스**로 활성 탭과 이어진다(2026-08-20 지시).
+       페이지 바탕이 `--color-bg`(옅은 청회색)이라 흰 면만으로 박스가 선다.
+       위 라인은 `.dz-tabline` 의 아래 라인이 대신하므로 `border-top` 을 두지 않는다 —
+       두면 활성 탭 아래에 1px 이 겹쳐 탭과 콘텐츠가 끊어져 보인다. */
+    .dz-zone { background: var(--color-surface);
+      border: 1px solid var(--color-line); border-top: 0;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      padding: clamp(22px, 2.4vw, 40px); }
 
-    /* 제목 줄 — 번호 + 권역명 한 줄, 오른쪽에 부지 면적 */
-    .dz-head { display: grid; grid-template-columns: minmax(0, 1fr) auto;
-      align-items: baseline; gap: clamp(12px, 1.6vw, 28px); }
+    /* 제목 줄 — 번호 + 권역명 한 줄. 부지 면적은 개요의 [부지 면적] 칸으로 옮겼다(2026-08-20 지시). */
+    .dz-head { display: grid; grid-template-columns: minmax(0, 1fr);
+      gap: clamp(7px, .7vw, 11px); }
     .dz-name { grid-column: 1; margin: 0; display: flex; align-items: baseline;
       gap: clamp(10px, 1vw, 16px);
       font-family: var(--font-display); font-weight: 800;
@@ -679,25 +684,31 @@
        구분은 색(권역 색)만으로 한다. */
     .dz-name b { font-weight: 800; color: var(--c);
       font-size: 1em; font-variant-numeric: tabular-nums; }
-    .dz-area-big { grid-column: 2; grid-row: 1; margin: 0; white-space: nowrap;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.15vw, 18px); color: var(--color-text-muted); }
     .dz-head .dz-h, .dz-head .dz-s { grid-column: 1 / -1; }
 
-    /* 성격 지표 — 권역마다 다른 값. **부지 개요 맨 앞**에 세운다(2026-08-20 지시로 우측 이동).
-       이게 없으면 8권역이 같은 화면으로 읽힌다. 값만 권역 색으로 키워 개요 안에서도 눈에 든다. */
-    .dz-stats { list-style: none; margin: 0 0 12px; padding: 0 0 12px;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px clamp(16px, 1.8vw, 28px); border-bottom: 1px solid var(--color-line); }
-    .dz-stats li { min-width: 0; }
-    .dz-stats b { display: block; margin-bottom: 4px; font-size: 11.5px; font-weight: 700;
+    /* 부지 개요 — IM 정본(260803) s22~29 의 4칸 형식이다: **라벨 · 큰 값 · 보조값**.
+       큰 값을 권역 색으로 키워 표 안에 묻히지 않게 한다(그래야 8권역이 같은 화면으로 안 읽힌다).
+       ⚠ 2x2 로 둔다. IM 은 4칸을 한 줄에 놓지만 웹에서는 칸이 200px 아래로 좁아져
+         `국가첨단전략산업` 같은 값이 세 줄로 접힌다. */
+    .dz-ov { list-style: none; margin: 0 0 clamp(18px, 1.8vw, 26px); padding: 0;
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(14px, 1.6vw, 22px) clamp(16px, 2vw, 32px); }
+    .dz-ov li { min-width: 0; padding-bottom: clamp(12px, 1.2vw, 16px);
+      border-bottom: 1px solid var(--color-line); }
+    /* ⚠ 마지막 줄(2칸)은 선을 뺀다 — 바로 아래 `.dz-area` 가 자기 `border-top` 을 갖고 있어
+         그대로 두면 선이 두 겹으로 겹친다(실측으로 잡았다). */
+    .dz-ov li:nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+    .dz-ov b { display: block; margin-bottom: 6px; font-size: 11.5px; font-weight: 700;
       letter-spacing: .06em; color: var(--color-text-muted); }
-    .dz-stats span { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.15vw, 18px); letter-spacing: -.01em; line-height: 1.4;
+    .dz-ov strong { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.3vw, 20px); line-height: 1.35; letter-spacing: -.015em;
       color: var(--c); word-break: keep-all; }
-    .dz-h { margin: 10px 0 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55;
+    .dz-ov span { display: block; margin-top: 5px; font-size: 12.5px; line-height: 1.55;
+      color: var(--color-text-muted); word-break: keep-all; }
+
+    .dz-h { margin: 0; font-size: clamp(15px, 1.15vw, 18px); line-height: 1.5;
       font-weight: 700; color: var(--c); word-break: keep-all; }
-    .dz-s { margin: 10px 0 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
+    .dz-s { margin: 0; max-width: 82ch; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.7;
       color: var(--color-text-muted); word-break: keep-all; }
 
     /* [토지이용계획도] | [부지 개요 + 구역별 면적] — 오른쪽 한 열에 표까지 함께 둔다.
@@ -710,12 +721,6 @@
       gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: stretch; }
     /* ⚠ min-width:0 — 없으면 안쪽 표가 이 칸을 밀어내 페이지가 가로로 넘친다(.dz-area 와 같은 이유) */
     .dz-info { min-width: 0; }
-    .dz-spec { margin: 0; display: grid; gap: 10px; }
-    .dz-spec div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px;
-      align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid var(--color-line); }
-    .dz-spec div:last-child { padding-bottom: 0; border-bottom: 0; }
-    .dz-spec dt { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
-    .dz-spec dd { margin: 0; font-size: 13.5px; line-height: 1.55; word-break: keep-all; }
     /* 면적표 칸 — ⚠ min-width:0 이 없으면 표가 그리드 칸을 밀어내 페이지가 가로로 넘친다.
        `.iv-scroll` 은 부모가 좁아져야 스크롤을 만드는데, 그리드 기본값(auto)은 안 좁아진다. */
     .dz-area { min-width: 0; margin-top: clamp(20px, 2.2vw, 32px);
@@ -784,11 +789,14 @@
 
     /* 핵심 가치 — 권역마다 한 문장. 왼쪽 색 선을 쓰지 않는다(2026-08-20 지시) —
        권역 색은 패널 상단 띠와 활성 탭이 이미 말해 준다. 옅게 칠한 면으로 구획만 잡는다. */
+    /* 한 줄 정리 — 권역의 결론이다. **가장 큰 본문**으로 두어 눈에 먼저 든다(2026-08-20 지시). */
     .dz-value { margin: clamp(20px, 2.2vw, 32px) 0 0;
-      padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 24px);
+      padding: clamp(18px, 1.8vw, 26px) clamp(20px, 2vw, 30px);
       border-radius: var(--radius-md); background: color-mix(in srgb, var(--c) 7%, transparent);
-      font-size: clamp(14px, 1.1vw, 17px); line-height: 1.75; color: var(--color-text); }
-    .dz-value em { font-style: normal; font-weight: 700; color: var(--c); }
+      font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(15.5px, 1.35vw, 21px); line-height: 1.65; letter-spacing: -.015em;
+      color: var(--color-text); }
+    .dz-value em { font-style: normal; font-weight: 800; color: var(--c); }
 
     /* 핵심 가치 3항목 — 기획서의 [핵심 가치] 슬라이드에 있는 3열 표를 그대로 옮긴 것이다.
        ⚠ 한 문장 요약(.dz-value)만으로는 내용이 통째로 빠진다(2026-08-13 사용자 지적). */
@@ -865,6 +873,10 @@
       /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */
       .dz-tabs { grid-template-columns: minmax(0, 1fr); }
       .dz-keys { grid-template-columns: minmax(0, 1fr); }
+      .dz-ov { grid-template-columns: minmax(0, 1fr); }
+      /* 1칸이므로 '마지막 줄' 은 마지막 하나뿐이다 */
+      .dz-ov li:nth-last-child(2) { border-bottom: 1px solid var(--color-line);
+        padding-bottom: clamp(12px, 1.2vw, 16px); }
       .lv-list { grid-template-columns: minmax(0, 1fr); }
       /* 계획도는 세로로 긴 그림이라 한 열로 내리면 화면을 다 잡아먹는다 — 폭을 묶어 둔다 */
       .dz-body { grid-template-columns: minmax(0, 1fr); }
@@ -884,7 +896,6 @@
         border: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
         border-top: 9px solid var(--color-mint); }
       .dz-tablist { grid-template-columns: minmax(0, 1fr); }
-      .dz-spec div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
     }
   </style>
 </head>
@@ -1026,7 +1037,6 @@
             <div class="dz-zone rv" id="z01" style="--c: var(--color-district-ai)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>01</b>AI 데이터 클러스터</h3>
-                <p class="dz-area-big">207,486㎡ (61,264평)</p>
                 <p class="dz-h">국가대표급 하이퍼스케일 AI 데이터 클러스터</p>
                 <p class="dz-s">최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축</p>
               </div>
@@ -1050,14 +1060,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>수전 용량</b><span>최대 330MW (IT Load 240MW)</span></li><li><b>목표 PUE</b><span>1.2</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>수전 방식</dt><dd>154kV 직접수전</dd></div>
-                    <div><dt>용도지역</dt><dd>준공업지역</dd></div>
-                    <div><dt>건폐율 / 용적률</dt><dd>70% / 400%</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 6.1만평</strong><span>207,486㎡ (61,264평)</span></li>
+                    <li><b>용도지역</b><strong>준공업지역</strong><span>건폐율 70% · 용적률 400%</span></li>
+                    <li><b>구성</b><strong>DC1~DC5</strong><span>총 5개 블럭</span></li>
+                    <li><b>전력</b><strong>330MW</strong><span>IT Load 240MW · 목표 PUE 1.2</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1101,7 +1112,6 @@
             <div class="dz-zone rv" id="z02" style="--c: var(--color-district-bio)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>02</b>첨단 바이오 클러스터</h3>
-                <p class="dz-area-big">270,910㎡ (81,950평)</p>
                 <p class="dz-h">AI 기반 신약 R&amp;D 및 중소형 CDMO 거점</p>
                 <p class="dz-s">미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축</p>
               </div>
@@ -1125,12 +1135,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>구역 구성</b><span>HT1 · HT2 (2개 구역)</span></li><li><b>용도지역</b><span>일반공업지역 / 준공업지역</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>건폐율 / 용적률</dt><dd>70% / 350~400%</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 8.2만평</strong><span>270,910㎡ (81,950평)</span></li>
+                    <li><b>용도지역</b><strong>일반공업지역 / 준공업지역</strong><span>건폐율 70% · 용적률 350~400%</span></li>
+                    <li><b>구성</b><strong>HT1~HT2</strong><span>총 2개 구역</span></li>
+                    <li><b>산업 연계</b><strong>국가첨단전략산업</strong><span>특화단지</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1170,7 +1183,6 @@
             <div class="dz-zone rv" id="z03" style="--c: var(--color-district-food)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>03</b>푸드 물류 클러스터</h3>
-                <p class="dz-area-big">138,860㎡ (약 42,254평)</p>
                 <p class="dz-h">AI 콜드체인 허브이자 군 급식 수요 대응 거점</p>
                 <p class="dz-s">AI 데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응</p>
               </div>
@@ -1194,13 +1206,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>주요 시설</b><span>물류유통시설</span></li><li><b>구역 구성</b><span>FL1 · FL2 · FL3 · FL4 (4개 구역)</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>용도지역</dt><dd>준공업지역</dd></div>
-                    <div><dt>건폐율 / 용적률</dt><dd>70% / 400%</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 4.2만평</strong><span>138,860㎡ (약 42,254평)</span></li>
+                    <li><b>용도지역</b><strong>준공업지역</strong><span>건폐율 70% · 용적률 400%</span></li>
+                    <li><b>구성</b><strong>FL1~FL4</strong><span>총 4개 구역</span></li>
+                    <li><b>접근성</b><strong>남춘천 IC 3분</strong><span>서울양양고속도로</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1242,7 +1256,6 @@
             <div class="dz-zone rv" id="z04" style="--c: var(--color-district-mice)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>04</b>바이오MICE 클러스터</h3>
-                <p class="dz-area-big">128,634㎡ (약 38,912평)</p>
                 <p class="dz-h">지속가능한 바이오 · 헬스 산업 커뮤니티 조성</p>
                 <p class="dz-s">일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성</p>
               </div>
@@ -1266,12 +1279,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>주요 시설</b><span>과학자마을 · 의료시설 · MICE 복합용지</span></li><li><b>구역 구성</b><span>Bio1 · Bio2 · Bio3 · Bio4 (4개 구역)</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>건폐율</dt><dd>70%</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 3.9만평</strong><span>128,634㎡ (약 38,912평)</span></li>
+                    <li><b>용도지역</b><strong>복합용지</strong><span>MICE · 의료시설 등 · 건폐율 70%</span></li>
+                    <li><b>구성</b><strong>BIO1~BIO4</strong><span>총 4개 구역</span></li>
+                    <li><b>특구</b><strong>AI 헬스케어</strong><span>국가첨단전략산업</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1335,7 +1351,6 @@
             <div class="dz-zone rv" id="z05" style="--c: var(--color-district-biz)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>05</b>비즈니스 콤플렉스</h3>
-                <p class="dz-area-big">55,703㎡ (약 16,850평)</p>
                 <p class="dz-h">상업 · 업무 · 문화가 융합된 강원 관문</p>
                 <p class="dz-s">B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점 · 직 · 주 · 락 중심 주민친화적 상권 조성</p>
               </div>
@@ -1359,12 +1374,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>구역 구성</b><span>업무시설 · 상업시설 · 문화시설</span></li><li><b>용도지역</b><span>일반상업지역</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>건폐율 / 용적률</dt><dd>80% / 600%</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 1.7만평</strong><span>55,703㎡ (약 16,850평)</span></li>
+                    <li><b>용도지역</b><strong>일반상업지역</strong><span>건폐율 80% · 용적률 600%</span></li>
+                    <li><b>업무시설</b><strong>29,583㎡</strong><span>8,949평</span></li>
+                    <li><b>상업시설</b><strong>26,120㎡</strong><span>7,901평</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1404,7 +1422,6 @@
             <div class="dz-zone rv" id="z06" style="--c: var(--color-district-housing)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>06</b>하우징 콤플렉스</h3>
-                <p class="dz-area-big">321,307㎡ (97,195평)</p>
                 <p class="dz-h">첨단 기술과 자연을 누리는 하우징 · 시니어 하우징</p>
                 <p class="dz-s">AI · 로보틱스 · 자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징</p>
               </div>
@@ -1428,12 +1445,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>계획 세대수</b><span>6,366세대 (공동주택 4,000 · 시니어하우징 2,000)</span></li><li><b>계획 인구</b><span>15,917명</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>구역 구성</dt><dd>단독주택 · 공동주택 · 근린생활시설 · 주상복합</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 9.7만평</strong><span>321,307㎡ (97,195평)</span></li>
+                    <li><b>주택 유형</b><strong>공동주택 · 시니어하우징</strong><span>단독주택 · 주상복합 · 근린생활시설 포함</span></li>
+                    <li><b>계획 세대</b><strong>6,366세대</strong><span>공동주택 4,000 · 시니어하우징 2,000</span></li>
+                    <li><b>계획 인구</b><strong>15,917명</strong></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1475,7 +1495,6 @@
             <div class="dz-zone rv" id="z07" style="--c: var(--color-district-edu)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>07</b>에듀 콤플렉스</h3>
-                <p class="dz-area-big">90,147㎡ (27,269평)</p>
                 <p class="dz-h">생애 전주기 교육하는 ‘생각하는 도시’ 글로벌</p>
                 <p class="dz-s">춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성 · 유입</p>
               </div>
@@ -1499,12 +1518,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>연계 특구</b><span>에듀포레스트 교육발전특구 춘천</span></li><li><b>구역 구성</b><span>유치원 · 초 · 중 · 고등학교 · 외국교육기관</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>건폐율</dt><dd>50%</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 2.7만평</strong><span>90,147㎡ (27,269평)</span></li>
+                    <li><b>외국인교육기관</b><strong>약 1.2만평</strong><span>40,539㎡ · 건폐율 50%</span></li>
+                    <li><b>도입시설</b><strong>교육시설</strong><span>유 · 초 · 중 · 고 · 외국교육기관</span></li>
+                    <li><b>연계</b><strong>교육발전특구</strong><span>에듀포레스트 춘천 (시범사업)</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
@@ -1547,7 +1569,6 @@
             <div class="dz-zone rv" id="z08" style="--c: var(--color-district-golf)">
               <div class="dz-head">
                 <h3 class="dz-name"><b>08</b>골프레저 콤플렉스</h3>
-                <p class="dz-area-big">942,975㎡ (약 285,250평)</p>
                 <p class="dz-h">바이오 스마트 · 피지컬 AI 기반 웰니스</p>
                 <p class="dz-s">친환경 그린 인프라에서 경험하는 로봇 캐디 · 메디컬 케어 등 미래형 라이프스타일 플랫폼 완성</p>
               </div>
@@ -1571,12 +1592,15 @@
                      같은 부지를 설명하는 값이라 시선이 좌우로 오가지 않는 편이 읽기 쉽다. -->
                 <div class="dz-info">
                   <p class="dz-area-h">부지 개요</p>
-                  <!-- 성격 지표 — 권역마다 다른 값을 개요 맨 앞에 세운다.
-                       표 안에 묻어 두면 8권역이 전부 같은 화면으로 보인다(2026-08-20 지적). -->
-                  <ul class="dz-stats"><li><b>종류</b><span>대중형 18홀 (파72)</span></li><li><b>연장</b><span>6,570m</span></li></ul>
-                  <dl class="dz-spec">
-                    <div><dt>주요 시설</dt><dd>클럽하우스 · 그늘집 · 관리동 · 연습시설</dd></div>
-                  </dl>
+                  <!-- IM 정본(260803) s22~29 의 [부지 개요] 4칸을 그대로 옮긴 것이다 —
+                       라벨 · 큰 값 · 보조값. 권역마다 세 번째 · 네 번째 칸의 라벨이 다르다
+                       (전력 · 산업 연계 · 접근성 · 특구 …) — 이게 권역의 성격을 가른다. -->
+                  <ul class="dz-ov">
+                    <li><b>부지 면적</b><strong>약 28.5만평</strong><span>942,975㎡ (약 285,250평)</span></li>
+                    <li><b>코스 구분</b><strong>대중형 · 18홀</strong><span>PAR 72</span></li>
+                    <li><b>코스 연장</b><strong>6,570m</strong></li>
+                    <li><b>부대시설</b><strong>4대 시설</strong><span>클럽하우스 · 그늘집 · 관리동 · 연습시설</span></li>
+                  </ul>
 
                   <div class="dz-area">
                     <p class="dz-area-h">구역별 면적</p>
