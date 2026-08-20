@@ -160,8 +160,11 @@
 /* 패널 — 배경 박스 없음. 위 라인과의 간격은 패딩 하나로만 잡는다. */
 .dz-panel[hidden] { display: none; }
 .dz-panel:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
-/* JS 가 없으면 8개가 다 보인다 — 그때만 서로 구분선이 필요하다 */
-.dz-panel + .dz-panel { border-top: 1px solid var(--color-line); }
+/* JS 가 없으면 8개가 다 보인다 — **그때만** 서로 구분선이 필요하다.
+   ⚠ `.dz-panel + .dz-panel` 로 쓰면 JS 가 켜진 상태에서도 두 번째 이후 패널이
+     border-top 을 갖게 되어 탭과 콘텐츠 사이에 **1px 틈**이 생긴다(실측으로 잡았다).
+     `:not([hidden])` 두 개를 걸면 '둘 다 보이는' 경우 = JS 없음 에서만 매칭된다. */
+.dz-panel:not([hidden]) + .dz-panel:not([hidden]) { border-top: 1px solid var(--color-line); }
 .dz-zone { padding: clamp(26px, 3vw, 44px) 0 0; }
 
 /* 제목 줄 — 번호 + 권역명 한 줄, 오른쪽에 부지 면적 */
