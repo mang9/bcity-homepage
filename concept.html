@@ -843,12 +843,9 @@
       grid-template-columns: calc(100% - (var(--pw) * 54%)) minmax(0, 1fr);
       column-gap: calc(var(--pw) * clamp(24px, 3.2vw, 60px)); }
 
-    /* 좌 — 큰 이미지 + 그 아래 작은 참고 이미지. 화면 왼쪽 끝까지 나간다. */
-    .lv-frame { display: flex; flex-direction: column; min-width: 0; min-height: 0;
-      row-gap: calc(var(--pw) * clamp(10px, 1.2vw, 18px));
-      /* ⚠ 아래 여백이 없으면 작은 이미지의 캡션 마지막 줄이 화면 밑변에 딱 붙어 잘려 보인다. */
-      padding-bottom: calc(var(--pw) * clamp(14px, 1.8vw, 28px)); }
-    .lv-big { position: relative; margin: 0; flex: 1 1 auto; min-height: 0;
+    /* 좌 — 큰 이미지 하나. 화면 왼쪽 끝까지, 위아래로도 화면 높이를 그대로 쓴다.
+       ⚠ 작은 참고 사진은 여기 아래가 아니라 **오른쪽 칸 맨 위**다(2026-08-21 지시). */
+    .lv-big { position: relative; margin: 0; min-width: 0; min-height: 0;
       isolation: isolate; background: var(--color-navy); }
     .lv-big img { display: block; width: 100%; height: 100%; object-fit: cover; }
     /* ⚠ 제목을 이미지 위에 얹으므로 스크림이 필요하다. 아래에서 위로 짙어지게 깔고
@@ -886,8 +883,11 @@
     .lv-side { min-width: 0; min-height: 0; overflow: hidden;
       padding-left: calc(var(--pw) * clamp(20px, 4vw, 56px));
       padding-right: calc(var(--pw) * clamp(34px, 4.6vw, 70px));
-      padding-block: clamp(24px, 3vw, 56px);
-      display: grid; gap: clamp(18px, 2.2vw, 30px);
+      /* ⚠ 여백·행간을 조금씩 조인 이유 — 사진 줄이 오른쪽 칸으로 올라오면서 높이가 189px
+           늘어 1280×720 · 1024×800 에서 마지막 항목이 잘렸다(실측 773/720 · 853/800).
+           사진 높이 상한 · 이 여백 · 항목 간격 · 본문 행간을 함께 조여 되찾았다. */
+      padding-block: clamp(14px, 1.8vw, 40px);
+      display: grid; gap: clamp(12px, 1.5vw, 24px);
       /* ⚠ `safe` 가 핵심이다. 전환 중간에는 칸이 아직 좁아서 내용이 화면보다 길어지는데,
            그냥 `center` 면 **위아래가 같이 잘려** 리드 문장 첫 줄이 사라진다. `safe center`
            는 넘칠 때만 `start` 로 물러나므로 위는 붙어 있고 아래만 잘린다 — 칸이 넓어지면서
@@ -907,17 +907,28 @@
     .lv-thumbs li { --r: clamp(0, calc((var(--p, 1) - var(--d, 0)) * 5.5), 1);
       opacity: var(--r);
       transform: translateX(calc((1 - var(--r)) * clamp(16px, 2vw, 34px))); }
-    .lv-side-lead { --d: .40; }
-    .lv-facts li:nth-child(1) { --d: .46; }
-    .lv-facts li:nth-child(2) { --d: .51; }
-    .lv-facts li:nth-child(3) { --d: .56; }
-    .lv-facts li:nth-child(4) { --d: .61; }
-    .lv-thumbs li:nth-child(1) { --d: .66; }
-    .lv-thumbs li:nth-child(2) { --d: .71; }
+    /* 등장 순서는 **자리 순서**로 정한다 — 섹션마다 사진이 위에 있기도 하고 아래에 있기도
+       하므로(레퍼런스처럼 변주를 준다) 요소 종류로 지연을 박으면 순서가 뒤집힌다.
+       `.lv-side` 의 몇 번째 자식인지로 묶음 지연 `--dg` 를 주고, 묶음 안에서 `--i` 로 조금씩 민다.
+       가장 늦은 것 = 세 번째 묶음(.58) + 3항목(.105) = .685 → 기울기 5.5 로 .87 에 끝난다. */
+    .lv-side > :nth-child(1) { --dg: .38; }
+    .lv-side > :nth-child(2) { --dg: .48; }
+    .lv-side > :nth-child(3) { --dg: .58; }
+    .lv-side-lead { --d: var(--dg); }
+    .lv-facts li  { --d: calc(var(--dg) + var(--i, 0) * .035); }
+    .lv-thumbs li { --d: calc(var(--dg) + var(--i, 0) * .05); }
+    .lv-facts li:nth-child(2),  .lv-thumbs li:nth-child(2) { --i: 1; }
+    .lv-facts li:nth-child(3) { --i: 2; }
+    .lv-facts li:nth-child(4) { --i: 3; }
 
     /* 항목 — 카드가 아니다. 2열, 세로 괘선 하나로만 나눈다. */
     .lv-facts { list-style: none; margin: 0; padding: 0; display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 1.8vw, 26px); }
+      grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 24px); }
+    /* 03 전용 — 항목이 셋이라 한 줄에 놓인다. 그만큼 세로가 짧아져 큰 사진을 받을 수 있다.
+       ⚠ 1280px 아래에서는 칸이 140px 대로 좁아져 한글이 8~9자마다 끊긴다 → 2열로 돌린다. */
+    @media (min-width: 1280px) {
+      .lv-facts--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
     .lv-fact { min-width: 0; padding-left: clamp(13px, 1.4vw, 20px);
       border-left: 1px solid var(--color-line); }
     .lv-fact-t { margin: 0; font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
@@ -925,31 +936,70 @@
     .lv-fact-h { display: block; margin-top: 7px; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(14px, 1.1vw, 16.5px); line-height: 1.45; letter-spacing: -.015em;
       word-break: keep-all; }
-    .lv-fact-d { margin: 8px 0 0; font-size: 13px; line-height: 1.8;
+    .lv-fact-d { margin: 7px 0 0; font-size: 13px; line-height: 1.7;
       color: var(--color-text-muted); word-break: keep-all; }
+    /* ⚠ 1200px 아래에서는 항목 칸이 200px 대로 좁아져 같은 글에 줄 수가 늘어난다.
+         한 단 내려야 세로가 짧은 창(1152×720)에서 마지막 항목이 안 잘린다(실측 14px 부족). */
+    @media (max-width: 1200px) {
+      .lv-fact-d { font-size: 12.5px; }
+    }
 
-    /* 작은 참고 이미지 — 큰 이미지 아래. p=0 에서는 높이 0 으로 접혀 있다가 함께 열린다.
-       ⚠ `max-height` 를 p=1 에서 실제 높이보다 넉넉하게 둔다. 모자라면 최종 상태에서
-         캡션이 잘린다 — 열리는 동안만 잘려야 한다. */
+    /* 작은 참고 사진 — 오른쪽 칸 **맨 위, 오른쪽 끝에 붙여** 두 장(2026-08-21 지시).
+       본문 폭을 다 쓰지 않고 오른쪽 위 한 귀퉁이를 잡는다 — 레퍼런스와 같은 자리다.
+       ⚠ 폭을 `min(100%, …)` 로 묶고 `margin-inline-start: auto` 로 밀어 붙인다.
+         `justify-content: end` 로는 안 된다 — 트랙이 이미 칸 전체를 채우기 때문이다.
+       ⚠ 높이를 `vh` 로도 묶는다. 폭만 보고 정하면 세로가 짧은 화면(720)에서 이 줄이
+         본문을 밀어내 마지막 항목이 잘린다(§11.56 의 높이 예산). */
     .lv-thumbs { list-style: none; margin: 0; padding: 0; display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 22px);
-      flex: 0 0 auto; overflow: hidden;
-      /* ⚠ 이 선반은 `--pw`(자리 잡기)가 아니라 **자기 등장 시점**에 열려야 한다. `--pw` 에
-           걸었더니 자리는 이미 비워졌는데 사진은 아직 안 나타나서, 큰 이미지가 274px
-           줄어든 채 그 아래가 빈 채로 한동안 남았다(실측). 아래 li 의 `--d`(.66/.71)보다
-           살짝 앞선 .60 에서 열리기 시작해 사진과 같이 채워진다. */
-      max-height: calc(clamp(0, calc((var(--p, 1) - .60) * 5.5), 1) * 34vh); }
+      align-items: start; gap: clamp(10px, 1.1vw, 16px); }
     .lv-thumbs figure { margin: 0; }
-    .lv-thumbs img { display: block; width: 100%; aspect-ratio: 16 / 10; height: auto;
+    .lv-thumbs img { display: block; width: 100%; height: auto;
       object-fit: cover; border-radius: var(--radius-md); background: var(--color-bg); }
-    .lv-thumbs figcaption { margin-top: 8px; font-size: 12px; line-height: 1.5;
+
+    /* 01 — 상단 우측, 두 장을 계단식으로. 레퍼런스 #골든 트라이앵글 의 배치다
+       (실측 305x137 두 장이 +168 오른쪽 · +148 아래로 엇갈려 있었다).
+       ⚠ 겹치게까지 하지 않는다 — 사진이 서로를 가리면 캡션 읽는 순서가 무너진다. */
+    .lv-thumbs--stagger { grid-template-columns: repeat(2, minmax(0, 1fr));
+      inline-size: min(100%, clamp(300px, 30vw, 430px)); margin-inline-start: auto; }
+    .lv-thumbs--stagger img { aspect-ratio: 16 / 10; max-block-size: 11vh; }
+    .lv-thumbs--stagger li:nth-child(2) { margin-top: clamp(14px, 1.8vw, 34px); }
+
+    /* 02 — 하단 우측, 폭이 다른 두 장을 같은 높이로. 레퍼런스 #스카이라인 의 배치다
+       (실측 146x200 + 218x200 — 높이는 같고 폭만 다르다).
+       ⚠ 높이를 직접 주고 `aspect-ratio` 를 쓰지 않는다. 비율로 맞추면 폭이 다른 만큼
+         높이도 달라져 아래가 어긋난다 — 잘라내는 건 `object-fit: cover` 가 한다. */
+    .lv-thumbs--uneven { grid-template-columns: minmax(0, .62fr) minmax(0, 1fr);
+      inline-size: min(100%, clamp(300px, 33vw, 470px)); margin-inline-start: auto; }
+    .lv-thumbs--uneven img { block-size: clamp(112px, 15vh, 190px); }
+
+    /* 03 — 상단 우측, 큰 판 하나. 레퍼런스 COMPLEX PLAN 과 같다(1장 + 캡션 + 본문 3열).
+       ⚠ 사진을 그냥 위에 얹으면 **왼쪽 위가 빈다.** 레퍼런스도 그 자리에 카피를 두므로
+         이 섹션만 오른쪽 칸을 [리드 | 사진] 2단으로 짜고 항목은 아래 줄에 걸친다.
+         덕분에 리드 한 줄만큼 세로도 줄어든다(실측 -80px). */
+    .lv-thumbs--solo { grid-template-columns: minmax(0, 1fr);
+      inline-size: min(100%, clamp(260px, 27vw, 390px)); margin-inline-start: auto; }
+    .lv-thumbs--solo img { aspect-ratio: 4 / 3; max-block-size: 17vh; }
+    .lv-side:has(.lv-thumbs--solo) { grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+      column-gap: clamp(18px, 2.2vw, 40px); }
+    .lv-side:has(.lv-thumbs--solo) .lv-thumbs--solo { grid-area: 1 / 2; }
+    .lv-side:has(.lv-thumbs--solo) .lv-side-lead { grid-area: 1 / 1; align-self: center; }
+    .lv-side:has(.lv-thumbs--solo) .lv-facts { grid-area: 2 / 1 / 3 / 3; }
+
+    /* 04 — 하단 전폭, 균등한 두 장. 02 와 달리 오른쪽으로 몰지 않고 본문 폭을 다 쓴다. */
+    .lv-thumbs--even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .lv-thumbs--even img { aspect-ratio: 16 / 10; max-block-size: 11vh; }
+    .lv-thumbs figcaption { margin-top: 7px; font-size: 11.5px; line-height: 1.45;
       color: var(--color-text-muted); word-break: keep-all; }
 
     /* ── 정주환경 — 고정 구간(런웨이). 여기서만 스크롤 전환이 일어난다 ──────────
        섹션 높이 = 화면 하나 + 런웨이. 화면 하나는 stage 가 sticky 로 붙잡고,
        런웨이만큼 스크롤되는 사이에 `--p` 가 0 → 1 로 오른다. 뒤쪽 여유(`lvstate.js` 의
        가속 구간 밖)는 완성된 2단 화면을 잠깐 볼 시간이다. */
-    @media (min-width: 1024px) {
+    /* ⚠ **높이 하한이 있다.** 이 짜임은 화면 하나에 [이미지 | 리드 + 항목 + 사진] 을 담으므로
+         세로가 짧으면 마지막 항목이 잘린다(실측: 1024×640 에서 128px, 1152×720 에서 14px 넘침).
+         680px 아래에서는 전환을 걷고 쌓기로 되돌린다 — 잘리는 것보다 페이지가 길어지는 게 낫다.
+       ⚠ `lvstate.js` 의 꺼짐 조건이 이 두 값과 **같아야 한다.** */
+    @media (min-width: 1024px) and (min-height: 680px) {
       /* ⚠ `.sec` 의 상하 여백(최대 112px)을 **반드시 지운다.** 남겨 두면 고정이 그만큼
            늦게 걸려 이미지 위로 배경색 띠가 지나가고, 섹션 끝에도 빈 띠가 남는다. */
       .lv-ed { --lv-run: 88vh; padding: 0;
@@ -971,7 +1021,40 @@
       .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(48px, 5.2vw, 88px); }
       .lv-stage { position: static; height: auto; }
       .lv-big img { height: auto; aspect-ratio: 4 / 5; }
-      .lv-thumbs { max-height: none; }
+    }
+
+    /* 정주환경 — 전환을 하지 않는 조건: **좁거나(≤1023px) 짧을 때(≤679px).**
+       [이미지] 위 [콘텐츠] 아래로 쌓아 내용이 하나도 잘리지 않게 한다.
+       ⚠ 이 조건이 `lvstate.js` 의 꺼짐 조건과 같아야 한다. 어긋나면 JS 는 `--p` 를 계속
+         넣는데 레이아웃은 1단이라 내용이 반투명하게 남는다. */
+    @media (max-width: 1023px), (max-height: 679px) {
+      .lv-ed { min-height: 0; padding-top: clamp(48px, 5.2vw, 88px); }
+      .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(48px, 5.2vw, 88px); }
+      .lv-stage { position: static; height: auto; }
+      .lv-split { grid-template-columns: minmax(0, 1fr); column-gap: 0;
+        row-gap: clamp(18px, 2.6vw, 30px); }
+      .lv-big img { height: auto; aspect-ratio: 16 / 10; }
+      .lv-big-tx { padding-left: clamp(20px, 2.6vw, 44px); }
+      .lv-big-h { font-size: clamp(22px, 2.5vw, 40px); }
+      .lv-side { padding-inline: clamp(20px, 4vw, 56px); padding-block: 0; }
+      .lv-facts { grid-template-columns: minmax(0, 1fr); }
+      /* 1단에서는 오른쪽으로 몰거나 계단식으로 둘 이유가 없다 — 본문 폭을 그대로 쓴다 */
+      .lv-thumbs { inline-size: 100%; margin-inline-start: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lv-thumbs--solo { grid-template-columns: minmax(0, 1fr); }
+      /* 03 의 [리드 | 사진] 2단도 되돌린다 — 배치를 지우지 않으면 사진이 2열에 남아 잘린다 */
+      .lv-side:has(.lv-thumbs--solo) { grid-template-columns: minmax(0, 1fr); }
+      .lv-side:has(.lv-thumbs--solo) .lv-thumbs--solo,
+      .lv-side:has(.lv-thumbs--solo) .lv-side-lead,
+      .lv-side:has(.lv-thumbs--solo) .lv-facts { grid-area: auto; }
+      .lv-thumbs img { max-block-size: none; block-size: auto; aspect-ratio: 16 / 10; }
+      .lv-thumbs--stagger li:nth-child(2) { margin-top: 0; }
+      /* 1단에서는 등장 순서를 매길 기준이 없다 — 전부 제자리에 둔다 */
+      .lv-side-lead,
+      .lv-fact,
+      .lv-thumbs li { opacity: 1; transform: none; }
+      /* 세로 라벨은 좁은 화면에서 자리만 차지한다 */
+      .lv-ed-rail { display: none; }
     }
 
     @media (max-width: 1200px) {
@@ -983,28 +1066,6 @@
       .cx-dia { max-width: 560px; margin-inline: auto; }
       /* 축 섹션 — 사진 칸이 좁아지면 [3항목] 아래로 내린다 */
       .cc-row { grid-template-columns: minmax(0, 1fr); }
-      /* 정주환경 — 고정도 전환도 하지 않고 [이미지] 위 [콘텐츠] 아래로 쌓는다. 이 규칙이
-         없으면 390px 에서 두 칸이 그대로 남아 한글이 3~4자마다 끊긴다(§11.54 에서 실측).
-         ⚠ `lvstate.js` 의 꺼짐 조건(`max-width: 1023px`)과 **여기 폭이 같아야 한다.**
-           어긋나면 JS 가 `--p` 를 계속 넣는데 레이아웃은 1단이라 내용이 반투명하게 남는다. */
-      .lv-ed { min-height: 0; padding-top: clamp(48px, 5.2vw, 88px); }
-      .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(48px, 5.2vw, 88px); }
-      .lv-stage { position: static; height: auto; }
-      .lv-split { grid-template-columns: minmax(0, 1fr); column-gap: 0;
-        row-gap: clamp(18px, 2.6vw, 30px); }
-      .lv-frame { display: block; }
-      .lv-big img { height: auto; aspect-ratio: 16 / 10; }
-      .lv-big-tx { padding-left: clamp(20px, 2.6vw, 44px); }
-      .lv-big-h { font-size: clamp(22px, 2.5vw, 40px); }
-      .lv-side { padding-inline: clamp(20px, 4vw, 56px); padding-block: 0; }
-      .lv-facts { grid-template-columns: minmax(0, 1fr); }
-      .lv-thumbs { max-height: none; margin-top: clamp(18px, 2.6vw, 30px); }
-      /* 1단에서는 등장 순서를 매길 기준이 없다 — 전부 제자리에 둔다 */
-      .lv-side-lead,
-      .lv-fact,
-      .lv-thumbs li { opacity: 1; transform: none; }
-      /* 세로 라벨은 좁은 화면에서 자리만 차지한다 */
-      .lv-ed-rail { display: none; }
       /* 1단에서는 3등분하지 않는다 — 사진 칸과 나란하지 않으므로 기준이 없다 */
       .cc-side { grid-auto-rows: auto; }
       /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */

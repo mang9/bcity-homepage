@@ -41,14 +41,23 @@ const KEEP_UNUSED = new Map([
 const read = (...p) => readFileSync(join(...p), 'utf8');
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
 
+/** 선언 블록 안(속성값)만 비운다 — `content: ".foo"` 같은 문자열 오탐을 막는 게 목적이다.
+ *  ⚠ `{[^}]*}` 한 방으로 지우면 안 된다. `@media (…) { .foo { … } }` 에서 여는 중괄호가
+ *    미디어 쪽이라 **첫 규칙의 선택자까지 함께 삼킨다.** 지금까지 안 드러난 건 미디어
+ *    블록의 첫 규칙들이 전부 최상위에도 정의돼 있었기 때문이고, 미디어 안에만 있는
+ *    `.lv-facts--3` 에서 처음 걸렸다(2026-08-21). 안쪽부터 한 겹씩 비워 중첩을 지킨다. */
+const stripBlocks = (s) => {
+  let prev;
+  do { prev = s; s = s.replace(/\{[^{}]*\}/g, '{}'); } while (s !== prev);
+  return s;
+};
+
 /** CSS 파일들에서 클래스 선택자를 모은다 */
 function definedIn(files) {
   const out = new Set();
   for (const f of files) {
     const css = stripComments(read(SUB, 'css', f + '.css'));
-    // 선언 블록 안(속성값)은 보지 않는다 — content:".foo" 같은 문자열 오탐 방지
-    const selectors = css.replace(/\{[^}]*\}/g, '{}');
-    for (const m of selectors.matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
+    for (const m of stripBlocks(css).matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
   }
   return out;
 }
@@ -90,7 +99,7 @@ function svgLocalClasses(slug) {
   const out = new Set();
   for (const svg of html.matchAll(/<svg[\s\S]*?<\/svg>/g)) {
     for (const st of svg[0].matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
-      const selectors = stripComments(st[1]).replace(/\{[^}]*\}/g, '{}');
+      const selectors = stripBlocks(stripComments(st[1]));
       for (const m of selectors.matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
     }
   }

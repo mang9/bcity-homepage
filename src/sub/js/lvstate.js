@@ -16,7 +16,10 @@
   if (!secs.length) return;
 
   var mqReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  var mqNarrow = window.matchMedia && window.matchMedia('(max-width: 1023px)');
+  /* ⚠ CSS 의 `@media (max-width: 1023px), (max-height: 679px)` 와 **같은 조건**이다.
+     한쪽만 바꾸면 JS 는 진행률을 넣는데 레이아웃은 쌓기라 내용이 반투명하게 남는다. */
+  var mqNarrow = window.matchMedia
+    && window.matchMedia('(max-width: 1023px), (max-height: 679px)');
 
   function off() {
     return (mqReduce && mqReduce.matches) || (mqNarrow && mqNarrow.matches);

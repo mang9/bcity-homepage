@@ -28,19 +28,20 @@
         <p class="lv-ed-rail" aria-hidden="true">BUSINESS ENVIRONMENT</p>
 
         <div class="lv-split">
-          <!-- 좌: 큰 이미지 + 그 아래 작은 참고 이미지 -->
-          <div class="lv-frame">
-            <figure class="lv-big">
-              <img src="assets/img-street.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="업무시설이 늘어선 도시 가로" />
-              <div class="lv-big-tx">
-                <p class="lv-big-eye"><b>01</b>Business Environment</p>
-                <h3 class="lv-big-h">비즈니스 환경<br /><em>일하기 좋은 도시</em></h3>
-                <p class="lv-big-tags">#국가급특구 #직주근접 #광역접근성 #산학연협력</p>
-              </div>
-              <figcaption><b>비즈니스</b>업무 · 상업 시설이 이어지는 도시 가로</figcaption>
-            </figure>
+          <!-- 좌: 큰 이미지. 화면 높이를 그대로 쓴다. -->
+          <figure class="lv-big">
+            <img src="assets/img-street.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="업무시설이 늘어선 도시 가로" />
+            <div class="lv-big-tx">
+              <p class="lv-big-eye"><b>01</b>Business Environment</p>
+              <h3 class="lv-big-h">비즈니스 환경<br /><em>일하기 좋은 도시</em></h3>
+              <p class="lv-big-tags">#국가급특구 #직주근접 #광역접근성 #산학연협력</p>
+            </div>
+            <figcaption><b>비즈니스</b>업무 · 상업 시설이 이어지는 도시 가로</figcaption>
+          </figure>
 
-            <ul class="lv-thumbs">
+          <!-- 우: 맨 위에 참고 사진 — 섹션마다 짜임을 달리한다 -->
+          <div class="lv-side">
+            <ul class="lv-thumbs lv-thumbs--stagger">
               <li><figure>
                 <img src="assets/img/gallery/plaza-walk.avif" width="1400" height="764" loading="lazy" decoding="async" alt="보행 데크를 걷는 사람들과 업무 시설" />
                 <figcaption>업무 · 연구 시설을 잇는 보행 가로</figcaption>
@@ -50,10 +51,6 @@
                 <figcaption>단지를 순환하는 자율주행 셔틀</figcaption>
               </figure></li>
             </ul>
-          </div>
-
-          <!-- 우: 스크롤에 따라 차례로 들어오는 내용 -->
-          <div class="lv-side">
             <p class="lv-side-lead">짧아진 출근길, 가까워진 협업, 그리고 일과 삶이 자연스럽게 이어지는 도시. B-CITY는 비즈니스의 새로운 환경을 제안합니다</p>
             <ul class="lv-facts">
               <li class="lv-fact">
@@ -82,6 +79,7 @@
       </div>
     </section>
 
+    <!-- ===== 02 Residential Environment ===== -->
     <section class="sec lv-ed" id="residential">
       <!-- 화면 하나를 붙잡아 두는 무대. 스크롤하는 동안 이 안에서 이미지가 왼쪽으로
            좁혀지고 오른쪽에 내용이 들어온다 (진행률은 js/lvstate.js 의 --p). -->
@@ -89,31 +87,18 @@
         <p class="lv-ed-rail" aria-hidden="true">RESIDENTIAL ENVIRONMENT</p>
 
         <div class="lv-split">
-          <!-- 좌: 큰 이미지 + 그 아래 작은 참고 이미지 -->
-          <div class="lv-frame">
-            <figure class="lv-big">
-              <img src="assets/img/gallery/green-complex.avif" width="1400" height="764" loading="lazy" decoding="async" alt="수변과 녹지에 맞닿은 주거 구역 조감" />
-              <div class="lv-big-tx">
-                <p class="lv-big-eye"><b>02</b>Residential Environment</p>
-                <h3 class="lv-big-h">주거 환경<br /><em>살기 좋은 도시</em></h3>
-                <p class="lv-big-tags">#스마트 라이프 #보행친화도시 #소셜믹스 #Green &amp; Blue</p>
-              </div>
-              <figcaption><b>주거</b>수변 · 녹지와 맞닿은 주거 콤플렉스</figcaption>
-            </figure>
+          <!-- 좌: 큰 이미지. 화면 높이를 그대로 쓴다. -->
+          <figure class="lv-big">
+            <img src="assets/img/gallery/green-complex.avif" width="1400" height="764" loading="lazy" decoding="async" alt="수변과 녹지에 맞닿은 주거 구역 조감" />
+            <div class="lv-big-tx">
+              <p class="lv-big-eye"><b>02</b>Residential Environment</p>
+              <h3 class="lv-big-h">주거 환경<br /><em>살기 좋은 도시</em></h3>
+              <p class="lv-big-tags">#스마트 라이프 #보행친화도시 #소셜믹스 #Green &amp; Blue</p>
+            </div>
+            <figcaption><b>주거</b>수변 · 녹지와 맞닿은 주거 콤플렉스</figcaption>
+          </figure>
 
-            <ul class="lv-thumbs">
-              <li><figure>
-                <img src="assets/img-mirror.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="스마트 미러로 정보를 확인하는 실내" />
-                <figcaption>스마트 미러로 확인하는 일상 정보</figcaption>
-              </figure></li>
-              <li><figure>
-                <img src="assets/img-family.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="횡단보도를 건너는 가족" />
-                <figcaption>보행 중심 가로를 걷는 가족</figcaption>
-              </figure></li>
-            </ul>
-          </div>
-
-          <!-- 우: 스크롤에 따라 차례로 들어오는 내용 -->
+          <!-- 우: 아래쪽에 참고 사진 — 섹션마다 짜임을 달리한다 -->
           <div class="lv-side">
             <p class="lv-side-lead">자연이 가까운 일상, 걸어서 누리는 편안함, 그리고 첨단 기술이 함께하는 주거 공간. B-CITY는 매일의 삶을 더 풍요롭게 만듭니다</p>
             <ul class="lv-facts">
@@ -138,11 +123,22 @@
                 <p class="lv-fact-d">B-CITY는 도시 전체 면적의 26%가 공원과 녹지로, 어디서든 자연과 가까이 닿아 있습니다. 수변을 따라 산책하고, 도심 한가운데 펼쳐진 녹지를 가로질러 출근하며, 주말이면 바로 옆 자연으로 떠납니다. 자연이 가까운 만큼 일상은 더 깊어집니다.</p>
               </li>
             </ul>
+            <ul class="lv-thumbs lv-thumbs--uneven">
+              <li><figure>
+                <img src="assets/img-mirror.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="스마트 미러로 정보를 확인하는 실내" />
+                <figcaption>스마트 미러로 확인하는 일상 정보</figcaption>
+              </figure></li>
+              <li><figure>
+                <img src="assets/img-family.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="횡단보도를 건너는 가족" />
+                <figcaption>보행 중심 가로를 걷는 가족</figcaption>
+              </figure></li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- ===== 03 Educational Environment ===== -->
     <section class="sec lv-ed" id="education">
       <!-- 화면 하나를 붙잡아 두는 무대. 스크롤하는 동안 이 안에서 이미지가 왼쪽으로
            좁혀지고 오른쪽에 내용이 들어온다 (진행률은 js/lvstate.js 의 --p). -->
@@ -150,34 +146,27 @@
         <p class="lv-ed-rail" aria-hidden="true">EDUCATIONAL ENVIRONMENT</p>
 
         <div class="lv-split">
-          <!-- 좌: 큰 이미지 + 그 아래 작은 참고 이미지 -->
-          <div class="lv-frame">
-            <figure class="lv-big">
-              <img src="assets/img/overview/education-campus.avif" width="1200" height="900" loading="lazy" decoding="async" alt="캠퍼스 앞마당에서 프로젝트 학습 중인 국제 학생들" />
-              <div class="lv-big-tx">
-                <p class="lv-big-eye"><b>03</b>Educational Environment</p>
-                <h3 class="lv-big-h">교육 환경<br /><em>배움이 넘치는 도시</em></h3>
-                <p class="lv-big-tags">#생애전주기 교육 #글로벌교육 #개방형교육</p>
-              </div>
-              <figcaption><b>교육</b>외국 교육기관을 포함한 교육시설과 캠퍼스 생활권</figcaption>
-            </figure>
+          <!-- 좌: 큰 이미지. 화면 높이를 그대로 쓴다. -->
+          <figure class="lv-big">
+            <img src="assets/img/overview/education-campus.avif" width="1200" height="900" loading="lazy" decoding="async" alt="캠퍼스 앞마당에서 프로젝트 학습 중인 국제 학생들" />
+            <div class="lv-big-tx">
+              <p class="lv-big-eye"><b>03</b>Educational Environment</p>
+              <h3 class="lv-big-h">교육 환경<br /><em>배움이 넘치는 도시</em></h3>
+              <p class="lv-big-tags">#생애전주기 교육 #글로벌교육 #개방형교육</p>
+            </div>
+            <figcaption><b>교육</b>외국 교육기관을 포함한 교육시설과 캠퍼스 생활권</figcaption>
+          </figure>
 
-            <ul class="lv-thumbs">
-              <li><figure>
-                <img src="assets/img/gallery/loop-road.avif" width="1400" height="764" loading="lazy" decoding="async" alt="층층이 이어지는 곡선형 보행 데크" />
-                <figcaption>층층이 이어지는 보행 데크</figcaption>
-              </figure></li>
+          <!-- 우: 맨 위에 참고 사진 — 섹션마다 짜임을 달리한다 -->
+          <div class="lv-side">
+            <ul class="lv-thumbs lv-thumbs--solo">
               <li><figure>
                 <img src="assets/img/gallery/aerial-city.avif" width="1400" height="764" loading="lazy" decoding="async" alt="유리 회랑에서 바라본 도시" />
                 <figcaption>유리 회랑에서 바라본 도시</figcaption>
               </figure></li>
             </ul>
-          </div>
-
-          <!-- 우: 스크롤에 따라 차례로 들어오는 내용 -->
-          <div class="lv-side">
             <p class="lv-side-lead">유치원부터 외국교육기관까지, 도시 안에서 이어지는 배움. 강원대 · 한림대 등 지역 대학과 함께하는 산 · 학 협력, 그리고 글로벌 인재가 모이는 교육 환경</p>
-            <ul class="lv-facts">
+            <ul class="lv-facts lv-facts--3">
               <li class="lv-fact">
                 <p class="lv-fact-t">#생애전주기 교육</p>
                 <b class="lv-fact-h">유치원부터 고등학교까지, 한 도시 안에서</b>
@@ -199,6 +188,7 @@
       </div>
     </section>
 
+    <!-- ===== 04 Culture &amp; Leisure ===== -->
     <section class="sec lv-ed" id="culture">
       <!-- 화면 하나를 붙잡아 두는 무대. 스크롤하는 동안 이 안에서 이미지가 왼쪽으로
            좁혀지고 오른쪽에 내용이 들어온다 (진행률은 js/lvstate.js 의 --p). -->
@@ -206,31 +196,18 @@
         <p class="lv-ed-rail" aria-hidden="true">CULTURE &amp; LEISURE</p>
 
         <div class="lv-split">
-          <!-- 좌: 큰 이미지 + 그 아래 작은 참고 이미지 -->
-          <div class="lv-frame">
-            <figure class="lv-big">
-              <img src="assets/img-park.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="해질 무렵 사람들이 모인 도심 광장" />
-              <div class="lv-big-tx">
-                <p class="lv-big-eye"><b>04</b>Culture &amp; Leisure</p>
-                <h3 class="lv-big-h">문화시설<br /><em>쉼이 있는 도시</em></h3>
-                <p class="lv-big-tags">#골프레저 #문화광장 #그린네트워크 #관광인프라</p>
-              </div>
-              <figcaption><b>문화 · 여가</b>전시 · 공연이 이어지는 도심 광장</figcaption>
-            </figure>
+          <!-- 좌: 큰 이미지. 화면 높이를 그대로 쓴다. -->
+          <figure class="lv-big">
+            <img src="assets/img-park.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="해질 무렵 사람들이 모인 도심 광장" />
+            <div class="lv-big-tx">
+              <p class="lv-big-eye"><b>04</b>Culture &amp; Leisure</p>
+              <h3 class="lv-big-h">문화시설<br /><em>쉼이 있는 도시</em></h3>
+              <p class="lv-big-tags">#골프레저 #문화광장 #그린네트워크 #관광인프라</p>
+            </div>
+            <figcaption><b>문화 · 여가</b>전시 · 공연이 이어지는 도심 광장</figcaption>
+          </figure>
 
-            <ul class="lv-thumbs">
-              <li><figure>
-                <img src="assets/img/gallery/open-stage.avif" width="1398" height="790" loading="lazy" decoding="async" alt="야간 야외 공연이 열린 중앙 공원" />
-                <figcaption>중앙 공원 야외 공연</figcaption>
-              </figure></li>
-              <li><figure>
-                <img src="assets/img/gallery/golf-green.avif" width="1398" height="790" loading="lazy" decoding="async" alt="단지 옆 골프 코스에서 라운딩하는 사람" />
-                <figcaption>단지와 맞닿은 골프 코스</figcaption>
-              </figure></li>
-            </ul>
-          </div>
-
-          <!-- 우: 스크롤에 따라 차례로 들어오는 내용 -->
+          <!-- 우: 아래쪽에 참고 사진 — 섹션마다 짜임을 달리한다 -->
           <div class="lv-side">
             <p class="lv-side-lead">일과 가까운 곳에 펼쳐진 자연, 도심 한복판의 문화 광장, 그리고 가까이에서 만나는 골프와 관광 인프라. B-CITY는 일하는 시간만큼 쉬는 시간도 풍요롭게 만듭니다</p>
             <ul class="lv-facts">
@@ -254,6 +231,16 @@
                 <b class="lv-fact-h">가볍게 떠날 수 있는 여행의 도시</b>
                 <p class="lv-fact-d">B-CITY 가까이에는 춘천이 자랑하는 대표 관광 · 레저 명소들이 자리하고 있습니다. 남이섬과 강촌, 김유정 문학촌, 의암호와 소양강, 그리고 비발디파크까지 — 차로 짧은 거리에서 사계절 내내 다채로운 즐거움을 누릴 수 있습니다. 주말마다 떠나는 여행이 멀지 않은 곳에서 시작되는, 관광 인프라가 가까운 도시입니다.</p>
               </li>
+            </ul>
+            <ul class="lv-thumbs lv-thumbs--even">
+              <li><figure>
+                <img src="assets/img/gallery/open-stage.avif" width="1398" height="790" loading="lazy" decoding="async" alt="야간 야외 공연이 열린 중앙 공원" />
+                <figcaption>중앙 공원 야외 공연</figcaption>
+              </figure></li>
+              <li><figure>
+                <img src="assets/img/gallery/golf-green.avif" width="1398" height="790" loading="lazy" decoding="async" alt="단지 옆 골프 코스에서 라운딩하는 사람" />
+                <figcaption>단지와 맞닿은 골프 코스</figcaption>
+              </figure></li>
             </ul>
           </div>
         </div>
