@@ -21,20 +21,37 @@
 .cx-bg { position: absolute; inset: 0; pointer-events: none; }
 .cx-bg img, .cx-bg picture { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cx-bg-grid { object-fit: cover; opacity: .2; }
-.cx-bg-city { object-fit: cover; }
+/* ⚠ 하단 정렬(2026-08-21 지시). 기본 `center` 면 아래가 잘려 도시가 떠 보인다 —
+     `50% 100%` 로 바닥을 섹션 아래에 붙인다. */
+.cx-bg-city { object-fit: cover; object-position: 50% 100%; }
+/* ⚠ 카피 쪽만 배경을 눌러 준다. 도시 일러스트에 진한 파랑(도로 · 수변)이 있어
+     `.lede`(--color-text-muted) 대비가 **1.38** 까지 떨어졌다(실측, 기준 4.5).
+     왼쪽을 거의 불투명하게 덮고 오른쪽(다이어그램 쪽)은 그림을 살린다.
+   ⚠ 리터럴 색을 쓰지 않는다 — `color-mix` 로 `--color-bg` 를 그대로 묻힌다. */
+.cx-bg::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--color-bg) 94%, transparent) 0%,
+    color-mix(in srgb, var(--color-bg) 93%, transparent) 46%,
+    color-mix(in srgb, var(--color-bg) 40%, transparent) 68%,
+    color-mix(in srgb, var(--color-bg) 0%, transparent) 86%); }
 /* 카피·다이어그램은 배경 위로 */
 .cx-top { position: relative; z-index: 1; }
 
 /* 도입부 — [카피 | 4축 허브 다이어그램] 2단.
    ⚠ 다이어그램은 메인 `#concept` 의 `.cn-dia` 를 좁은 칸용으로 줄인 것이다.
      색 · 그라디언트 · 아이콘 4개를 그대로 쓰므로 새 스타일이 아니다. */
-/* ⚠ 카피 칸을 넓게 잡는다. `.92fr / 1.08fr` 이었을 때 제목이
-     `… 산업이 / 성장하는 / AI Living Lab, B-CITY` 세 줄로 접혔다(2026-08-21 지적).
-     제목 서체는 `clamp(26px, 2.5vw, 42px)` 로 화면보다 빠르게 커지므로 1440 에서 특히 좁다 —
-     `1.08fr` 로는 여전히 세 줄이었다(실측). `1.22fr / .78fr` 이어야 한 줄에 들어온다. */
-.cx-top { display: grid; grid-template-columns: minmax(0, 1.17fr) minmax(0, .83fr);
-  gap: clamp(22px, 2.8vw, 48px); align-items: center; }
+/* 카피 칸 — `성장하는` 을 둘째 줄로 내리면서(2026-08-21 지시) 첫 줄이 짧아져
+   칸을 줄일 수 있게 됐다. 남는 폭은 다이어그램이 받는다.
+   ⚠ 두 줄을 지키는 조건은 **둘째 줄**(`성장하는 AI Living Lab, B-CITY`)이다 — 이제 이쪽이 길다.
+     칸을 더 줄이려면 이 줄이 접히는지 반드시 실측할 것. */
+.cx-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(22px, 2.6vw, 44px); align-items: center; }
 .cx-lead { min-width: 0; }
+/* 제목만 이 페이지에서 키운다(2026-08-21 지시) — 공용 `.h2` 는 건드리지 않는다.
+   ⚠ `.cx-lead .h2` 로 범위를 묶어야 다른 서브페이지가 함께 커지지 않는다. */
+/* ⚠ 상한은 **둘째 줄**(`성장하는 AI Living Lab, B-CITY`)이 정한다. 52px 로 뒀더니 1440 에서
+     그 줄이 접혀 제목이 네 줄이 됐다(실측). 1:1 칸에서는 40px 이 상한이다. */
+.cx-lead .h2 { font-size: clamp(27px, 3.05vw, 40px); }
 
 /* ⚠ 모든 좌표는 viewBox 1000x740 비율의 **퍼센트**다. px 로 박으면 칸 폭이 바뀔 때 어긋난다.
    ⚠ 그림이 칸 폭을 다 쓰도록 좌우 배지 중심을 14% · 86% 에 둔다. 전에 27% · 72% 로 뒀더니
