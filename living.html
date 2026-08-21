@@ -1091,7 +1091,13 @@
         min-height: calc(100vh + var(--lv-lap));
         min-height: calc(100svh + var(--lv-lap)); }
       .lv-intro + .lv-ed { margin-top: calc(0px - var(--lv-lap)); }
-      /* 01 은 **아래에서 올라오지 않고 우측에서 겹쳐 들어온다**(2026-08-21 지시).
+      /* 도입부와 01 은 **겹치지 않고 나란히 밀려간다**(2026-08-21 지시) — 01 이 우측에서
+         들어오는 만큼 도입부가 좌측으로 나간다. 두 값이 **같은 진행률(가속)** 이어야
+         맞물린 채로 움직인다. 하나라도 다른 곡선을 쓰면 사이가 벌어지거나 겹친다. */
+      .lv-intro { overflow-x: clip; }
+      .lv-stage--intro { transform: translateX(calc(0px - var(--p, 0) * 100%)); }
+
+      /* 01 은 **아래에서 올라오지 않고 우측에서 들어온다**(2026-08-21 지시).
            가로: 화면 폭만큼 오른쪽에 두고 들어온다 — 가속 진행률(`--pin`)을 쓴다.
            세로: 겹침 때문에 무대의 자연 위치가 화면 아래 `--lv-lap` 만큼 내려가 있다.
                  그만큼 **정확히 상쇄**해 처음부터 화면 위에 붙어 있게 한다.
@@ -1105,11 +1111,9 @@
         transform: translate(calc((1 - var(--pin, 1)) * 100%),
                              calc(0px - (1 - var(--pinl, 1)) * var(--lv-lap))); }
       .lv-stage--intro { align-items: center; }
-      /* ⚠ 카피를 **완전히 없애지 않는다.** 진행률은 런웨이의 68% 에서 이미 1 이 되므로
-           (lvstate.js 의 가속 구간) 0 까지 빼면 남은 32% 동안 위쪽이 빈 화면이 된다.
-           가리는 일은 올라오는 이미지가 한다 — 여기서는 살짝 물러나게만 한다. */
-      .lv-intro-tx { opacity: calc(1 - var(--p, 0) * .5);
-        transform: translateY(calc(var(--p, 0) * -3vh)); }
+      /* ⚠ 카피에 따로 퇴장 모션을 주지 않는다. 무대가 통째로 좌측으로 밀려 나가므로
+           카피도 같이 나간다. 여기서 또 투명도를 빼면 밀려 나가는 판이 반투명해져
+           "밀린다" 가 아니라 "사라진다" 로 읽힌다. 등장은 자식의 `.rv rv-rise` 가 맡는다. */
     }
     /* 동작 최소화 — 고정도 전환도 하지 않는다. `--p` 가 비어 있어 되돌림 값 1 이 쓰이므로
        곧바로 최종 2단 화면이고, 내용은 전부 그대로 보인다. */
@@ -1301,18 +1305,16 @@
       <div class="lv-stage lv-stage--intro">
         <img class="lv-intro-bg" src="assets/img-wide.jpg" width="1920" height="820"
              loading="lazy" decoding="async" alt="" aria-hidden="true" />
+        <!-- 글자는 이미지에서 떠오른다(`.rv rv-rise`). 나가는 쪽은 따로 두지 않는다 —
+             무대가 통째로 좌측으로 밀려 나가므로 카피도 같이 나간다.
+             ⚠ 한 요소에 등장과 퇴장을 겹치지 말 것. 관찰자의 transform 과 진행률의
+               transform 이 서로를 덮는다(§11.56). -->
         <div class="wrap">
-          <!-- 글자는 이미지에서 떠오른다 — `.rv rv-rise` 가 아래에서 올라오며 나타나고,
-               나가는 쪽(스크롤)은 부모 `.lv-intro-tx` 가 `--p` 로 맡는다.
-               ⚠ 둘을 **같은 요소에 겹치지 않는다.** 한 요소에 얹으면 관찰자의 transform 과
-                 진행률의 transform 이 서로를 덮는다(§11.56). 부모/자식으로 나눈다. -->
-          <div class="lv-intro-tx">
-            <p class="eyebrow rv rv-rise"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
-            <h2 class="h2 rv rv-rise">일과 삶이 조화롭게 어우러지는 곳<br />
-              비즈니스 · 주거 · 교육 · 문화가<br />
-              하나로 완성되는 <em>자족도시</em></h2>
-            <p class="lede rv rv-rise">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
-          </div>
+          <p class="eyebrow rv rv-rise"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
+          <h2 class="h2 rv rv-rise">일과 삶이 조화롭게 어우러지는 곳<br />
+            비즈니스 · 주거 · 교육 · 문화가<br />
+            하나로 완성되는 <em>자족도시</em></h2>
+          <p class="lede rv rv-rise">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
         </div>
       </div>
     </section>
