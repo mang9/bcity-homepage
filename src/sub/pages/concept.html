@@ -12,24 +12,75 @@
 -->
     <!-- ===== 도시 컨셉 (스토리보드 v2 slide53~56) ===== -->
     <section class="sec" id="concept">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>CITY CONCEPT</b><span>도시 컨셉</span></p>
-        <h2 class="h2 rv">AI를 기반으로 BIO · 로보틱스 산업이 성장하는<br />
-          <em>AI Living Lab, B-CITY</em></h2>
-        <p class="lede rv">AI DATA · BIO INDUSTRY · PHYSICAL AI · FOOD CLUSTER —
-          4개의 축이 유기적으로 연결되어 완성되는 미래 산업 혁신 허브</p>
+      <div class="wrap cx-top">
+        <div class="cx-lead">
+          <p class="eyebrow rv"><i aria-hidden="true"></i><b>CITY CONCEPT</b><span>도시 컨셉</span></p>
+          <h2 class="h2 rv">AI를 기반으로 BIO · 로보틱스 산업이 성장하는<br />
+            <em>AI Living Lab, B-CITY</em></h2>
+          <p class="lede rv">AI DATA · BIO INDUSTRY · PHYSICAL AI · FOOD CLUSTER —
+            4개의 축이 유기적으로 연결되어 완성되는 미래 산업 혁신 허브</p>
+        </div>
 
-        <!-- 4축 연결 다이어그램 — 최신 기획서(와이어프레임)에 있는 구성이다.
-             네 축이 **한 방향으로 이어지는 흐름**이라는 게 요지라 화살표로 잇는다.
-             ⚠ 화살표는 CSS 로 그린다 — 삼각형 하나라 SVG 가 필요 없다.
-             ⚠ 좁은 화면에서는 세로로 쌓고 화살표도 아래를 향한다. 목록 순서가 곧 흐름이라
-               마크업은 그대로 두고 CSS 만 바꾼다. -->
-        <ol class="cc-flow rv">
-          <li class="cc-flow-i"><b>01</b><span>AI 데이터센터</span></li>
-          <li class="cc-flow-i"><b>02</b><span>BIO INDUSTRY</span></li>
-          <li class="cc-flow-i"><b>03</b><span>PHYSICAL AI</span></li>
-          <li class="cc-flow-i"><b>04</b><span>FOOD CLUSTER</span></li>
-        </ol>
+        <!-- 4축 허브 다이어그램 — 메인페이지 `#concept` 의 `.cn-dia` 를 **좁은 칸용으로 줄인 것**이다
+             (2026-08-21 지시 · 첨부 디자인). 색 · 그라디언트 · 아이콘 4개를 그대로 쓴다:
+               허브   #4A78F2 → #222F8E, 바깥 링 #A4D9FF / 흰 테두리
+               아이콘 linear-gradient(35deg, #4a78f2 14.1%, #27359e 85.9%)
+               오비트 #A9BEEC · 커넥터 #BBCCF0
+             ⚠ 좌표는 viewBox 1000x740 비율의 **퍼센트**다. px 로 박으면 칸 폭이 바뀔 때 어긋난다.
+             ⚠ 일렬 카드(`.cc-flow`)는 제거했다 — 같은 내용을 두 형태로 두지 않는다. -->
+        <div class="cx-dia rv">
+          <svg class="cx-orbit" viewBox="0 0 1000 740" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cxDotG" x1="0" y1="0" x2="0" y2="1">
+                <stop stop-color="#A6C1D4" /><stop offset=".48" stop-color="#80A6C2" /><stop offset="1" stop-color="#B2CADA" />
+              </linearGradient>
+            </defs>
+            <ellipse class="cx-ring" pathLength="1" cx="500" cy="370" rx="360" ry="280"
+                     stroke="#A9BEEC" stroke-opacity=".8" stroke-width="2.6" />
+            <path class="cx-conn" pathLength="1" d="M500 190V245" stroke="#BBCCF0" stroke-width="3" />
+            <path class="cx-conn" pathLength="1" d="M500 495V550" stroke="#BBCCF0" stroke-width="3" />
+            <path class="cx-conn" pathLength="1" d="M240 370H375" stroke="#BBCCF0" stroke-width="3" />
+            <path class="cx-conn" pathLength="1" d="M625 370H760" stroke="#BBCCF0" stroke-width="3" />
+            <circle class="cx-dot" cx="245" cy="172" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
+            <circle class="cx-dot" cx="755" cy="172" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
+            <circle class="cx-dot" cx="245" cy="568" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
+            <circle class="cx-dot" cx="755" cy="568" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
+          </svg>
+
+          <div class="cx-hub">
+            <svg viewBox="0 0 222.75 222.75" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="cxHubG" x1="111.375" y1="210.375" x2="111.375" y2="12.375" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#4A78F2" /><stop offset="1" stop-color="#222F8E" />
+                </linearGradient>
+              </defs>
+              <rect x=".65" y=".65" width="221.45" height="221.45" rx="110.725" fill="#A4D9FF" stroke="#C7D6F5" stroke-width="1.3" />
+              <circle cx="111.375" cy="111.375" r="97.5" fill="url(#cxHubG)" stroke="#fff" stroke-width="3" />
+            </svg>
+            <span class="cx-hub-txt"><b>AI</b><i>Living Lab</i><span>B-CITY</span></span>
+          </div>
+
+          <article class="cx-node cx-node--n">
+            <span class="cx-ic"><img src="assets/icon/concept-aidata.svg?v=2" alt=""
+                   width="31.9" height="29.55" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">AI DATA</p>
+          </article>
+          <article class="cx-node cx-node--w">
+            <span class="cx-ic"><img src="assets/icon/concept-bio.svg?v=2" alt=""
+                   width="16.04" height="32.57" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">BIO<br />INDUSTRY</p>
+          </article>
+          <article class="cx-node cx-node--e">
+            <span class="cx-ic"><img src="assets/icon/concept-physical.svg?v=2" alt=""
+                   width="26.63" height="26.59" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">PHYSICAL AI</p>
+          </article>
+          <article class="cx-node cx-node--s">
+            <span class="cx-ic"><img src="assets/icon/concept-food.svg?v=2" alt=""
+                   width="35.12" height="31.91" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">FOOD<br />CLUSTER</p>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -243,10 +294,7 @@
     <section class="sec">
       <div class="wrap">
         <div class="closer rv">
-          <p>4대 산업이 만드는 <em>하나의 도시</em><br />
-            B-CITY는 대한민국 첨단 산업의 새로운 중심이 됩니다</p>
+          <p>4대 산업이 만드는 하나의 도시, B-CITY는 대한민국 첨단 산업의 <em>새로운 중심</em>이 됩니다</p>
         </div>
-
-        <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
       </div>
     </section>
