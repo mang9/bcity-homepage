@@ -10,13 +10,21 @@
   "js": ["lvstate"]
 }
 -->
-    <!-- ===== 정주환경 (스토리보드 v2 slide77~87) ===== -->
-    <section class="sec" id="living">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
-        <h2 class="h2 rv">일과 삶이 조화롭게 어우러지는 곳<br />
-          비즈니스 · 주거 · 교육 · 문화가 하나로 완성되는 <em>자족도시</em></h2>
-        <p class="lede rv">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
+    <!-- ===== 정주환경 도입부 (스토리보드 v2 slide77~87) =====
+         화면 하나를 온전히 쓰는 장 시작 화면이다. 스크롤하면 이 자리에서 카피가 물러나고
+         01 비즈니스의 전폭 이미지가 올라와 덮는다 — 진행률은 축 섹션과 같은 `--p` 다.
+         ⚠ `.rv` 를 쓰지 않는다. 등장·퇴장을 `--p` 하나가 맡는다(§11.56). -->
+    <section class="sec lv-intro" id="living">
+      <div class="lv-stage lv-stage--intro">
+        <div class="wrap">
+          <div class="lv-intro-tx">
+            <p class="eyebrow"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
+            <h2 class="h2">일과 삶이 조화롭게 어우러지는 곳<br />
+              비즈니스 · 주거 · 교육 · 문화가<br />
+              하나로 완성되는 <em>자족도시</em></h2>
+            <p class="lede">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -30,13 +38,13 @@
         <div class="lv-split">
           <!-- 좌: 큰 이미지. 화면 높이를 그대로 쓴다. -->
           <figure class="lv-big">
-            <img src="assets/img-street.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="업무시설이 늘어선 도시 가로" />
+            <img src="assets/img-city.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="유리 외피의 업무 · 연구 시설이 늘어선 업무지구" />
             <div class="lv-big-tx">
               <p class="lv-big-eye"><b>01</b>Business Environment</p>
               <h3 class="lv-big-h">비즈니스 환경<br /><em>일하기 좋은 도시</em></h3>
               <p class="lv-big-tags">#국가급특구 #직주근접 #광역접근성 #산학연협력</p>
             </div>
-            <figcaption><b>비즈니스</b>업무 · 상업 시설이 이어지는 도시 가로</figcaption>
+            <figcaption><b>비즈니스</b>산과 맞닿은 업무 · 상업 콤플렉스</figcaption>
           </figure>
 
           <!-- 우: 맨 위에 참고 사진 — 섹션마다 짜임을 달리한다 -->

@@ -12,7 +12,9 @@
      CSS 가 런웨이를 걷고 두 칸을 세로로 쌓으므로 내용이 전부 그대로 보인다.
      **CSS 의 조건과 여기 조건이 같아야 한다.** */
 (function () {
-  var secs = [].slice.call(document.querySelectorAll('.lv-ed'));
+  /* 도입부(`.lv-intro`)도 같은 방식으로 진행률을 받는다 — 카피가 물러나는 데 쓴다.
+     ⚠ 도입부의 CSS 되돌림 값은 0, 축 섹션은 1 이다. 여기서는 값만 넣으므로 상관없다. */
+  var secs = [].slice.call(document.querySelectorAll('.lv-intro, .lv-ed'));
   if (!secs.length) return;
 
   var mqReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');

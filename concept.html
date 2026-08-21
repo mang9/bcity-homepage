@@ -853,29 +853,34 @@
        ⚠ 음수 z-index 를 쓰지 말 것 — `isolation: isolate` 안에서 배경이 사라진다(§11.37). */
     .lv-big::after { content: ""; position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(180deg,
-        rgb(var(--scrim-rgb) / .10) 0%, rgb(var(--scrim-rgb) / .34) 42%,
-        rgb(var(--scrim-rgb) / .78) 100%); }
+        rgb(var(--scrim-rgb) / .08) 0%, rgb(var(--scrim-rgb) / .30) 34%,
+        rgb(var(--scrim-rgb) / .58) 62%, rgb(var(--scrim-rgb) / .82) 100%); }
     /* 제목은 전환에 같이 움직인다 — 이미지가 전폭일 때는 본문 여백선까지 물러나 크게 앉고,
        왼쪽 칸으로 좁혀지면 그만큼 당겨지며 줄어든다. 값 하나(`--p`)로 둘 다 따라온다. */
     .lv-big-tx { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
-      padding: clamp(20px, 2.4vw, 40px) clamp(20px, 2.6vw, 44px) clamp(52px, 4.6vw, 76px);
+      padding: clamp(30px, 3.4vw, 60px) clamp(20px, 2.6vw, 44px) clamp(74px, 6.4vw, 112px);
       padding-left: calc(clamp(20px, 2.6vw, 44px)
         + (1 - var(--pw)) * clamp(0px, 3.4vw, 56px));
       color: #ffffff; }
-    .lv-big-eye { display: flex; align-items: baseline; gap: 10px; margin: 0;
-      font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-      color: rgb(255 255 255 / .82); }
-    .lv-big-eye b { font-family: var(--font-display); font-size: 13px; color: #ffffff; }
-    .lv-big-h { margin: clamp(8px, 1vw, 14px) 0 0; font-family: var(--font-display); font-weight: 800;
-      font-size: calc(clamp(22px, 2.5vw, 40px) + (1 - var(--pw)) * clamp(4px, 1.1vw, 16px));
-      line-height: 1.22; letter-spacing: -.03em; color: #ffffff; }
+    /* 이미지 위 글자는 **메인 위계에 맞춘다** — 아이브로 = 공용 `.eyebrow`(12.5px / ls .2em),
+       제목 = `.h2`(최대 42px)와 `.hero h1`(최대 62px) 사이, 해시태그 = `.lede` 아래급. */
+    .lv-big-eye { display: flex; align-items: baseline; gap: 12px; margin: 0;
+      font-size: 12.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: rgb(255 255 255 / .84); }
+    .lv-big-eye b { font-family: var(--font-display); font-size: 15px; letter-spacing: .06em;
+      color: #ffffff; }
+    .lv-big-h { margin: clamp(12px, 1.3vw, 20px) 0 0;
+      font-family: var(--font-display); font-weight: 800;
+      font-size: calc(clamp(30px, 3.4vw, 54px) + (1 - var(--pw)) * clamp(6px, 1.7vw, 26px));
+      line-height: 1.2; letter-spacing: -.028em; color: #ffffff; }
     .lv-big-h em { font-style: normal; color: var(--color-light-blue); }
-    .lv-big-tags { margin: clamp(10px, 1.2vw, 16px) 0 0; display: flex; flex-wrap: wrap;
-      gap: 5px 12px; font-size: 12px; font-weight: 700; color: rgb(255 255 255 / .84); }
+    .lv-big-tags { margin: clamp(14px, 1.6vw, 24px) 0 0; display: flex; flex-wrap: wrap;
+      gap: 6px 16px; font-size: clamp(13px, .95vw, 15px); font-weight: 700;
+      color: rgb(255 255 255 / .86); }
     /* 사진 캡션 — 스크림 맨 아래 */
     .lv-big figcaption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
-      padding: 0 clamp(20px, 2.6vw, 44px) clamp(16px, 1.8vw, 26px);
-      color: rgb(255 255 255 / .78); font-size: 11.5px; line-height: 1.5; }
+      padding: 0 clamp(20px, 2.6vw, 44px) clamp(26px, 2.6vw, 42px);
+      color: rgb(255 255 255 / .78); font-size: 12px; line-height: 1.5; }
     .lv-big figcaption b { color: #ffffff; font-weight: 700; margin-right: 8px; }
 
     /* 우 — 콘텐츠. p=0 에서는 칸 폭이 0 이므로 **여백도 0 이어야 한다** — 남겨 두면
@@ -991,6 +996,23 @@
     .lv-thumbs figcaption { margin-top: 7px; font-size: 11.5px; line-height: 1.45;
       color: var(--color-text-muted); word-break: keep-all; }
 
+    /* ── 정주환경 도입부 — 화면 하나를 온전히 쓰는 장 시작 화면 ─────────────────
+       스크롤하면 **이 자리에서** 카피가 물러나고 01 의 전폭 이미지가 올라와 덮는다.
+       덮는 원리는 따로 만든 게 없다 — 두 무대가 모두 `top: 0` sticky 이고 01 이 DOM 상
+       뒤에 있으므로 나중에 칠해진다. 카피만 `--p` 로 물러나면 교차되어 보인다.
+       ⚠ 여기서는 `--p` 의 **되돌림 값이 0** 이다(축 섹션은 1). 시작 상태가 "다 보임" 이므로
+         스크립트가 없으면 카피가 그대로 있어야 한다. 방향이 반대인 것을 혼동하지 말 것. */
+    .lv-intro { position: relative; }
+    /* ⚠ `.lv-intro-tx` 에 `max-width: 24ch` 를 주면 안 된다. `ch` 가 제목의 큰 글자 기준이
+         아니라 이 요소의 글자 기준이어서 제목이 좁은 기둥으로 짜부라졌다(실측 11줄).
+         줄 길이는 `.wrap` 과 마크업의 `<br>` 로 잡고, 여기서는 제한하지 않는다.
+       ⚠ 제목 상한은 **가장 긴 줄**이 정한다 — `비즈니스 · 주거 · 교육 · 문화가`.
+         줄바꿈을 하나 더 넣어(2 → 3줄) 그 줄이 짧아졌기에 58px 까지 올릴 수 있었다. */
+    .lv-intro .h2 { font-size: clamp(28px, 4vw, 58px); line-height: 1.24;
+      letter-spacing: -.028em; }
+    .lv-intro .lede { margin-top: clamp(16px, 1.8vw, 26px);
+      font-size: clamp(15px, 1.15vw, 19px); }
+
     /* ── 정주환경 — 고정 구간(런웨이). 여기서만 스크롤 전환이 일어난다 ──────────
        섹션 높이 = 화면 하나 + 런웨이. 화면 하나는 stage 가 sticky 로 붙잡고,
        런웨이만큼 스크롤되는 사이에 `--p` 가 0 → 1 로 오른다. 뒤쪽 여유(`lvstate.js` 의
@@ -1013,10 +1035,38 @@
            높이를 훌쩍 넘겨 버린다(실측 2448px). `.lv-side` 의 `overflow: hidden` 과
            한 쌍이다 — 넘치는 부분이 옆 섹션 위로 삐져나오지 않게 잘라 준다. */
       .lv-split { grid-template-rows: minmax(0, 1fr); }
+
+      /* 도입부 — 런웨이 동안 카피가 물러나고 01 의 전폭 이미지가 그 자리를 덮는다.
+         ⚠ **01 을 런웨이만큼 끌어올려야 한다.** 안 그러면 런웨이 끝에서 카피는 이미
+           사라졌는데 01 은 아직 화면 밖이라 **빈 화면이 한 번 지나간다**(실측으로 봤다).
+           음수 마진으로 겹쳐 두면 카피가 옅어지는 사이에 이미지가 아래에서 올라와 덮는다.
+         ⚠ 이 음수 마진은 01 의 진행률 계산을 건드리지 않는다 — `lvstate.js` 는 섹션의
+           자기 높이와 자기 rect 만 보므로 문서 위치가 앞당겨진 것과 무관하다.
+         ⚠ 겹치는 양에 `--lv-run` 을 쓰면 안 된다. 그 이름은 `.lv-ed` 에도 있고(88vh) 마진은
+           `.lv-ed` 쪽에서 읽히므로 -88vh 가 되어, 도입부 첫 화면 아래 288px 이 벌써 01 의
+           이미지로 덮여 있었다(실측). 겹침용 값을 따로 두고 양쪽에 같이 준다. */
+      .lv-intro,
+      .lv-intro + .lv-ed { --lv-lap: 100vh; }
+      .lv-intro { padding: 0;
+        min-height: calc(100vh + var(--lv-lap));
+        min-height: calc(100svh + var(--lv-lap)); }
+      .lv-intro + .lv-ed { margin-top: calc(0px - var(--lv-lap)); }
+      .lv-stage--intro { align-items: center; }
+      /* ⚠ 카피를 **완전히 없애지 않는다.** 진행률은 런웨이의 68% 에서 이미 1 이 되므로
+           (lvstate.js 의 가속 구간) 0 까지 빼면 남은 32% 동안 위쪽이 빈 화면이 된다.
+           가리는 일은 올라오는 이미지가 한다 — 여기서는 살짝 물러나게만 한다. */
+      .lv-intro-tx { opacity: calc(1 - var(--p, 0) * .5);
+        transform: translateY(calc(var(--p, 0) * -3vh)); }
     }
     /* 동작 최소화 — 고정도 전환도 하지 않는다. `--p` 가 비어 있어 되돌림 값 1 이 쓰이므로
        곧바로 최종 2단 화면이고, 내용은 전부 그대로 보인다. */
     @media (prefers-reduced-motion: reduce) {
+      .lv-intro { min-height: 0; padding: clamp(58px, 6.4vw, 112px) 0; }
+      .lv-intro .lv-stage--intro { position: static; height: auto; }
+      /* ⚠ 겹침용 음수 마진을 **반드시 지운다.** 이 블록만 빼먹었더니 넓은 화면 + 동작 최소화에서
+           고정은 풀렸는데 마진은 -900px 로 남아 01 이 도입부를 통째로 덮었다(실측).
+           좁거나 짧을 때는 마진 선언 자체가 고정 블록 안이라 애초에 적용되지 않는다. */
+      .lv-intro + .lv-ed { margin-top: 0; }
       .lv-ed { min-height: 0; padding-top: clamp(48px, 5.2vw, 88px); }
       .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(48px, 5.2vw, 88px); }
       .lv-stage { position: static; height: auto; }
@@ -1028,6 +1078,9 @@
        ⚠ 이 조건이 `lvstate.js` 의 꺼짐 조건과 같아야 한다. 어긋나면 JS 는 `--p` 를 계속
          넣는데 레이아웃은 1단이라 내용이 반투명하게 남는다. */
     @media (max-width: 1023px), (max-height: 679px) {
+      .lv-intro { min-height: 0; padding: clamp(58px, 6.4vw, 112px) 0; }
+      .lv-intro .lv-stage--intro { position: static; height: auto; }
+      .lv-intro-tx { max-width: none; }
       .lv-ed { min-height: 0; padding-top: clamp(48px, 5.2vw, 88px); }
       .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(48px, 5.2vw, 88px); }
       .lv-stage { position: static; height: auto; }
