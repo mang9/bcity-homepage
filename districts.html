@@ -512,6 +512,17 @@
     /* 4축 연결 다이어그램 — 네 축이 한 방향으로 이어지는 흐름을 보여 준다.
        ⚠ 화살표는 항목 사이 `::before` 로 그린 삼각형이다. 첫 항목에는 붙이지 않는다.
        ⚠ 좁아지면 세로로 쌓고 화살표를 아래로 돌린다 — 마크업은 그대로다. */
+    /* 도입부 배경 — 메인 `#concept` 과 같은 두 겹(격자 + 아이소메트릭 도시).
+       ⚠ `.sec` 이 padding 만 갖고 position 이 없어 여기서 기준을 만든다.
+         `overflow: hidden` 이 없으면 도시 일러스트가 섹션 밖으로 흘러넘친다. */
+    .cx-sec { position: relative; overflow: hidden; background: var(--color-bg); }
+    .cx-bg { position: absolute; inset: 0; pointer-events: none; }
+    .cx-bg img, .cx-bg picture { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .cx-bg-grid { object-fit: cover; opacity: .2; }
+    .cx-bg-city { object-fit: cover; }
+    /* 카피·다이어그램은 배경 위로 */
+    .cx-top { position: relative; z-index: 1; }
+
     /* 도입부 — [카피 | 4축 허브 다이어그램] 2단.
        ⚠ 다이어그램은 메인 `#concept` 의 `.cn-dia` 를 좁은 칸용으로 줄인 것이다.
          색 · 그라디언트 · 아이콘 4개를 그대로 쓰므로 새 스타일이 아니다. */
@@ -519,17 +530,19 @@
          `… 산업이 / 성장하는 / AI Living Lab, B-CITY` 세 줄로 접혔다(2026-08-21 지적).
          제목 서체는 `clamp(26px, 2.5vw, 42px)` 로 화면보다 빠르게 커지므로 1440 에서 특히 좁다 —
          `1.08fr` 로는 여전히 세 줄이었다(실측). `1.22fr / .78fr` 이어야 한 줄에 들어온다. */
-    .cx-top { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(0, .78fr);
-      gap: clamp(24px, 3.2vw, 56px); align-items: center; }
+    .cx-top { display: grid; grid-template-columns: minmax(0, 1.17fr) minmax(0, .83fr);
+      gap: clamp(22px, 2.8vw, 48px); align-items: center; }
     .cx-lead { min-width: 0; }
 
     /* ⚠ 모든 좌표는 viewBox 1000x740 비율의 **퍼센트**다. px 로 박으면 칸 폭이 바뀔 때 어긋난다.
        ⚠ 그림이 칸 폭을 다 쓰도록 좌우 배지 중심을 14% · 86% 에 둔다. 전에 27% · 72% 로 뒀더니
          그림이 칸의 58% 만 차지해 작아 보였다(실측). */
-    .cx-dia { position: relative; width: 100%; max-width: 560px; margin-inline: auto;
+    .cx-dia { position: relative; width: 100%; max-width: 620px; margin-inline: auto;
       aspect-ratio: 1000 / 740; }
     /* ⚠ 상한을 430px 로 뒀더니 배지가 86px 로 줄어 DNA 아이콘이 12px, `PHYSICAL AI` 는
-         두 줄로 접혔다(실측). 560px 이 "줄이되 읽히는" 선이다 — 배지 123px. */
+         두 줄로 접혔다(실측). 560px 이 "줄이되 읽히는" 하한이다.
+       ⚠ 실제 크기는 이 상한이 아니라 **오른쪽 칸 폭**이 정한다 — 상한만 620 으로 올렸을 때
+         1440 에서 459px 로 그대로였다(칸이 493px). 칸 배분(`.83fr`)과 gap 을 함께 조정해야 커진다. */
     .cx-orbit { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
     /* 링 → 커넥터 순으로 그려진다. `pathLength="1"` 이라 dash 값을 1 로 쓴다. */
     .cx-ring, .cx-conn { stroke-dasharray: 1; stroke-dashoffset: 1;
@@ -537,7 +550,11 @@
     .cx-dia.in .cx-ring { stroke-dashoffset: 0; }
     .cx-conn { transition-duration: .7s; transition-delay: .8s; }
     .cx-dia.in .cx-conn { stroke-dashoffset: 0; }
-    .cx-dot { opacity: 0; transition: opacity .5s ease .95s; }
+    /* ⚠ 점 안쪽을 **배경색으로 채운다**(2026-08-21 지시) — `fill: none` 이면 오비트 선이
+         점을 가로질러 보인다. 선 두께도 4 → 6 으로 올려 점이 선보다 앞에 있게 읽힌다.
+         ⚠ 배경이 아이소메트릭 이미지라 완전히 같은 색은 아니지만, 그림이 매우 옅어
+           `--color-bg` 로 채우면 불투명하게 읽힌다(실측 확인). */
+    .cx-dot { fill: var(--color-bg); opacity: 0; transition: opacity .5s ease .95s; }
     .cx-dia.in .cx-dot { opacity: 1; }
 
     /* 중앙 허브 — 지름 25% (1000 기준 250px) */
@@ -549,9 +566,11 @@
     .cx-hub-txt { position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 1px;
       font-family: var(--font-display); text-align: center; line-height: 1; }
-    .cx-hub-txt b { font-size: clamp(18px, 2vw, 32px); font-weight: 800; color: #ffffff; }
-    .cx-hub-txt i { font-size: clamp(11px, 1.25vw, 20px); font-weight: 800; font-style: normal; color: #ffffff; }
-    .cx-hub-txt span { font-size: clamp(10.5px, 1.2vw, 19px); font-weight: 600; color: #d7e2fa; line-height: 1.15; }
+    /* ⚠ 허브 글자는 원보다 **작게** 유지한다(2026-08-21 지시로 축소).
+         원 지름이 25% 라 글자를 키우면 세 줄이 원 테두리에 닿는다. */
+    .cx-hub-txt b { font-size: clamp(15px, 1.6vw, 26px); font-weight: 800; color: #ffffff; }
+    .cx-hub-txt i { font-size: clamp(9.5px, 1.02vw, 16px); font-weight: 800; font-style: normal; color: #ffffff; }
+    .cx-hub-txt span { font-size: clamp(9px, .96vw, 15px); font-weight: 600; color: #d7e2fa; line-height: 1.15; }
 
     /* 위성 배지 — 흰 원. 지름 22% (1000 기준 220px, 첨부 디자인의 215px 과 같은 비율) */
     .cx-node { position: absolute; width: 22%; aspect-ratio: 1; margin: 0;

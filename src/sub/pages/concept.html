@@ -11,7 +11,23 @@
 }
 -->
     <!-- ===== 도시 컨셉 (스토리보드 v2 slide53~56) ===== -->
-    <section class="sec" id="concept">
+    <section class="sec cx-sec" id="concept">
+      <!-- 배경 — 메인 `#concept` 과 **같은 두 겹**이다(2026-08-21 지시):
+             ① `concept-grid.png` 격자 패턴 (opacity .2)
+             ② `concept-city` 아이소메트릭 도시 일러스트
+           ⚠ 메인도 격자를 `object-fit: cover` 로 늘려 쓴다(타일 반복이 아니다) — 같게 맞춘다.
+           ⚠ AVIF 를 `<picture>` 로 감싸되 이 안에는 겹침 전제가 없어 안전하다(§11.5-4 는 계획도 얘기다). -->
+      <div class="cx-bg" aria-hidden="true">
+        <img class="cx-bg-grid" src="assets/img/concept-grid.png" alt=""
+             width="256" height="256" loading="lazy" decoding="async" />
+        <picture>
+          <source type="image/avif" media="(max-width: 767px)" srcset="assets/img/concept-city@m.avif" />
+          <source type="image/avif" srcset="assets/img/concept-city.avif" />
+          <img class="cx-bg-city" src="assets/img/concept-city.png" alt=""
+               width="1660" height="934" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+
       <div class="wrap cx-top">
         <div class="cx-lead">
           <p class="eyebrow rv"><i aria-hidden="true"></i><b>CITY CONCEPT</b><span>도시 컨셉</span></p>
@@ -43,10 +59,10 @@
             <path class="cx-conn" pathLength="1" d="M500 495V550" stroke="#BBCCF0" stroke-width="3" />
             <path class="cx-conn" pathLength="1" d="M240 370H375" stroke="#BBCCF0" stroke-width="3" />
             <path class="cx-conn" pathLength="1" d="M625 370H760" stroke="#BBCCF0" stroke-width="3" />
-            <circle class="cx-dot" cx="245" cy="172" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
-            <circle class="cx-dot" cx="755" cy="172" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
-            <circle class="cx-dot" cx="245" cy="568" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
-            <circle class="cx-dot" cx="755" cy="568" r="11" fill="none" stroke="url(#cxDotG)" stroke-width="4" />
+            <circle class="cx-dot" cx="245" cy="172" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+            <circle class="cx-dot" cx="755" cy="172" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+            <circle class="cx-dot" cx="245" cy="568" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+            <circle class="cx-dot" cx="755" cy="568" r="11" stroke="url(#cxDotG)" stroke-width="6" />
           </svg>
 
           <div class="cx-hub">
