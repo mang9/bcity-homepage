@@ -965,7 +965,6 @@
       .dz-sums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 1023px) {
-      .cc-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       /* 도입부 2단 → 1단. 다이어그램이 카피 아래로 내려간다 */
       .cx-top { grid-template-columns: minmax(0, 1fr); }
       .cx-dia { max-width: 560px; margin-inline: auto; }
@@ -993,11 +992,6 @@
     }
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
-      /* 한 줄로 쌓이면 화살표도 아래를 향한다 */
-      .cc-flow { grid-template-columns: minmax(0, 1fr); }
-      .cc-flow-i + .cc-flow-i::before { top: calc(-1 * clamp(22px, 2.4vw, 40px) / 2); left: 50%;
-        border: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
-        border-top: 9px solid var(--color-mint); }
       .dz-tablist { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
