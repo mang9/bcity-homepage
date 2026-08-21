@@ -28,7 +28,11 @@
   }
 
   function clear() {
-    for (var i = 0; i < secs.length; i++) secs[i].style.removeProperty('--p');
+    for (var i = 0; i < secs.length; i++) {
+      secs[i].style.removeProperty('--p');
+      secs[i].style.removeProperty('--pin');
+      secs[i].style.removeProperty('--pinl');
+    }
   }
 
   function tick() {
@@ -47,6 +51,17 @@
          만들어진 화면을 볼 틈이 없다. */
       var e = Math.min(1, Math.max(0, (p - .08) / .60));
       sec.style.setProperty('--p', e.toFixed(3));
+
+      /* 도입부는 진행률을 **다음 섹션에도** 넘긴다 — 01 이 우측에서 겹쳐 들어오는 데 쓴다.
+         가로 이동은 가속된 `--pin`, 세로 상쇄는 **선형** `--pinl` 이다.
+         세로에 가속 값을 쓰면 상쇄가 어긋나 판이 흔들리며 들어온다. */
+      if (sec.classList.contains('lv-intro')) {
+        var nxt = sec.nextElementSibling;
+        if (nxt && nxt.classList.contains('lv-ed')) {
+          nxt.style.setProperty('--pin', e.toFixed(3));
+          nxt.style.setProperty('--pinl', p.toFixed(3));
+        }
+      }
     }
   }
 

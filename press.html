@@ -220,6 +220,10 @@
          지연은 common.js 가 인라인으로 넣는다(`(i % 4) * .07s`) — CSS 로 주면 인라인에 밀린다. */
     .rv.rv-x { transform: translateX(clamp(28px, 3.4vw, 56px)); }
     .rv.rv-x.in { transform: none; }
+    /* 더 크게 떠오르는 변종 — 화면 하나를 채우는 장 시작 화면에서 기본 22px 는 눈에 안 띈다.
+       ⚠ `.rv-x` 와 같이 `.rv` 와 함께 쓴다(`class="rv rv-rise"`). */
+    .rv.rv-rise { transform: translateY(clamp(26px, 4vh, 54px)); }
+    .rv.rv-rise.in { transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }

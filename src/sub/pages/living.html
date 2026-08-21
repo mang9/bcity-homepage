@@ -16,13 +16,19 @@
          ⚠ `.rv` 를 쓰지 않는다. 등장·퇴장을 `--p` 하나가 맡는다(§11.56). -->
     <section class="sec lv-intro" id="living">
       <div class="lv-stage lv-stage--intro">
+        <img class="lv-intro-bg" src="assets/img-wide.jpg" width="1920" height="820"
+             loading="lazy" decoding="async" alt="" aria-hidden="true" />
         <div class="wrap">
+          <!-- 글자는 이미지에서 떠오른다 — `.rv rv-rise` 가 아래에서 올라오며 나타나고,
+               나가는 쪽(스크롤)은 부모 `.lv-intro-tx` 가 `--p` 로 맡는다.
+               ⚠ 둘을 **같은 요소에 겹치지 않는다.** 한 요소에 얹으면 관찰자의 transform 과
+                 진행률의 transform 이 서로를 덮는다(§11.56). 부모/자식으로 나눈다. -->
           <div class="lv-intro-tx">
-            <p class="eyebrow"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
-            <h2 class="h2">일과 삶이 조화롭게 어우러지는 곳<br />
+            <p class="eyebrow rv rv-rise"><i aria-hidden="true"></i><b>LIVING</b><span>정주환경</span></p>
+            <h2 class="h2 rv rv-rise">일과 삶이 조화롭게 어우러지는 곳<br />
               비즈니스 · 주거 · 교육 · 문화가<br />
               하나로 완성되는 <em>자족도시</em></h2>
-            <p class="lede">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
+            <p class="lede rv rv-rise">네 가지 환경이 서로를 받쳐 주며 하루를 완성합니다</p>
           </div>
         </div>
       </div>
