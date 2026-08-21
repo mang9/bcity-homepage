@@ -368,31 +368,70 @@
       border-left: 9px solid var(--color-mint); }
 
     /* ── 1. 컨셉 — 4개 축 ──────────────────────────────────────────────
-       축마다 위 룰 하나로 구획을 나눈다. 박스로 감싸면 네 덩어리가 각각 떠 보인다. */
-    .cc-axis { margin-top: clamp(34px, 3.6vw, 60px); padding-top: clamp(30px, 3.2vw, 52px);
-      border-top: 1px solid var(--color-line); }
-    .cc-axis:first-of-type { margin-top: clamp(38px, 4vw, 66px); }
-    .cc-t { margin: 0; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(20px, 1.85vw, 30px); line-height: 1.4; letter-spacing: -.02em; }
-    .cc-s { margin: 14px 0 0; max-width: 76ch; font-size: clamp(14px, 1vw, 16px); line-height: 1.7;
-      color: var(--color-primary); }
-    .cc-d { margin: 14px 0 0; max-width: 76ch; font-size: clamp(14px, 1vw, 16px); line-height: 1.8;
+       축 하나가 한 섹션이다. 구성은 아래 순서로 고정한다(2026-08-21 지시 · 레퍼런스 배치).
+
+         [번호 + 축 성격]  [대형 영문 타이포]  [제목]  [한 줄]
+         [━━━ 큰 비주얼 · 전폭 ━━━]            ← 영상 2축 / 정지컷 2축
+         [핵심 3항목]      [사진 2x2 + 캡션]
+
+       ⚠ 큰 비주얼 **위에 글자를 얹지 않는다.** 영상은 프레임마다 밝기가 달라 대비를
+         보장할 수 없다(§11.42 의 스와치 대비와 같은 이유). 타이포는 비주얼 위쪽,
+         페이지 바탕에 둔다 — 그래서 스크림도 필요 없다. */
+    .cc-ax { padding-block: clamp(56px, 6vw, 104px); }
+    .cc-ax + .cc-ax { border-top: 1px solid var(--color-line); }
+
+    /* 번호 + 축 성격 — 사용자 기획서의 "최종 목표" 한 줄을 그대로 쓴다 */
+    .cc-ax-eye { display: flex; align-items: baseline; gap: 12px; margin: 0;
+      font-size: clamp(12.5px, 1vw, 15px); font-weight: 700; color: var(--color-text-muted); }
+    .cc-ax-eye b { font-family: var(--font-display); font-size: clamp(13px, 1.05vw, 16px);
+      letter-spacing: .04em; color: var(--ax-t, var(--color-primary)); }
+
+    /* 대형 영문 타이포 — 시스템에 이미 있는 스케일이다(index 의 `.lo-no` 128px · `.ov-title` 84px).
+       ⚠ 축 색은 **두 벌**이다. `--ax` 는 8대 권역 식별색 원본, `--ax-t` 는 작은 글자용 변종이다.
+         권역색은 **흰 면** 기준으로 4.62 이상이지만 이 페이지 바탕은 `--color-bg`(#f4f8fe) 라
+         바이오 4.45 · MICE 4.42 · 푸드 4.43 으로 AA(4.5) 아래로 떨어졌다(실측).
+         여기 대형 타이포는 38~104px 이라 WCAG large(3.0) 기준을 넉넉히 넘으므로 원색을 쓰고,
+         14~17px 인 `.cc-side b` 와 13~16px 인 `.cc-ax-eye b` 는 `--ax-t` 를 쓴다.
+         (§11.45 와 같은 함정 — 색 변종은 **배경이 바뀌면 다시 재야 한다.**) */
+    .cc-big { margin: clamp(6px, .7vw, 12px) 0 0; font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(38px, 6.4vw, 104px); line-height: 1.02; letter-spacing: -.035em;
+      color: var(--ax, var(--color-primary)); }
+
+    .cc-t { margin: clamp(16px, 1.8vw, 26px) 0 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(18px, 1.7vw, 27px); line-height: 1.42; letter-spacing: -.02em; }
+    .cc-s { margin: 12px 0 0; max-width: 76ch; font-size: clamp(14px, 1vw, 16px); line-height: 1.75;
       color: var(--color-text-muted); }
 
-    /* 세부 그룹 3열 (03 Physical AI · 04 Food Cluster) */
-    .cc-gs { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(12px, 1.2vw, 20px); margin: clamp(22px, 2.2vw, 34px) 0 0; padding: 0; }
-    .cc-g { padding: clamp(20px, 2vw, 28px); background: var(--color-surface);
-      border: 1px solid var(--color-line); border-top: 2px solid var(--color-primary);
-      border-radius: var(--radius-md); }
-    .cc-g-t { display: block; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.2vw, 18px); letter-spacing: -.012em; }
-    .cc-g-s { margin: 6px 0 0; font-size: 13px; font-weight: 700; color: var(--color-primary); }
-    .cc-g-l { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
-    .cc-g-l li { position: relative; padding-left: 14px; font-size: 13.5px; line-height: 1.65;
+    /* 큰 비주얼 — 전폭. `.wrap` 밖에 있으므로 화면 폭을 다 쓴다. */
+    .cc-hero { margin: clamp(26px, 3vw, 48px) 0 0; }
+    .cc-hero-m { display: block; width: 100%; aspect-ratio: 1920 / 820; height: auto;
+      object-fit: cover; background: var(--color-bg); }
+
+    /* [핵심 3항목 | 사진 2x2] */
+    /* ⚠ `align-items: stretch` + `.cc-side` 의 `align-content: space-between`.
+         3항목이 사진 2x2 보다 일찍 끝나 왼쪽 아래가 200px 넘게 비었다(실측).
+         칸 높이를 함께 쓰고 항목을 고르게 벌려 두 칸이 같은 줄에서 끝난다. */
+    .cc-row { display: grid; grid-template-columns: minmax(260px, .82fr) minmax(0, 1.18fr);
+      gap: clamp(22px, 2.8vw, 52px); margin-top: clamp(26px, 3vw, 48px); align-items: stretch; }
+    .cc-side { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(16px, 1.8vw, 24px);
+      align-content: space-between; }
+    .cc-side li { display: grid; gap: 6px; padding-bottom: clamp(14px, 1.6vw, 20px);
+      border-bottom: 1px solid var(--color-line); }
+    .cc-side li:last-child { padding-bottom: 0; border-bottom: 0; }
+    .cc-side b { font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(14.5px, 1.15vw, 17px); letter-spacing: -.015em;
+      color: var(--ax-t, var(--color-primary)); }
+    .cc-side span { font-size: 13.5px; line-height: 1.7; color: var(--color-text-muted); }
+
+    /* 사진 2x2 — 캡션은 사진 **아래**에 둔다(레퍼런스와 같은 배치).
+       사진 위에 얹으면 사진마다 밝기가 달라 대비가 무너진다. */
+    .cc-shots { list-style: none; margin: 0; padding: 0;
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 22px); }
+    .cc-shots figure { margin: 0; }
+    .cc-shots img { display: block; width: 100%; aspect-ratio: 1200 / 676; height: auto;
+      object-fit: cover; border-radius: var(--radius-md); background: var(--color-bg); }
+    .cc-shots figcaption { margin-top: 9px; font-size: 12.5px; line-height: 1.55;
       color: var(--color-text-muted); word-break: keep-all; }
-    .cc-g-l li::before { content: ""; position: absolute; left: 0; top: .62em;
-      width: 5px; height: 5px; border-radius: 50%; background: var(--color-mint); }
 
     /* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
 
@@ -707,8 +746,11 @@
       .dz-sums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 1023px) {
-      .cc-gs { grid-template-columns: minmax(0, 1fr); }
       .cc-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      /* 축 섹션 — 사진 칸이 좁아지면 [3항목] 아래로 내린다 */
+      .cc-row { grid-template-columns: minmax(0, 1fr); }
+      /* 1단에서는 벌리지 않는다 — 세로로 쌓이므로 고르게 벌리면 사이가 뜬다 */
+      .cc-side { align-content: start; }
       /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */
       .dz-tabs { grid-template-columns: minmax(0, 1fr); }
       .dz-keys { grid-template-columns: minmax(0, 1fr); }
@@ -855,64 +897,202 @@
           <li class="cc-flow-i"><b>03</b><span>PHYSICAL AI</span></li>
           <li class="cc-flow-i"><b>04</b><span>FOOD CLUSTER</span></li>
         </ol>
+      </div>
+    </section>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>01</b>AI DATA</p>
-          <h3 class="cc-t">첨단 스마트 도시를 견인하는<br />최대 330MW 하이퍼스케일 데이터센터</h3>
-          <p class="cc-s">AI 확산으로 급증하는 전력 수요에 부합하는 하이퍼스케일 데이터센터 거점 도시</p>
-          <p class="cc-d">B-CITY는 최대 330MW 규모의 하이퍼스케일 데이터센터를 기반으로 도시 전반의 컴퓨팅 인프라를 구축합니다. AI 연산, 바이오 데이터 처리, 도시 운영 시스템까지 지원하는 차세대 컴퓨팅 허브입니다.</p>
-        </div>
+    <!-- ===== 01 AI DATA ===== -->
+    <section class="sec cc-ax" id="ai-data" style="--ax: var(--color-district-ai); --ax-t: var(--color-district-ai)">
+      <div class="wrap">
+        <p class="cc-ax-eye rv"><b>01</b>데이터 인프라와 AI 컴퓨팅의 시작</p>
+        <h3 class="cc-big rv">AI DATA</h3>
+        <p class="cc-t rv">첨단 스마트 도시를 견인하는<br />최대 330MW 하이퍼스케일 데이터센터</p>
+        <p class="cc-s rv">AI 확산으로 급증하는 전력 수요에 부합하는 하이퍼스케일 데이터센터 거점 도시</p>
+      </div>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>02</b>BIO INDUSTRY</p>
-          <h3 class="cc-t">美 생물보안법 시행에 따른 역대급 수주기회를 선점할<br />AI를 활용한 신약개발 및 중소형 CDMO 거점 도시</h3>
-          <p class="cc-s">27~28년 美 생물보안법 효력 발생 시 글로벌 제약사의 中 의존 탈피 및 블록버스터 특허 만료 도래, 한국 CDMO · CRO에 역대급 수주 기회</p>
-          <p class="cc-d">AI 신약개발부터 위탁생산 · 임상까지 이어지는 완결형 바이오 밸류체인을 82,000평 규모에 집적합니다.</p>
-        </div>
+      <!-- 큰 비주얼 — 전폭. 글자를 얹지 않는다(영상 위 대비를 보장할 수 없다). -->
+      <figure class="cc-hero rv">
+          <video class="cc-hero-m" muted loop playsinline preload="none"
+                 poster="assets/still/concept/cc-aidata.jpg"
+                 data-src="assets/vid/cc-aidata.mp4"
+                 aria-label="데이터센터 컴퓨팅 인프라"></video>
+      </figure>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>03</b>PHYSICAL AI</p>
-          <h3 class="cc-t">로봇 · 자율주행 · AI 자동화를 구현하는<br />첨단 Physical AI 선도 도시</h3>
-          <p class="cc-s">AI 기술을 실제 도시 환경에 적용하여 산업 · 교통 · 생활 전반의 혁신을 실현하는 미래 도시</p>
-          <ul class="cc-gs">
-            <li class="cc-g">
-              <b class="cc-g-t">지능형 로보틱스</b>
-              <p class="cc-g-s">휴머노이드 · 서비스 로봇 실증 거점</p>
-              <ul class="cc-g-l"><li>AI 기반 로보틱스 R&amp;D 센터 유치</li><li>휴머노이드 · 서비스 로봇 실증 트랙 구축</li><li>로봇 부품 · 소재 협력 클러스터 조성</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">스마트 모빌리티</b>
-              <p class="cc-g-s">자율주행 · 미래 모빌리티 상용화 도시</p>
-              <ul class="cc-g-l"><li>자율주행 실증 도로망 구축</li><li>도심항공교통(UAM) 이착륙 인프라 조성</li><li>스마트 물류 · 배송 로봇 상용화 지원</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">AI 자동화</b>
-              <p class="cc-g-s">설계부터 관제까지 도시 전반의 디지털 통합 운영</p>
-              <ul class="cc-g-l"><li>도시 설계 단계 디지털 트윈 시뮬레이션 기반 최적화</li><li>설계 · 건설 · 에너지 · 교통 등 도시 인프라 통합 관리 시스템 구현</li><li>AI를 통한 도시데이터 표준화 및 실시간 대응</li></ul>
-            </li>
-          </ul>
-        </div>
+      <div class="wrap cc-row">
+        <ul class="cc-side rv">
+            <li><b>전력 인프라</b><span>최대 330MW · 154kV 직접수전 · IT Load 240MW</span></li>
+            <li><b>집적 규모</b><span>DC1~DC5 5개 블록 · 목표 PUE 1.2</span></li>
+            <li><b>연산 기반</b><span>AI 연산 · 바이오 데이터 처리 · 도시 운영 시스템</span></li>
+        </ul>
+        <ul class="cc-shots rv">
+            <li><figure>
+              <img src="assets/img/concept/cc-ai-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="데이터센터 집적단지 조감" />
+              <figcaption>데이터센터 집적단지 조감</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-ai-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="하이퍼스케일 데이터센터 외관" />
+              <figcaption>하이퍼스케일 데이터센터 외관</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-ai-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="고성능 컴퓨팅 인프라" />
+              <figcaption>고성능 컴퓨팅 인프라</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-ai-4.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="서버랙 근경" />
+              <figcaption>서버랙 근경</figcaption>
+            </figure></li>
+        </ul>
+      </div>
+    </section>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>04</b>FOOD CLUSTER</p>
-          <h3 class="cc-t">연 2조원의 대규모 군 급식 민간 위탁 수요를 안정적으로 확보하는<br />차세대 강원형 푸드물류 클러스터 거점 도시</h3>
-          <p class="cc-s">2022년부터 급식업체 선정에 완전경쟁입찰제가 도입되어 민간 위탁 급식이 점진적으로 확대되고 있습니다</p>
-          <ul class="cc-gs">
-            <li class="cc-g">
-              <b class="cc-g-t">콜드체인 인프라</b>
-              <ul class="cc-g-l"><li>대규모 저온 · 냉동 저장소</li><li>전국 연결 물류 네트워크</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">푸드테크 생태계</b>
-              <ul class="cc-g-l"><li>ICT · R&amp;D 기반 미래형 식품산업</li><li>새로운 표준 제시</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">지역 연계</b>
-              <ul class="cc-g-l"><li>강원 · 수도권 · 전국을 잇는 광역 물류 거점</li><li>강원권 군 부대 군 급식 위탁 수요 연계 (안정적 대규모 판로 확보)</li></ul>
-            </li>
-          </ul>
-        </div>
+    <!-- ===== 02 BIO INDUSTRY ===== -->
+    <section class="sec cc-ax" id="bio" style="--ax: var(--color-district-bio); --ax-t: #277D72">
+      <div class="wrap">
+        <p class="cc-ax-eye rv"><b>02</b>연구부터 생산까지 이어지는 바이오 혁신 생태계</p>
+        <h3 class="cc-big rv">BIO INDUSTRY</h3>
+        <p class="cc-t rv">美 생물보안법 시행에 따른 역대급 수주기회를 선점할<br />AI를 활용한 신약개발 및 중소형 CDMO 거점 도시</p>
+        <p class="cc-s rv">27~28년 美 생물보안법 효력 발생 시 글로벌 제약사의 中 의존 탈피 및 블록버스터 특허 만료 도래, 한국 CDMO · CRO에 역대급 수주 기회</p>
+      </div>
 
+      <!-- 큰 비주얼 — 전폭. 글자를 얹지 않는다(영상 위 대비를 보장할 수 없다). -->
+      <figure class="cc-hero rv">
+          <video class="cc-hero-m" muted loop playsinline preload="none"
+                 poster="assets/still/concept/cc-bio.jpg"
+                 data-src="assets/vid/cc-bio.mp4"
+                 aria-label="정밀 바이오 연구"></video>
+      </figure>
+
+      <div class="wrap cc-row">
+        <ul class="cc-side rv">
+            <li><b>연구개발</b><span>AI 신약개발 · 유전체 분석 기반 바이오마커 발굴</span></li>
+            <li><b>생산 · 임상</b><span>중소형 CDMO 위탁생산부터 임상까지 완결형 밸류체인</span></li>
+            <li><b>집적 규모</b><span>82,000평 규모에 바이오 밸류체인 집적</span></li>
+        </ul>
+        <ul class="cc-shots rv">
+            <li><figure>
+              <img src="assets/img/concept/cc-bio-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="AI 기반 데이터 분석" />
+              <figcaption>AI 기반 데이터 분석</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-bio-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="정밀 바이오 연구" />
+              <figcaption>정밀 바이오 연구</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-bio-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="첨단 바이오 클러스터 조감" />
+              <figcaption>첨단 바이오 클러스터 조감</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-bio-4.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="자동화 실험 · 분석 설비" />
+              <figcaption>자동화 실험 · 분석 설비</figcaption>
+            </figure></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 03 PHYSICAL AI ===== -->
+    <section class="sec cc-ax" id="physical-ai" style="--ax: var(--color-district-mice); --ax-t: #31769E">
+      <div class="wrap">
+        <p class="cc-ax-eye rv"><b>03</b>로봇 · 모빌리티 · AI 자동화가 구현되는 미래 도시</p>
+        <h3 class="cc-big rv">PHYSICAL AI</h3>
+        <p class="cc-t rv">로봇 · 자율주행 · AI 자동화를 구현하는<br />첨단 Physical AI 선도 도시</p>
+        <p class="cc-s rv">AI 기술을 실제 도시 환경에 적용하여 산업 · 교통 · 생활 전반의 혁신을 실현하는 미래 도시</p>
+      </div>
+
+      <!-- 큰 비주얼 — 전폭. 글자를 얹지 않는다(영상 위 대비를 보장할 수 없다). -->
+      <figure class="cc-hero rv">
+          <img class="cc-hero-m" src="assets/img/concept/cc-physical-hero.avif"
+               width="1920" height="820" loading="lazy" decoding="async"
+               alt="도시에 적용되는 서비스 로봇" />
+      </figure>
+
+      <div class="wrap cc-row">
+        <ul class="cc-side rv">
+            <li><b>지능형 로보틱스</b><span>휴머노이드 · 서비스 로봇 실증 트랙 · 로보틱스 R&amp;D 센터</span></li>
+            <li><b>스마트 모빌리티</b><span>자율주행 실증 도로망 · UAM 이착륙 인프라 · 배송 로봇</span></li>
+            <li><b>AI 자동화</b><span>디지털 트윈 시뮬레이션 · 도시 인프라 통합 관제</span></li>
+        </ul>
+        <ul class="cc-shots rv">
+            <li><figure>
+              <img src="assets/img/concept/cc-phy-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="생활 속 서비스 로봇" />
+              <figcaption>생활 속 서비스 로봇</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-phy-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="도시 인터랙티브 인프라" />
+              <figcaption>도시 인터랙티브 인프라</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-phy-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="자율주행 실증 도로망" />
+              <figcaption>자율주행 실증 도로망</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-phy-4.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="개인 단위 스마트 서비스" />
+              <figcaption>개인 단위 스마트 서비스</figcaption>
+            </figure></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 04 FOOD CLUSTER ===== -->
+    <section class="sec cc-ax" id="food" style="--ax: var(--color-district-food); --ax-t: #9C632A">
+      <div class="wrap">
+        <p class="cc-ax-eye rv"><b>04</b>스마트 푸드와 물류가 연결되는 산업 허브</p>
+        <h3 class="cc-big rv">FOOD CLUSTER</h3>
+        <p class="cc-t rv">연 2조원의 대규모 군 급식 민간 위탁 수요를 안정적으로 확보하는<br />차세대 강원형 푸드물류 클러스터 거점 도시</p>
+        <p class="cc-s rv">2022년부터 급식업체 선정에 완전경쟁입찰제가 도입되어 민간 위탁 급식이 점진적으로 확대되고 있습니다</p>
+      </div>
+
+      <!-- 큰 비주얼 — 전폭. 글자를 얹지 않는다(영상 위 대비를 보장할 수 없다). -->
+      <figure class="cc-hero rv">
+          <img class="cc-hero-m" src="assets/img/concept/cc-food-hero.avif"
+               width="1920" height="820" loading="lazy" decoding="async"
+               alt="푸드물류 클러스터" />
+      </figure>
+
+      <div class="wrap cc-row">
+        <ul class="cc-side rv">
+            <li><b>콜드체인 인프라</b><span>대규모 저온 · 냉동 저장소 · 전국 연결 물류 네트워크</span></li>
+            <li><b>푸드테크 생태계</b><span>ICT · R&amp;D 기반 미래형 식품산업</span></li>
+            <li><b>지역 연계</b><span>강원 · 수도권 · 전국 광역 물류 거점 · 군 급식 위탁 수요 연계</span></li>
+        </ul>
+        <ul class="cc-shots rv">
+            <li><figure>
+              <img src="assets/img/concept/cc-food-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="푸드물류 클러스터 조감" />
+              <figcaption>푸드물류 클러스터 조감</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-food-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="광역 물류 동선" />
+              <figcaption>광역 물류 동선</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-food-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="물류 · 가공 시설" />
+              <figcaption>물류 · 가공 시설</figcaption>
+            </figure></li>
+            <li><figure>
+              <img src="assets/img/concept/cc-food-4.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="상 · 하차 물류 동선" />
+              <figcaption>상 · 하차 물류 동선</figcaption>
+            </figure></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 마무리 ===== -->
+    <section class="sec">
+      <div class="wrap">
         <div class="closer rv">
           <p>4대 산업이 만드는 <em>하나의 도시</em><br />
             B-CITY는 대한민국 첨단 산업의 새로운 중심이 됩니다</p>
@@ -1002,6 +1182,47 @@
         io.observe(el);
       });
     })();
+
+/* 배경/비주얼 영상 지연 로딩 — 화면에 들어올 때 받고, 벗어나면 멈춘다.
+   마크업은 `data-src` 로 두고 `src` 를 비워 둔다. 그래야 `preload="none"` 이어도
+   브라우저가 미리 손대지 않는다.
+
+   ⚠ `prefers-reduced-motion: reduce` 에서는 **영상을 아예 걸지 않는다.**
+     poster 이미지가 그대로 남으므로 정보가 빠지지 않는다.
+   ⚠ IntersectionObserver 가 없는 환경(구형)에서는 즉시 로드한다 — 없는 것보다 낫다. */
+(function () {
+  var vids = [].slice.call(document.querySelectorAll('video[data-src]'));
+  if (!vids.length) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;                       // poster 만 남긴다
+
+  function load(v) {
+    if (v.dataset.loaded) return;
+    v.dataset.loaded = '1';
+    v.src = v.dataset.src;
+    v.load();
+  }
+  function play(v) {
+    load(v);
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});   // 자동재생 차단은 조용히 넘긴다
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    vids.forEach(play);
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) play(e.target);
+      else if (e.target.dataset.loaded) e.target.pause();
+    });
+  }, { rootMargin: '200px 0px', threshold: 0.01 });
+
+  vids.forEach(function (v) { io.observe(v); });
+})();
   </script>
 </body>
 </html>
