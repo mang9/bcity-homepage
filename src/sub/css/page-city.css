@@ -17,14 +17,21 @@
 /* 도입부 — [카피 | 4축 허브 다이어그램] 2단.
    ⚠ 다이어그램은 메인 `#concept` 의 `.cn-dia` 를 좁은 칸용으로 줄인 것이다.
      색 · 그라디언트 · 아이콘 4개를 그대로 쓰므로 새 스타일이 아니다. */
-.cx-top { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
-  gap: clamp(24px, 3.2vw, 60px); align-items: center; }
+/* ⚠ 카피 칸을 넓게 잡는다. `.92fr / 1.08fr` 이었을 때 제목이
+     `… 산업이 / 성장하는 / AI Living Lab, B-CITY` 세 줄로 접혔다(2026-08-21 지적).
+     제목 서체는 `clamp(26px, 2.5vw, 42px)` 로 화면보다 빠르게 커지므로 1440 에서 특히 좁다 —
+     `1.08fr` 로는 여전히 세 줄이었다(실측). `1.22fr / .78fr` 이어야 한 줄에 들어온다. */
+.cx-top { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(0, .78fr);
+  gap: clamp(24px, 3.2vw, 56px); align-items: center; }
 .cx-lead { min-width: 0; }
 
 /* ⚠ 모든 좌표는 viewBox 1000x740 비율의 **퍼센트**다. px 로 박으면 칸 폭이 바뀔 때 어긋난다.
    ⚠ 그림이 칸 폭을 다 쓰도록 좌우 배지 중심을 14% · 86% 에 둔다. 전에 27% · 72% 로 뒀더니
      그림이 칸의 58% 만 차지해 작아 보였다(실측). */
-.cx-dia { position: relative; width: 100%; aspect-ratio: 1000 / 740; }
+.cx-dia { position: relative; width: 100%; max-width: 560px; margin-inline: auto;
+  aspect-ratio: 1000 / 740; }
+/* ⚠ 상한을 430px 로 뒀더니 배지가 86px 로 줄어 DNA 아이콘이 12px, `PHYSICAL AI` 는
+     두 줄로 접혔다(실측). 560px 이 "줄이되 읽히는" 선이다 — 배지 123px. */
 .cx-orbit { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 /* 링 → 커넥터 순으로 그려진다. `pathLength="1"` 이라 dash 값을 1 로 쓴다. */
 .cx-ring, .cx-conn { stroke-dasharray: 1; stroke-dashoffset: 1;
@@ -48,8 +55,8 @@
 .cx-hub-txt i { font-size: clamp(11px, 1.25vw, 20px); font-weight: 800; font-style: normal; color: #ffffff; }
 .cx-hub-txt span { font-size: clamp(10.5px, 1.2vw, 19px); font-weight: 600; color: #d7e2fa; line-height: 1.15; }
 
-/* 위성 배지 — 흰 원. 지름 20% (1000 기준 200px) */
-.cx-node { position: absolute; width: 20%; aspect-ratio: 1; margin: 0;
+/* 위성 배지 — 흰 원. 지름 22% (1000 기준 220px, 첨부 디자인의 215px 과 같은 비율) */
+.cx-node { position: absolute; width: 22%; aspect-ratio: 1; margin: 0;
   display: grid; align-content: center; justify-items: center; gap: 6%;
   background: var(--color-surface); border-radius: 999px;
   box-shadow: 0 4px 14px -6px rgb(var(--navy-rgb) / .22), 0 1px 2px rgb(var(--navy-rgb) / .06);
@@ -61,12 +68,16 @@
 .cx-node--s { left: 50%; top: 87.84%;  transform: translate(-50%, calc(-50% + 22px)); transition-delay: 1.26s; }
 
 /* 아이콘 원 — 메인 `.cn-ic` 와 같은 그라디언트 */
-.cx-ic { width: 34%; aspect-ratio: 1; border-radius: 999px; display: grid; place-items: center;
+.cx-ic { width: 40%; aspect-ratio: 1; border-radius: 999px; display: grid; place-items: center;
   background: linear-gradient(35deg, #4a78f2 14.1%, #27359e 85.9%); }
-.cx-ic img { width: 46%; height: auto; }
+/* ⚠ 아이콘은 **높이**로 맞춘다. 네 개의 비율이 전혀 다르다 —
+     aidata 31.9x29.55 · bio 16.04x32.57(좁고 길다) · physical 26.63x26.59 · food 35.12x31.91.
+     `width: 46%` 로 주면 BIO 의 DNA 가 원 높이의 93% 까지 자라 혼자 커 보인다(실측).
+     메인 `.cn-ic` 도 고유 px 를 그대로 써 높이가 26~33px 대로 모여 있다 — 같은 기준이다. */
+.cx-ic img { height: 46%; width: auto; max-width: 66%; }
 .cx-tt { margin: 0; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(10px, 1vw, 15px); line-height: 1.25; letter-spacing: -.015em;
-  text-align: center; color: var(--color-primary); }
+  font-size: clamp(10px, .95vw, 13.5px); line-height: 1.25; letter-spacing: -.02em;
+  text-align: center; color: var(--color-primary); word-break: keep-all; }
 
 /* ── 1. 컨셉 — 4개 축 ──────────────────────────────────────────────
    축 하나가 한 섹션이다. 구성은 아래 순서로 고정한다(2026-08-21 지시 · 레퍼런스 배치).
@@ -78,8 +89,11 @@
    ⚠ 큰 비주얼 **위에 글자를 얹지 않는다.** 영상은 프레임마다 밝기가 달라 대비를
      보장할 수 없다(§11.42 의 스와치 대비와 같은 이유). 타이포는 비주얼 위쪽,
      페이지 바탕에 둔다 — 그래서 스크림도 필요 없다. */
-.cc-ax { padding-block: clamp(56px, 6vw, 104px); }
-.cc-ax + .cc-ax { border-top: 1px solid var(--color-line); }
+/* ⚠ 축 사이에 구분선을 두지 않는다(2026-08-21 지시) — 큰 비주얼이 이미 경계다.
+     위 여백만 남겨 아래 축으로 바로 이어진다. `padding-block` 을 양쪽에 주면
+     축 사이가 두 배로 벌어져 끊겨 보인다. */
+.cc-ax { padding-top: clamp(40px, 4.4vw, 76px); padding-bottom: 0; }
+.cc-ax:last-of-type { padding-bottom: clamp(40px, 4.4vw, 76px); }
 
 /* 번호 + 축 성격 — 사용자 기획서의 "최종 목표" 한 줄을 그대로 쓴다 */
 .cc-ax-eye { display: flex; align-items: baseline; gap: 12px; margin: 0;
