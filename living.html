@@ -817,9 +817,18 @@
 
        ⚠ 탭을 쓰지 않는다. 편집 레이아웃은 **한 번에 다 보이는 것**이 전제다 —
          탭은 내용을 감춰 스크롤로 읽는 흐름을 끊는다. `tabs.js` 도 떼어 냈다. */
-    .lv-ed { position: relative; overflow: hidden;
-      padding-top: clamp(52px, 5.6vw, 96px); padding-bottom: 0; }
-    .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(52px, 5.6vw, 96px); }
+    /* 런웨이 + sticky 무대 — 세로 스크롤이 하단 트랙을 **가로로** 밀어 전환한다(2026-08-21 지시).
+       ⚠ 스크롤을 가로채지 않는다. 레퍼런스는 fullpage.js 로 화면을 잡아 두지만
+         여기서는 런웨이 안에서 무대만 붙어 있고 스크롤은 평소대로 흐른다.
+       ⚠ 런웨이 길이는 항목 수와 무관하게 고정한다 — 트랙이 넘치는 폭에 맞춰
+         `htrack.js` 가 진행률을 환산하므로 항목이 3개든 4개든 속도가 비슷하다. */
+    /* ⚠ `--run` 은 `htrack.js` 가 넘치는 폭에 비례해 넣는다. 없을 때의 값(90vh)은
+         스크립트가 없거나 아직 재기 전의 안전값이다. */
+    .lv-ed { position: relative; height: calc(100vh + var(--run, 90vh)); padding: 0; }
+    .lv-stage { position: sticky; top: 0; height: 100vh; overflow: hidden;
+      display: grid; grid-template-rows: minmax(0, 1fr) auto auto;
+      gap: clamp(18px, 2.2vw, 34px);
+      padding-block: clamp(24px, 3vw, 52px); }
 
     /* 세로 섹션 라벨 — 화면 가장자리에 세워 둔다(레퍼런스의 회전 라벨과 같은 어법) */
     .lv-ed-rail { position: absolute; top: clamp(52px, 5.6vw, 96px); margin: 0;
@@ -830,12 +839,14 @@
     .lv-ed--r .lv-ed-rail { left: clamp(10px, 1.6vw, 26px); }
 
     /* [사진 | 카피] — 사진은 화면 끝까지 나가고 카피는 `.wrap` 안쪽에 맞춘다 */
-    .lv-ed-top { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr);
+    /* ⚠ 무대 높이가 뷰포트에 묶여 있으므로 사진은 `aspect-ratio` 가 아니라
+         **남는 행 높이**를 채운다. 비율로 두면 낮은 화면에서 무대를 넘친다. */
+    .lv-ed-top { min-height: 0; display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr);
       gap: clamp(24px, 3.4vw, 64px); align-items: center; }
     .lv-ed--r .lv-ed-fig { order: 2; }
-    .lv-ed-fig { position: relative; margin: 0; }
-    .lv-ed-fig img { display: block; width: 100%; height: 100%; aspect-ratio: 4 / 3;
-      object-fit: cover; }
+    .lv-ed-fig { position: relative; margin: 0; min-height: 0; height: 100%; }
+    .lv-ed-fig img { display: block; width: 100%; height: 100%; object-fit: cover; }
     /* 사진 캡션 — 좌하단 라벨. `.shot` 의 어법을 그대로 쓴다(§overview) */
     .lv-ed-fig figcaption { position: absolute; left: 0; right: 0; bottom: 0;
       padding: clamp(12px, 1.4vw, 20px) clamp(14px, 1.6vw, 24px);
@@ -862,23 +873,45 @@
       font-size: clamp(14px, 1.02vw, 16px); line-height: 1.8; color: var(--color-text-muted); }
     .lv-ed--r .lv-ed-lead { margin-left: auto; }
 
-    /* 인용구 — 상자 없이 큰 글자와 따옴표로만 세운다 */
-    .lv-quote { margin: clamp(34px, 4vw, 68px) 0 0; padding: 0; border: 0;
+    /* 인용구 — 상자 없이 큰 글자와 따옴표로만. 카피 칸 안에 둔다(무대 높이를 아낀다). */
+    .lv-quote { margin: clamp(16px, 1.8vw, 26px) 0 0; padding: 0; border: 0;
       max-width: 34ch; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(17px, 1.85vw, 28px); line-height: 1.5; letter-spacing: -.02em;
+      font-size: clamp(15.5px, 1.5vw, 23px); line-height: 1.5; letter-spacing: -.02em;
       color: var(--color-navy); text-indent: -.4em; }
     .lv-quote::before { content: "\201C"; }
     .lv-quote::after { content: "\201D"; }
     .lv-ed--r .lv-quote { margin-left: auto; text-align: right; }
 
-    /* 본문 여러 단 — 카드가 아니다. 세로 괘선 하나로만 나눈다.
-       ⚠ 항목 수가 섹션마다 3~4개다. `auto-fit` 으로 두면 3개일 때 칸이 넓어져
-         4개 섹션과 글줄 길이가 달라진다 — 열 수를 고정한다. */
-    .lv-cols { list-style: none; margin: clamp(30px, 3.4vw, 56px) 0 0; padding: 0;
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: clamp(20px, 2.4vw, 40px); }
-    .lv-col { min-width: 0; padding-left: clamp(14px, 1.6vw, 24px);
-      border-left: 1px solid var(--color-line); }
+    /* 하단 가로 트랙 — 카드가 아니다. 세로 괘선 하나로만 나눈다.
+       ⚠ 항목 폭을 **고정**한다(`flex: 0 0`). `1fr` 로 두면 트랙이 뷰포트에 맞춰져
+         넘치는 폭이 0 이 되고 가로로 밀 것이 없어진다. */
+    .lv-vp { min-width: 0; overflow: hidden;
+      padding-inline: clamp(20px, 4vw, 56px);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 clamp(20px, 4vw, 56px),
+        #000 calc(100% - clamp(28px, 5vw, 90px)), transparent 100%);
+              mask-image: linear-gradient(90deg, transparent 0, #000 clamp(20px, 4vw, 56px),
+        #000 calc(100% - clamp(28px, 5vw, 90px)), transparent 100%); }
+    /* ⚠ 트랙에 `transition` 을 걸지 말 것. 스크롤 진행률이 매 프레임 값을 주므로
+         전환이 그 값을 뒤따라가며 지연이 생기고, 무엇보다 **전환이 진행되지 않는 환경**
+         (헤드리스 · 숨겨진 프레임)에서는 computed 값이 시작값에 머물러 움직이지 않는다.
+         스크롤 연동 변환은 전환 없이 바로 적용한다. */
+    .lv-track { list-style: none; margin: 0; padding: 0; display: flex;
+      gap: clamp(20px, 2.4vw, 44px); will-change: transform; }
+    /* ⚠ 항목 폭이 좁으면 트랙이 뷰포트를 거의 넘지 않아 **밀 것이 없다** —
+         24vw(330px 상한)로 뒀을 때 4항목 트랙이 1218px 로 뷰포트(1180)를 38px 만 넘었고
+         3항목 섹션은 아예 넘치지 않았다(실측). 한 번에 두어 개만 보이는 폭으로 잡는다. */
+    .lv-col { flex: 0 0 clamp(290px, 38vw, 540px); min-width: 0;
+      padding-left: clamp(14px, 1.6vw, 24px);
+      border-left: 1px solid var(--color-line);
+      opacity: .5; transition: opacity .45s ease; }
+    .lv-col.is-on { opacity: 1; }
+
+    /* 진행 표시 — 메인 `.cine-dots` 와 같은 어법(누르면 그 구간으로 스크롤한다) */
+    .lv-dots { display: flex; justify-content: center; gap: 8px; min-height: 10px; }
+    .lv-dots i { width: 26px; height: 3px; border-radius: 2px; background: var(--color-line);
+      cursor: pointer; transition: background .3s, width .3s; }
+    .lv-dots i.on { background: var(--color-primary); width: 40px; }
+    .lv-dots i:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
     .lv-col-t { margin: 0; font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
       color: var(--color-primary); }
     .lv-col-h { display: block; margin-top: 8px; font-family: var(--font-display); font-weight: 700;
@@ -896,11 +929,20 @@
       .cx-dia { max-width: 560px; margin-inline: auto; }
       /* 축 섹션 — 사진 칸이 좁아지면 [3항목] 아래로 내린다 */
       .cc-row { grid-template-columns: minmax(0, 1fr); }
-      /* 정주환경 — 본문 4단 → 2단 */
-      .lv-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      /* ⚠ [사진 | 카피] 도 함께 1단으로 내린다. 이 규칙이 없으면 390px 에서 두 칸이 그대로 남아
+      /* 정주환경 — 좁은 화면에서는 런웨이 · sticky · 가로 트랙을 전부 걷는다.
+         100vh 무대에 [사진 + 카피 + 트랙] 을 담을 높이가 없다. */
+      .lv-ed { height: auto; padding-top: clamp(44px, 5vw, 76px); }
+      .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(44px, 5vw, 76px); }
+      .lv-stage { position: static; height: auto; overflow: visible; padding-block: 0; }
+      .lv-vp { overflow: visible; padding-inline: 0; -webkit-mask-image: none; mask-image: none; }
+      .lv-track { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); transform: none !important; }
+      .lv-col { flex: none; opacity: 1; }
+      .lv-dots { display: none; }
+      /* ⚠ [사진 | 카피] 도 1단으로. 이 규칙이 없으면 390px 에서 두 칸이 그대로 남아
            사진 215px · 글 155px 로 쪼그라들고 한글이 3~4자마다 끊긴다(실측). */
       .lv-ed-top { grid-template-columns: minmax(0, 1fr); gap: clamp(18px, 2.6vw, 30px); }
+      .lv-ed-fig { height: auto; }
+      .lv-ed-fig img { aspect-ratio: 16 / 10; }
       .lv-ed--r .lv-ed-fig { order: 0; }
       .lv-ed--r .lv-ed-tx,
       .lv-ed--r .lv-quote { text-align: left; }
@@ -932,6 +974,20 @@
     @media (max-width: 560px) {
       .dz-sums { grid-template-columns: minmax(0, 1fr); }
       .dz-tablist { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    /* 모션 축소 — 런웨이와 가로 트랙을 걷고 격자로 되돌린다.
+       ⚠ `htrack.js` 도 이 조건에서 아무 것도 하지 않는다(두 곳이 같은 조건이어야 한다). */
+    @media (prefers-reduced-motion: reduce) {
+      .lv-ed { height: auto; padding-top: clamp(44px, 5vw, 76px); }
+      .lv-ed:not(:has(~ .lv-ed)) { padding-bottom: clamp(44px, 5vw, 76px); }
+      .lv-stage { position: static; height: auto; overflow: visible; }
+      .lv-vp { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+      .lv-track { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); transform: none !important; }
+      .lv-col { flex: none; opacity: 1; }
+      .lv-dots { display: none; }
+      .lv-ed-fig { height: auto; }
+      .lv-ed-fig img { aspect-ratio: 16 / 10; }
     }
   </style>
 </head>
@@ -1046,43 +1102,46 @@
     <section class="sec lv-ed lv-ed--l" id="business">
       <p class="lv-ed-rail" aria-hidden="true">BUSINESS ENVIRONMENT</p>
 
-      <div class="lv-ed-top">
-        <figure class="lv-ed-fig rv">
-          <img src="assets/img-street.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="업무시설이 늘어선 도시 가로" />
-          <figcaption><b>비즈니스</b>업무 · 상업 시설이 이어지는 도시 가로</figcaption>
-        </figure>
-        <div class="lv-ed-tx">
-          <p class="lv-ed-eye rv"><b>01</b>Business Environment</p>
-          <h3 class="lv-ed-h rv">비즈니스 환경<br /><em>일하기 좋은 도시</em></h3>
-          <p class="lv-ed-tags rv">#국가급특구 #직주근접 #광역접근성 #산학연협력</p>
-          <p class="lv-ed-lead rv">짧아진 출근길, 가까워진 협업, 그리고 일과 삶이 자연스럽게 이어지는 도시. B-CITY는 비즈니스의 새로운 환경을 제안합니다</p>
+      <div class="lv-stage">
+        <div class="lv-ed-top">
+          <figure class="lv-ed-fig rv">
+            <img src="assets/img-street.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="업무시설이 늘어선 도시 가로" />
+            <figcaption><b>비즈니스</b>업무 · 상업 시설이 이어지는 도시 가로</figcaption>
+          </figure>
+          <div class="lv-ed-tx">
+            <p class="lv-ed-eye rv"><b>01</b>Business Environment</p>
+            <h3 class="lv-ed-h rv">비즈니스 환경<br /><em>일하기 좋은 도시</em></h3>
+            <p class="lv-ed-tags rv">#국가급특구 #직주근접 #광역접근성 #산학연협력</p>
+            <p class="lv-ed-lead rv">짧아진 출근길, 가까워진 협업, 그리고 일과 삶이 자연스럽게 이어지는 도시. B-CITY는 비즈니스의 새로운 환경을 제안합니다</p>
+            <blockquote class="lv-quote rv">출근길이 짧아진 만큼, 하루의 가능성은 더 크게 열립니다.</blockquote>
+          </div>
         </div>
-      </div>
 
-      <div class="wrap">
-        <blockquote class="lv-quote rv">출근길이 짧아진 만큼, 하루의 가능성은 더 크게 열립니다.</blockquote>
-        <ul class="lv-cols">
-            <li class="lv-col rv rv-x">
+        <div class="lv-vp">
+          <ul class="lv-track">
+            <li class="lv-col">
               <p class="lv-col-t">#국가급특구</p>
               <b class="lv-col-h">국가가 함께 만드는 비즈니스 기반</b>
               <p class="lv-col-d">B-CITY는 4대 국가급 특구가 지정된 도시입니다. 바이오 국가첨단전략산업 특화단지, AI 헬스케어 글로벌 혁신특구, 교육발전특구, 기회발전특구 · 강원연구개발특구. 세제 감면, 보조금 지원, 신속 인허가까지 기업이 마음껏 도전할 수 있는 환경이 이미 마련되어 있습니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#직주근접</p>
               <b class="lv-col-h">여유로운 출퇴근 길</b>
               <p class="lv-col-d">직주근접 보행 네트워크가 도시 전체를 연결해, 복잡한 교통 체증도 긴 통근 시간도 없습니다. 출근길이 짧아진 만큼, 하루의 가능성은 더 크게 열립니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#광역접근성</p>
               <b class="lv-col-h">서울도, 세계도 1시간 거리</b>
               <p class="lv-col-d">서울과의 미팅도, 양양국제공항을 통한 해외 출장도 모두 1시간이면 충분합니다. GTX-B · ITX · 고속도로가 연결되는 광역 교통망 위에서 B-CITY는 수도권의 모든 기회와 닿아 있고, 국제공항을 통해 세계와도 가장 가까이 연결됩니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#산학연협력</p>
               <b class="lv-col-h">협업이 일상이 되는 도시</b>
               <p class="lv-col-d">도시 안에 입주한 기업, 연구 기관, 대학이 거리적으로도 일상적으로도 가까이 있습니다. 오전 회의가 끝나고 점심에 인근 연구진을 만나고, 오후에는 대학 캠퍼스에서 공동 프로젝트를 이어갑니다. 협력은 멀리 떠나야 하는 일이 아니라, 이 도시 안에서 자연스럽게 일어나는 일상입니다.</p>
             </li>
-        </ul>
+          </ul>
+        </div>
+        <nav class="lv-dots" aria-label="항목 선택"></nav>
       </div>
     </section>
 
@@ -1090,43 +1149,46 @@
     <section class="sec lv-ed lv-ed--r" id="residential">
       <p class="lv-ed-rail" aria-hidden="true">RESIDENTIAL ENVIRONMENT</p>
 
-      <div class="lv-ed-top">
-        <figure class="lv-ed-fig rv">
-          <img src="assets/img/gallery/green-complex.avif" width="1400" height="764" loading="lazy" decoding="async" alt="수변과 녹지에 맞닿은 주거 구역 조감" />
-          <figcaption><b>주거</b>수변 · 녹지와 맞닿은 주거 콤플렉스</figcaption>
-        </figure>
-        <div class="lv-ed-tx">
-          <p class="lv-ed-eye rv"><b>02</b>Residential Environment</p>
-          <h3 class="lv-ed-h rv">주거 환경<br /><em>살기 좋은 도시</em></h3>
-          <p class="lv-ed-tags rv">#스마트 라이프 #보행친화도시 #소셜믹스 #Green &amp; Blue</p>
-          <p class="lv-ed-lead rv">자연이 가까운 일상, 걸어서 누리는 편안함, 그리고 첨단 기술이 함께하는 주거 공간. B-CITY는 매일의 삶을 더 풍요롭게 만듭니다</p>
+      <div class="lv-stage">
+        <div class="lv-ed-top">
+          <figure class="lv-ed-fig rv">
+            <img src="assets/img/gallery/green-complex.avif" width="1400" height="764" loading="lazy" decoding="async" alt="수변과 녹지에 맞닿은 주거 구역 조감" />
+            <figcaption><b>주거</b>수변 · 녹지와 맞닿은 주거 콤플렉스</figcaption>
+          </figure>
+          <div class="lv-ed-tx">
+            <p class="lv-ed-eye rv"><b>02</b>Residential Environment</p>
+            <h3 class="lv-ed-h rv">주거 환경<br /><em>살기 좋은 도시</em></h3>
+            <p class="lv-ed-tags rv">#스마트 라이프 #보행친화도시 #소셜믹스 #Green &amp; Blue</p>
+            <p class="lv-ed-lead rv">자연이 가까운 일상, 걸어서 누리는 편안함, 그리고 첨단 기술이 함께하는 주거 공간. B-CITY는 매일의 삶을 더 풍요롭게 만듭니다</p>
+            <blockquote class="lv-quote rv">자연이 가까운 만큼 일상은 더 깊어집니다.</blockquote>
+          </div>
         </div>
-      </div>
 
-      <div class="wrap">
-        <blockquote class="lv-quote rv">자연이 가까운 만큼 일상은 더 깊어집니다.</blockquote>
-        <ul class="lv-cols">
-            <li class="lv-col rv rv-x">
+        <div class="lv-vp">
+          <ul class="lv-track">
+            <li class="lv-col">
               <p class="lv-col-t">#스마트 라이프</p>
               <b class="lv-col-h">AI · IoT 기반 첨단 주거 환경</b>
               <p class="lv-col-d">AI와 IoT가 집안 곳곳에 스며들어 일상의 모든 순간을 더 편리하게 만듭니다. 조명 · 온도 · 보안은 자동으로 관리되고, 영양 관리 시스템이 건강한 식단을 챙기며, 통합 의료 생태계가 가족 모두의 건강을 살핍니다. 하이퍼엔드 시니어 하우징부터 일반 주거까지 첨단 기술이 만드는 새로운 주거 경험이 시작됩니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#보행친화도시</p>
               <b class="lv-col-h">보행자 중심 도시 네트워크</b>
               <p class="lv-col-d">B-CITY의 보행자 중심 네트워크가 도시 전체를 자연스럽게 연결합니다. 아이의 등하굣길도, 출근길도, 장보러 가는 길도 모두 안전하고 가까운 거리 안에 있습니다. 복잡한 이동이 없는 일상에서 하루는 더 여유로워집니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#소셜믹스</p>
               <b class="lv-col-h">다양한 주거 유형이 공존하는 도시</b>
               <p class="lv-col-d">단독주택, 공동주택, 주상복합까지 다양한 주거 유형이 한 도시 안에 공존합니다. 세대도 라이프스타일도 서로 다른 이웃들이 공원과 광장에서 자연스럽게 만납니다. 다양한 사람들이 어우러지는 풍경 속에서 건강한 동네 문화가 자라납니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#Green &amp; Blue</p>
               <b class="lv-col-h">자연 · 녹지 · 수변이 가까운 도시</b>
               <p class="lv-col-d">B-CITY는 도시 전체 면적의 26%가 공원과 녹지로, 어디서든 자연과 가까이 닿아 있습니다. 수변을 따라 산책하고, 도심 한가운데 펼쳐진 녹지를 가로질러 출근하며, 주말이면 바로 옆 자연으로 떠납니다. 자연이 가까운 만큼 일상은 더 깊어집니다.</p>
             </li>
-        </ul>
+          </ul>
+        </div>
+        <nav class="lv-dots" aria-label="항목 선택"></nav>
       </div>
     </section>
 
@@ -1134,38 +1196,41 @@
     <section class="sec lv-ed lv-ed--l" id="education">
       <p class="lv-ed-rail" aria-hidden="true">EDUCATIONAL ENVIRONMENT</p>
 
-      <div class="lv-ed-top">
-        <figure class="lv-ed-fig rv">
-          <img src="assets/img/overview/education-campus.avif" width="1200" height="900" loading="lazy" decoding="async" alt="캠퍼스 앞마당에서 프로젝트 학습 중인 국제 학생들" />
-          <figcaption><b>교육</b>외국 교육기관을 포함한 교육시설과 캠퍼스 생활권</figcaption>
-        </figure>
-        <div class="lv-ed-tx">
-          <p class="lv-ed-eye rv"><b>03</b>Educational Environment</p>
-          <h3 class="lv-ed-h rv">교육 환경<br /><em>배움이 넘치는 도시</em></h3>
-          <p class="lv-ed-tags rv">#생애전주기 교육 #글로벌교육 #개방형교육</p>
-          <p class="lv-ed-lead rv">유치원부터 외국교육기관까지, 도시 안에서 이어지는 배움. 강원대 · 한림대 등 지역 대학과 함께하는 산 · 학 협력, 그리고 글로벌 인재가 모이는 교육 환경</p>
+      <div class="lv-stage">
+        <div class="lv-ed-top">
+          <figure class="lv-ed-fig rv">
+            <img src="assets/img/overview/education-campus.avif" width="1200" height="900" loading="lazy" decoding="async" alt="캠퍼스 앞마당에서 프로젝트 학습 중인 국제 학생들" />
+            <figcaption><b>교육</b>외국 교육기관을 포함한 교육시설과 캠퍼스 생활권</figcaption>
+          </figure>
+          <div class="lv-ed-tx">
+            <p class="lv-ed-eye rv"><b>03</b>Educational Environment</p>
+            <h3 class="lv-ed-h rv">교육 환경<br /><em>배움이 넘치는 도시</em></h3>
+            <p class="lv-ed-tags rv">#생애전주기 교육 #글로벌교육 #개방형교육</p>
+            <p class="lv-ed-lead rv">유치원부터 외국교육기관까지, 도시 안에서 이어지는 배움. 강원대 · 한림대 등 지역 대학과 함께하는 산 · 학 협력, 그리고 글로벌 인재가 모이는 교육 환경</p>
+            <blockquote class="lv-quote rv">교실 밖에서 만나는 진짜 배움이 B-CITY의 일상이 됩니다.</blockquote>
+          </div>
         </div>
-      </div>
 
-      <div class="wrap">
-        <blockquote class="lv-quote rv">교실 밖에서 만나는 진짜 배움이 B-CITY의 일상이 됩니다.</blockquote>
-        <ul class="lv-cols">
-            <li class="lv-col rv rv-x">
+        <div class="lv-vp">
+          <ul class="lv-track">
+            <li class="lv-col">
               <p class="lv-col-t">#생애전주기 교육</p>
               <b class="lv-col-h">유치원부터 고등학교까지, 한 도시 안에서</b>
               <p class="lv-col-d">아이가 처음 유치원에 들어서던 날, 그리고 고등학교를 졸업하는 날까지 — 모든 배움이 같은 도시 안에서 이어집니다. 「에듀포레스트 교육발전특구 춘천」과 연계된 생애 전주기 맞춤형 교육 시스템이 B-CITY의 아이들과 함께 성장합니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#글로벌교육</p>
               <b class="lv-col-h">세계 수준의 교육이 가까이에</b>
               <p class="lv-col-d">「기업도시개발특별법」 제38조에 따른 외국교육기관 설립으로 글로벌 교육 환경이 도시 안에 마련됩니다. 해외로 떠나지 않아도 세계 수준의 교육을 누릴 수 있고, 국제적인 시야를 가진 인재가 자연스럽게 모이는 국제도시로서의 기반이 함께 만들어집니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#개방형교육</p>
               <b class="lv-col-h">도시 전체가 학교가 되는 교육도시</b>
               <p class="lv-col-d">학교 안에서만 배움이 끝나지 않습니다. 도시 내 입주 기업, 연구 기관, 그리고 강원대 · 한림대 등 지역 거점 대학이 유기적으로 연결됩니다. AI 기반 진로 체험부터 산 · 학 공동 프로젝트까지, 교실 밖에서 만나는 진짜 배움이 B-CITY의 일상이 됩니다.</p>
             </li>
-        </ul>
+          </ul>
+        </div>
+        <nav class="lv-dots" aria-label="항목 선택"></nav>
       </div>
     </section>
 
@@ -1173,43 +1238,46 @@
     <section class="sec lv-ed lv-ed--r" id="culture">
       <p class="lv-ed-rail" aria-hidden="true">CULTURE &AMP; LEISURE</p>
 
-      <div class="lv-ed-top">
-        <figure class="lv-ed-fig rv">
-          <img src="assets/img-park.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="해질 무렵 사람들이 모인 도심 광장" />
-          <figcaption><b>문화 · 여가</b>전시 · 공연이 이어지는 도심 광장</figcaption>
-        </figure>
-        <div class="lv-ed-tx">
-          <p class="lv-ed-eye rv"><b>04</b>Culture &amp; Leisure</p>
-          <h3 class="lv-ed-h rv">문화시설<br /><em>쉼이 있는 도시</em></h3>
-          <p class="lv-ed-tags rv">#골프레저 #문화광장 #그린네트워크 #관광인프라</p>
-          <p class="lv-ed-lead rv">일과 가까운 곳에 펼쳐진 자연, 도심 한복판의 문화 광장, 그리고 가까이에서 만나는 골프와 관광 인프라. B-CITY는 일하는 시간만큼 쉬는 시간도 풍요롭게 만듭니다</p>
+      <div class="lv-stage">
+        <div class="lv-ed-top">
+          <figure class="lv-ed-fig rv">
+            <img src="assets/img-park.jpg" width="1920" height="820" loading="lazy" decoding="async" alt="해질 무렵 사람들이 모인 도심 광장" />
+            <figcaption><b>문화 · 여가</b>전시 · 공연이 이어지는 도심 광장</figcaption>
+          </figure>
+          <div class="lv-ed-tx">
+            <p class="lv-ed-eye rv"><b>04</b>Culture &amp; Leisure</p>
+            <h3 class="lv-ed-h rv">문화시설<br /><em>쉼이 있는 도시</em></h3>
+            <p class="lv-ed-tags rv">#골프레저 #문화광장 #그린네트워크 #관광인프라</p>
+            <p class="lv-ed-lead rv">일과 가까운 곳에 펼쳐진 자연, 도심 한복판의 문화 광장, 그리고 가까이에서 만나는 골프와 관광 인프라. B-CITY는 일하는 시간만큼 쉬는 시간도 풍요롭게 만듭니다</p>
+            <blockquote class="lv-quote rv">일하는 시간만큼 쉬는 시간도 풍요롭게 만듭니다.</blockquote>
+          </div>
         </div>
-      </div>
 
-      <div class="wrap">
-        <blockquote class="lv-quote rv">일하는 시간만큼 쉬는 시간도 풍요롭게 만듭니다.</blockquote>
-        <ul class="lv-cols">
-            <li class="lv-col rv rv-x">
+        <div class="lv-vp">
+          <ul class="lv-track">
+            <li class="lv-col">
               <p class="lv-col-t">#골프레저</p>
               <b class="lv-col-h">일상이 된 골프 라이프</b>
               <p class="lv-col-d">남춘천 IC에서 3분, 서울에서 50분 거리. B-CITY 안에 자리한 285,000평 규모의 골프장에서 일상처럼 라운딩을 즐길 수 있습니다. 멀리 떠나야만 했던 골프가 출근길 같은 일상이 되는 곳. 가까이 있어 더 자주, 더 편하게 누립니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#문화광장</p>
               <b class="lv-col-h">도시 한복판의 문화 거점</b>
               <p class="lv-col-d">비즈니스 콤플렉스 중심부에 자리한 문화시설은 상업 · 업무와 어우러진 도시의 문화 코어입니다. 전시 · 공연 · 이벤트가 이어지는 도심 광장은 출근길에도, 퇴근길에도 일상의 풍경이 됩니다. 문화를 만나기 위해 멀리 가지 않아도 되는, 가까이 있는 문화 공간이 펼쳐집니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#그린네트워크</p>
               <b class="lv-col-h">도시 전체가 녹지로 채워진 도심 속 자연</b>
               <p class="lv-col-d">도시 면적의 26%가 공원과 녹지로 채워진 B-CITY. 어디서든 자연이 가까운 환경에서 일상의 모든 순간이 더 여유로워집니다. 산책로와 수변 공간, 도심 속 녹지가 이어져 출근 전 아침 산책도, 점심시간의 잠깐 휴식도 자연 속에서 즐길 수 있습니다.</p>
             </li>
-            <li class="lv-col rv rv-x">
+            <li class="lv-col">
               <p class="lv-col-t">#관광인프라</p>
               <b class="lv-col-h">가볍게 떠날 수 있는 여행의 도시</b>
               <p class="lv-col-d">B-CITY 가까이에는 춘천이 자랑하는 대표 관광 · 레저 명소들이 자리하고 있습니다. 남이섬과 강촌, 김유정 문학촌, 의암호와 소양강, 그리고 비발디파크까지 — 차로 짧은 거리에서 사계절 내내 다채로운 즐거움을 누릴 수 있습니다. 주말마다 떠나는 여행이 멀지 않은 곳에서 시작되는, 관광 인프라가 가까운 도시입니다.</p>
             </li>
-        </ul>
+          </ul>
+        </div>
+        <nav class="lv-dots" aria-label="항목 선택"></nav>
       </div>
     </section>
   </main>
@@ -1293,6 +1361,113 @@
         io.observe(el);
       });
     })();
+
+/* 가로 트랙 — 세로 스크롤 진행률로 하단 내용을 가로로 밀어 전환한다.
+   레퍼런스(드파인 아르티아)는 fullpage.js 로 화면을 가로채 260vw 트랙을 넘기지만,
+   여기서는 **스크롤을 가로채지 않는다** — 섹션에 런웨이를 두고 sticky 무대 안에서
+   트랙만 `translateX` 로 옮긴다. 스크롤은 평소대로 흐른다.
+
+   마크업 전제
+     <section class="lv-ed">            런웨이(높이는 CSS 가 정한다)
+       <div class="lv-stage">           position: sticky
+         …
+         <div class="lv-vp">            overflow: hidden
+           <ul class="lv-track"> <li> × n
+         <nav class="lv-dots">          i × n (JS 가 채운다)
+
+   ⚠ `prefers-reduced-motion: reduce` 에서는 아무 것도 하지 않는다. CSS 가 런웨이를
+     걷고 트랙을 줄바꿈 격자로 되돌리므로 내용이 전부 그대로 보인다.
+   ⚠ 좁은 화면(트랙이 넘치지 않는 경우)도 같다 — `overflow <= 0` 이면 손대지 않는다. */
+(function () {
+  var secs = [].slice.call(document.querySelectorAll('.lv-ed'));
+  if (!secs.length) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var items = secs.map(function (sec) {
+    var vp = sec.querySelector('.lv-vp');
+    var track = sec.querySelector('.lv-track');
+    if (!vp || !track) return null;
+    var cells = [].slice.call(track.children);
+    var dots = sec.querySelector('.lv-dots');
+    if (dots && cells.length > 1) {
+      dots.innerHTML = cells.map(function (_, i) {
+        return '<i role="button" tabindex="0" aria-label="' + (i + 1) + '번째 항목으로 이동"'
+             + (i === 0 ? ' class="on"' : '') + '></i>';
+      }).join('');
+      var go = function (i) {
+        var run = sec.offsetHeight - window.innerHeight;
+        if (run <= 0) return;
+        window.scrollTo({
+          top: sec.offsetTop + run * (cells.length > 1 ? i / (cells.length - 1) : 0),
+          behavior: 'smooth'
+        });
+      };
+      [].slice.call(dots.children).forEach(function (el, i) {
+        el.addEventListener('click', function () { go(i); });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(i); }
+        });
+      });
+    }
+    return { sec: sec, vp: vp, track: track, cells: cells, dots: dots, cur: -1 };
+  }).filter(Boolean);
+
+  /* 런웨이 길이를 **넘치는 폭에 비례**해 정한다.
+     ⚠ 고정 런웨이(130vh)로 두면 항목 수가 다른 섹션의 가로 속도가 달라진다 —
+       4항목은 699px 를 130vh 동안 밀고 3항목은 222px 만 밀어 거의 멈춘 것처럼 보였다(실측).
+     ⚠ 폭은 레이아웃(가로)에만 의존하므로 스크롤마다 재지 않는다 — 리사이즈·이미지 로드에만 잰다.
+       매 프레임 재면 높이를 바꾸는 일이 스크롤 위치를 흔들어 되먹임이 생긴다. */
+  var RATE = 1.6;              // 가로 1px 을 세로 몇 px 스크롤로 넘길지
+  function measure() {
+    for (var k = 0; k < items.length; k++) {
+      var it = items[k];
+      it.over = it.track.scrollWidth - it.vp.clientWidth;
+      if (it.over > 0) it.sec.style.setProperty('--run', Math.round(it.over * RATE) + 'px');
+      else it.sec.style.removeProperty('--run');
+    }
+  }
+
+  function tick() {
+    for (var k = 0; k < items.length; k++) {
+      var it = items[k];
+      var over = it.over != null ? it.over : it.track.scrollWidth - it.vp.clientWidth;
+      var run = it.sec.offsetHeight - window.innerHeight;
+      if (over <= 0 || run <= 0) {
+        it.track.style.transform = '';
+        continue;
+      }
+      var top = it.sec.getBoundingClientRect().top;
+      var p = Math.min(1, Math.max(0, -top / run));
+      it.track.style.transform = 'translate3d(' + (-p * over).toFixed(1) + 'px,0,0)';
+
+      var i = Math.min(it.cells.length - 1, Math.round(p * (it.cells.length - 1)));
+      if (i !== it.cur) {
+        it.cur = i;
+        for (var j = 0; j < it.cells.length; j++) it.cells[j].classList.toggle('is-on', j === i);
+        if (it.dots) {
+          var ds = it.dots.children;
+          for (var m = 0; m < ds.length; m++) ds[m].classList.toggle('on', m === i);
+        }
+      }
+    }
+  }
+
+  var queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () { queued = false; tick(); });
+  }
+  function remeasure() { measure(); onScroll(); }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', remeasure);
+  /* 이미지가 들어오면 폭이 바뀐다 — 로드 후 한 번 더 잰다 */
+  addEventListener('load', remeasure);
+  [].slice.call(document.images).forEach(function (im) {
+    if (!im.complete) im.addEventListener('load', remeasure, { once: true });
+  });
+  remeasure();
+})();
   </script>
 </body>
 </html>
