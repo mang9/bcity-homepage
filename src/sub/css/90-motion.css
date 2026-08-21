@@ -2,6 +2,11 @@
 .rv { opacity: 0; transform: translateY(22px);
   transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
 .rv.in { opacity: 1; transform: none; }
+/* 가로로 들어오는 변종 — 레퍼런스의 `.complex_content { translateX(5rem) → 0 }` 와 같은 어법.
+   ⚠ `.rv` 와 함께 쓴다(`class="rv rv-x"`). 관찰자는 `.rv` 만 찾으므로 그래야 걸린다.
+     지연은 common.js 가 인라인으로 넣는다(`(i % 4) * .07s`) — CSS 로 주면 인라인에 밀린다. */
+.rv.rv-x { transform: translateX(clamp(28px, 3.4vw, 56px)); }
+.rv.rv-x.in { transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
