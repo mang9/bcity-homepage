@@ -129,7 +129,13 @@
      위 여백만 남겨 아래 축으로 바로 이어진다. `padding-block` 을 양쪽에 주면
      축 사이가 두 배로 벌어져 끊겨 보인다. */
 .cc-ax { padding-top: clamp(40px, 4.4vw, 76px); padding-bottom: 0; }
-.cc-ax:last-of-type { padding-bottom: clamp(40px, 4.4vw, 76px); }
+/* ⚠ `:first-of-type` · `:last-of-type` 를 쓰지 말 것. of-type 은 **태그** 기준이라
+     형제 중 첫 `<section>` 은 도입부(`#concept`)이고 마지막은 마무리 섹션이다 —
+     축 섹션에는 하나도 매칭되지 않는다. 그래서 `:last-of-type` 로 준 아래 패딩은
+     처음부터 적용된 적이 없었다(2026-08-21 실측으로 발견).
+   첫 축 = 앞에 `.cc-ax` 가 없는 것 · 마지막 축 = 뒤에 `.cc-ax` 가 없는 것으로 잡는다. */
+.cc-ax:not(.cc-ax + .cc-ax) { padding-top: 0; }
+.cc-ax:not(:has(~ .cc-ax)) { padding-bottom: clamp(40px, 4.4vw, 76px); }
 
 /* 번호 + 축 성격 — 사용자 기획서의 "최종 목표" 한 줄을 그대로 쓴다 */
 .cc-ax-eye { display: flex; align-items: baseline; gap: 12px; margin: 0;
@@ -159,7 +165,10 @@
      ② 그 위에 왼쪽이 짙은 가로 스크림 — 글자가 앉는 쪽만 더 누른다
    ⚠ 레퍼런스는 ①만 쓴다(미디어 40% + 검정). 그러면 큰 타이포는 괜찮지만
      17px 본문이 약 3.5 로 AA(4.5)에 못 미친다. 그래서 ②를 더했다. */
-.cc-hero { position: relative; isolation: isolate; margin: clamp(26px, 3vw, 48px) 0 0;
+/* ⚠ 위 마진을 두지 않는다. 제목·설명이 이 안으로 들어온 뒤로는(§11.48) 비주얼 위에
+     떼어 놓을 것이 없다. 남겨 두면 축 사이가 `패딩 + 마진` 으로 두 번 벌어진다
+     (도입부 배경 아래 107px = 패딩 63 + 마진 43 이 그렇게 생겼다). */
+.cc-hero { position: relative; isolation: isolate; margin: 0;
   display: grid; background: var(--color-navy);
   min-height: clamp(400px, 44vw, 620px); }
 .cc-hero-m { grid-area: 1 / 1; display: block; width: 100%; height: 100%;
