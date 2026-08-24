@@ -63,6 +63,12 @@
             <a class="ci-map-a" href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">
               <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1008&amp;IH=620&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1008" height="620" loading="lazy" decoding="async"
                    alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
+              <!-- 건물 표시(2026-08-24 지시). 정적 지도는 `MX`/`MY`(= 태림빌딩)를 **중심**으로
+                   그려지므로 정확히 가운데에 두면 그 건물을 가리킨다.
+                   ⚠ 카카오 정적 지도의 마커 파라미터는 이 엔드포인트에서 무시된다
+                     (`MARKERS=` 를 붙여도 응답 이미지가 기준과 동일했다 — md5 일치).
+                     그래서 이미지 위에 얹는다. -->
+              <span class="ci-pin" aria-hidden="true"></span>
               <span class="sr">카카오맵에서 크게 보기 (새 창)</span>
             </a>
             <figcaption class="ci-map-bar">

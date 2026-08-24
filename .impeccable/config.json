@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "createdAt": "2026-08-24T06:06:38.231Z",
+        "reason": "라이트박스 레터박스 배경 — 이미지·영상 비율 여백은 검정이 관례. 2026-08-24 사용자 확인"
+      }
+    ]
+  }
+}
