@@ -381,21 +381,7 @@
     .iv-scroll:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
     /* ── 법적 요건 비교 표 (토지확보 현황 01) ──────────────────────────── */
-    .iv-cmp { width: 100%; min-width: 620px; border-collapse: collapse;
-      background: var(--color-surface); font-size: clamp(13px, .95vw, 14.5px); }
-    .iv-cmp th, .iv-cmp td { padding: clamp(13px, 1.3vw, 18px) clamp(12px, 1.2vw, 20px);
-      border: 1px solid var(--color-line); text-align: left; line-height: 1.6;
-      vertical-align: middle; word-break: keep-all; }
-    .iv-cmp thead th { background: var(--color-bg); font-family: var(--font-display);
-      font-weight: 700; font-size: clamp(13.5px, 1vw, 15px); color: var(--color-text); }
-    .iv-cmp tbody th { width: 26%; background: var(--color-bg); font-weight: 700;
-      color: var(--color-text); }
     /* 강조 열 = B-CITY 가 적용받는 특별법. ⚠ 한쪽만 칠한다 — 양쪽을 칠하면 구분이 사라진다 */
-    .iv-cmp .is-on { background: rgb(var(--primary-rgb) / .055); color: var(--color-primary); }
-    .iv-cmp thead .is-on { background: var(--color-primary); color: #fff; }
-    .iv-cmp thead .is-on span { display: block; margin-top: 3px; font-family: var(--font-body);
-      font-weight: 600; font-size: 11.5px; letter-spacing: .04em; color: rgba(255, 255, 255, .82); }
-    .iv-cmp .is-on b { font-family: var(--font-display); font-size: 1.35em; }
 
     /* ── 확보율 게이지 (토지확보 현황 02) ──────────────────────────────
        막대 길이는 인라인 `--v`, 법적 요건 눈금은 `--legal` 이 정한다.

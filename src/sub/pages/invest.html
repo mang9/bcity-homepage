@@ -77,7 +77,9 @@
                남기고, 특별법 칸 앞에 화살표를 두어 `무엇이 → 무엇으로` 완화됐는지 읽히게 한다.
                ⚠ `<table>` 을 버리지 않는다. 4개 기준 × 2개 법은 표 데이터이고, 표를 걷으면
                  스크린리더가 행·열 관계를 읽지 못한다. 틀만 지우고 의미는 남긴다. -->
-          <div class="iv-scroll">
+          <!-- ⚠ `min-width: 620px` 이라 390px 에서 가로로 스크롤된다. 스크롤되는 영역은
+               `tabindex="0"` 이 있어야 키보드로 닿는다 — 아래 지원 내용 표와 같은 처리다. -->
+          <div class="iv-scroll" tabindex="0" role="region" aria-label="법적 요건 비교 표">
             <table class="iv-relax">
               <caption class="sr-only">도시개발법과 기업도시개발 특별법의 토지확보 요건 비교</caption>
               <thead>
