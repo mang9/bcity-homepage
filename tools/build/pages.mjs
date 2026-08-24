@@ -684,17 +684,21 @@ for (const t of detailTemplates) jobs.push(...buildDetails(t));
 const detailPrefixes = [...new Set(detailTemplates
   .map((t) => JSON.parse(read(SUB, 'pages', t).match(/^<!--build\s*([\s\S]*?)-->/)[1]).slugPrefix))];
 const wanted = new Set(jobs.map((j) => basename(j.out)));
+/* ⚠ 상세 페이지만 보면 안 된다. 2026-08-24 에 투자·입주 세 페이지를 한 장으로 합쳤을 때
+     옛 `land.html` · `zone-benefit.html` · `benefit.html` 이 접두어와 맞지 않아 검사에서
+     빠졌고, 그대로 두면 **목록에는 없는데 URL 로는 열리는 페이지**가 영구히 남는다.
+     이제 **배너가 있는데 이번 빌드가 만들지 않은 루트 HTML 전부**를 고아로 본다.
+     배너 없는 손글씨 파일(index.html · 리다이렉트 stub)은 여전히 건드리지 않는다. */
 const orphans = readdirSync(ROOT)
   .filter((f) => f.endsWith('.html') && !wanted.has(f)
-    && detailPrefixes.some((p) => f.startsWith(p + '-'))
     && readFileSync(join(ROOT, f), 'utf8').startsWith('<!-- 생성물이다.'));
 
 if (orphans.length) {
   if (CHECK) {
     stale += orphans.length;
-    orphans.forEach((f) => console.log(`  ✗ ${f} — 이번 빌드가 만들지 않은 상세 페이지가 남아 있다`));
+    orphans.forEach((f) => console.log(`  ✗ ${f} — 이번 빌드가 만들지 않은 생성물이 남아 있다`));
   } else {
-    orphans.forEach((f) => { rmSync(join(ROOT, f)); console.log(`  ✕ ${f} (남겨진 상세 페이지 — 삭제)`); });
+    orphans.forEach((f) => { rmSync(join(ROOT, f)); console.log(`  ✕ ${f} (남겨진 생성물 — 삭제)`); });
   }
 }
 
