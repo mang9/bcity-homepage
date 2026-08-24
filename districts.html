@@ -400,26 +400,29 @@
     /* ── 확보율 게이지 (토지확보 현황 02) ──────────────────────────────
        막대 길이는 인라인 `--v`, 법적 요건 눈금은 `--legal` 이 정한다.
        ⚠ 값이 바뀌면 마크업의 숫자(data-count 포함)와 이 두 변수를 **함께** 고친다. */
-    /* ── 토지확보 현황 — 도넛 + 값 3장 (기획서 #p-invest "1. B-CITY 토지확보 현황") ──
-       ⚠ 도넛은 `conic-gradient` 로 그린다. 값 하나(`--v`)로 각도가 정해져 SVG 각도 계산이
-         필요 없고, 마크업의 숫자와 어긋날 여지가 없다. 가운데는 흰 원으로 파낸다. */
-    .iv-stat { display: grid; align-items: center;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: clamp(24px, 3vw, 56px);
-      margin-top: clamp(22px, 2.2vw, 34px); padding: clamp(24px, 2.6vw, 40px);
+    /* ── 토지확보 현황 — 한 줄 지표 띠 (2026-08-24 지시로 디자인 변경) ──────────
+       이전안은 값마다 색 타일을 둔 카드였는데 **숫자보다 상자가 먼저 읽혔다.**
+       지금은 흰 면 하나에 [도넛 | 값 셋]을 두고 **세로 괘선으로만** 나눈다. */
+    .iv-strip { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      gap: clamp(24px, 3vw, 56px); align-items: center;
+      margin-top: clamp(22px, 2.2vw, 34px); padding: clamp(26px, 2.8vw, 44px);
       background: var(--color-surface); border: 1px solid var(--color-line);
-      border-radius: var(--radius-lg); }
+      border-radius: var(--radius-md); }
+    .iv-strip-note { margin: clamp(10px, 1vw, 14px) 0 0; text-align: right;
+      font-size: 11.5px; color: var(--color-text-muted); }
+
+    /* 도넛 — `conic-gradient` 로 그린다. 값 하나(`--v`)가 각도를 정하므로 SVG 각도 계산이 없다.
+       ⚠ 가운데는 흰 원으로 파낸다. `mask` 를 쓰지 않는다 — 안쪽에 글자를 얹으므로 실제 면이 필요하다. */
     .iv-donut { margin: 0; display: grid; justify-items: center; gap: clamp(14px, 1.4vw, 20px); }
     .iv-donut-g { position: relative; display: grid; place-content: center; gap: 2px;
-      width: clamp(150px, 15vw, 208px); aspect-ratio: 1; border-radius: 50%;
+      width: clamp(158px, 15.5vw, 216px); aspect-ratio: 1; border-radius: 50%;
       background: conic-gradient(var(--color-primary) 0 var(--v, 0%),
                                  var(--color-bg) var(--v, 0%) 100%); }
-    /* 가운데를 파내는 흰 원. `mask` 를 쓰지 않는다 — 안쪽에 글자를 얹으므로 실제 면이 필요하다. */
-    .iv-donut-g::before { content: ""; position: absolute; inset: clamp(20px, 2vw, 30px);
+    .iv-donut-g::before { content: ""; position: absolute; inset: clamp(21px, 2.1vw, 31px);
       border-radius: 50%; background: var(--color-surface); }
     .iv-donut-v, .iv-donut-l { position: relative; text-align: center; }
     .iv-donut-v { font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -.03em; color: var(--color-primary); }
+      font-size: clamp(25px, 2.5vw, 35px); letter-spacing: -.03em; color: var(--color-primary); }
     .iv-donut-l { font-size: 12px; font-weight: 700; color: var(--color-text-muted); }
     .iv-donut-lg { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; }
     .iv-donut-k { position: relative; padding-left: 15px; font-size: 12.5px;
@@ -429,25 +432,55 @@
       border: 1px solid var(--color-line); }
     .iv-donut-k--on::before { background: var(--color-primary); border-color: var(--color-primary); }
 
-    /* 값 3장 — 법적 요건 / 확보율 / 초과분. 확보율만 강조하고 초과분은 민트로 구분한다. */
-    .iv-tiles { list-style: none; display: grid; gap: clamp(10px, 1vw, 16px);
-      grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; }
-    .iv-tile { padding: clamp(16px, 1.6vw, 24px);
-      background: var(--color-bg); border-radius: var(--radius-md);
-      border-top: 3px solid var(--color-line); }
-    .iv-tile--on { border-top-color: var(--color-primary); }
-    .iv-tile--over { border-top-color: var(--color-mint); }
-    .iv-tile-t { display: block; font-size: 13px; font-weight: 700; color: var(--color-text); }
-    .iv-tile-s { display: block; margin-top: 3px; font-size: 11.5px; color: var(--color-text-muted); }
-    .iv-tile-v { display: block; margin-top: clamp(10px, 1vw, 16px); font-style: normal;
-      font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em;
-      font-size: clamp(21px, 2.1vw, 30px); color: var(--color-text-muted); }
-    .iv-tile--on .iv-tile-v { color: var(--color-primary); }
-    .iv-tile--over .iv-tile-v { color: var(--color-mint); }
-    .iv-tile-v span { font-size: .58em; margin-left: 1px; }
-    /* 확보율의 산정 기준 — 도넛과 타일 아래를 가로질러 오른쪽에 붙인다 */
-    .iv-stat-note { grid-column: 1 / -1; margin: 0; text-align: right;
-      font-size: 11.5px; color: var(--color-text-muted); }
+    /* 값 셋 — 상자 없이 세로 괘선으로만 나눈다.
+       ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
+    .iv-figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 0; padding: 0; }
+    .iv-figs > div { padding: 0 clamp(14px, 1.6vw, 26px); }
+    .iv-figs > div + div { border-left: 1px solid var(--color-line); }
+    .iv-figs > div:first-child { padding-left: 0; }
+    .iv-figs > div:last-child { padding-right: 0; }
+    .iv-figs dt { font-size: 13px; font-weight: 700; color: var(--color-text);
+      word-break: keep-all; }
+    .iv-figs dt span { display: block; margin-top: 3px; font-size: 11.5px; font-weight: 400;
+      color: var(--color-text-muted); }
+    .iv-figs dd { margin: clamp(12px, 1.2vw, 18px) 0 0; font-family: var(--font-display);
+      font-weight: 800; letter-spacing: -.03em; line-height: 1;
+      font-size: clamp(22px, 2.2vw, 32px); color: var(--color-text-muted); }
+    /* 강조는 두 칸만 — 세 값이 다 색을 가지면 어느 쪽이 우리 값인지 읽히지 않는다 */
+    .iv-figs .is-on dd { color: var(--color-primary); font-size: clamp(24px, 2.5vw, 36px); }
+    .iv-figs .is-over dd { color: var(--color-mint); }
+    .iv-figs dd span { font-size: .58em; margin-left: 1px; }
+
+    /* ── 법적 요건 비교 — 완화 대비 (2026-08-24 지시로 디자인 변경) ──────────────
+       격자 표를 걷고 **행 괘선만** 남겼다. 특별법 칸 앞에 화살표를 두어
+       `무엇이 → 무엇으로` 완화됐는지가 먼저 읽히게 한다.
+       ⚠ `<table>` 을 버리지 않았다. 4개 기준 × 2개 법은 표 데이터이고, 표를 걷으면
+         스크린리더가 행·열 관계를 잃는다. **틀만 지우고 의미는 남긴다.** */
+    .iv-relax { width: 100%; min-width: 620px; border-collapse: collapse;
+      margin-top: clamp(22px, 2.2vw, 34px); }
+    .iv-relax th, .iv-relax td { padding: clamp(15px, 1.5vw, 22px) clamp(12px, 1.2vw, 20px);
+      text-align: left; vertical-align: baseline; line-height: 1.6; word-break: keep-all; }
+    .iv-relax thead th, .iv-relax thead td { padding-top: 0; padding-bottom: 12px;
+      font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
+      color: var(--color-text-muted); border-bottom: 1px solid var(--color-line); }
+    .iv-relax thead .is-on { color: var(--color-primary); }
+    .iv-relax thead .is-on span { display: block; margin-top: 3px; font-size: 11px;
+      font-weight: 600; color: var(--color-text-muted); }
+    .iv-relax tbody tr + tr th, .iv-relax tbody tr + tr td {
+      border-top: 1px solid var(--color-line); }
+    .iv-relax tbody th { width: 1%; white-space: nowrap; font-size: 13px; font-weight: 700;
+      color: var(--color-text-muted); padding-left: 0; }
+    .iv-relax tbody td { font-size: clamp(13.5px, 1.05vw, 15.5px); color: var(--color-text-muted); }
+    /* 특별법 칸 — 화살표 + 프라이머리. 왼쪽에 옅은 면을 깔아 열이 눈에 잡히게 한다. */
+    .iv-relax tbody td.is-on { position: relative; padding-left: clamp(34px, 3vw, 46px);
+      background: rgb(var(--primary-rgb) / .045);
+      font-weight: 700; color: var(--color-primary); }
+    .iv-relax tbody td.is-on::before { content: "\2192"; position: absolute;
+      left: clamp(12px, 1.2vw, 18px); font-weight: 400; color: var(--color-primary); opacity: .55; }
+    .iv-relax tbody td.is-on b { font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(19px, 1.7vw, 25px); letter-spacing: -.02em; }
+    .iv-relax thead .is-on, .iv-relax tbody td.is-on { border-left: 1px solid var(--color-line); }
 
     /* ── 특구 카드 (특구별 혜택) — IM 슬라이드 17 배치를 그대로 옮겼다 ──────────
        IM 실측(EMU→px): 카드 3장 나란히(x 65 · 453 · 841, 폭 372) · 카드 위 5px 네이비 바 ·
@@ -603,16 +636,20 @@
 
     /* ── 반응형 ───────────────────────────────────────────────────────── */
     @media (max-width: 1023px) {
-      /* 도넛 옆에 값 3장을 두면 타일이 100px 대로 좁아져 숫자가 접힌다 → 위아래로 쌓는다 */
-      .iv-stat { grid-template-columns: minmax(0, 1fr); }
-      .iv-stat-note { text-align: center; }
+      /* 도넛 옆에 값 셋을 두면 칸이 100px 대로 좁아져 숫자가 접힌다 → 위아래로 쌓는다 */
+      .iv-strip { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+      .iv-figs { width: 100%; }
+      .iv-strip-note { text-align: center; }
       /* 카드 3장이 320px 아래로 좁아지면 한글이 6~7자마다 끊긴다 → 한 열로 쌓는다 */
       .iv-szs { grid-template-columns: minmax(0, 1fr); }
       .iv-sz-t br { display: none; }
     }
     @media (max-width: 767px) {
       .iv-sum { grid-template-columns: minmax(0, 1fr); }
-      .iv-tiles { grid-template-columns: minmax(0, 1fr); }
+      /* 세 값을 한 줄에 두면 각 90px 로 좁아진다 → 한 열로. 괘선도 세로에서 가로로 바꾼다. */
+      .iv-figs { grid-template-columns: minmax(0, 1fr); }
+      .iv-figs > div { padding: clamp(14px, 1.5vw, 20px) 0; }
+      .iv-figs > div + div { border-left: 0; border-top: 1px solid var(--color-line); }
     }
 
     /* ── page-city.css ─────────────────────────────────────────── */
