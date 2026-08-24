@@ -104,10 +104,15 @@
       transition: background .3s ease, color .3s ease, border-color .3s ease;
     }
     .gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
-    .gnb.is-solid { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+    /* ⚠ `.no-hero` 를 함께 넣는다(§11.61). 히어로가 없는 페이지는 맨 위에서도 밝은 배경
+         위에 놓이므로 흰 글자로 두면 로고와 메뉴가 보이지 않는다. 값을 복사하지 않고
+         선택자만 더해 한 곳에서 관리한다. */
+    .gnb.is-solid,
+    .no-hero .gnb { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
       color: var(--color-text); border-bottom-color: var(--color-line); }
     .logo { width: 118px; height: auto; color: currentColor; }
-    .gnb.is-solid .logo { color: var(--color-logo); }
+    .gnb.is-solid .logo,
+    .no-hero .gnb .logo { color: var(--color-logo); }
     .gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
     .gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
     .gnb-menu a:hover { opacity: 1; }
@@ -163,6 +168,16 @@
     .hero-eyebrow b { color: #fff; font-weight: 700; }
     .hero h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(34px, 4.2vw, 62px); line-height: 1.14; letter-spacing: -.025em; }
+
+    /* ===== 히어로 없는 카테고리 — GNB 바로 아래에 LNB 만 =====
+       도시소개 · 투자·입주 가 이 형태다(nav.json 의 `hero: false`).
+       ⚠ GNB 가 `position: fixed` 라 흐름에서 빠져 있다. 본문을 그만큼 내려야 LNB 가
+         GNB 뒤에 숨지 않는다. `body` 에 패딩을 줘도 GNB 는 영향받지 않는다.
+       ⚠ GNB 를 **처음부터 흰 배경**으로 둔다. 기본 상태는 히어로 사진 위를 전제로 흰 글자라,
+         밝은 페이지 배경 위에서는 글자가 보이지 않는다. `common.js` 는 스크롤 40px 부터
+         `.is-solid` 를 붙이므로 맨 위에서는 붙지 않는다 → CSS 로 같은 값을 함께 준다. */
+    .no-hero { padding-top: var(--gnb-h); }
+    .no-hero .lnb { top: var(--gnb-h); }
 
     /* ===== LNB ===== */
     .lnb { position: sticky; top: 0; z-index: 40; background: var(--color-surface);
@@ -342,8 +357,9 @@
     /* ===== 브랜드 (도시소개) =====
        내용 구성은 클로드 디자인 기획(와이어프레임 p.48~50 · 도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
        자산 출처는 assets/brand/README 대신 이 주석 — symbol.svg 는 assets/logo/bcity-logo.svg 에서
-       민트·애저 패스만 뽑은 것이고, 워드마크는 partials/brand-defs.svg 의 <symbol id="wm"> 한 벌을
-       <use> 로 돌려 쓴다(로고 변형 6종이 같은 도형을 색만 바꿔 쓰기 때문). */
+       민트·애저 패스만 뽑은 것이다. 워드마크는 assets/logo/bcity-logo.svg 를 그대로 싣는다.
+       ⚠ 로고 변형 6종(시그니처 조합)과 그것만 쓰던 partials/brand-defs.svg 의 <symbol id="wm">,
+         `.br-vars`/`.br-var*`/`.br-wmk` 규칙은 2026-08-21 지시로 함께 걷어냈다. */
 
     /* ---------- 1. 브랜드 네임 ---------- */
 
@@ -489,31 +505,9 @@
     .br-symmark-d { margin: 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
     /* 로고 변형 6종 — 변형마다 배경이 다르므로 그림 영역과 설명을 분리한다 */
-    .br-vars { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: clamp(14px, 1.4vw, 22px); margin: 0; padding: 0; }
-    .br-var { border: 1px solid var(--color-line); border-radius: var(--radius-md); overflow: hidden; }
-    .br-var-fig { display: flex; align-items: center; justify-content: center;
-      height: clamp(108px, 10vw, 156px); padding-inline: clamp(20px, 2.4vw, 40px);
-      background: var(--color-surface); }
-    .br-var-fig img, .br-wmk { display: block; width: 100%; max-width: 240px; height: auto; }
     /* 기본(3색)은 원본 SVG 를 그대로 쓰고, 나머지 4종은 <use href="#wm"> + currentColor 다 */
-    .br-var--main .br-var-fig { background: var(--color-surface); }
     /* 심볼 단독만 가로가 아니라 세로 기준으로 맞춘다 — 정사각에 가까워 폭을 맞추면 너무 커진다 */
-    .br-var--sym .br-var-fig img { width: auto; height: clamp(52px, 5vw, 74px); max-width: none; }
-    .br-var-cap { display: grid; grid-template-columns: auto 1fr; column-gap: 12px;
-      padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 22px);
-      border-top: 1px solid var(--color-line); }
-    .br-var-cap i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-      font-size: 20px; line-height: 1.1; color: var(--color-light-blue); }
-    .br-var-cap b { font-size: 14px; letter-spacing: -.01em; }
-    .br-var-cap > span { grid-column: 2; margin-top: 3px; font-size: 12px; color: var(--color-text-muted); }
 
-    .br-var--navy .br-wmk { color: var(--color-logo); }
-    .br-var--black .br-wmk { color: #111111; }
-    .br-var--rev .br-var-fig { background: var(--color-navy); }
-    .br-var--rev .br-wmk { color: #ffffff; }
-    .br-var--blue .br-var-fig { background: var(--brand-azure); }
-    .br-var--blue .br-wmk { color: #ffffff; }
 
     /* ---------- 3. 브랜드 컬러 ---------- */
 
@@ -555,12 +549,10 @@
     .br-cd { margin: 10px 0 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
     /* SVG 정의 전용 — 화면에서 자리를 차지하면 섹션 사이에 빈 줄이 생긴다 */
-    .br-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
     /* ---------- 반응형 ---------- */
 
     @media (max-width: 1200px) {
-      .br-vars { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 1023px) {
       .br-sym { grid-template-columns: 1fr; }
@@ -579,13 +571,12 @@
       .br-colors { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 767px) {
-      .br-vars { grid-template-columns: 1fr; }
       .br-symmark-in { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
-<body>
+<body class="no-hero">
   <a href="#main" class="sr">본문으로 건너뛰기</a>
 
   <!-- ===== GNB ===== -->
@@ -657,19 +648,20 @@
   </div>
 
   <main id="main">
-    <!-- ===== 히어로 ===== -->
-    <section class="hero">
-      <img class="hero-bg" src="assets/slide-night.jpg" alt="" />
-      <div class="hero-scrim" aria-hidden="true"></div>
-      <div class="wrap">
-        <nav class="crumb" aria-label="현재 위치">
-          <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>도시소개</span><span aria-hidden="true">›</span><b>브랜드</b>
-        </nav>
-        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>02</b><span>CITY · 도시소개</span></p>
-        <h1>브랜드</h1>
-      </div>
-    </section>
+  <!-- 상단 블록 — 카테고리에 따라 [히어로 + LNB] 또는 [LNB 만] 이다.
+       어느 쪽인지는 nav.json 의 `hero` 가 정하고, 빌드(heroBlock)가 골라 미리 펼쳐 넣는다.
+       파티셜 이름을 여기에 박으면 카테고리별로 바꿀 수 없어 값으로 받는다.
+       ⚠ 이 주석에 파티셜 호출 문법을 **글자로도 쓰지 말 것.** render() 는 HTML 주석을
+         구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
+    <!-- ===== 서브 상단 — 히어로 없이 LNB 만 =====
+         도시소개 · 투자·입주 는 상단 이미지 영역 없이 GNB 바로 아래에 하위 메뉴만 온다
+         (2026-08-21 지시). 어느 카테고리가 이 형태인지는 `nav.json` 의 `hero: false` 가 정한다.
+
+         ⚠ `h1` 을 없애지 않고 **화면에서만 감춘다.** 이 페이지들의 본문 제목은 모두 `.h2` 라
+           h1 을 빼면 문서에 h1 이 하나도 없게 된다 — 검색 노출과 스크린리더 목차가 함께 죽는다.
+         ⚠ 브레드크럼은 뺀다. 보여 줄 자리가 없고, 같은 정보를 LNB 의 현재 항목
+           (`aria-current="page"`)이 이미 전달한다. -->
+    <h1 class="sr">도시소개 · 브랜드</h1>
 
     <!-- ===== LNB ===== -->
     <nav class="lnb" aria-label="도시소개 하위 메뉴">
@@ -681,28 +673,7 @@
       </div>
     </nav>
 
-<!-- 브랜드 페이지 전용 SVG 정의 — 워드마크를 한 번만 싣고 <use> 로 재사용한다.
-     로고 변형 6종(Main·Mono Navy·Mono Black·Reverse White·On Vibrant Blue·Symbol Only)은
-     같은 도형을 색만 달리해 보여 주므로, 파일을 6번 받는 대신 여기 한 벌만 둔다.
-
-     ⚠ **7개 패스를 전부 담는다** — 글자 5개 + 심볼 2개.
-       src/sub/partials/logo.svg 는 글자만 currentColor 이고 심볼은 민트·애저가 박혀 있어
-       그대로 가져오면 단색 변형에서 **심볼이 통째로 빠진다**(2026-08-13 실측으로 확인).
-       단색 변형에서는 심볼도 글자와 같은 한 색으로 합쳐지는 것이 기획서 slide50 의 구성이다.
-     ⚠ 도형 원본은 assets/logo/bcity-logo.svg 다. 로고가 바뀌면 이 파일을 다시 만든다. -->
-<svg class="br-defs" aria-hidden="true" focusable="false" width="0" height="0">
-<symbol id="wm" viewBox="0 0 2518 421" fill="currentColor">
-  <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
-  <path d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
-  <path d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
-  <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
-  <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
-  <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
-  <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
-</symbol>
-</svg>
-
-    <!-- ===== 1. Brand name — 기획 p.48 ===== -->
+<!-- ===== 1. Brand name — 기획 p.48 ===== -->
     <section class="sec" id="name">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND NAME</b><span>브랜드 네임</span></p>
@@ -746,15 +717,14 @@
       </div>
     </section>
 
-    <!-- ===== 2. Brand Logotype — 기획 p.49 (기본 로고타입 · 시그니처 조합 · 사용 규정 · 여백) ===== -->
+    <!-- ===== 2. Brand Logotype — 기획 p.49 (기본 로고타입 · 사용 규정 · 여백)
+         ⚠ 기획 p.49 의 [시그니처 조합] 블록은 뺐다(2026-08-21 지시). ===== -->
     <section class="sec sec--surface" id="logotype">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND LOGOTYPE</b><span>브랜드 로고타입</span></p>
         <h2 class="h2 rv">전용 서체로 다시 그린 <em>B·CITY 워드마크</em></h2>
         <p class="lede rv">기존 서체를 가져다 쓰지 않고, 브랜드 전용으로 수정한 기하학적 산세리프입니다</p>
 
-        <!-- 기획(클로드 디자인 와이어프레임 p.49)의 세 블록 순서를 그대로 따른다 —
-             [기본 로고타입] → [시그니처 조합] → [사용 규정 · 여백]. -->
         <!-- [기본 로고타입 | 심볼 마크] 2단. **제목도 박스 밖 같은 줄**에 온다(2026-08-20 지시).
              ⚠ 제목과 박스를 **한 그리드**에 넣고 CSS 의 `grid-area` 로 자리를 명시한다.
                컨테이너를 둘로 나눠 열 정의를 두 번 쓰면 한쪽만 바뀔 때 어긋나고,
@@ -793,35 +763,6 @@
           </div>
         </div>
 
-        
-        <h3 class="br-h3 rv">시그니처 조합 <span>SIGNATURE LOCKUPS</span></h3>
-
-        <ul class="br-vars rv">
-            <li class="br-var br-var--main">
-              <span class="br-var-fig"><img src="assets/logo/bcity-logo.svg" alt="B·CITY 기본 로고 — 인디고 워드마크에 민트·애저 심볼" width="2518" height="421" /></span>
-              <span class="br-var-cap"><i>01</i><b>Main</b><span>기본 · 공식 매체</span></span>
-            </li>
-            <li class="br-var br-var--navy">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>02</i><b>Mono Navy</b><span>단색 인쇄 · 간결한 상황</span></span>
-            </li>
-            <li class="br-var br-var--black">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>03</i><b>Mono Black</b><span>팩스 · 문서 흑백 출력</span></span>
-            </li>
-            <li class="br-var br-var--rev">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>04</i><b>Reverse White</b><span>어두운 배경 · 야간 사이니지</span></span>
-            </li>
-            <li class="br-var br-var--blue">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>05</i><b>On Vibrant Blue</b><span>강조 컬러 배경</span></span>
-            </li>
-            <li class="br-var br-var--sym">
-              <span class="br-var-fig"><img src="assets/brand/symbol.svg" alt="B·CITY 심볼 마크" width="308" height="332" /></span>
-              <span class="br-var-cap"><i>06</i><b>Symbol Only</b><span>파비콘 · 작은 매체 · 패턴</span></span>
-            </li>
-        </ul>
 
         <h3 class="br-h3 rv">사용 규정 · 여백 <span>USAGE &amp; CLEAR SPACE</span></h3>
         <div class="br-panel br-rules rv">

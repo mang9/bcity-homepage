@@ -17,6 +17,16 @@
 .hero h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(34px, 4.2vw, 62px); line-height: 1.14; letter-spacing: -.025em; }
 
+/* ===== 히어로 없는 카테고리 — GNB 바로 아래에 LNB 만 =====
+   도시소개 · 투자·입주 가 이 형태다(nav.json 의 `hero: false`).
+   ⚠ GNB 가 `position: fixed` 라 흐름에서 빠져 있다. 본문을 그만큼 내려야 LNB 가
+     GNB 뒤에 숨지 않는다. `body` 에 패딩을 줘도 GNB 는 영향받지 않는다.
+   ⚠ GNB 를 **처음부터 흰 배경**으로 둔다. 기본 상태는 히어로 사진 위를 전제로 흰 글자라,
+     밝은 페이지 배경 위에서는 글자가 보이지 않는다. `common.js` 는 스크롤 40px 부터
+     `.is-solid` 를 붙이므로 맨 위에서는 붙지 않는다 → CSS 로 같은 값을 함께 준다. */
+.no-hero { padding-top: var(--gnb-h); }
+.no-hero .lnb { top: var(--gnb-h); }
+
 /* ===== LNB ===== */
 .lnb { position: sticky; top: 0; z-index: 40; background: var(--color-surface);
   border-bottom: 1px solid var(--color-line); }

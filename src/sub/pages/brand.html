@@ -4,13 +4,10 @@
   "title": "브랜드 · B-CITY 춘천기업혁신파크",
   "description": "도시와 바이오가 하나가 되는 곳. B-CITY의 브랜드 네임과 심볼, 로고타입 시스템, 그리고 인디고·민트·애저 3색 컬러 시스템을 소개합니다.",
   "nav": "brand",
-  "heroImg": "assets/slide-night.jpg",
   "h1": "브랜드",
   "css": ["page-shared", "page-brand"]
 }
 -->
-    {{> brand-defs}}
-
     <!-- ===== 1. Brand name — 기획 p.48 ===== -->
     <section class="sec" id="name">
       <div class="wrap">
@@ -55,15 +52,14 @@
       </div>
     </section>
 
-    <!-- ===== 2. Brand Logotype — 기획 p.49 (기본 로고타입 · 시그니처 조합 · 사용 규정 · 여백) ===== -->
+    <!-- ===== 2. Brand Logotype — 기획 p.49 (기본 로고타입 · 사용 규정 · 여백)
+         ⚠ 기획 p.49 의 [시그니처 조합] 블록은 뺐다(2026-08-21 지시). ===== -->
     <section class="sec sec--surface" id="logotype">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND LOGOTYPE</b><span>브랜드 로고타입</span></p>
         <h2 class="h2 rv">전용 서체로 다시 그린 <em>B·CITY 워드마크</em></h2>
         <p class="lede rv">기존 서체를 가져다 쓰지 않고, 브랜드 전용으로 수정한 기하학적 산세리프입니다</p>
 
-        <!-- 기획(클로드 디자인 와이어프레임 p.49)의 세 블록 순서를 그대로 따른다 —
-             [기본 로고타입] → [시그니처 조합] → [사용 규정 · 여백]. -->
         <!-- [기본 로고타입 | 심볼 마크] 2단. **제목도 박스 밖 같은 줄**에 온다(2026-08-20 지시).
              ⚠ 제목과 박스를 **한 그리드**에 넣고 CSS 의 `grid-area` 로 자리를 명시한다.
                컨테이너를 둘로 나눠 열 정의를 두 번 쓰면 한쪽만 바뀔 때 어긋나고,
@@ -102,35 +98,6 @@
           </div>
         </div>
 
-        
-        <h3 class="br-h3 rv">시그니처 조합 <span>SIGNATURE LOCKUPS</span></h3>
-
-        <ul class="br-vars rv">
-            <li class="br-var br-var--main">
-              <span class="br-var-fig"><img src="assets/logo/bcity-logo.svg" alt="B·CITY 기본 로고 — 인디고 워드마크에 민트·애저 심볼" width="2518" height="421" /></span>
-              <span class="br-var-cap"><i>01</i><b>Main</b><span>기본 · 공식 매체</span></span>
-            </li>
-            <li class="br-var br-var--navy">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>02</i><b>Mono Navy</b><span>단색 인쇄 · 간결한 상황</span></span>
-            </li>
-            <li class="br-var br-var--black">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>03</i><b>Mono Black</b><span>팩스 · 문서 흑백 출력</span></span>
-            </li>
-            <li class="br-var br-var--rev">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>04</i><b>Reverse White</b><span>어두운 배경 · 야간 사이니지</span></span>
-            </li>
-            <li class="br-var br-var--blue">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>05</i><b>On Vibrant Blue</b><span>강조 컬러 배경</span></span>
-            </li>
-            <li class="br-var br-var--sym">
-              <span class="br-var-fig"><img src="assets/brand/symbol.svg" alt="B·CITY 심볼 마크" width="308" height="332" /></span>
-              <span class="br-var-cap"><i>06</i><b>Symbol Only</b><span>파비콘 · 작은 매체 · 패턴</span></span>
-            </li>
-        </ul>
 
         <h3 class="br-h3 rv">사용 규정 · 여백 <span>USAGE &amp; CLEAR SPACE</span></h3>
         <div class="br-panel br-rules rv">

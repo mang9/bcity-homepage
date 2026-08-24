@@ -1,8 +1,9 @@
 /* ===== 브랜드 (도시소개) =====
    내용 구성은 클로드 디자인 기획(와이어프레임 p.48~50 · 도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
    자산 출처는 assets/brand/README 대신 이 주석 — symbol.svg 는 assets/logo/bcity-logo.svg 에서
-   민트·애저 패스만 뽑은 것이고, 워드마크는 partials/brand-defs.svg 의 <symbol id="wm"> 한 벌을
-   <use> 로 돌려 쓴다(로고 변형 6종이 같은 도형을 색만 바꿔 쓰기 때문). */
+   민트·애저 패스만 뽑은 것이다. 워드마크는 assets/logo/bcity-logo.svg 를 그대로 싣는다.
+   ⚠ 로고 변형 6종(시그니처 조합)과 그것만 쓰던 partials/brand-defs.svg 의 <symbol id="wm">,
+     `.br-vars`/`.br-var*`/`.br-wmk` 규칙은 2026-08-21 지시로 함께 걷어냈다. */
 
 /* ---------- 1. 브랜드 네임 ---------- */
 
@@ -148,31 +149,9 @@
 .br-symmark-d { margin: 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
 /* 로고 변형 6종 — 변형마다 배경이 다르므로 그림 영역과 설명을 분리한다 */
-.br-vars { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: clamp(14px, 1.4vw, 22px); margin: 0; padding: 0; }
-.br-var { border: 1px solid var(--color-line); border-radius: var(--radius-md); overflow: hidden; }
-.br-var-fig { display: flex; align-items: center; justify-content: center;
-  height: clamp(108px, 10vw, 156px); padding-inline: clamp(20px, 2.4vw, 40px);
-  background: var(--color-surface); }
-.br-var-fig img, .br-wmk { display: block; width: 100%; max-width: 240px; height: auto; }
 /* 기본(3색)은 원본 SVG 를 그대로 쓰고, 나머지 4종은 <use href="#wm"> + currentColor 다 */
-.br-var--main .br-var-fig { background: var(--color-surface); }
 /* 심볼 단독만 가로가 아니라 세로 기준으로 맞춘다 — 정사각에 가까워 폭을 맞추면 너무 커진다 */
-.br-var--sym .br-var-fig img { width: auto; height: clamp(52px, 5vw, 74px); max-width: none; }
-.br-var-cap { display: grid; grid-template-columns: auto 1fr; column-gap: 12px;
-  padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 22px);
-  border-top: 1px solid var(--color-line); }
-.br-var-cap i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: 20px; line-height: 1.1; color: var(--color-light-blue); }
-.br-var-cap b { font-size: 14px; letter-spacing: -.01em; }
-.br-var-cap > span { grid-column: 2; margin-top: 3px; font-size: 12px; color: var(--color-text-muted); }
 
-.br-var--navy .br-wmk { color: var(--color-logo); }
-.br-var--black .br-wmk { color: #111111; }
-.br-var--rev .br-var-fig { background: var(--color-navy); }
-.br-var--rev .br-wmk { color: #ffffff; }
-.br-var--blue .br-var-fig { background: var(--brand-azure); }
-.br-var--blue .br-wmk { color: #ffffff; }
 
 /* ---------- 3. 브랜드 컬러 ---------- */
 
@@ -214,12 +193,10 @@
 .br-cd { margin: 10px 0 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
 /* SVG 정의 전용 — 화면에서 자리를 차지하면 섹션 사이에 빈 줄이 생긴다 */
-.br-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
 /* ---------- 반응형 ---------- */
 
 @media (max-width: 1200px) {
-  .br-vars { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 1023px) {
   .br-sym { grid-template-columns: 1fr; }
@@ -238,6 +215,5 @@
   .br-colors { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 767px) {
-  .br-vars { grid-template-columns: 1fr; }
   .br-symmark-in { grid-template-columns: 1fr; }
 }

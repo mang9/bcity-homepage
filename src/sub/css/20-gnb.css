@@ -5,10 +5,15 @@
   transition: background .3s ease, color .3s ease, border-color .3s ease;
 }
 .gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
-.gnb.is-solid { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+/* ⚠ `.no-hero` 를 함께 넣는다(§11.61). 히어로가 없는 페이지는 맨 위에서도 밝은 배경
+     위에 놓이므로 흰 글자로 두면 로고와 메뉴가 보이지 않는다. 값을 복사하지 않고
+     선택자만 더해 한 곳에서 관리한다. */
+.gnb.is-solid,
+.no-hero .gnb { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
   color: var(--color-text); border-bottom-color: var(--color-line); }
 .logo { width: 118px; height: auto; color: currentColor; }
-.gnb.is-solid .logo { color: var(--color-logo); }
+.gnb.is-solid .logo,
+.no-hero .gnb .logo { color: var(--color-logo); }
 .gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
 .gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
 .gnb-menu a:hover { opacity: 1; }

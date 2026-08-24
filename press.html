@@ -104,10 +104,15 @@
       transition: background .3s ease, color .3s ease, border-color .3s ease;
     }
     .gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
-    .gnb.is-solid { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+    /* ⚠ `.no-hero` 를 함께 넣는다(§11.61). 히어로가 없는 페이지는 맨 위에서도 밝은 배경
+         위에 놓이므로 흰 글자로 두면 로고와 메뉴가 보이지 않는다. 값을 복사하지 않고
+         선택자만 더해 한 곳에서 관리한다. */
+    .gnb.is-solid,
+    .no-hero .gnb { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
       color: var(--color-text); border-bottom-color: var(--color-line); }
     .logo { width: 118px; height: auto; color: currentColor; }
-    .gnb.is-solid .logo { color: var(--color-logo); }
+    .gnb.is-solid .logo,
+    .no-hero .gnb .logo { color: var(--color-logo); }
     .gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
     .gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
     .gnb-menu a:hover { opacity: 1; }
@@ -163,6 +168,16 @@
     .hero-eyebrow b { color: #fff; font-weight: 700; }
     .hero h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(34px, 4.2vw, 62px); line-height: 1.14; letter-spacing: -.025em; }
+
+    /* ===== 히어로 없는 카테고리 — GNB 바로 아래에 LNB 만 =====
+       도시소개 · 투자·입주 가 이 형태다(nav.json 의 `hero: false`).
+       ⚠ GNB 가 `position: fixed` 라 흐름에서 빠져 있다. 본문을 그만큼 내려야 LNB 가
+         GNB 뒤에 숨지 않는다. `body` 에 패딩을 줘도 GNB 는 영향받지 않는다.
+       ⚠ GNB 를 **처음부터 흰 배경**으로 둔다. 기본 상태는 히어로 사진 위를 전제로 흰 글자라,
+         밝은 페이지 배경 위에서는 글자가 보이지 않는다. `common.js` 는 스크롤 40px 부터
+         `.is-solid` 를 붙이므로 맨 위에서는 붙지 않는다 → CSS 로 같은 값을 함께 준다. */
+    .no-hero { padding-top: var(--gnb-h); }
+    .no-hero .lnb { top: var(--gnb-h); }
 
     /* ===== LNB ===== */
     .lnb { position: sticky; top: 0; z-index: 40; background: var(--color-surface);
@@ -738,6 +753,11 @@
   </div>
 
   <main id="main">
+  <!-- 상단 블록 — 카테고리에 따라 [히어로 + LNB] 또는 [LNB 만] 이다.
+       어느 쪽인지는 nav.json 의 `hero` 가 정하고, 빌드(heroBlock)가 골라 미리 펼쳐 넣는다.
+       파티셜 이름을 여기에 박으면 카테고리별로 바꿀 수 없어 값으로 받는다.
+       ⚠ 이 주석에 파티셜 호출 문법을 **글자로도 쓰지 말 것.** render() 는 HTML 주석을
+         구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
       <img class="hero-bg" src="assets/img-street.jpg" alt="" />

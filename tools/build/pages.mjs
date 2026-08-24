@@ -61,7 +61,9 @@ function parsePage(src, file) {
   if (!m) throw new Error(`${file}: 선두 <!--build … --> 블록이 없다`);
   let fm;
   try { fm = JSON.parse(m[1]); } catch (e) { throw new Error(`${file}: front-matter JSON 오류 — ${e.message}`); }
-  for (const k of ['slug', 'title', 'description', 'nav', 'heroImg', 'h1']) {
+  /* ⚠ `heroImg` 는 여기서 검사하지 않는다 — 히어로가 없는 카테고리(nav.json 의
+       `hero: false`)는 아예 두지 않기 때문이다. 카테고리를 아는 자리에서 검사한다. */
+  for (const k of ['slug', 'title', 'description', 'nav', 'h1']) {
     if (!fm[k]) throw new Error(`${file}: front-matter 에 ${k} 가 없다`);
   }
   return { fm, body: src.slice(m[0].length).replace(/\s*$/, '') };
@@ -536,6 +538,16 @@ function navBits(cat, navKey) {
   return { gnbItems, mnavItems, lnbItems, footItems };
 }
 
+/** 상단 블록 — 카테고리의 `hero` 가 false 면 [LNB 만], 아니면 [히어로 + LNB].
+ *  ⚠ **미리 펼쳐서** 넘긴다. `render()` 는 ctx 값을 치환만 하고 그 안을 다시 훑지 않으므로
+ *    (본문 `main` 과 같은 사정) 여기서 펼치지 않으면 `{{ }}` 가 남아 빌드가 죽는다. */
+function heroBlock(cat, fm, ctx, file) {
+  const on = cat.hero !== false;
+  if (on && !fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 있는 카테고리다 — front-matter 에 heroImg 가 필요하다`);
+  if (!on && fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 없다 — 쓰이지 않는 heroImg 를 지울 것`);
+  return render(partial(on ? 'hero' : 'hero-lnb'), ctx, 1);
+}
+
 /** CSS 번들 — 공통 순서 뒤에 페이지 CSS. 파일마다 구분 주석을 남긴다 */
 function cssBundle(fm) {
   return [...CSS_COMMON, ...(fm.css || [])].map((n) => {
@@ -574,6 +586,16 @@ function build(file) {
     console.log(`    ${fm.slug}: ${fm.list.kind} 노출 ${rows.length}건`);
   }
 
+  const heroCtx0 = {
+    heroImg: fm.heroImg, h1: fm.h1,
+    catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
+    navLabel: esc(fm.crumb || item.label),
+    ...navBits(cat, fm.nav),
+  };
+  const heroCtx = { ...heroCtx0,
+    hero: heroBlock(cat, fm, heroCtx0, file),
+    bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
+
   const html = render(layout, {
     title: esc(fm.title),
     description: esc(fm.description),
@@ -585,11 +607,7 @@ function build(file) {
     main: body.replace('{{list}}', () => listHtml)
                .replace('{{controls}}', () => pressControls())
                .replace(/\{\{>\s*([\w-]+)\s*\}\}/g, (_, n) => partial(n)),
-    heroImg: fm.heroImg,
-    h1: fm.h1,
-    catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
-    navLabel: esc(fm.crumb || item.label),
-    ...navBits(cat, fm.nav),
+    ...heroCtx,
   });
 
   return { out: join(ROOT, fm.slug + '.html'), html: banner(file) + html, slug: fm.slug };
@@ -606,6 +624,16 @@ function buildDetails(file) {
   const rows = loadContent(kind);
   const { cat, item } = locate(fm.nav, file);
   const out = [];
+
+  const dHeroCtx0 = {
+    heroImg: fm.heroImg, h1: fm.h1,
+    catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
+    navLabel: esc(item.label),
+    ...navBits(cat, fm.nav),
+  };
+  const dHeroCtx = { ...dHeroCtx0,
+    hero: heroBlock(cat, fm, dHeroCtx0, file),
+    bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
 
   rows.forEach((r, i) => {
     const excerpt = (r.summary || (Array.isArray(r.body) ? r.body[0] : r.body) || r.title).slice(0, 150);
@@ -627,10 +655,7 @@ function buildDetails(file) {
       title: fill(fm.title), description: fill(fm.description),
       css: cssBundle(fm), js: jsBundle(fm),
       main: render(body, ctx, 1),
-      heroImg: fm.heroImg, h1: fm.h1,
-      catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
-      navLabel: esc(item.label),
-      ...navBits(cat, fm.nav),
+      ...dHeroCtx,
     });
     out.push({ out: join(ROOT, detailPath(fm.slugPrefix, r.id)), html: banner(file) + html,
                slug: detailPath(fm.slugPrefix, r.id).replace(/\.html$/, '') });
