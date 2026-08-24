@@ -1,13 +1,14 @@
 /* ===== 문의하기 (투자·입주) =====
    구성은 기획 #p-contact "16 · 투자·입주 > 문의하기"(Storyboard p.104) 그대로다 —
-   [시행자 정보] · [지도] 2단 · 마무리 카피 · 접수 안내.
+   [시행자 정보 + 길찾기·전화·문의하기 | 지도] 2단.
+   ⚠ 마무리 카피와 접수 안내 문단은 2026-08-24 지시로 뺐다 — 문의하기 버튼이 그 역할을 한다.
    ⚠ 문의 폼은 여기에 없다. 실제 접수 폼은 메인 `#contact` 한 곳뿐이고, 두 벌이 되면
      한쪽만 고쳐져 접수가 새는 쪽이 생긴다. 여기서는 그 폼으로 보낸다. */
 
 /* 지도가 오른쪽에 온다(2026-08-24 지시). 지도 비율(504:310)이 정해져 있으므로
    왼쪽 정보 칸을 조금 넓게 잡아 두 칸의 아래가 크게 어긋나지 않게 한다. */
 .ci-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
-  gap: clamp(22px, 2.6vw, 48px); margin-top: clamp(28px, 3vw, 48px);
+  column-gap: clamp(22px, 2.6vw, 48px); margin-top: clamp(28px, 3vw, 48px);
   align-items: start; }
 /* ⚠ 자리를 **명시**한다. 왼쪽 칸에 두 덩이(정보 + 버튼)가 들어가므로 자동 배치에 맡기면
      버튼이 2열을 먹고 지도가 1열 둘째 줄로 밀린다(실측: 지도가 641px 로 왼쪽에 있었다). */
@@ -19,9 +20,13 @@
 .ci-lead > .eyebrow { margin-top: 0; }
 .ci-info { grid-area: 2 / 1; }
 .ci-acts { grid-area: 3 / 1; }
-/* 지도는 왼쪽 세 덩이 전체 높이에 걸치되 **맨 위에 붙는다** — 비율이 고정이라 늘어나지
-   않으므로 `align-self: start` 로 제목 줄에 맞춘다(2026-08-24 지시로 여기까지 올렸다). */
-.ci-map  { grid-area: 1 / 2 / 4 / 3; align-self: start; }
+/* ⚠ 지도는 **`홈페이지` 행 아래 괘선에 맞춰 내린다**(2026-08-24 지시) — 제목 줄까지
+     올렸더니 위에 붙어 보였다. 정보 목록이 끝나는 지점이 곧 3행의 시작이므로
+     `grid-row: 3` + `align-self: start` 면 지도 윗변이 그 괘선에 정확히 닿는다.
+   ⚠ 그러려면 `.ci-grid` 의 **세로 간격이 0** 이어야 한다 — `gap` 대신 `column-gap` 만 주고
+     세로 간격은 각 덩이의 `margin-top` 으로 잡는다. `gap` 을 두면 행 간격만큼 지도가 더
+     내려가 괘선과 어긋난다. */
+.ci-map  { grid-area: 3 / 2; align-self: start; }
 
 /* ── 시행자 정보 — **카드가 아니다**(2026-08-24 지시) ────────────────────
    흰 상자 + 위쪽 강조선은 투자·입주의 특구/혜택 카드가 쓰는 어법이다. 여기서 또 쓰면
@@ -38,8 +43,9 @@
 .ci-info dd { margin: 0; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(15px, 1.3vw, 20px); line-height: 1.5; letter-spacing: -.018em;
   color: var(--color-text); word-break: keep-all; }
-/* 첫 줄(시행자)만 프라이머리로 — 누가 이 사업을 하는지가 이 블록의 주어다 */
-.ci-info > div:first-child dd { color: var(--color-primary); }
+/* ⚠ 첫 줄(시행자)은 **본문색**이다(2026-08-24 지시). 프라이머리로 두었더니 아래
+     전화·홈페이지 링크(같은 색)와 같은 무게로 읽혀 링크처럼 보였다. */
+.ci-info > div:first-child dd { color: var(--color-text); }
 .ci-info a { color: var(--color-primary); text-decoration: none; }
 .ci-info a:hover, .ci-info a:focus-visible { text-decoration: underline;
   text-underline-offset: 3px; }
@@ -54,6 +60,13 @@
   transition: border-color .2s, background .2s; }
 .ci-act:hover, .ci-act:focus-visible { border-color: var(--color-primary);
   background: var(--color-bg); }
+/* 문의하기 — 이 페이지의 유일한 주행동이므로 셋 중 하나만 면을 채운다.
+   ⚠ 실제 접수 폼은 메인 `#contact` 한 곳뿐이다(백엔드 미연결 시 메일로 넘기는 분기까지
+     그쪽에 있다). 여기서 폼을 복제하면 한쪽만 고쳐져 접수가 새는 쪽이 생긴다. */
+.ci-act--go { background: var(--color-primary); border-color: var(--color-primary);
+  color: #ffffff; }
+.ci-act--go:hover, .ci-act--go:focus-visible { background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover); }
 
 /* ── 지도 (카카오맵 정적 지도) ─────────────────────────────────────────
    ⚠ 퍼가기 코드의 고정 폭(504px)을 쓰지 않는다. 이미지는 칸 폭에 맞추고 비율만 지킨다.
@@ -88,17 +101,6 @@
   text-decoration: none; }
 .ci-map-bar a:hover, .ci-map-bar a:focus-visible { color: var(--color-primary);
   text-decoration: underline; text-underline-offset: 3px; }
-
-/* 접수 안내 — 실제 폼은 메인 `#contact` 다 */
-.ci-cta { display: flex; flex-wrap: wrap; align-items: center;
-  gap: clamp(12px, 1.4vw, 22px); margin: clamp(28px, 3vw, 48px) 0 0; }
-.ci-cta span { font-size: clamp(13px, .98vw, 15px); color: var(--color-text-muted);
-  word-break: keep-all; }
-.ci-cta-b { flex: none; padding: clamp(13px, 1.3vw, 17px) clamp(24px, 2.4vw, 38px);
-  border-radius: 999px; background: var(--color-primary); color: #ffffff;
-  font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.1vw, 16.5px);
-  text-decoration: none; transition: background .2s; }
-.ci-cta-b:hover, .ci-cta-b:focus-visible { background: var(--color-primary-hover); }
 
 @media (max-width: 899px) {
   /* 두 칸을 나란히 두면 주소가 3~4줄로 접히고 지도도 너무 작아진다 → 위아래로 쌓는다.
