@@ -25,9 +25,15 @@
         <p class="lede rv">사업 · 투자 · 입주에 관한 문의를 기다립니다</p>
 
         <div class="ci-grid rv">
-          <!-- 시행자 정보 — 기획서의 [구분 | 내용] 표를 정의 목록으로 옮겼다.
-               두 열뿐이고 각 항목이 독립적이라 `<dl>` 이 표보다 읽기 쉽다(스크린리더 포함). -->
+          <!-- 좌: 시행자 정보. 카드 대신 **밑줄로만 나누는 사양 목록**이다(2026-08-24 지시) —
+               이 페이지에만 흰 카드가 또 있으면 투자·입주의 카드들과 구분이 안 된다.
+               `구분` 에 시행자(회사명)를 더했다. 표기는 사이트가 이미 쓰는 `바이오테크 이노밸리 PFV`
+               로 맞춘다 — 법인 전체 이름은 아래 마무리 카피에 그대로 있다. -->
           <dl class="ci-info">
+            <div>
+              <dt>시행자</dt>
+              <dd>바이오테크 이노밸리 PFV</dd>
+            </div>
             <div>
               <dt>주소</dt>
               <dd>서울특별시 광진구 자양로 58, 태림빌딩 3층</dd>
@@ -41,21 +47,30 @@
               <dd><a href="https://www.biotech-iv.com/" target="_blank" rel="noopener">www.biotech-iv.com<span class="sr"> (새 창)</span></a></dd>
             </div>
           </dl>
+          <p class="ci-acts">
+            <a class="ci-act" href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창)</span></a>
+            <a class="ci-act" href="tel:07041300423">전화 연결</a>
+          </p>
 
-          <!-- 찾아오시는 길. ⚠ 기획서는 "카카오/네이버 지도 API 연동" 을 적어 뒀지만 키가
-               필요하다 → 키 없이 되는 **길찾기 링크**로 먼저 연결한다. 빈 회색 상자를
-               올려 두지 않는다(라이브 페이지다). API 키가 생기면 이 자리에 임베드한다. -->
-          <div class="ci-map">
-            <p class="ci-map-h">찾아오시는 길</p>
-            <p class="ci-map-a">서울특별시 광진구 자양로 58, 태림빌딩 3층</p>
-            <ul class="ci-acts">
-              <li><a class="ci-act" href="https://map.kakao.com/?q=%EC%84%9C%EC%9A%B8%EC%8A%A4%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EC%9E%90%EC%96%91%EB%A1%9C%2058"
-                     target="_blank" rel="noopener">카카오맵 길찾기<span class="sr"> (새 창)</span></a></li>
-              <li><a class="ci-act" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%EC%8A%A4%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EC%9E%90%EC%96%91%EB%A1%9C%2058"
-                     target="_blank" rel="noopener">네이버지도 길찾기<span class="sr"> (새 창)</span></a></li>
-              <li><a class="ci-act ci-act--tel" href="tel:07041300423">전화 연결 070-4130-0423</a></li>
-            </ul>
-          </div>
+          <!-- 우: 카카오맵 정적 지도. 사용자가 준 퍼가기 코드를 바탕으로 했다.
+               ⚠ `IW`/`IH` 를 2배(1008x620)로 올렸다. 준 코드의 504x310 은 **실제 픽셀도 504** 라
+                 넓은 칸에서 늘리면 흐려진다(실측). 화면 크기는 CSS 의 `aspect-ratio` 가 잡는다.
+               ⚠ 퍼가기 코드의 고정 폭(504px · 482px)과 인라인 색은 걷었다 — 반응형이 아니고
+                 팔레트에 없는 색이 섞인다. 모양은 CSS 에서 토큰으로 다시 만든다.
+               ⚠ 카카오맵 로고와 "지도 크게 보기" 는 **남겨야 한다**(퍼가기 표기 조건).
+               ⚠ 정적 이미지라 키가 필요 없다. 이 자리를 동적 지도로 바꾸려면 API 키가 필요하다. -->
+          <figure class="ci-map">
+            <a class="ci-map-a" href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">
+              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1008&amp;IH=620&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1008" height="620" loading="lazy" decoding="async"
+                   alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
+              <span class="sr">카카오맵에서 크게 보기 (새 창)</span>
+            </a>
+            <figcaption class="ci-map-bar">
+              <img class="ci-map-logo" src="https://t1.kakaocdn.net/localimg/localimages/07/2018/pc/common/logo_kakaomap.png"
+                   width="72" height="16" loading="lazy" decoding="async" alt="카카오맵" />
+              <a href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">지도 크게 보기<span class="sr"> (새 창)</span></a>
+            </figcaption>
+          </figure>
         </div>
 
         <div class="closer rv">
