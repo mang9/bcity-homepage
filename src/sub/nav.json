@@ -10,6 +10,7 @@
     "href : 루트 기준 상대 경로. index.html#앵커 는 아직 서브페이지가 없는 항목이다",
     "앞의 세 항목은 한 페이지(invest.html)의 앵커다 — 내용이 적어 합쳤다(2026-08-24 지시).",
     "hero : false 면 상단 이미지 영역 없이 GNB 바로 아래에 LNB 만 온다(2026-08-21 지시).",
+    "       도시소개만 해당한다 — 투자·입주는 2026-08-24 지시로 다시 히어로를 쓴다.",
     "       그 카테고리 페이지들은 front-matter 에 heroImg 를 두지 않는다 — 쓰이지 않는다."
   ],
 
@@ -41,7 +42,7 @@
       ]
     },
     {
-      "key": "invest", "hero": false, "no": "03", "label": "투자·입주", "en": "INVEST",
+      "key": "invest", "no": "03", "label": "투자·입주", "en": "INVEST",
       "items": [
         { "key": "land",         "label": "토지확보 현황", "href": "invest.html#land" },
         { "key": "zone-benefit", "label": "특구별 혜택",   "href": "invest.html#zone" },

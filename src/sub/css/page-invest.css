@@ -33,40 +33,53 @@
 /* ── 확보율 게이지 (토지확보 현황 02) ──────────────────────────────
    막대 길이는 인라인 `--v`, 법적 요건 눈금은 `--legal` 이 정한다.
    ⚠ 값이 바뀌면 마크업의 숫자(data-count 포함)와 이 두 변수를 **함께** 고친다. */
-.iv-gauge { margin-top: clamp(22px, 2.2vw, 34px); padding: clamp(22px, 2.4vw, 36px);
+/* ── 토지확보 현황 — 도넛 + 값 3장 (기획서 #p-invest "1. B-CITY 토지확보 현황") ──
+   ⚠ 도넛은 `conic-gradient` 로 그린다. 값 하나(`--v`)로 각도가 정해져 SVG 각도 계산이
+     필요 없고, 마크업의 숫자와 어긋날 여지가 없다. 가운데는 흰 원으로 파낸다. */
+.iv-stat { display: grid; align-items: center;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 56px);
+  margin-top: clamp(22px, 2.2vw, 34px); padding: clamp(24px, 2.6vw, 40px);
   background: var(--color-surface); border: 1px solid var(--color-line);
   border-radius: var(--radius-lg); }
-.iv-gauge-tags { display: flex; flex-wrap: wrap; gap: clamp(16px, 2.4vw, 44px);
-  justify-content: flex-end; margin: 0 0 clamp(14px, 1.4vw, 20px); }
-.iv-tag { display: flex; flex-direction: column; gap: 2px; text-align: right; }
-.iv-tag b { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
-.iv-tag em { font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(22px, 2.2vw, 34px); line-height: 1.1; font-variant-numeric: tabular-nums; }
-.iv-tag--legal em { color: var(--color-text-muted); }
-.iv-tag--own em { color: var(--color-primary); }
-/* 기획에 새로 붙은 세 번째 값(2026-08-24) — 법적 요건 대비 초과분. 확보율의 의미를
-   숫자 하나로 못 박아 준다. 단위는 %p 이므로 작게 붙여 %와 혼동되지 않게 한다. */
-.iv-tag--over em { color: var(--color-mint); }
-.iv-tag--over em span { font-size: .66em; margin-left: 1px; }
+.iv-donut { margin: 0; display: grid; justify-items: center; gap: clamp(14px, 1.4vw, 20px); }
+.iv-donut-g { position: relative; display: grid; place-content: center; gap: 2px;
+  width: clamp(150px, 15vw, 208px); aspect-ratio: 1; border-radius: 50%;
+  background: conic-gradient(var(--color-primary) 0 var(--v, 0%),
+                             var(--color-bg) var(--v, 0%) 100%); }
+/* 가운데를 파내는 흰 원. `mask` 를 쓰지 않는다 — 안쪽에 글자를 얹으므로 실제 면이 필요하다. */
+.iv-donut-g::before { content: ""; position: absolute; inset: clamp(20px, 2vw, 30px);
+  border-radius: 50%; background: var(--color-surface); }
+.iv-donut-v, .iv-donut-l { position: relative; text-align: center; }
+.iv-donut-v { font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -.03em; color: var(--color-primary); }
+.iv-donut-l { font-size: 12px; font-weight: 700; color: var(--color-text-muted); }
+.iv-donut-lg { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; }
+.iv-donut-k { position: relative; padding-left: 15px; font-size: 12.5px;
+  color: var(--color-text-muted); }
+.iv-donut-k::before { content: ""; position: absolute; left: 0; top: .42em;
+  width: 9px; height: 9px; border-radius: 2px; background: var(--color-bg);
+  border: 1px solid var(--color-line); }
+.iv-donut-k--on::before { background: var(--color-primary); border-color: var(--color-primary); }
 
-.iv-gauge-bar { position: relative; height: clamp(16px, 1.6vw, 24px);
-  background: var(--color-bg); border-radius: 999px; overflow: hidden; }
-.iv-gauge-fill { position: absolute; inset: 0 auto 0 0; width: var(--v);
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-mint)); }
-/* 법적 요건 눈금 — 채움 위에 얹는다. 흰 선이라 어디까지가 '최소'인지 바로 읽힌다 */
-.iv-gauge-legal { position: absolute; top: 0; bottom: 0; left: var(--legal);
-  width: 2px; background: var(--color-surface); }
-.iv-gauge-scale { display: flex; margin: 8px 0 0; padding: 0; list-style: none;
-  font-size: 11.5px; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
-/* 눈금 0·50·75·100 을 실제 위치에 맞춰 놓는다(균등 분할이 아니다) */
-.iv-gauge-scale span { position: relative; }
-.iv-gauge-scale span:nth-child(1) { flex: 0 0 50%; }
-.iv-gauge-scale span:nth-child(2) { flex: 0 0 25%; }
-.iv-gauge-scale span:nth-child(3) { flex: 0 0 25%; }
-.iv-gauge-scale span:nth-child(4) { flex: 0 0 0; margin-left: auto; }
-/* 확보율의 산정 기준 각주 — 게이지 바로 아래, 눈금과 겹치지 않게 */
-.iv-gauge-note { margin: clamp(12px, 1.2vw, 18px) 0 0; text-align: right;
+/* 값 3장 — 법적 요건 / 확보율 / 초과분. 확보율만 강조하고 초과분은 민트로 구분한다. */
+.iv-tiles { list-style: none; display: grid; gap: clamp(10px, 1vw, 16px);
+  grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; }
+.iv-tile { padding: clamp(16px, 1.6vw, 24px);
+  background: var(--color-bg); border-radius: var(--radius-md);
+  border-top: 3px solid var(--color-line); }
+.iv-tile--on { border-top-color: var(--color-primary); }
+.iv-tile--over { border-top-color: var(--color-mint); }
+.iv-tile-t { display: block; font-size: 13px; font-weight: 700; color: var(--color-text); }
+.iv-tile-s { display: block; margin-top: 3px; font-size: 11.5px; color: var(--color-text-muted); }
+.iv-tile-v { display: block; margin-top: clamp(10px, 1vw, 16px); font-style: normal;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em;
+  font-size: clamp(21px, 2.1vw, 30px); color: var(--color-text-muted); }
+.iv-tile--on .iv-tile-v { color: var(--color-primary); }
+.iv-tile--over .iv-tile-v { color: var(--color-mint); }
+.iv-tile-v span { font-size: .58em; margin-left: 1px; }
+/* 확보율의 산정 기준 — 도넛과 타일 아래를 가로질러 오른쪽에 붙인다 */
+.iv-stat-note { grid-column: 1 / -1; margin: 0; text-align: right;
   font-size: 11.5px; color: var(--color-text-muted); }
 
 /* ── 특구 카드 (특구별 혜택) — IM 슬라이드 17 배치를 그대로 옮겼다 ──────────
@@ -86,16 +99,29 @@
   background: var(--color-surface);
   border: 1px solid var(--color-line); border-top: 5px solid var(--color-primary);
   border-radius: 0 0 var(--radius-md) var(--radius-md); }
-/* 원형 배지 + 아이콘. 아이콘은 currentColor 라 배지 쪽 색이 그대로 실린다. */
-.iv-sz-ic { display: grid; place-items: center; width: 56px; height: 56px;
+/* 머리 — **아이콘 옆에 제목**(2026-08-24 지시). 아이콘은 줄어들지 않게 flex: none.
+   ⚠ 제목 칸에 `min-width: 0` 이 필요하다. 없으면 긴 단어가 flex 항목의 최소 폭을
+     밀어 올려 카드 밖으로 삐져나온다. */
+.iv-sz-h { display: flex; align-items: center; gap: clamp(12px, 1.2vw, 18px); }
+.iv-sz-h > div { min-width: 0; }
+/* 원형 배지 + 아이콘. 아이콘이 `currentColor` 라 여기 색이 그대로 실린다 —
+   프라이머리 컬러다(2026-08-24 지시). ⚠ SVG 안에 색을 박아 두면 이 값이 무시된다. */
+.iv-sz-ic { flex: none; display: grid; place-items: center; width: 52px; height: 52px;
   border-radius: 999px; background: var(--color-bg); color: var(--color-primary); }
-.iv-sz-ic img { width: 26px; height: 26px; }
-.iv-sz-t { margin: clamp(14px, 1.4vw, 20px) 0 0; font-family: var(--font-display);
+/* ⚠ 아이콘을 `<img>` 로 넣으면 안 된다. **외부 SVG 는 문서의 `currentColor` 를 상속하지
+     않아** 글리프가 검정으로 찍힌다(실측 #000000, computed 는 프라이머리였다).
+     `mask-image` 로 모양만 쓰고 색은 `background: currentColor` 가 낸다 — 그래야 같은
+     파일 하나로 특구 카드(프라이머리)와 주요 혜택 카드(흰색)를 모두 칠할 수 있다.
+   ⚠ CSS 는 페이지마다 인라인되므로 `url()` 은 **문서 기준** 상대경로다(§11.5). */
+.iv-ic { display: block; width: 24px; height: 24px; background: currentColor;
+  -webkit-mask: var(--ic) center / contain no-repeat;
+          mask: var(--ic) center / contain no-repeat; }
+.iv-sz-t { margin: 0; font-family: var(--font-display);
   font-weight: 700; font-size: clamp(15.5px, 1.25vw, 19px); line-height: 1.4;
   letter-spacing: -.015em; color: var(--color-primary); word-break: keep-all; }
 .iv-sz-t i { display: inline-block; font-style: normal; font-weight: 600; font-size: .78em;
   color: var(--color-text-muted); }
-.iv-sz-area { margin: 9px 0 0; font-size: 12.5px; font-weight: 700;
+.iv-sz-area { margin: 5px 0 0; font-size: 12.5px; font-weight: 700;
   color: var(--color-text-muted); }
 /* 구분선 — IM 의 329x1 #D8E2F0 */
 .iv-sz-gs { list-style: none; margin: clamp(14px, 1.4vw, 20px) 0 0; padding: 0;
@@ -122,10 +148,26 @@
   margin: clamp(28px, 3vw, 48px) 0 0; padding: 0; }
 .iv-sum-i { padding: clamp(22px, 2.2vw, 32px);
   background: var(--color-primary); border-radius: var(--radius-lg); color: #fff; }
-.iv-sum-t { display: block; font-family: var(--font-display); font-weight: 700;
+/* 아이콘은 짙은 면 위이므로 배지를 흰 반투명으로 두고 글리프를 흰색으로 둔다 —
+   특구 카드와 반대다(그쪽은 흰 면 위 프라이머리). */
+.iv-sum-ic { display: grid; place-items: center; width: 46px; height: 46px;
+  border-radius: 999px; background: rgba(255, 255, 255, .16); color: #fff; }
+.iv-sum-ic .iv-ic { width: 22px; height: 22px; }
+.iv-sum-no { margin: clamp(14px, 1.4vw, 20px) 0 0; display: flex; align-items: baseline; gap: 9px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
+  color: rgba(255, 255, 255, .7); }
+.iv-sum-no b { font-family: var(--font-display); font-size: 13px; letter-spacing: 0; color: #fff; }
+.iv-sum-t { display: block; margin-top: 6px; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(17px, 1.45vw, 22px); letter-spacing: -.015em; }
-.iv-sum-d { margin: 8px 0 0; font-size: 13.5px; line-height: 1.65;
-  color: rgba(255, 255, 255, .86); }
+/* 핵심 값 한 줄 — 표를 열기 전에 규모가 읽혀야 한다(기획서에 이 줄이 있다) */
+.iv-sum-v { display: block; margin-top: clamp(8px, .9vw, 12px); font-style: normal;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em;
+  font-size: clamp(15px, 1.3vw, 19px); color: var(--color-light-blue); word-break: keep-all; }
+.iv-sum-k { list-style: none; display: flex; flex-wrap: wrap; gap: 6px;
+  margin: clamp(14px, 1.4vw, 20px) 0 0; padding: 0; }
+.iv-sum-k li { padding: 4px 11px; border-radius: 999px;
+  background: rgba(255, 255, 255, .14); font-size: 12.5px; font-weight: 600;
+  color: rgba(255, 255, 255, .92); }
 
 /* ── 기업 유형별 지원 표 (주요 혜택) ────────────────────────────────
    원문 표(스토리보드 slide94)의 병합 구조를 rowspan/colspan 으로 그대로 옮겼다.
@@ -163,7 +205,7 @@
 .iv-fnb { margin-left: 6px; color: var(--color-primary); text-decoration: none; }
 .iv-fnb:hover, .iv-fnb:focus-visible { text-decoration: underline; }
 /* 각주로 뛰었을 때 sticky LNB 밑으로 파고들지 않게 한다 */
-.iv-fn li:target, .iv-tbl sup a:target { scroll-margin-top: calc(var(--lnb-h) + 16px); }
+.iv-fn li:target, .iv-tbl sup a:target { scroll-margin-top: calc(var(--gnb-h) + var(--lnb-h) + 16px); }
 
 /* ── 원페이지 앵커 (투자·입주) ──────────────────────────────────────
    ⚠ 화면 위를 **두 겹이** 덮는다 — GNB(fixed 64px) + LNB(sticky 58px).
@@ -171,7 +213,6 @@
    ⚠ 세 섹션 사이에 위아래 여백이 두 번 겹치지 않게 한다 — `.sec` 이 양쪽에 여백을 주므로
      이어지는 섹션은 위쪽만 남긴다. */
 .iv-sec { scroll-margin-top: calc(var(--gnb-h) + var(--lnb-h)); }
-.iv-lead { padding-bottom: 0; }
 .iv-sec + .iv-sec { padding-top: 0; }
 /* 이어지는 섹션 사이에 `.sec` 의 아래 여백(최대 112px)과 구분선 여백이 겹쳐 270px 가
    비었다(실측). 뒤에 섹션이 더 있으면 아래 여백을 줄인다. */
@@ -183,11 +224,14 @@
 
 /* ── 반응형 ───────────────────────────────────────────────────────── */
 @media (max-width: 1023px) {
+  /* 도넛 옆에 값 3장을 두면 타일이 100px 대로 좁아져 숫자가 접힌다 → 위아래로 쌓는다 */
+  .iv-stat { grid-template-columns: minmax(0, 1fr); }
+  .iv-stat-note { text-align: center; }
   /* 카드 3장이 320px 아래로 좁아지면 한글이 6~7자마다 끊긴다 → 한 열로 쌓는다 */
   .iv-szs { grid-template-columns: minmax(0, 1fr); }
   .iv-sz-t br { display: none; }
 }
 @media (max-width: 767px) {
   .iv-sum { grid-template-columns: minmax(0, 1fr); }
-  .iv-gauge-tags { justify-content: space-between; }
+  .iv-tiles { grid-template-columns: minmax(0, 1fr); }
 }

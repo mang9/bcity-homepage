@@ -538,6 +538,13 @@ function navBits(cat, navKey) {
   return { gnbItems, mnavItems, lnbItems, footItems };
 }
 
+/** 히어로 제목 아래 한 줄. front-matter 의 `heroLede` 가 있을 때만 문단을 만든다.
+ *  ⚠ 값이 없을 때 빈 `<p>` 를 내보내면 히어로 아래에 여백만 남는다 — 빈 문자열을 준다.
+ *  ⚠ `<br />` 를 쓸 수 있어야 하므로 이스케이프하지 않는다. 이 값은 우리가 쓴 것이고
+ *    사용자 입력이 아니다. */
+const heroLede = (fm) => fm.heroLede
+  ? `        <p class="hero-lede">${fm.heroLede}</p>` : '';
+
 /** 상단 블록 — 카테고리의 `hero` 가 false 면 [LNB 만], 아니면 [히어로 + LNB].
  *  ⚠ **미리 펼쳐서** 넘긴다. `render()` 는 ctx 값을 치환만 하고 그 안을 다시 훑지 않으므로
  *    (본문 `main` 과 같은 사정) 여기서 펼치지 않으면 `{{ }}` 가 남아 빌드가 죽는다. */
@@ -587,7 +594,7 @@ function build(file) {
   }
 
   const heroCtx0 = {
-    heroImg: fm.heroImg, h1: fm.h1,
+    heroImg: fm.heroImg, h1: fm.h1, heroLede: heroLede(fm),
     catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
     navLabel: esc(fm.crumb || item.label),
     ...navBits(cat, fm.nav),
@@ -626,7 +633,7 @@ function buildDetails(file) {
   const out = [];
 
   const dHeroCtx0 = {
-    heroImg: fm.heroImg, h1: fm.h1,
+    heroImg: fm.heroImg, h1: fm.h1, heroLede: heroLede(fm),
     catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
     navLabel: esc(item.label),
     ...navBits(cat, fm.nav),

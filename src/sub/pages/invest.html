@@ -4,7 +4,9 @@
   "title": "투자 · 입주 · B-CITY 춘천기업혁신파크",
   "description": "리스크는 줄이고 속도는 높이는 투자 환경. 토지확보 현황, 특구별 혜택, 이전기업 주요 혜택을 한 페이지에 모았습니다.",
   "nav": "land",
+  "heroImg": "assets/img/districts-aerial.avif",
   "h1": "투자 · 입주",
+  "heroLede": "리스크는 줄이고, 속도는 높이는 투자 환경<br />토지확보 현황부터 특구별 · 이전기업 혜택까지 한 번에",
   "crumb": "투자 · 입주",
   "css": ["page-shared", "page-invest"],
   "js": ["countup", "anchornav"]
@@ -16,15 +18,9 @@
          ⚠ 상단 LNB 가 그대로 **앵커 내비게이션**이다 — nav.json 의 세 항목이 이 페이지의
            `#land` · `#zone` · `#benefit` 를 가리키고, js/anchornav.js 가 현재 위치를 따라간다.
          ⚠ 각 섹션에 `scroll-margin-top` 이 필요하다. GNB(fixed) + LNB(sticky) 가 화면 위를
-           두 겹으로 덮으므로 그대로 뛰면 제목이 바 뒤로 들어간다. -->
-    <section class="sec iv-lead">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>INVEST</b><span>투자 · 입주</span></p>
-        <h2 class="h2 rv">리스크는 줄이고, <em>속도는 높이는</em> 투자 환경</h2>
-        <p class="lede rv">토지확보 현황부터 특구별 · 이전기업 혜택까지 한 번에</p>
-      </div>
-    </section>
-
+           두 겹으로 덮으므로 그대로 뛰면 제목이 바 뒤로 들어간다.
+         ⚠ 상단 카피는 **히어로 안**에 있다(front-matter 의 `heroLede`) — 2026-08-24 지시로
+           사업소개처럼 상단 이미지 영역에 넣었다. 여기에 또 두면 같은 문장이 두 번 나온다. -->
     <!-- ===== 01 토지확보 현황 ===== -->
     <section class="sec iv-sec" id="land">
       <div class="wrap">
@@ -33,7 +29,49 @@
         <p class="lede rv">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">법적 요건 비교</h3></div>
+          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
+          <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
+            토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
+
+          <!-- 기획서 배치(#p-invest "1. B-CITY 토지확보 현황") — 도넛 + 값 3장.
+               ⚠ 도넛은 `conic-gradient` 로 그린다. 값 하나(`--v`)로 각도가 정해지므로
+                 SVG 각도 계산이 필요 없고, 마크업의 숫자와 어긋날 여지가 없다.
+               ⚠ 값이 바뀌면 `--v` 와 마크업의 숫자를 **함께** 고친다. 초과분(+26.52%p)은
+                 76.52 − 50 이므로 셋이 같이 움직인다. -->
+          <div class="iv-stat" style="--v: 76.52%">
+            <figure class="iv-donut">
+              <div class="iv-donut-g" role="img"
+                   aria-label="B-CITY 토지 확보율 76.52퍼센트, 미확보 23.48퍼센트">
+                <b class="iv-donut-v"><span data-count="76.52" data-dec="2">76.52</span>%</b>
+                <span class="iv-donut-l">확보율</span>
+              </div>
+              <figcaption class="iv-donut-lg">
+                <span class="iv-donut-k iv-donut-k--on">확보 76.52%</span>
+                <span class="iv-donut-k">미확보 23.48%</span>
+              </figcaption>
+            </figure>
+            <ul class="iv-tiles">
+              <li class="iv-tile">
+                <b class="iv-tile-t">법적 최소 요건</b>
+                <span class="iv-tile-s">기업도시개발 특별법 기준</span>
+                <em class="iv-tile-v">50%</em>
+              </li>
+              <li class="iv-tile iv-tile--on">
+                <b class="iv-tile-t">B-CITY 확보율</b>
+                <span class="iv-tile-s">2026.05 기준</span>
+                <em class="iv-tile-v">76.52%</em>
+              </li>
+              <li class="iv-tile iv-tile--over">
+                <b class="iv-tile-t">요건 초과 확보분</b>
+                <span class="iv-tile-s">최소 요건 대비</span>
+                <em class="iv-tile-v">+26.52<span>%p</span></em>
+              </li>
+            </ul>
+            <p class="iv-stat-note">※ 국공유지 포함 · 2026.05 기준</p>
+          </div>
+
+        <div class="tr-block rv">
+          <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">법적 요건 비교</h3></div>
           <p class="sub-d">같은 개발사업이라도 어느 법을 적용받느냐에 따라 출발선이 다릅니다.
             B-CITY는 기업도시개발 특별법을 적용받아 절반의 토지만 확보해도 사업을 추진할 수 있습니다.</p>
 
@@ -53,31 +91,6 @@
                 <tr><th scope="row">충족 조건</th><td>두 요건 모두 충족 필요</td><td class="is-on">50% 확보 시 미확보 토지까지 수용 가능</td></tr>
               </tbody>
             </table>
-          </div>
-        </div>
-
-        <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
-          <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
-            토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
-
-          <!-- 게이지 — 눈금(0·50·75·100)과 두 표식(법적 요건 50% · 확보율 76.52%).
-               ⚠ 막대 길이는 인라인 --v 가 정한다. 값이 바뀌면 마크업의 숫자와 --v 를 **함께** 고친다. -->
-          <div class="iv-gauge" style="--legal: 50%; --v: 76.52%">
-            <p class="iv-gauge-tags">
-              <span class="iv-tag iv-tag--legal"><b>법적 최소 요건</b><em>50%</em></span>
-              <span class="iv-tag iv-tag--own"><b>B-CITY 확보율</b><em><span data-count="76.52" data-dec="2">76.52</span>%</em></span>
-              <span class="iv-tag iv-tag--over"><b>요건 초과 확보분</b><em>+26.52<span>%p</span></em></span>
-            </p>
-            <div class="iv-gauge-bar" role="img"
-                 aria-label="B-CITY 토지 확보율 76.52퍼센트. 법적 최소 요건은 50퍼센트입니다.">
-              <span class="iv-gauge-fill"></span>
-              <span class="iv-gauge-legal" aria-hidden="true"></span>
-            </div>
-            <p class="iv-gauge-scale" aria-hidden="true"><span>0%</span><span>50%</span><span>75%</span><span>100%</span></p>
-            <!-- 확보율의 산정 기준. 최신 기획서에 새로 붙었다(2026-08-14) — 76.52% 가
-                 무엇을 포함한 값인지 밝히는 문구라 빠뜨리면 수치의 뜻이 달라진다. -->
-            <p class="iv-gauge-note">※ 국공유지 포함</p>
           </div>
         </div>
 
@@ -101,10 +114,13 @@
 
         <ul class="iv-szs">
           <li class="iv-sz rv">
-            <span class="iv-sz-ic"><img src="assets/icon/zone-dna.svg" width="24" height="24"
-                  loading="lazy" decoding="async" alt="DNA 이중나선 아이콘" /></span>
-            <h4 class="iv-sz-t">바이오 분야<br />국가첨단전략산업 특화단지</h4>
-            <p class="iv-sz-area">춘천 · 홍천 선정</p>
+            <div class="iv-sz-h">
+              <span class="iv-sz-ic"><i class="iv-ic" style="--ic: url(assets/icon/zone-dna.svg)" aria-hidden="true"></i></span>
+              <div>
+                <h4 class="iv-sz-t">바이오 분야<br />국가첨단전략산업 특화단지</h4>
+                <p class="iv-sz-area">춘천 · 홍천 선정</p>
+              </div>
+            </div>
             <ul class="iv-sz-gs">
               <li>
                 <b class="iv-sz-gt">신속 인허가</b>
@@ -122,10 +138,13 @@
             <p class="iv-sz-src">제6차 국가첨단전략산업위원회 의결 (2024. 06. 27.)</p>
           </li>
           <li class="iv-sz rv">
-            <span class="iv-sz-ic"><img src="assets/icon/zone-globe.svg" width="24" height="24"
-                  loading="lazy" decoding="async" alt="지구 아이콘" /></span>
-            <h4 class="iv-sz-t">글로벌 혁신<br />규제자유특구</h4>
-            <p class="iv-sz-area">춘천 · 원주 선정</p>
+            <div class="iv-sz-h">
+              <span class="iv-sz-ic"><i class="iv-ic" style="--ic: url(assets/icon/zone-globe.svg)" aria-hidden="true"></i></span>
+              <div>
+                <h4 class="iv-sz-t">글로벌 혁신<br />규제자유특구</h4>
+                <p class="iv-sz-area">춘천 · 원주 선정</p>
+              </div>
+            </div>
             <ul class="iv-sz-gs">
               <li>
                 <b class="iv-sz-gt">포괄적 규제해제</b>
@@ -143,10 +162,13 @@
             <p class="iv-sz-src">중소벤처기업부 고시 제2024-33호 (2023. 12. 28.)</p>
           </li>
           <li class="iv-sz rv">
-            <span class="iv-sz-ic"><img src="assets/icon/zone-edu.svg" width="24" height="24"
-                  loading="lazy" decoding="async" alt="학사모 아이콘" /></span>
-            <h4 class="iv-sz-t">교육발전특구<br /><i>시범사업</i></h4>
-            <p class="iv-sz-area">춘천 · 원주 · 화천 선정</p>
+            <div class="iv-sz-h">
+              <span class="iv-sz-ic"><i class="iv-ic" style="--ic: url(assets/icon/zone-edu.svg)" aria-hidden="true"></i></span>
+              <div>
+                <h4 class="iv-sz-t">교육발전특구<br /><i>시범사업</i></h4>
+                <p class="iv-sz-area">춘천 · 원주 · 화천 선정</p>
+              </div>
+            </div>
             <ul class="iv-sz-gs">
               <li>
                 <b class="iv-sz-gt">인재 및 인프라 지원</b>
@@ -177,14 +199,22 @@
         <h2 class="h2 rv">법률 및 지자체의 이전 기업 전폭 지원으로<br /><em>압도적 비즈니스 환경</em> 구축</h2>
         <p class="lede rv">지방 이전 및 투자기업 주요 혜택</p>
 
+        <!-- 기획서 배치(#p-invest "03 주요 혜택") — 카드마다 아이콘 · 번호·영문 라벨 ·
+             제목 · **핵심 값 한 줄** · 해당 항목. 값을 빼면 표를 열기 전까지 규모를 알 수 없다. -->
         <ul class="iv-sum rv">
           <li class="iv-sum-i">
+            <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(assets/icon/benefit-subsidy.svg)" aria-hidden="true"></i></span>
+            <p class="iv-sum-no"><b>01</b>SUBSIDY</p>
             <b class="iv-sum-t">투자 · 이전 보조금</b>
-            <p class="iv-sum-d">토지매입비 · 설비투자금 · 이전보조금(본사)</p>
+            <em class="iv-sum-v">최대 300억 규모의 직접 지원</em>
+            <ul class="iv-sum-k"><li>토지매입비</li><li>설비투자금</li><li>이전보조금(본사)</li></ul>
           </li>
           <li class="iv-sum-i">
+            <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(assets/icon/benefit-tax.svg)" aria-hidden="true"></i></span>
+            <p class="iv-sum-no"><b>02</b>TAX</p>
             <b class="iv-sum-t">세제 혜택</b>
-            <p class="iv-sum-d">소득세 · 법인세 · 취득세 · 재산세</p>
+            <em class="iv-sum-v">최대 5년 100% + 2년 50% 감면</em>
+            <ul class="iv-sum-k"><li>소득세</li><li>법인세</li><li>취득세</li><li>재산세</li></ul>
           </li>
         </ul>
 

@@ -9,6 +9,10 @@
         </nav>
         <p class="hero-eyebrow"><i aria-hidden="true"></i><b>{{catNo}}</b><span>{{catEn}} · {{catLabel}}</span></p>
         <h1>{{h1}}</h1>
+        <!-- 페이지가 front-matter 에 `heroLede` 를 두면 제목 아래 한 줄이 붙는다.
+             원페이지로 합친 투자·입주가 상단 카피를 여기 담기 위해 생겼다(2026-08-24 지시).
+             ⚠ 값이 없으면 **문단 자체가 나오지 않는다** — 빈 `<p>` 를 남기면 여백만 생긴다. -->
+{{heroLede}}
       </div>
     </section>
 
