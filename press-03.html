@@ -1,13 +1,13 @@
 <!-- 생성물이다. 이 파일을 고치지 말 것.
-     소스: src/sub/pages/publication.html + src/sub/{layout.html,partials,css,js,nav.json}
+     소스: src/sub/pages/_detail-press.html + src/sub/{layout.html,partials,css,js,nav.json}
      빌드: npm run build:pages -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>발행물 · B-CITY 춘천기업혁신파크</title>
-  <meta name="description" content="춘천기업혁신파크 B-CITY 의 카달로그와 IM 등 발행물입니다." />
+  <title>GTX-B 춘천 연장 추진… 서울 50분대 생활권 · 언론보도 · B-CITY 춘천기업혁신파크</title>
+  <meta name="description" content="※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다." />
   <!-- 파비콘 — 원본 심볼은 assets/favicon/favicon.svg 이고 PNG·ICO 는 거기서 파생된다.
        SVG 를 먼저 두면 지원 브라우저는 그것만 쓴다(선명하고 4KB 미만).
        루트의 favicon.ico 는 <link> 와 무관하게 브라우저가 자동으로 요청하므로 함께 둔다. -->
@@ -756,10 +756,10 @@
       <a href="contact.html">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
-      <a href="press.html">언론보도</a>
+      <a href="press.html" class="is-on">언론보도</a>
       <a href="video.html">홍보영상</a>
       <a href="gallery.html">갤러리</a>
-      <a href="publication.html" class="is-on">발행물</a>
+      <a href="publication.html">발행물</a>
     </div>
   </div>
 
@@ -771,15 +771,15 @@
          구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/img-bio.jpg" alt="" />
+      <img class="hero-bg" src="assets/img-street.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
           <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>홍보센터</span><span aria-hidden="true">›</span><b>발행물</b>
+          <span>홍보센터</span><span aria-hidden="true">›</span><b>언론보도</b>
         </nav>
         <p class="hero-eyebrow"><i aria-hidden="true"></i><b>04</b><span>PR CENTER · 홍보센터</span></p>
-        <h1>발행물</h1>
+        <h1>언론보도</h1>
         <!-- 페이지가 front-matter 에 `heroLede` 를 두면 제목 아래 한 줄이 붙는다.
              원페이지로 합친 투자·입주가 상단 카피를 여기 담기 위해 생겼다(2026-08-24 지시).
              ⚠ 값이 없으면 **문단 자체가 나오지 않는다** — 빈 `<p>` 를 남기면 여백만 생긴다. -->
@@ -791,76 +791,33 @@
     <nav class="lnb" aria-label="홍보센터 하위 메뉴">
       <div class="wrap">
         <a href="notice.html">공지사항</a>
-        <a href="press.html">언론보도</a>
+        <a href="press.html" class="is-on" aria-current="page">언론보도</a>
         <a href="video.html">홍보영상</a>
         <a href="gallery.html">갤러리</a>
-        <a href="publication.html" class="is-on" aria-current="page">발행물</a>
+        <a href="publication.html">발행물</a>
       </div>
     </nav>
 
-<!-- 스토리보드 v2 slide100. 항목마다 "새 창으로 보기"(url)와 "내려받기"(file)가 갈린다 -->
-    <section class="sec" id="list">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>PUBLICATION</b><span>발행물</span></p>
-        <h2 class="h2 rv">카달로그와 <em>사업 소개 자료</em></h2>
-
-        <ul class="pub-list">
-          <li class="pub-item" data-cat="im">
-            <span class="pub-thumb"><img src="assets/img-bio.jpg" alt="" loading="lazy" decoding="async" /><span class="pr-badge">IM</span><span class="pub-ov"><a class="pub-ov-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener" title="B-CITY 사업 소개 IM 새 창으로 보기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg><span class="sr">B-CITY 사업 소개 IM 새 창으로 보기</span></a><a class="pub-ov-btn" href="assets/img-city.jpg" download title="B-CITY 사업 소개 IM 내려받기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10m0 0 3.5-3.5M12 14l-3.5-3.5"/><path d="M5 17.5v1A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg><span class="sr">B-CITY 사업 소개 IM 내려받기</span></a></span></span>
-            <p class="pr-title">B-CITY 사업 소개 IM</p>
-            <p class="pr-row-meta"><time datetime="2026-07-16">2026.07.16</time></p>
-          </li>
-          <li class="pub-item" data-cat="catalog">
-            <span class="pub-thumb"><img src="assets/img-city.jpg" alt="" loading="lazy" decoding="async" /><span class="pr-badge">카달로그</span><span class="pub-ov"><a class="pub-ov-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener" title="춘천기업혁신파크 카달로그 새 창으로 보기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg><span class="sr">춘천기업혁신파크 카달로그 새 창으로 보기</span></a><a class="pub-ov-btn" href="assets/img-city.jpg" download title="춘천기업혁신파크 카달로그 내려받기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10m0 0 3.5-3.5M12 14l-3.5-3.5"/><path d="M5 17.5v1A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg><span class="sr">춘천기업혁신파크 카달로그 내려받기</span></a></span></span>
-            <p class="pr-title">춘천기업혁신파크 카달로그</p>
-            <p class="pr-row-meta"><time datetime="2026-06-30">2026.06.30</time></p>
-          </li>
-          <li class="pub-item" data-cat="brochure">
-            <span class="pub-thumb"><span class="pub-blank"><span class="pub-spine" aria-hidden="true"></span><span class="pub-mark"><svg class="pub-logo" viewBox="0 0 2518 421" fill="none" role="img" aria-label="B·CITY">
-<g fill="currentColor">
-  <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
-  <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
-  <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
-  <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
-  <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
-</g>
-<path fill="currentColor" d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
-<path fill="currentColor" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
-</svg></span></span><span class="pr-badge">브로슈어</span><span class="pub-ov"><a class="pub-ov-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener" title="투자 유치 브로슈어 새 창으로 보기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg><span class="sr">투자 유치 브로슈어 새 창으로 보기</span></a><a class="pub-ov-btn" href="assets/img-city.jpg" download title="투자 유치 브로슈어 내려받기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10m0 0 3.5-3.5M12 14l-3.5-3.5"/><path d="M5 17.5v1A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg><span class="sr">투자 유치 브로슈어 내려받기</span></a></span></span>
-            <p class="pr-title">투자 유치 브로슈어</p>
-            <p class="pr-row-meta"><time datetime="2026-06-02">2026.06.02</time></p>
-          </li>
-          <li class="pub-item" data-cat="report">
-            <span class="pub-thumb"><span class="pub-blank"><span class="pub-spine" aria-hidden="true"></span><span class="pub-mark"><svg class="pub-logo" viewBox="0 0 2518 421" fill="none" role="img" aria-label="B·CITY">
-<g fill="currentColor">
-  <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
-  <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
-  <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
-  <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
-  <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
-</g>
-<path fill="currentColor" d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
-<path fill="currentColor" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
-</svg></span></span><span class="pr-badge">리포트</span><span class="pub-ov"><a class="pub-ov-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener" title="2026 상반기 사업 추진 리포트 새 창으로 보기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg><span class="sr">2026 상반기 사업 추진 리포트 새 창으로 보기</span></a><a class="pub-ov-btn" href="assets/img-city.jpg" download title="2026 상반기 사업 추진 리포트 내려받기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10m0 0 3.5-3.5M12 14l-3.5-3.5"/><path d="M5 17.5v1A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg><span class="sr">2026 상반기 사업 추진 리포트 내려받기</span></a></span></span>
-            <p class="pr-title">2026 상반기 사업 추진 리포트</p>
-            <p class="pr-row-meta"><time datetime="2026-05-20">2026.05.20</time></p>
-          </li>
-          <li class="pub-item" data-cat="catalog">
-            <span class="pub-thumb"><span class="pub-blank"><span class="pub-spine" aria-hidden="true"></span><span class="pub-mark"><svg class="pub-logo" viewBox="0 0 2518 421" fill="none" role="img" aria-label="B·CITY">
-<g fill="currentColor">
-  <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
-  <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
-  <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
-  <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
-  <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
-</g>
-<path fill="currentColor" d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
-<path fill="currentColor" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
-</svg></span></span><span class="pr-badge">카달로그</span><span class="pub-ov"><a class="pub-ov-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener" title="8대 권역 안내 카달로그 새 창으로 보기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg><span class="sr">8대 권역 안내 카달로그 새 창으로 보기</span></a><a class="pub-ov-btn" href="assets/img-city.jpg" download title="8대 권역 안내 카달로그 내려받기"><svg class="pr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10m0 0 3.5-3.5M12 14l-3.5-3.5"/><path d="M5 17.5v1A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-1"/></svg><span class="sr">8대 권역 안내 카달로그 내려받기</span></a></span></span>
-            <p class="pr-title">8대 권역 안내 카달로그</p>
-            <p class="pr-row-meta"><time datetime="2026-04-11">2026.04.11</time></p>
-          </li>
-        </ul>
+<!-- 언론보도 상세. 원문 기사는 본문 아래 "원문 기사 보기" 버튼으로 나간다
+         (사용자 지시 2026-08-10 — 목록에서 바로 외부로 보내지 않는다). -->
+    <section class="sec" id="post">
+      <div class="wrap wrap--narrow">
+        <article class="post">
+          <header class="post-head">
+            <h2 class="post-title">GTX-B 춘천 연장 추진… 서울 50분대 생활권</h2>
+            <p class="post-meta"><span class="post-outlet">매체명 A</span><time datetime="2026-05-29">보도일자 2026.05.29</time></p>
+          </header>
+                    <div class="post-body">
+            <p>매체명 A 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.</p>
+            <p>이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다.</p>
+          </div>
+                    <p class="post-source"><a class="src-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener"><span>원문 기사 보기</span><span class="src-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4 11 13"/><path d="M19 14v4.5A1.5 1.5 0 0 1 17.5 20h-12A1.5 1.5 0 0 1 4 18.5v-12A1.5 1.5 0 0 1 5.5 5H10"/></svg></span></a></p>
+        </article>
+                <nav class="post-nav" aria-label="게시글 이동">
+          <a class="post-nav-item" href="press-02.html"><span class="post-nav-label"><svg class="post-nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>이전 글</span><span class="post-nav-title">더존비즈온 앵커로 참여하는 1.1조원 규모 도시개발</span></a>
+          <a class="post-nav-item" href="press-04.html"><span class="post-nav-label"><svg class="post-nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>다음 글</span><span class="post-nav-title">강원특별자치도·춘천시, B-CITY PFV 출자 확정</span></a>
+          <a class="post-back" href="press.html"><svg class="post-back-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>목록으로</a>
+        </nav>
       </div>
     </section>
   </main>
@@ -942,40 +899,6 @@
       items.forEach(function (el, i) {
         el.style.transitionDelay = (i % 4) * 0.07 + 's';
         io.observe(el);
-      });
-    })();
-
-    /* 분류 필터 — 갤러리(행사·현장·조감도·기타)와 발행물(카달로그·IM·브로슈어·리포트)이
-       같은 코드를 쓴다. 카드에 hidden 을 세우고 보이기는 CSS 가 정한다.
-       ⚠ style.display 를 직접 건드리지 말 것. hidden 은 접근성 트리에서도 빠지므로
-         스크린리더가 감춰진 카드를 읽지 않는다. */
-    (function () {
-      var btns = [].slice.call(document.querySelectorAll('.pr-filter'));
-      if (!btns.length) return;
-      /* ⚠ 반드시 목록 컨테이너 안으로 한정한다. 예전에는 `[data-cat]` 전역이었는데
-         **분류 탭 자신도 data-cat 을 들고 있어서** 탭을 고르면 나머지 탭이 함께
-         hidden 이 됐다 — 한 번 고르면 다른 분류로 갈 수 없었다(2026-08-10 신고). */
-      var cards = [].slice.call(
-        document.querySelectorAll('.pr-cards [data-cat], .pub-list [data-cat]'));
-      var live = document.getElementById('filterCount');
-
-      var apply = function (cat) {
-        var n = 0;
-        cards.forEach(function (c) {
-          var on = cat === 'all' || c.dataset.cat === cat;
-          c.hidden = !on;
-          if (on) n++;
-        });
-        btns.forEach(function (b) {
-          var on = b.dataset.cat === cat;
-          b.classList.toggle('is-on', on);
-          b.setAttribute('aria-pressed', on ? 'true' : 'false');
-        });
-        if (live) live.textContent = n + '건 표시 중';
-      };
-
-      btns.forEach(function (b) {
-        b.addEventListener('click', function () { apply(b.dataset.cat); });
       });
     })();
   </script>
