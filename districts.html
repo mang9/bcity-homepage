@@ -386,42 +386,47 @@
     /* ── 확보율 게이지 (토지확보 현황 02) ──────────────────────────────
        막대 길이는 인라인 `--v`, 법적 요건 눈금은 `--legal` 이 정한다.
        ⚠ 값이 바뀌면 마크업의 숫자(data-count 포함)와 이 두 변수를 **함께** 고친다. */
-    /* ── 토지확보 현황 — 한 줄 지표 띠 (2026-08-24 지시로 디자인 변경) ──────────
-       이전안은 값마다 색 타일을 둔 카드였는데 **숫자보다 상자가 먼저 읽혔다.**
-       지금은 흰 면 하나에 [도넛 | 값 셋]을 두고 **세로 괘선으로만** 나눈다. */
-    .iv-strip { display: grid; grid-template-columns: auto minmax(0, 1fr);
-      gap: clamp(24px, 3vw, 56px); align-items: center;
-      margin-top: clamp(22px, 2.2vw, 34px); padding: clamp(26px, 2.8vw, 44px);
-      background: var(--color-surface); border: 1px solid var(--color-line);
-      border-radius: var(--radius-md); }
-    .iv-strip-note { margin: clamp(10px, 1vw, 14px) 0 0; text-align: right;
-      font-size: 11.5px; color: var(--color-text-muted); }
+    /* ── 토지확보 현황 — [제목 + 값 셋 | 파이 그래프] 2단 (2026-08-24 지시) ────────
+       ⚠ 제목까지 왼쪽 칸에 넣어야 그래프가 **제목 영역까지** 올라온다. 제목을 그리드 밖에
+         두면 오른쪽 제목 옆이 통째로 빈다(문의하기 지도에서 같은 함정을 밟았다 · §11.66).
+       ⚠ 그래프는 비율이 고정이라 늘어나지 않는다 → `align-self: start` 로 제목 줄에 맞춘다. */
+    .iv-head { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+      gap: clamp(28px, 3.4vw, 68px); align-items: start; }
+    .iv-head-l { min-width: 0; }
+    /* ⚠ `.eyebrow` 는 `<p>` 이고 이 프로젝트에 `p { margin: 0 }` 리셋이 없다 → 브라우저
+         기본 `margin: 1em 0`(12.5px)이 붙어 왼쪽 칸이 오른쪽보다 12px 내려간다(실측).
+         두 칸의 시작을 맞추려면 이 마진을 지운다. `.sec` 의 위 여백이 이미 충분해
+         다른 섹션과 달라 보이지 않는다. */
+    .iv-head-l > .eyebrow { margin-top: 0; }
 
-    /* 도넛 — `conic-gradient` 로 그린다. 값 하나(`--v`)가 각도를 정하므로 SVG 각도 계산이 없다.
-       ⚠ 가운데는 흰 원으로 파낸다. `mask` 를 쓰지 않는다 — 안쪽에 글자를 얹으므로 실제 면이 필요하다. */
-    .iv-donut { margin: 0; display: grid; justify-items: center; gap: clamp(14px, 1.4vw, 20px); }
-    .iv-donut-g { position: relative; display: grid; place-content: center; gap: 2px;
-      width: clamp(158px, 15.5vw, 216px); aspect-ratio: 1; border-radius: 50%;
+    /* 파이 그래프 — 자기 칸을 온전히 쓰므로 이전(216px)보다 크게 잡는다 */
+    .iv-donut { margin: 0; display: grid; justify-items: center;
+      gap: clamp(16px, 1.6vw, 24px); align-self: start; }
+    .iv-donut-g { position: relative; display: grid; place-content: center; gap: 3px;
+      width: clamp(200px, 20vw, 296px); aspect-ratio: 1; border-radius: 50%;
       background: conic-gradient(var(--color-primary) 0 var(--v, 0%),
                                  var(--color-bg) var(--v, 0%) 100%); }
-    .iv-donut-g::before { content: ""; position: absolute; inset: clamp(21px, 2.1vw, 31px);
+    /* 가운데를 파내는 흰 원. `mask` 를 쓰지 않는다 — 안쪽에 글자를 얹으므로 실제 면이 필요하다. */
+    .iv-donut-g::before { content: ""; position: absolute; inset: clamp(26px, 2.6vw, 40px);
       border-radius: 50%; background: var(--color-surface); }
     .iv-donut-v, .iv-donut-l { position: relative; text-align: center; }
     .iv-donut-v { font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(25px, 2.5vw, 35px); letter-spacing: -.03em; color: var(--color-primary); }
-    .iv-donut-l { font-size: 12px; font-weight: 700; color: var(--color-text-muted); }
-    .iv-donut-lg { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; }
+      font-size: clamp(30px, 3vw, 44px); letter-spacing: -.03em; color: var(--color-primary); }
+    .iv-donut-l { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
+    .iv-donut-lg { display: grid; justify-items: center; gap: 7px; }
     .iv-donut-k { position: relative; padding-left: 15px; font-size: 12.5px;
       color: var(--color-text-muted); }
     .iv-donut-k::before { content: ""; position: absolute; left: 0; top: .42em;
       width: 9px; height: 9px; border-radius: 2px; background: var(--color-bg);
       border: 1px solid var(--color-line); }
     .iv-donut-k--on::before { background: var(--color-primary); border-color: var(--color-primary); }
+    /* 확보율의 산정 기준 — 그래프 바로 아래. 숫자의 뜻을 밝히는 문구라 빠뜨리면 안 된다. */
+    .iv-donut-n { margin-top: 4px; font-size: 11.5px; color: var(--color-text-muted); }
 
-    /* 값 셋 — 상자 없이 세로 괘선으로만 나눈다.
+    /* 값 셋 — 왼쪽. 상자 없이 세로 괘선으로만 나눈다.
        ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
     .iv-figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin: 0; padding: 0; }
+      margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; }
     .iv-figs > div { padding: 0 clamp(14px, 1.6vw, 26px); }
     .iv-figs > div + div { border-left: 1px solid var(--color-line); }
     .iv-figs > div:first-child { padding-left: 0; }
@@ -438,35 +443,59 @@
     .iv-figs .is-over dd { color: var(--color-mint); }
     .iv-figs dd span { font-size: .58em; margin-left: 1px; }
 
-    /* ── 법적 요건 비교 — 완화 대비 (2026-08-24 지시로 디자인 변경) ──────────────
-       격자 표를 걷고 **행 괘선만** 남겼다. 특별법 칸 앞에 화살표를 두어
-       `무엇이 → 무엇으로` 완화됐는지가 먼저 읽히게 한다.
-       ⚠ `<table>` 을 버리지 않았다. 4개 기준 × 2개 법은 표 데이터이고, 표를 걷으면
-         스크린리더가 행·열 관계를 잃는다. **틀만 지우고 의미는 남긴다.** */
-    .iv-relax { width: 100%; min-width: 620px; border-collapse: collapse;
+    /* ── 법적 요건 비교 — VS 대비 (2026-08-24 지시) ─────────────────────────────
+       **기준을 가운데 열**에 두고 두 법의 값이 그것을 마주 보게 한다.
+       ⚠ 두 법을 각각 카드로 세우면 값 길이가 달라 **행이 가로로 어긋난다**(오른쪽 `50%` 를
+         크게 잡자 이후 행이 30px 씩 밀렸다). 가운데 열 방식은 한 행이 곧 한 기준이라 정렬이
+         구조적으로 보장되고 라벨도 한 번만 나온다.
+       ⚠ `<table>` 을 유지한다. `scope="row"` 는 첫 칸이 아니어도 되므로 기준을 가운데에
+         두어도 행·열 관계가 남는다. */
+    /* ⚠ `table-layout: fixed` 로 두 값 열의 폭을 **같게 못 박는다.** 자동 배분에 맡기면
+         내용이 긴 쪽(특별법)이 열을 다 먹어 왼쪽이 쪼그라들고 "마주 본다" 가 무너진다
+         (실측: 왼쪽 값이 x 500~590, 오른쪽이 720~1330). */
+    .iv-vs { width: 100%; min-width: 660px; table-layout: fixed;
+      border-collapse: separate; border-spacing: 0;
       margin-top: clamp(22px, 2.2vw, 34px); }
-    .iv-relax th, .iv-relax td { padding: clamp(15px, 1.5vw, 22px) clamp(12px, 1.2vw, 20px);
-      text-align: left; vertical-align: baseline; line-height: 1.6; word-break: keep-all; }
-    .iv-relax thead th, .iv-relax thead td { padding-top: 0; padding-bottom: 12px;
+    .iv-vs thead th:first-child { width: 41%; }
+    .iv-vs-mid { width: 18%; }
+    .iv-vs thead th.is-on { width: 41%; }
+    .iv-vs th, .iv-vs td { padding: clamp(15px, 1.5vw, 22px) clamp(14px, 1.4vw, 24px);
+      line-height: 1.6; word-break: keep-all; vertical-align: middle; }
+
+    /* 머리 — 두 법 이름. B-CITY 쪽만 색을 준다(양쪽 다 칠하면 어느 쪽이 우리인지 사라진다). */
+    .iv-vs thead th { font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.3vw, 19px); letter-spacing: -.015em;
+      color: var(--color-text-muted); }
+    .iv-vs thead th:first-child { text-align: right; }
+    .iv-vs thead th.is-on { text-align: left; color: var(--color-primary); }
+    .iv-vs thead th span { display: block; margin-top: 4px; font-family: var(--font-body);
+      font-size: 11.5px; font-weight: 600; color: var(--color-text-muted); }
+    /* VS 배지 — 가운데 열 머리에 앉는다. `position: absolute` 로 얹지 않는다(칸을 준다). */
+    .iv-vs-mid { text-align: center; }
+    .iv-vs-b { display: inline-grid; place-items: center;
+      width: clamp(42px, 4vw, 56px); aspect-ratio: 1; border-radius: 999px;
+      background: var(--color-navy); color: #ffffff;
+      font-family: var(--font-display); font-weight: 800; font-size: clamp(13px, 1.1vw, 16px);
+      letter-spacing: .02em; }
+
+    /* 기준 — 가운데. 값보다 약하게 두어 두 값이 먼저 읽히게 한다. */
+    .iv-vs tbody th { text-align: center;
       font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
-      color: var(--color-text-muted); border-bottom: 1px solid var(--color-line); }
-    .iv-relax thead .is-on { color: var(--color-primary); }
-    .iv-relax thead .is-on span { display: block; margin-top: 3px; font-size: 11px;
-      font-weight: 600; color: var(--color-text-muted); }
-    .iv-relax tbody tr + tr th, .iv-relax tbody tr + tr td {
+      color: var(--color-text-muted);
       border-top: 1px solid var(--color-line); }
-    .iv-relax tbody th { width: 1%; white-space: nowrap; font-size: 13px; font-weight: 700;
-      color: var(--color-text-muted); padding-left: 0; }
-    .iv-relax tbody td { font-size: clamp(13.5px, 1.05vw, 15.5px); color: var(--color-text-muted); }
-    /* 특별법 칸 — 화살표 + 프라이머리. 왼쪽에 옅은 면을 깔아 열이 눈에 잡히게 한다. */
-    .iv-relax tbody td.is-on { position: relative; padding-left: clamp(34px, 3vw, 46px);
+    /* 값 — 기준을 향해 마주 본다. 왼쪽은 오른끝 정렬, 오른쪽은 왼끝 정렬. */
+    .iv-vs-old { text-align: right; font-size: clamp(13.5px, 1.05vw, 15.5px);
+      color: var(--color-text-muted); border-top: 1px solid var(--color-line); }
+    .iv-vs-new { text-align: left; font-size: clamp(13.5px, 1.05vw, 15.5px);
+      font-weight: 700; color: var(--color-text);
       background: rgb(var(--primary-rgb) / .045);
-      font-weight: 700; color: var(--color-primary); }
-    .iv-relax tbody td.is-on::before { content: "\2192"; position: absolute;
-      left: clamp(12px, 1.2vw, 18px); font-weight: 400; color: var(--color-primary); opacity: .55; }
-    .iv-relax tbody td.is-on b { font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(19px, 1.7vw, 25px); letter-spacing: -.02em; }
-    .iv-relax thead .is-on, .iv-relax tbody td.is-on { border-left: 1px solid var(--color-line); }
+      border-top: 1px solid var(--color-line); }
+    .iv-vs thead .is-on { background: rgb(var(--primary-rgb) / .045); }
+    .iv-vs-new b { font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(20px, 1.8vw, 27px); letter-spacing: -.02em; color: var(--color-primary); }
+    /* B-CITY 열의 위·아래 모서리를 둥글게 — 이 열이 한 덩이로 읽히게 한다 */
+    .iv-vs thead .is-on { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .iv-vs tbody tr:last-child .iv-vs-new { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
 
     /* ── 특구 카드 (특구별 혜택) — IM 슬라이드 17 배치를 그대로 옮겼다 ──────────
        IM 실측(EMU→px): 카드 3장 나란히(x 65 · 453 · 841, 폭 372) · 카드 위 5px 네이비 바 ·
@@ -622,10 +651,13 @@
 
     /* ── 반응형 ───────────────────────────────────────────────────────── */
     @media (max-width: 1023px) {
-      /* 도넛 옆에 값 셋을 두면 칸이 100px 대로 좁아져 숫자가 접힌다 → 위아래로 쌓는다 */
-      .iv-strip { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-      .iv-figs { width: 100%; }
-      .iv-strip-note { text-align: center; }
+      /* 제목 옆에 그래프를 두면 왼쪽이 좁아져 값 셋이 접힌다 → 그래프를 아래로 내린다 */
+      .iv-head { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+      .iv-head-l { width: 100%; }
+      /* 세 열을 유지하면 값 칸이 200px 대로 좁아진다. 표는 접지 않고 `min-width` 로
+         가로 스크롤한다 — 마주 보는 배치가 이 표의 전부이고, 세로로 쌓으면 비교가 사라진다.
+         스크롤 영역이므로 마크업에 `tabindex="0"` 이 있어야 키보드로 닿는다. */
+      .iv-vs { min-width: 660px; }
       /* 카드 3장이 320px 아래로 좁아지면 한글이 6~7자마다 끊긴다 → 한 열로 쌓는다 */
       .iv-szs { grid-template-columns: minmax(0, 1fr); }
       .iv-sz-t br { display: none; }

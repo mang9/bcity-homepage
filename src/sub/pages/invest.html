@@ -24,33 +24,19 @@
     <!-- ===== 01 토지확보 현황 ===== -->
     <section class="sec iv-sec" id="land">
       <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>LAND SECURED</b><span>토지확보 현황</span></p>
-        <h2 class="h2 rv">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
-        <p class="lede rv">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
+        <!-- 제목까지 왼쪽 칸에 넣는다 — 그래야 파이 그래프가 **제목 영역까지** 올라온다
+             (2026-08-24 지시). 제목을 그리드 밖에 두면 오른쪽 제목 옆이 통째로 빈다. -->
+        <div class="iv-head rv">
+          <div class="iv-head-l">
+            <p class="eyebrow"><i aria-hidden="true"></i><b>LAND SECURED</b><span>토지확보 현황</span></p>
+            <h2 class="h2">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
+            <p class="lede">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
 
-        <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
-          <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
-            토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
+            <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
+            <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
+              토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
 
-          <!-- 한 줄 지표 띠(2026-08-24 지시로 디자인 변경) — [도넛 | 값 셋]을 세로 괘선으로만
-               나눈다. 값마다 색 타일을 두던 이전안은 숫자보다 상자가 먼저 읽혔다.
-               ⚠ 도넛은 `conic-gradient` 다. 값 하나(`--v`)로 각도가 정해지므로 SVG 각도 계산이
-                 없고 마크업의 숫자와 어긋날 여지가 없다.
-               ⚠ 값이 바뀌면 `--v` 와 마크업 숫자를 **함께** 고친다. 초과분은 76.52 − 50 이라
-                 셋이 같이 움직인다. -->
-          <div class="iv-strip" style="--v: 76.52%">
-            <figure class="iv-donut">
-              <div class="iv-donut-g" role="img"
-                   aria-label="B-CITY 토지 확보율 76.52퍼센트, 미확보 23.48퍼센트">
-                <b class="iv-donut-v"><span data-count="76.52" data-dec="2">76.52</span>%</b>
-                <span class="iv-donut-l">확보율</span>
-              </div>
-              <figcaption class="iv-donut-lg">
-                <span class="iv-donut-k iv-donut-k--on">확보 76.52%</span>
-                <span class="iv-donut-k">미확보 23.48%</span>
-              </figcaption>
-            </figure>
+            <!-- 값 셋은 왼쪽(2026-08-24 지시). 상자 없이 세로 괘선으로만 나눈다. -->
             <dl class="iv-figs">
               <div>
                 <dt>법적 최소 요건<span>기업도시개발 특별법 기준</span></dt>
@@ -66,48 +52,73 @@
               </div>
             </dl>
           </div>
-          <p class="iv-strip-note">※ 국공유지 포함 · 2026.05 기준</p>
+
+          <!-- 파이 그래프는 오른쪽 한 칸을 온전히 쓴다.
+               ⚠ `conic-gradient` 다. 값 하나(`--v`)가 각도를 정하므로 SVG 각도 계산이 없고
+                 마크업의 숫자와 어긋날 여지가 없다. 값이 바뀌면 `--v` 와 숫자를 함께 고친다
+                 — 초과분은 76.52 − 50 이라 셋이 같이 움직인다. -->
+          <figure class="iv-donut" style="--v: 76.52%">
+            <div class="iv-donut-g" role="img"
+                 aria-label="B-CITY 토지 확보율 76.52퍼센트, 미확보 23.48퍼센트">
+              <b class="iv-donut-v"><span data-count="76.52" data-dec="2">76.52</span>%</b>
+              <span class="iv-donut-l">확보율</span>
+            </div>
+            <figcaption class="iv-donut-lg">
+              <span class="iv-donut-k iv-donut-k--on">확보 76.52%</span>
+              <span class="iv-donut-k">미확보 23.48%</span>
+              <span class="iv-donut-n">※ 국공유지 포함 · 2026.05 기준</span>
+            </figcaption>
+          </figure>
         </div>
 
         <div class="tr-block rv">
           <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">법적 요건 비교</h3></div>
           <p class="sub-d">같은 개발사업이라도 어느 법을 적용받느냐에 따라 출발선이 다릅니다</p>
 
-          <!-- 완화 대비로 보여 준다(2026-08-24 지시로 디자인 변경) — 격자 표 대신 행 괘선만
-               남기고, 특별법 칸 앞에 화살표를 두어 `무엇이 → 무엇으로` 완화됐는지 읽히게 한다.
-               ⚠ `<table>` 을 버리지 않는다. 4개 기준 × 2개 법은 표 데이터이고, 표를 걷으면
-                 스크린리더가 행·열 관계를 읽지 못한다. 틀만 지우고 의미는 남긴다. -->
-          <!-- ⚠ `min-width: 620px` 이라 390px 에서 가로로 스크롤된다. 스크롤되는 영역은
-               `tabindex="0"` 이 있어야 키보드로 닿는다 — 아래 지원 내용 표와 같은 처리다. -->
+          <!-- VS 대비(2026-08-24 지시) — **기준을 가운데 열**에 두고 두 법의 값이 그것을
+               마주 보게 한다.
+               ⚠ 두 법을 각각 카드로 세우면 값 길이가 달라 **행이 가로로 어긋난다**(오른쪽
+                 `50%` 를 크게 잡자 이후 행이 30px 씩 밀렸다). 가운데 열 방식은 한 행이
+                 곧 한 기준이라 정렬이 구조적으로 보장되고 라벨도 한 번만 나온다.
+               ⚠ `<table>` 을 유지한다. `scope="row"` 는 첫 칸이 아니어도 되므로 기준을
+                 가운데에 두어도 행·열 관계가 남는다.
+               ⚠ 좁은 화면에서는 세 열을 유지할 수 없다 → 기준을 위로 올리고 값 둘을
+                 아래에 나란히 둔다(아래 미디어 쿼리). -->
           <div class="iv-scroll" tabindex="0" role="region" aria-label="법적 요건 비교 표">
-            <table class="iv-relax">
+            <table class="iv-vs">
               <caption class="sr-only">도시개발법과 기업도시개발 특별법의 토지확보 요건 비교</caption>
               <thead>
-                <tr><td></td><th scope="col">도시개발법</th>
-                    <th scope="col" class="is-on">기업도시개발 특별법<span>B-CITY 적용</span></th></tr>
+                <tr>
+                  <th scope="col">도시개발법</th>
+                  <td class="iv-vs-mid"><span class="iv-vs-b">VS</span></td>
+                  <th scope="col" class="is-on">기업도시개발 특별법<span>B-CITY 적용</span></th>
+                </tr>
               </thead>
               <tbody>
-                <tr><th scope="row">법적 최소요건</th>
-                    <td>66.7% 이상</td><td class="is-on"><b>50%</b></td></tr>
-                <tr><th scope="row">토지 면적 요건</th>
-                    <td>사업대상 토지의 2/3</td><td class="is-on">사업대상 토지의 50%</td></tr>
-                <tr><th scope="row">소유자 동의</th>
-                    <td>토지소유자 총수의 &frac12; 이상 동의</td><td class="is-on">소유권 취득 또는 사용동의</td></tr>
-                <tr><th scope="row">충족 조건</th>
-                    <td>두 요건 모두 충족 필요</td><td class="is-on">50% 확보 시 미확보 토지까지 수용 가능</td></tr>
+                <tr>
+                  <td class="iv-vs-old">66.7% 이상</td>
+                  <th scope="row">법적 최소요건</th>
+                  <td class="iv-vs-new"><b>50%</b></td>
+                </tr>
+                <tr>
+                  <td class="iv-vs-old">사업대상 토지의 2/3</td>
+                  <th scope="row">토지 면적 요건</th>
+                  <td class="iv-vs-new">사업대상 토지의 50%</td>
+                </tr>
+                <tr>
+                  <td class="iv-vs-old">토지소유자 총수의 &frac12; 이상 동의</td>
+                  <th scope="row">소유자 동의</th>
+                  <td class="iv-vs-new">소유권 취득 또는 사용동의</td>
+                </tr>
+                <tr>
+                  <td class="iv-vs-old">두 요건 모두 충족 필요</td>
+                  <th scope="row">충족 조건</th>
+                  <td class="iv-vs-new">50% 확보 시 미확보 토지까지 수용 가능</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
-
-        <div class="closer rv">
-          <p>B-CITY는 <em>시작부터 안정적</em>입니다<br />
-            이미 법적 요건보다 더 많은 토지를 확보한 상태로<br />
-            토지 미수용 리스크 없이 안정적으로 사업이 추진되고 있습니다</p>
-        </div>
-
-        <p class="note">※ 26.05 기준<br />
-          ※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
       </div>
     </section>
 
