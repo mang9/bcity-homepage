@@ -1,0 +1,67 @@
+/* ===== 문의하기 (투자·입주) =====
+   구성은 기획 #p-contact "16 · 투자·입주 > 문의하기"(Storyboard p.104) 그대로다 —
+   [시행자 정보] · [찾아오시는 길] 2단 · 마무리 카피 · 접수 안내.
+   ⚠ 문의 폼은 여기에 없다. 실제 접수 폼은 메인 `#contact` 한 곳뿐이고, 두 벌이 되면
+     한쪽만 고쳐져 접수가 새는 쪽이 생긴다. 여기서는 그 폼으로 보낸다. */
+
+.ci-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: clamp(16px, 1.8vw, 28px); margin-top: clamp(28px, 3vw, 48px); align-items: stretch; }
+
+/* 시행자 정보 — 기획서의 [구분 | 내용] 표를 정의 목록으로 옮겼다.
+   ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. 그래야 항목마다 괘선을 줄 수 있고
+     `dt`/`dd` 를 2열로 나란히 놓을 수 있다(dl 직계에 grid 를 걸면 쌍이 흩어진다). */
+.ci-info { margin: 0; padding: clamp(22px, 2.2vw, 34px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line); border-top: 5px solid var(--color-primary);
+  border-radius: 0 0 var(--radius-md) var(--radius-md); }
+.ci-info > div { display: grid; grid-template-columns: minmax(88px, auto) minmax(0, 1fr);
+  gap: clamp(12px, 1.4vw, 22px); align-items: baseline;
+  padding: clamp(13px, 1.3vw, 18px) 0; border-top: 1px solid var(--color-line); }
+.ci-info > div:first-child { padding-top: 0; border-top: 0; }
+.ci-info > div:last-child { padding-bottom: 0; }
+.ci-info dt { font-size: 13px; font-weight: 700; color: var(--color-text-muted); }
+.ci-info dd { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.25vw, 19px); letter-spacing: -.015em;
+  color: var(--color-text); word-break: keep-all; }
+.ci-info a { color: var(--color-primary); text-decoration: none; }
+.ci-info a:hover, .ci-info a:focus-visible { text-decoration: underline;
+  text-underline-offset: 3px; }
+
+/* 찾아오시는 길 — 기획서는 "카카오/네이버 지도 API 연동" 을 적어 뒀으나 키가 필요하다.
+   ⚠ 키 없이 되는 **길찾기 링크**로 먼저 연결한다. 빈 회색 상자를 라이브에 올리지 않는다.
+     API 키가 생기면 이 블록 안에 임베드를 넣고 링크는 보조로 남긴다. */
+.ci-map { display: flex; flex-direction: column;
+  padding: clamp(22px, 2.2vw, 34px);
+  background: var(--color-primary); border-radius: var(--radius-md); color: #ffffff; }
+.ci-map-h { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(16px, 1.35vw, 21px); letter-spacing: -.015em; }
+.ci-map-a { margin: clamp(10px, 1vw, 14px) 0 0; font-size: clamp(13.5px, 1vw, 15px);
+  line-height: 1.7; color: rgba(255, 255, 255, .84); word-break: keep-all; }
+.ci-acts { list-style: none; display: grid; gap: 8px; padding: 0;
+  margin: clamp(18px, 1.8vw, 26px) 0 0; }
+.ci-act { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: clamp(11px, 1.1vw, 15px) clamp(14px, 1.3vw, 18px);
+  border-radius: var(--radius-sm); background: rgba(255, 255, 255, .13);
+  font-size: 13.5px; font-weight: 700; color: #ffffff; text-decoration: none;
+  transition: background .2s; }
+.ci-act::after { content: "\2192"; font-weight: 400; opacity: .7; }
+.ci-act:hover, .ci-act:focus-visible { background: rgba(255, 255, 255, .24); }
+/* 전화는 마지막 수단이 아니라 가장 빠른 길이다 — 흰 면으로 한 칸 올린다 */
+.ci-act--tel { background: #ffffff; color: var(--color-primary); }
+.ci-act--tel:hover, .ci-act--tel:focus-visible { background: rgba(255, 255, 255, .88); }
+
+/* 접수 안내 — 실제 폼은 메인 `#contact` 다 */
+.ci-cta { display: flex; flex-wrap: wrap; align-items: center;
+  gap: clamp(12px, 1.4vw, 22px); margin: clamp(28px, 3vw, 48px) 0 0; }
+.ci-cta span { font-size: clamp(13px, .98vw, 15px); color: var(--color-text-muted);
+  word-break: keep-all; }
+.ci-cta-b { flex: none; padding: clamp(13px, 1.3vw, 17px) clamp(24px, 2.4vw, 38px);
+  border-radius: 999px; background: var(--color-primary); color: #ffffff;
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.1vw, 16.5px);
+  text-decoration: none; transition: background .2s; }
+.ci-cta-b:hover, .ci-cta-b:focus-visible { background: var(--color-primary-hover); }
+
+@media (max-width: 899px) {
+  /* 두 칸을 나란히 두면 시행자 정보의 주소가 3~4줄로 접힌다 → 위아래로 쌓는다 */
+  .ci-grid { grid-template-columns: minmax(0, 1fr); }
+}

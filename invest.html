@@ -267,7 +267,10 @@
     .sub-h { margin: clamp(40px, 4vw, 68px) 0 0; display: flex; align-items: baseline;
       gap: 12px; flex-wrap: wrap; }
     .sub-h:first-child { margin-top: 0; }
-    .sub-no { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
+    /* ⚠ 제목(`.sub-t`, 최대 27px) 대비 비율을 확인해 올렸다(2026-08-24 지시).
+         19px 는 제목의 73% 로 "라벨" 처럼 작게 읽혔다 — 88% 로 맞춰 한 쌍으로 읽히게 한다.
+         ⚠ 이 클래스는 공용이다(company · invest 등 `.sub-h` 를 쓰는 모든 블록). */
+    .sub-no { font-family: var(--font-display); font-size: clamp(17px, 1.45vw, 24px);
       font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
     .sub-t { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 700; line-height: 1.34; letter-spacing: -.018em; }
@@ -510,28 +513,40 @@
     .iv-sum { list-style: none; display: grid; gap: clamp(12px, 1.2vw, 20px);
       grid-template-columns: repeat(2, minmax(0, 1fr));
       margin: clamp(28px, 3vw, 48px) 0 0; padding: 0; }
-    .iv-sum-i { padding: clamp(22px, 2.2vw, 32px);
-      background: var(--color-primary); border-radius: var(--radius-lg); color: #fff; }
-    /* 아이콘은 짙은 면 위이므로 배지를 흰 반투명으로 두고 글리프를 흰색으로 둔다 —
-       특구 카드와 반대다(그쪽은 흰 면 위 프라이머리). */
-    .iv-sum-ic { display: grid; place-items: center; width: 46px; height: 46px;
-      border-radius: 999px; background: rgba(255, 255, 255, .16); color: #fff; }
-    .iv-sum-ic .iv-ic { width: 22px; height: 22px; }
-    .iv-sum-no { margin: clamp(14px, 1.4vw, 20px) 0 0; display: flex; align-items: baseline; gap: 9px;
+    /* ⚠ **밝은 카드**다(2026-08-24 지시). 흰 면 + 실선 + 위쪽 강조선 — 특구 카드와 같은 어법이라
+         한 페이지 안에서 카드 종류가 둘로 갈리지 않는다. 짙은 면을 쓰면 바로 아래 표의
+         짙은 머리(프라이머리)와 무게가 겹쳐 어느 쪽이 요약인지 읽히지 않았다. */
+    .iv-sum-i { display: flex; flex-direction: column;
+      padding: clamp(22px, 2.2vw, 32px);
+      background: var(--color-surface);
+      border: 1px solid var(--color-line); border-top: 5px solid var(--color-primary);
+      border-radius: 0 0 var(--radius-md) var(--radius-md); }
+    /* 머리 — 아이콘 옆에 번호·영문 라벨과 제목(2026-08-24 지시).
+       ⚠ 제목 칸에 `min-width: 0` 이 필요하다 — 없으면 긴 단어가 flex 최소 폭을 밀어낸다. */
+    .iv-sum-h { display: flex; align-items: center; gap: clamp(14px, 1.4vw, 20px); }
+    .iv-sum-h > div { min-width: 0; }
+    /* 특구 배지(52px)보다 **크게** 잡는다 — 요약 카드가 둘뿐이라 시선을 먼저 받아야 한다 */
+    .iv-sum-ic { flex: none; display: grid; place-items: center;
+      width: clamp(58px, 5.4vw, 76px); aspect-ratio: 1;
+      border-radius: 999px; background: var(--color-bg); color: var(--color-primary); }
+    .iv-sum-ic .iv-ic { width: clamp(28px, 2.6vw, 36px); height: clamp(28px, 2.6vw, 36px); }
+    .iv-sum-no { margin: 0; display: flex; align-items: baseline; gap: 9px;
       font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
-      color: rgba(255, 255, 255, .7); }
-    .iv-sum-no b { font-family: var(--font-display); font-size: 13px; letter-spacing: 0; color: #fff; }
-    .iv-sum-t { display: block; margin-top: 6px; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(17px, 1.45vw, 22px); letter-spacing: -.015em; }
+      color: var(--color-text-muted); }
+    .iv-sum-no b { font-family: var(--font-display); font-size: 13px; letter-spacing: 0;
+      color: var(--color-primary); }
+    .iv-sum-t { display: block; margin-top: 4px; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(17px, 1.45vw, 22px); letter-spacing: -.015em; color: var(--color-text);
+      word-break: keep-all; }
     /* 핵심 값 한 줄 — 표를 열기 전에 규모가 읽혀야 한다(기획서에 이 줄이 있다) */
-    .iv-sum-v { display: block; margin-top: clamp(8px, .9vw, 12px); font-style: normal;
+    .iv-sum-v { display: block; margin-top: clamp(14px, 1.4vw, 20px); font-style: normal;
       font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em;
-      font-size: clamp(15px, 1.3vw, 19px); color: var(--color-light-blue); word-break: keep-all; }
+      font-size: clamp(16px, 1.4vw, 21px); color: var(--color-primary); word-break: keep-all; }
     .iv-sum-k { list-style: none; display: flex; flex-wrap: wrap; gap: 6px;
       margin: clamp(14px, 1.4vw, 20px) 0 0; padding: 0; }
     .iv-sum-k li { padding: 4px 11px; border-radius: 999px;
-      background: rgba(255, 255, 255, .14); font-size: 12.5px; font-weight: 600;
-      color: rgba(255, 255, 255, .92); }
+      background: var(--color-bg); font-size: 12.5px; font-weight: 600;
+      color: var(--color-text-muted); }
 
     /* ── 기업 유형별 지원 표 (주요 혜택) ────────────────────────────────
        원문 표(스토리보드 slide94)의 병합 구조를 rowspan/colspan 으로 그대로 옮겼다.
@@ -663,7 +678,7 @@
       <a href="invest.html#land" class="is-on">토지확보 현황</a>
       <a href="invest.html#zone">특구별 혜택</a>
       <a href="invest.html#benefit">주요 혜택</a>
-      <a href="index.html#contact">문의하기</a>
+      <a href="contact.html">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
@@ -703,7 +718,7 @@
         <a href="invest.html#land" class="is-on" aria-current="page">토지확보 현황</a>
         <a href="invest.html#zone">특구별 혜택</a>
         <a href="invest.html#benefit">주요 혜택</a>
-        <a href="index.html#contact">문의하기</a>
+        <a href="contact.html">문의하기</a>
       </div>
     </nav>
 
@@ -896,18 +911,29 @@
 
         <!-- 기획서 배치(#p-invest "03 주요 혜택") — 카드마다 아이콘 · 번호·영문 라벨 ·
              제목 · **핵심 값 한 줄** · 해당 항목. 값을 빼면 표를 열기 전까지 규모를 알 수 없다. -->
+        <!-- 기획서 배치(#p-invest "03 주요 혜택") — 아이콘 옆에 번호·영문 라벨과 제목,
+             그 아래 **핵심 값 한 줄**, 해당 항목. 값을 빼면 표를 열기 전까지 규모를 알 수 없다.
+             ⚠ 밝은 카드다(2026-08-24 지시) — 짙은 면을 쓰면 아래 표의 짙은 머리와 무게가 겹친다. -->
         <ul class="iv-sum rv">
           <li class="iv-sum-i">
-            <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(assets/icon/benefit-subsidy.svg)" aria-hidden="true"></i></span>
-            <p class="iv-sum-no"><b>01</b>SUBSIDY</p>
-            <b class="iv-sum-t">투자 · 이전 보조금</b>
+            <div class="iv-sum-h">
+              <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(assets/icon/benefit-subsidy.svg)" aria-hidden="true"></i></span>
+              <div>
+                <p class="iv-sum-no"><b>01</b>SUBSIDY</p>
+                <b class="iv-sum-t">투자 · 이전 보조금</b>
+              </div>
+            </div>
             <em class="iv-sum-v">최대 300억 규모의 직접 지원</em>
             <ul class="iv-sum-k"><li>토지매입비</li><li>설비투자금</li><li>이전보조금(본사)</li></ul>
           </li>
           <li class="iv-sum-i">
-            <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(assets/icon/benefit-tax.svg)" aria-hidden="true"></i></span>
-            <p class="iv-sum-no"><b>02</b>TAX</p>
-            <b class="iv-sum-t">세제 혜택</b>
+            <div class="iv-sum-h">
+              <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(assets/icon/benefit-tax.svg)" aria-hidden="true"></i></span>
+              <div>
+                <p class="iv-sum-no"><b>02</b>TAX</p>
+                <b class="iv-sum-t">세제 혜택</b>
+              </div>
+            </div>
             <em class="iv-sum-v">최대 5년 100% + 2년 50% 감면</em>
             <ul class="iv-sum-k"><li>소득세</li><li>법인세</li><li>취득세</li><li>재산세</li></ul>
           </li>
@@ -915,8 +941,7 @@
 
         <div class="tr-block rv">
           <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">기업 유형별 지원 내용</h3></div>
-          <p class="sub-d">어디에서 오는 기업인지에 따라 지원 내용이 달라집니다.
-            아래 표는 스토리보드 원문을 그대로 옮긴 것으로, 실제 적용 규모는 기업 여건에 따라 달라집니다.</p>
+          <p class="sub-d">어디에서 오는 기업인지에 따라 지원 내용이 달라집니다</p>
 
           <!-- ⚠ 좁은 화면에서는 표를 접지 않고 **가로 스크롤**한다.
                셀 하나하나가 금액·기간 조건이라 카드로 쪼개면 어느 열의 값인지 알 수 없다.
@@ -957,7 +982,7 @@
                 </tr>
                 <tr>
                   <th scope="row" rowspan="6" class="iv-tbl-g">세제<br />혜택</th>
-                  <th scope="row" rowspan="2">국세</th>
+                  <th scope="row" rowspan="2" class="iv-tbl-g">국세</th>
                   <th scope="row">소득세</th>
                   <td>공장 이전 : 5년 100% + 2년 50% 감면</td>
                   <td class="iv-na">-</td>
@@ -970,7 +995,7 @@
                   <td>3년 100% + 2년 50% 감면<br />(기회발전특구 지정 시) 5년 100% + 5년 50% 감면</td>
                 </tr>
                 <tr>
-                  <th scope="row" rowspan="4">지방세</th>
+                  <th scope="row" rowspan="4" class="iv-tbl-g">지방세</th>
                   <th scope="row" rowspan="2">취득세</th>
                   <td rowspan="2">본사 이전 : 100% 면제</td>
                   <td class="iv-na">-</td>

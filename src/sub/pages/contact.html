@@ -1,0 +1,72 @@
+<!--build
+{
+  "slug": "contact",
+  "title": "Contact · B-CITY 춘천기업혁신파크",
+  "description": "B-CITY 춘천기업혁신파크 시행자 ㈜바이오테크이노밸리피에프브이의 주소 · 대표 전화 · 홈페이지와 찾아오시는 길을 안내합니다.",
+  "nav": "contact",
+  "heroImg": "assets/img/gallery/plaza-walk.avif",
+  "h1": "Contact",
+  "crumb": "문의하기",
+  "heroLede": "함께 미래를 만들어갈 파트너를 기다립니다",
+  "css": ["page-shared", "page-contact"]
+}
+-->
+    <!-- ===== 문의하기 — 기획 #p-contact "16 · 투자·입주 > 문의하기" (Storyboard p.104) =====
+         구성은 기획서 그대로다 — [시행자 정보 표] · [마무리 카피] · [찾아오시는 길].
+         ⚠ 제목은 `Contact` 다(2026-08-24 지시). 메뉴 이름은 `문의하기` 로 남는다 —
+           브레드크럼(`crumb`)이 그 이름을 쓴다.
+         ⚠ 문의 **폼은 여기에 두지 않는다.** 기획서에도 없고, 실제 접수 폼은 메인 `#contact`
+           한 곳에만 있다(백엔드 미연결 시 메일로 넘기는 분기까지 그쪽에 있다).
+           두 벌이 되면 한쪽만 고쳐져 접수가 새는 쪽이 생긴다 → 여기서는 그 폼으로 보낸다. -->
+    <section class="sec" id="contact-info">
+      <div class="wrap">
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
+        <h2 class="h2 rv">B-CITY를 만들어가는 <em>시행자</em></h2>
+        <p class="lede rv">사업 · 투자 · 입주에 관한 문의를 기다립니다</p>
+
+        <div class="ci-grid rv">
+          <!-- 시행자 정보 — 기획서의 [구분 | 내용] 표를 정의 목록으로 옮겼다.
+               두 열뿐이고 각 항목이 독립적이라 `<dl>` 이 표보다 읽기 쉽다(스크린리더 포함). -->
+          <dl class="ci-info">
+            <div>
+              <dt>주소</dt>
+              <dd>서울특별시 광진구 자양로 58, 태림빌딩 3층</dd>
+            </div>
+            <div>
+              <dt>대표 전화</dt>
+              <dd><a href="tel:07041300423">070-4130-0423</a></dd>
+            </div>
+            <div>
+              <dt>홈페이지</dt>
+              <dd><a href="https://www.biotech-iv.com/" target="_blank" rel="noopener">www.biotech-iv.com<span class="sr"> (새 창)</span></a></dd>
+            </div>
+          </dl>
+
+          <!-- 찾아오시는 길. ⚠ 기획서는 "카카오/네이버 지도 API 연동" 을 적어 뒀지만 키가
+               필요하다 → 키 없이 되는 **길찾기 링크**로 먼저 연결한다. 빈 회색 상자를
+               올려 두지 않는다(라이브 페이지다). API 키가 생기면 이 자리에 임베드한다. -->
+          <div class="ci-map">
+            <p class="ci-map-h">찾아오시는 길</p>
+            <p class="ci-map-a">서울특별시 광진구 자양로 58, 태림빌딩 3층</p>
+            <ul class="ci-acts">
+              <li><a class="ci-act" href="https://map.kakao.com/?q=%EC%84%9C%EC%9A%B8%EC%8A%A4%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EC%9E%90%EC%96%91%EB%A1%9C%2058"
+                     target="_blank" rel="noopener">카카오맵 길찾기<span class="sr"> (새 창)</span></a></li>
+              <li><a class="ci-act" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%EC%8A%A4%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EC%9E%90%EC%96%91%EB%A1%9C%2058"
+                     target="_blank" rel="noopener">네이버지도 길찾기<span class="sr"> (새 창)</span></a></li>
+              <li><a class="ci-act ci-act--tel" href="tel:07041300423">전화 연결 070-4130-0423</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="closer rv">
+          <p>㈜바이오테크이노밸리피에프브이는 B-CITY를 만들어가는 <em>시행자</em>이자,<br />
+            대한민국 미래 도시의 새로운 가능성을 함께 그려가는 <em>동반자</em>입니다</p>
+        </div>
+
+        <!-- 접수는 메인의 문의 폼 한 곳에서 받는다 -->
+        <p class="ci-cta rv">
+          <a class="ci-cta-b" href="index.html#contact">문의 남기기</a>
+          <span>기업입주 · 투자 · 사업 문의를 남겨 주시면 담당자가 순차적으로 연락드립니다</span>
+        </p>
+      </div>
+    </section>

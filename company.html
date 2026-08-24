@@ -267,7 +267,10 @@
     .sub-h { margin: clamp(40px, 4vw, 68px) 0 0; display: flex; align-items: baseline;
       gap: 12px; flex-wrap: wrap; }
     .sub-h:first-child { margin-top: 0; }
-    .sub-no { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
+    /* ⚠ 제목(`.sub-t`, 최대 27px) 대비 비율을 확인해 올렸다(2026-08-24 지시).
+         19px 는 제목의 73% 로 "라벨" 처럼 작게 읽혔다 — 88% 로 맞춰 한 쌍으로 읽히게 한다.
+         ⚠ 이 클래스는 공용이다(company · invest 등 `.sub-h` 를 쓰는 모든 블록). */
+    .sub-no { font-family: var(--font-display); font-size: clamp(17px, 1.45vw, 24px);
       font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
     .sub-t { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 700; line-height: 1.34; letter-spacing: -.018em; }
@@ -769,7 +772,7 @@
       <a href="invest.html#land">토지확보 현황</a>
       <a href="invest.html#zone">특구별 혜택</a>
       <a href="invest.html#benefit">주요 혜택</a>
-      <a href="index.html#contact">문의하기</a>
+      <a href="contact.html">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>

@@ -1,13 +1,13 @@
 <!-- 생성물이다. 이 파일을 고치지 말 것.
-     소스: src/sub/pages/publication.html + src/sub/{layout.html,partials,css,js,nav.json}
+     소스: src/sub/pages/contact.html + src/sub/{layout.html,partials,css,js,nav.json}
      빌드: npm run build:pages -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>발행물 · B-CITY 춘천기업혁신파크</title>
-  <meta name="description" content="춘천기업혁신파크 B-CITY 의 카달로그와 IM 등 발행물입니다." />
+  <title>Contact · B-CITY 춘천기업혁신파크</title>
+  <meta name="description" content="B-CITY 춘천기업혁신파크 시행자 ㈜바이오테크이노밸리피에프브이의 주소 · 대표 전화 · 홈페이지와 찾아오시는 길을 안내합니다." />
   <!-- 파비콘 — 원본 심볼은 assets/favicon/favicon.svg 이고 PNG·ICO 는 거기서 파생된다.
        SVG 를 먼저 두면 지원 브라우저는 그것만 쓴다(선명하고 4KB 미만).
        루트의 favicon.ico 는 <link> 와 무관하게 브라우저가 자동으로 요청하므로 함께 둔다. -->
@@ -364,331 +364,74 @@
     @media (max-width: 640px) { .lb-close { top: auto; bottom: -46px; right: 50%;
       transform: translateX(50%); } }
 
-    /* ── page-pr.css ─────────────────────────────────────────── */
-    /* ===== 홍보센터 — 목록형(공지·언론) · 카드형(영상·갤러리·발행물) =====
-       마크업은 tools/build/pages.mjs 의 renderRows / renderCards 가 만든다.
-       클래스 이름을 바꾸면 그 함수도 같이 고쳐야 한다(정적 마크업이 아니다). */
+    /* ── page-contact.css ─────────────────────────────────────────── */
+    /* ===== 문의하기 (투자·입주) =====
+       구성은 기획 #p-contact "16 · 투자·입주 > 문의하기"(Storyboard p.104) 그대로다 —
+       [시행자 정보] · [찾아오시는 길] 2단 · 마무리 카피 · 접수 안내.
+       ⚠ 문의 폼은 여기에 없다. 실제 접수 폼은 메인 `#contact` 한 곳뿐이고, 두 벌이 되면
+         한쪽만 고쳐져 접수가 새는 쪽이 생긴다. 여기서는 그 폼으로 보낸다. */
 
-    /* ── 목록형 ─────────────────────────────────────────────────────── */
-    /* ⚠ 세 목록의 상단 여백은 같은 값이어야 한다 — 분류 탭이 꺼져 있어(SHOW_LIST_FILTERS)
-       목록이 곧바로 제목 아래 오므로, 다르면 페이지를 옮길 때마다 제목 아래가 들쭉날쭉하다. */
-    .pr-rows { margin: clamp(28px, 3vw, 46px) 0 0; padding: 0; list-style: none;
-      border-top: 2px solid var(--color-primary); }
-    .pr-row { display: flex; flex-wrap: wrap; gap: 6px clamp(16px, 2vw, 36px);
-      align-items: baseline; justify-content: space-between;
-      padding: clamp(18px, 1.8vw, 26px) 2px; border-bottom: 1px solid var(--color-line); }
-    .pr-row-main { flex: 1 1 min(100%, 42ch); min-width: 0; }
-    .pr-title { margin: 0; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.15vw, 18px); line-height: 1.45; letter-spacing: -.015em;
-      color: var(--color-text); }
-    .pr-title a { transition: color .2s; }
-    .pr-title a:hover { color: var(--color-primary); }
-    .pr-sum { margin: 7px 0 0; font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
-    .pr-row-meta { flex: none; display: flex; align-items: baseline; gap: 12px; margin: 0;
-      font-size: 13px; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
-    .pr-outlet { font-weight: 600; color: var(--color-primary); }
+    .ci-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      gap: clamp(16px, 1.8vw, 28px); margin-top: clamp(28px, 3vw, 48px); align-items: stretch; }
 
-    /* ── 카드형 ─────────────────────────────────────────────────────── */
-    .pr-cards { display: grid; gap: clamp(14px, 1.5vw, 26px); margin: clamp(28px, 3vw, 46px) 0 0;
-      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    @media (min-width: 768px)  { .pr-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (min-width: 1200px) { .pr-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-    .pr-card { display: flex; flex-direction: column; }
-    .pr-thumb { position: relative; display: flex; align-items: center; justify-content: center;
-      aspect-ratio: 16 / 9; margin-bottom: 12px; border-radius: var(--radius-md);
-      border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
-    .pr-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .pr-noimg { font-size: 12.5px; font-weight: 600; letter-spacing: .06em;
-      color: var(--color-text-muted); opacity: .8; }
-    /* 카드 전체를 링크로 덮는다 — 제목만 링크로 두면 눌리는 영역이 너무 좁다 */
-    .pr-cover { position: absolute; inset: 0; }
-    .pr-cover:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-    .pr-badge { position: absolute; left: 10px; top: 10px; padding: 3px 9px; border-radius: 999px;
-      background: rgb(var(--navy-rgb) / .82); color: #fff; font-size: 11.5px; font-weight: 700;
-      letter-spacing: .02em; font-variant-numeric: tabular-nums; }
-    .pr-card .pr-title { font-size: clamp(14px, 1.05vw, 16px); }
-    .pr-card .pr-row-meta { margin-top: 7px; }
-    /* 썸네일 위 재생·확대 아이콘 — 화면 안에서 열린다는 신호 */
-    .pr-play { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px;
-      transform: translate(-50%, -50%); color: #fff; opacity: .92;
-      filter: drop-shadow(0 2px 8px rgb(var(--navy-rgb) / .5));
-      transition: transform .2s, opacity .2s; }
-    .pr-cover:hover .pr-play { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+    /* 시행자 정보 — 기획서의 [구분 | 내용] 표를 정의 목록으로 옮겼다.
+       ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. 그래야 항목마다 괘선을 줄 수 있고
+         `dt`/`dd` 를 2열로 나란히 놓을 수 있다(dl 직계에 grid 를 걸면 쌍이 흩어진다). */
+    .ci-info { margin: 0; padding: clamp(22px, 2.2vw, 34px);
+      background: var(--color-surface);
+      border: 1px solid var(--color-line); border-top: 5px solid var(--color-primary);
+      border-radius: 0 0 var(--radius-md) var(--radius-md); }
+    .ci-info > div { display: grid; grid-template-columns: minmax(88px, auto) minmax(0, 1fr);
+      gap: clamp(12px, 1.4vw, 22px); align-items: baseline;
+      padding: clamp(13px, 1.3vw, 18px) 0; border-top: 1px solid var(--color-line); }
+    .ci-info > div:first-child { padding-top: 0; border-top: 0; }
+    .ci-info > div:last-child { padding-bottom: 0; }
+    .ci-info dt { font-size: 13px; font-weight: 700; color: var(--color-text-muted); }
+    .ci-info dd { margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.25vw, 19px); letter-spacing: -.015em;
+      color: var(--color-text); word-break: keep-all; }
+    .ci-info a { color: var(--color-primary); text-decoration: none; }
+    .ci-info a:hover, .ci-info a:focus-visible { text-decoration: underline;
+      text-underline-offset: 3px; }
 
-    /* ── 발행물 — 표지 위 / 텍스트 아래 세로 카드 (첨부 와이어프레임 2026-08-10) ── */
-    /* 카드 크기 — 2026-08-10 에 두 번 줄였다(4열 → 5열 → **6열**).
-       간격(gap)은 갤러리·홍보영상(.pr-cards)과 **같은 값**을 쓴다. 한 카테고리 안에서
-       목록끼리 리듬이 다르면 페이지를 옮길 때마다 밀도가 달라 보인다.
-       표지 비율은 3:4 → **4:5** 로 낮췄다. 세로가 카드 높이를 지배하는 요소라
-       열 수만 늘리면 폭만 줄고 여전히 길어 보인다. 인쇄물 비율에서 크게 벗어나지도 않는다. */
-    .pub-list { display: grid; gap: clamp(14px, 1.5vw, 26px); margin: clamp(28px, 3vw, 46px) 0 0;
-      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    @media (min-width: 600px)  { .pub-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (min-width: 900px)  { .pub-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-    @media (min-width: 1120px) { .pub-list { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-    @media (min-width: 1360px) { .pub-list { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-    /* ⚠ **바깥 상자를 두르지 않는다**(2026-08-14 지시). 표지에 이미 테두리가 있어
-       상자를 한 겹 더 두르면 액자 안의 액자가 된다. 같은 카테고리의 갤러리·홍보영상
-       (`.pr-card`)도 상자가 없으므로 이쪽이 홍보센터 전체와도 맞는다. */
-    .pub-item { display: flex; flex-direction: column; }
-    .pub-item[hidden] { display: none; }
-    /* 표지는 세로로 긴 인쇄물 비율. **모서리를 둥글리지 않는다** — 종이는 각지다 */
-    .pub-thumb { position: relative; display: flex; align-items: center; justify-content: center;
-      aspect-ratio: 4 / 5; margin-bottom: 11px; border-radius: 0;
-      border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
-    .pub-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-    /* 이미지가 없을 때의 기본 표지 — 로고를 얹은 책자.
-       면은 아주 옅은 그라데이션(종이), 왼쪽은 제본 등이다. */
-    .pub-blank { position: absolute; inset: 0; display: flex; align-items: center;
-      justify-content: center;
-      background: linear-gradient(160deg, var(--color-surface) 0%, var(--color-bg) 58%,
-                  rgb(var(--primary-rgb) / .06) 100%); }
-
-    /* 제본 등 — 그라데이션만으로는 접힌 느낌이 약해서 **선으로 끊는다**.
-       면 색이 이어지면 그냥 얼룩처럼 보인다(2026-08-10 지적).
-         · 띠 오른쪽 경계선 = 표지와 등을 가르는 접지선
-         · ::after = 등 안쪽의 두 번째 선(박음질/접힘 자국) */
-    .pub-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 14px;
-      background: linear-gradient(90deg, rgb(var(--primary-rgb) / .10) 0%,
-                  rgb(var(--primary-rgb) / .03) 70%, transparent 100%);
-      border-right: 1px solid rgb(var(--primary-rgb) / .22); }
-    .pub-spine::after { content: ""; position: absolute; left: 5px; top: 0; bottom: 0;
-      width: 1px; background: rgb(var(--primary-rgb) / .13); }
-
-    .pub-mark { display: block; width: 58%; max-width: 104px; margin-left: 14px; }
-    /* 원톤·저채도 — 표지의 워터마크처럼 깔린다. 진하면 목록에서 로고만 튄다 */
-    .pub-logo { width: 100%; height: auto; color: var(--color-primary); opacity: .22; }
-    /* 간격 배분 — 제목과 날짜는 한 덩어리로 붙이고, 남는 세로 여백은 **버튼 앞**에 몰아준다.
-       앞서 제목에 두 줄 자리(min-height)를 잡았더니 한 줄짜리 카드는 제목과 날짜 사이가
-       한 줄만큼 벌어지고 정작 날짜와 버튼은 붙어 버렸다(2026-08-10 지적).
-       제목은 두 줄에서 자르되 자리를 미리 잡지 않는다 — 대신 buttons 가 margin-top:auto 로
-       바닥에 붙으므로 **버튼 줄은 카드끼리 그대로 맞는다**(그리드가 높이를 맞춰 준다).
-       ⚠ 대신 제목 줄 수가 다르면 날짜 높이는 카드마다 달라진다 — 둘 다는 성립하지 않고,
-         이 화면에서는 버튼 정렬이 더 중요하다. */
-    .pub-item .pr-title { font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .pub-item .pr-row-meta { margin-top: 5px; }
-
-    /* ── 표지 위 보기·다운로드 오버레이 (2026-08-14 지시) ─────────────────
-       전에는 카드 아래에 텍스트 버튼 두 개가 폭을 반씩 나눠 갖고 있었다. 6열 그리드에서는
-       그 줄이 카드 높이의 상당 부분을 먹고 목록이 버튼 밭처럼 보인다. 표지 위로 올려
-       **평소에는 표지만 보이고, 가리켰을 때 도구가 나타나게** 했다.
-
-       ⚠ 호버 전용 컨트롤의 두 가지 함정을 CSS 에서 막는다.
-         · 키보드 — `:focus-within` 을 호버와 **같이** 건다. 빠뜨리면 탭으로 버튼에 가도
-           화면에는 아무것도 안 보여 어디에 있는지 알 수 없다
-         · 터치   — `@media (hover: none)` 에서 항상 보이게 한다. 이 분기가 없으면
-           휴대폰에서 **보기·다운로드에 아예 닿지 못한다**
-       ⚠ 오버레이가 표지를 덮으므로 스크림이 필요하다 — 흰 아이콘을 밝은 표지 위에 그냥
-         올리면 사라진다. */
-    /* ⚠ 분류 배지(.pr-badge)가 오버레이보다 위에 있어야 한다. 스크림에 덮이면 호버하는 동안
-       무슨 분류인지 사라진다 — 배지는 표지 위에 얹힌 라벨이지 오버레이의 일부가 아니다.
-       갤러리(.pr-thumb)에서는 오버레이가 없어 이 문제가 없었다. */
-    .pub-thumb .pr-badge { z-index: 1; }
-    /* ⚠ 이미지가 없는 **책자 표지**에서는 배지를 제본 등 오른쪽으로 물린다.
-       기본 위치(왼쪽 10px)는 등(0~14px)과 접지선(15px)에 4px 걸쳐 선을 끊어 놓는다(실측).
-       등 15px + 이미지 표지와 같은 여백 10px = 25px.
-       `.pub-blank` 는 마크업에서 배지 **앞**에 오므로 일반 형제 결합자로 잡힌다 —
-       `:has()` 가 필요 없다(빌더의 `<span class="pub-thumb">{표지}{배지}` 순서에 의존한다). */
-    .pub-blank ~ .pr-badge { left: 25px; }
-    .pub-ov { position: absolute; inset: 0; display: flex; align-items: center;
-      justify-content: center; gap: 10px;
-      background: rgb(var(--navy-rgb) / .52);
-      opacity: 0; transition: opacity .2s; }
-    .pub-thumb:hover .pub-ov,
-    .pub-thumb:focus-within .pub-ov { opacity: 1; }
-    .pub-ov-btn { display: inline-flex; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border-radius: 999px;
-      background: rgb(255 255 255 / .94); color: var(--color-primary);
-      transform: translateY(6px); transition: transform .2s, background .2s, color .2s; }
-    .pub-thumb:hover .pub-ov-btn,
-    .pub-thumb:focus-within .pub-ov-btn { transform: none; }
-    .pub-ov-btn:hover { background: #fff; color: var(--color-primary-hover); }
-    .pub-ov-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-    /* 터치 기기 — 호버가 없다. 스크림을 옅게 깔고 도구를 늘 띄운다.
-       ⚠ 크기를 줄이지 않는다. 손가락 타깃이라 40px 를 유지하고(2열 375px 에서 표지 폭
-         약 163px → 40×2 + gap 8 + padding 16 = 104px 로 들어간다) 대신 모서리로 붙여
-         표지를 최대한 가리지 않게 한다. */
-    @media (hover: none) {
-      .pub-ov { opacity: 1; background: rgb(var(--navy-rgb) / .34);
-        align-items: flex-end; justify-content: flex-end; padding: 8px; gap: 8px; }
-      .pub-ov-btn { transform: none; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .pub-ov, .pub-ov-btn { transition: none; }
-      .pub-ov-btn { transform: none; }
-    }
-    .pr-ic { flex: none; width: 17px; height: 17px; }
-    .pub-ov-btn .pr-ic { width: 20px; height: 20px; }
-
-    /* ── 언론보도 목록 — 분류 · 검색 · 페이지네이션 ────────────────────── */
-    .pl-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
-      justify-content: space-between; margin: clamp(24px, 2.6vw, 40px) 0 0; }
-    .pl-modes { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pl-mode { padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
-      background: var(--color-surface); font: inherit; font-size: 13.5px; font-weight: 600;
-      color: var(--color-text-muted); cursor: pointer;
-      transition: background .2s, color .2s, border-color .2s; }
-    .pl-mode:hover { color: var(--color-text); border-color: var(--color-text-muted); }
-    .pl-mode.is-on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-    .pl-search { display: flex; gap: 0; min-width: min(100%, 340px); }
-    .pl-search input { flex: 1 1 auto; min-width: 0; padding: 10px 14px; font: inherit; font-size: 14px;
-      border: 1px solid var(--color-line); border-right: 0;
-      border-radius: var(--radius-sm) 0 0 var(--radius-sm); background: var(--color-surface);
-      color: var(--color-text); }
-    .pl-search input:focus { outline: 2px solid var(--color-primary); outline-offset: -2px; }
-    .pl-go { flex: none; padding: 10px 20px; border: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      background: var(--color-navy); color: #fff; font: inherit; font-size: 13.5px; font-weight: 700;
-      cursor: pointer; transition: background .2s; }
-    .pl-go:hover { background: var(--color-primary); }
-
-    .pl-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; }
-    .pl-chips[hidden] { display: none; }
-    .pl-chip { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--color-line);
-      background: var(--color-surface); font: inherit; font-size: 13px; font-weight: 600;
-      color: var(--color-text-muted); cursor: pointer; transition: background .2s, color .2s; }
-    .pl-chip.is-on { background: rgb(var(--primary-rgb) / .1); border-color: var(--color-primary);
-      color: var(--color-primary); }
-
-    /* 언론보도 행 — 제목 아래 매체·보도일자 한 줄(첨부 와이어프레임) */
-    .pr-row--stack { display: block; }
-    .pr-row--stack[hidden] { display: none; }
-    .pr-row--stack .pr-row-meta { margin-top: 8px; }
-
-    .pl-pager { display: flex; justify-content: center; align-items: center; gap: 4px;
-      margin: clamp(28px, 3vw, 46px) 0 0; }
-    .pl-pager[hidden] { display: none; }
-    .pl-pg { min-width: 34px; height: 34px; padding: 0 9px; border: 0; border-radius: var(--radius-sm);
-      background: none; font: inherit; font-size: 14px; font-weight: 600;
-      color: var(--color-text-muted); cursor: pointer; font-variant-numeric: tabular-nums;
-      transition: background .2s, color .2s; }
-    .pl-pg:hover:not(:disabled) { background: rgb(var(--primary-rgb) / .08); color: var(--color-primary); }
-    .pl-pg.is-on { background: var(--color-primary); color: #fff; }
-    .pl-pg:disabled { opacity: .3; cursor: default; }
-
-    /* ── 갤러리 분류 탭 ─────────────────────────────────────────────── */
-    .pr-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: clamp(24px, 2.4vw, 36px) 0 0; }
-    /* 형태는 언론보도의 분류 컨트롤(.pl-mode)과 맞춘다 — 같은 홍보센터 안에서
-       페이지마다 탭 모양이 다르면 다른 기능처럼 보인다(2026-08-10 지적).
-       하나를 골라도 나머지 분류에 몇 건이 있는지 탭에서 바로 보이게 건수를 붙였다.
-       0건 분류도 탭을 지우지 않고 흐리게 남긴다 — 탭이 데이터에 따라 나타났다 사라지면
-       어떤 분류가 있는지 자체를 알 수 없다(2026-08-10 지적). */
-    .pr-filter { display: inline-flex; align-items: center; gap: 7px;
-      padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
-      background: var(--color-surface); font-size: 13.5px; font-weight: 600;
-      color: var(--color-text-muted); transition: background .2s, color .2s, border-color .2s; }
-    .pr-filter:hover { color: var(--color-text); border-color: var(--color-text-muted); }
-    .pr-filter-n { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
-      color: var(--color-text-muted); opacity: .75; }
-    .pr-filter.is-on .pr-filter-n { color: #fff; opacity: .8; }
-    /* 0건 — 누를 수 없다는 것이 보여야 한다. disabled 라 hover 도 걸리지 않는다 */
-    .pr-filter.is-empty { opacity: .45; cursor: default; }
-    .pr-filter.is-empty:hover { color: var(--color-text-muted); border-color: var(--color-line); }
-    .pr-filter.is-on { background: var(--color-primary); border-color: var(--color-primary);
-      color: #fff; }
-    /* 필터가 걸리면 JS 가 카드에 hidden 을 세운다 — display 는 CSS 가 정한다 */
-    .pr-card[hidden] { display: none; }
-
-    /* ── 비어 있을 때 ───────────────────────────────────────────────── */
-    .pr-empty { margin: clamp(28px, 3vw, 46px) 0 0; padding: clamp(44px, 5vw, 84px) 20px;
-      border: 1px dashed var(--color-line); border-radius: var(--radius-lg);
-      background: var(--color-surface); text-align: center;
-      font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted); }
-
-    /* ── 게시글 상세 ────────────────────────────────────────────────────
-       스토리보드에는 공개용 상세 화면이 없다(slide106~116 은 전부 관리자 CMS 이고
-       §11.3 에서 도입하지 않기로 한 범위다). 관리자 등록 폼(slide108)의 필드
-       — 제목 · 내용 · 첨부파일 — 을 기준으로 공개 화면을 새로 짰다.
-       마크업은 tools/build/pages.mjs 의 buildDetails() 가 만든다. */
-
-    /* 본문은 읽는 글이라 컨테이너를 좁힌다. 한 줄이 길면 눈이 다음 줄을 놓친다 */
-    .wrap--narrow { max-width: 860px; }
-
-    .post { margin: 0; }
-    .post-head { padding-bottom: clamp(20px, 2vw, 30px);
-      border-bottom: 2px solid var(--color-primary); }
-    .post-title { margin: 0; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(21px, 2vw, 31px); line-height: 1.4; letter-spacing: -.022em;
-      color: var(--color-text); }
-    .post-meta { margin: 12px 0 0; font-size: 13px; color: var(--color-text-muted);
-      font-variant-numeric: tabular-nums; }
-
-    .post-body { padding: clamp(26px, 2.8vw, 44px) 0; }
-    .post-body p { margin: 0 0 1.1em; font-size: clamp(15px, 1.05vw, 17px); line-height: 1.85;
-      color: var(--color-text); }
-    .post-body p:last-child { margin-bottom: 0; }
-    .post-empty { padding: clamp(40px, 4vw, 64px) 0; text-align: center;
-      font-size: 14px; color: var(--color-text-muted); }
-
-    .post-files { margin: 0 0 clamp(26px, 2.8vw, 40px); padding: clamp(16px, 1.6vw, 22px);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md);
-      background: var(--color-bg); }
-    .post-files-h { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .1em;
-      color: var(--color-text-muted); }
-    .post-files-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
-    /* 아이콘·이름·확장자 한 줄. 이름이 길면 이름만 줄고 아이콘·확장자는 안 눌린다 */
-    .post-files-list a { display: flex; align-items: center; gap: 10px; min-width: 0;
-      padding: 9px 11px; margin: -9px -11px; border-radius: var(--radius-sm);
-      font-size: 14px; font-weight: 600; color: var(--color-primary);
+    /* 찾아오시는 길 — 기획서는 "카카오/네이버 지도 API 연동" 을 적어 뒀으나 키가 필요하다.
+       ⚠ 키 없이 되는 **길찾기 링크**로 먼저 연결한다. 빈 회색 상자를 라이브에 올리지 않는다.
+         API 키가 생기면 이 블록 안에 임베드를 넣고 링크는 보조로 남긴다. */
+    .ci-map { display: flex; flex-direction: column;
+      padding: clamp(22px, 2.2vw, 34px);
+      background: var(--color-primary); border-radius: var(--radius-md); color: #ffffff; }
+    .ci-map-h { margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(16px, 1.35vw, 21px); letter-spacing: -.015em; }
+    .ci-map-a { margin: clamp(10px, 1vw, 14px) 0 0; font-size: clamp(13.5px, 1vw, 15px);
+      line-height: 1.7; color: rgba(255, 255, 255, .84); word-break: keep-all; }
+    .ci-acts { list-style: none; display: grid; gap: 8px; padding: 0;
+      margin: clamp(18px, 1.8vw, 26px) 0 0; }
+    .ci-act { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: clamp(11px, 1.1vw, 15px) clamp(14px, 1.3vw, 18px);
+      border-radius: var(--radius-sm); background: rgba(255, 255, 255, .13);
+      font-size: 13.5px; font-weight: 700; color: #ffffff; text-decoration: none;
       transition: background .2s; }
-    .post-files-list a:hover { background: rgb(var(--primary-rgb) / .07); }
-    /* 아이콘은 currentColor 를 따라간다(§5) — 링크 색이 바뀌면 함께 바뀐다 */
-    .post-file-ic { flex: none; width: 19px; height: 19px; }
-    .post-file-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .post-file-ext { flex: none; padding: 2px 7px; border-radius: 999px;
-      background: rgb(var(--primary-rgb) / .1); font-size: 11px; font-weight: 700;
-      letter-spacing: .04em; }
+    .ci-act::after { content: "\2192"; font-weight: 400; opacity: .7; }
+    .ci-act:hover, .ci-act:focus-visible { background: rgba(255, 255, 255, .24); }
+    /* 전화는 마지막 수단이 아니라 가장 빠른 길이다 — 흰 면으로 한 칸 올린다 */
+    .ci-act--tel { background: #ffffff; color: var(--color-primary); }
+    .ci-act--tel:hover, .ci-act--tel:focus-visible { background: rgba(255, 255, 255, .88); }
 
-    /* 이전·다음·목록 — 본문 끝에 카드가 또 오면 무게가 본문과 비슷해져 끝이 흐려진다.
-       얇은 구분선으로 나눈 행 목록으로 낮추고, 목록 버튼은 아래 가운데로 뺐다(2026-08-10 지적). */
-    .post-nav { margin-top: clamp(20px, 2.2vw, 32px);
-      border-top: 1px solid var(--color-line); }
-    .post-nav-item { display: grid; grid-template-columns: auto minmax(0, 1fr);
-      align-items: center; gap: clamp(12px, 1.6vw, 26px);
-      padding: clamp(13px, 1.3vw, 17px) 6px;
-      border-bottom: 1px solid var(--color-line); transition: background .2s; }
-    a.post-nav-item:hover { background: rgb(var(--primary-rgb) / .045); }
-    .post-nav-label { display: inline-flex; align-items: center; gap: 7px; min-width: 74px;
-      font-size: 13px; font-weight: 700; color: var(--color-text-muted); }
-    .post-nav-ic { flex: none; width: 15px; height: 15px; }
-    a.post-nav-item:hover .post-nav-label { color: var(--color-primary); }
-    /* 제목이 길어도 행 높이가 변하지 않게 한 줄로 자른다 */
-    .post-nav-title { font-size: 15px; color: var(--color-text);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .post-nav-item.is-off .post-nav-title { color: var(--color-text-muted); }
+    /* 접수 안내 — 실제 폼은 메인 `#contact` 다 */
+    .ci-cta { display: flex; flex-wrap: wrap; align-items: center;
+      gap: clamp(12px, 1.4vw, 22px); margin: clamp(28px, 3vw, 48px) 0 0; }
+    .ci-cta span { font-size: clamp(13px, .98vw, 15px); color: var(--color-text-muted);
+      word-break: keep-all; }
+    .ci-cta-b { flex: none; padding: clamp(13px, 1.3vw, 17px) clamp(24px, 2.4vw, 38px);
+      border-radius: 999px; background: var(--color-primary); color: #ffffff;
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.1vw, 16.5px);
+      text-decoration: none; transition: background .2s; }
+    .ci-cta-b:hover, .ci-cta-b:focus-visible { background: var(--color-primary-hover); }
 
-    /* 목록으로 — 채운 버튼이 아니라 가운데 정렬한 외곽선 링크 */
-    /* ⚠ display 는 flex(블록 레벨)여야 한다. inline-flex 는 인라인이라
-       margin-inline:auto 로 가운데 정렬되지 않고 왼쪽에 붙는다. */
-    .post-back { display: flex; align-items: center; gap: 8px; width: max-content;
-      margin: clamp(20px, 2.2vw, 30px) auto 0;
-      padding: 11px 22px; border-radius: 999px;
-      border: 1px solid var(--color-line); background: var(--color-surface);
-      font-size: 14px; font-weight: 600; color: var(--color-text);
-      transition: border-color .2s, color .2s; }
-    .post-back:hover { border-color: var(--color-primary); color: var(--color-primary); }
-    .post-back-ic { flex: none; width: 15px; height: 15px; }
-
-    /* ── 상세 본문 이미지 (공지사항에 이미지가 등록됐을 때) ────────────── */
-    .post-fig { margin: clamp(22px, 2.4vw, 34px) 0; }
-    .post-fig img { width: 100%; height: auto; border-radius: var(--radius-md);
-      border: 1px solid var(--color-line); }
-    .post-fig figcaption { margin-top: 10px; font-size: 13px; color: var(--color-text-muted); }
-
-    /* 언론보도 상세 — 매체명 · 원문 기사 보기 */
-    .post-outlet { font-weight: 700; color: var(--color-primary); margin-right: 10px; }
-    .post-source { margin: 0 0 clamp(26px, 2.8vw, 40px); }
-    /* 본문 옆 보조 동작이다. 채운 원형 화살표 · 볼드 · 그림자를 걷었다(2026-08-10 지적).
-       아이콘은 새 창으로 나간다는 뜻의 외부링크 표시다. */
-    .src-btn { display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 17px; border-radius: 999px;
-      border: 1px solid var(--color-line); background: var(--color-surface);
-      font-size: 13px; font-weight: 500; color: var(--color-text-muted);
-      transition: border-color .2s, color .2s; }
-    .src-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
-    .src-arrow { display: inline-flex; flex: none; width: 15px; height: 15px; }
-    .src-arrow svg { width: 100%; height: 100%; }
+    @media (max-width: 899px) {
+      /* 두 칸을 나란히 두면 시행자 정보의 주소가 3~4줄로 접힌다 → 위아래로 쌓는다 */
+      .ci-grid { grid-template-columns: minmax(0, 1fr); }
+    }
   </style>
 </head>
 
@@ -712,8 +455,8 @@
       <nav class="gnb-menu" aria-label="주 메뉴">
         <a href="overview.html">사업소개</a>
         <a href="index.html#concept">도시소개</a>
-        <a href="invest.html">투자·입주</a>
-        <a href="index.html#pr" class="is-on" aria-current="page">홍보센터</a>
+        <a href="invest.html" class="is-on" aria-current="page">투자·입주</a>
+        <a href="index.html#pr">홍보센터</a>
       </nav>
       <div class="gnb-side">
         <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
@@ -753,13 +496,13 @@
       <a href="invest.html#land">토지확보 현황</a>
       <a href="invest.html#zone">특구별 혜택</a>
       <a href="invest.html#benefit">주요 혜택</a>
-      <a href="contact.html">문의하기</a>
+      <a href="contact.html" class="is-on">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
       <a href="video.html">홍보영상</a>
       <a href="gallery.html">갤러리</a>
-      <a href="publication.html" class="is-on">발행물</a>
+      <a href="publication.html">발행물</a>
     </div>
   </div>
 
@@ -771,39 +514,89 @@
          구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/img-bio.jpg" alt="" />
+      <img class="hero-bg" src="assets/img/gallery/plaza-walk.avif" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
           <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>홍보센터</span><span aria-hidden="true">›</span><b>발행물</b>
+          <span>투자·입주</span><span aria-hidden="true">›</span><b>문의하기</b>
         </nav>
-        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>04</b><span>PR CENTER · 홍보센터</span></p>
-        <h1>발행물</h1>
+        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>03</b><span>INVEST · 투자·입주</span></p>
+        <h1>Contact</h1>
         <!-- 페이지가 front-matter 에 `heroLede` 를 두면 제목 아래 한 줄이 붙는다.
              원페이지로 합친 투자·입주가 상단 카피를 여기 담기 위해 생겼다(2026-08-24 지시).
              ⚠ 값이 없으면 **문단 자체가 나오지 않는다** — 빈 `<p>` 를 남기면 여백만 생긴다. -->
-
+        <p class="hero-lede">함께 미래를 만들어갈 파트너를 기다립니다</p>
       </div>
     </section>
 
     <!-- ===== LNB ===== -->
-    <nav class="lnb" aria-label="홍보센터 하위 메뉴">
+    <nav class="lnb" aria-label="투자·입주 하위 메뉴">
       <div class="wrap">
-        <a href="notice.html">공지사항</a>
-        <a href="press.html">언론보도</a>
-        <a href="video.html">홍보영상</a>
-        <a href="gallery.html">갤러리</a>
-        <a href="publication.html" class="is-on" aria-current="page">발행물</a>
+        <a href="invest.html#land">토지확보 현황</a>
+        <a href="invest.html#zone">특구별 혜택</a>
+        <a href="invest.html#benefit">주요 혜택</a>
+        <a href="contact.html" class="is-on" aria-current="page">문의하기</a>
       </div>
     </nav>
 
-<!-- 스토리보드 v2 slide100. 항목마다 "새 창으로 보기"(url)와 "내려받기"(file)가 갈린다 -->
-    <section class="sec" id="list">
+<!-- ===== 문의하기 — 기획 #p-contact "16 · 투자·입주 > 문의하기" (Storyboard p.104) =====
+         구성은 기획서 그대로다 — [시행자 정보 표] · [마무리 카피] · [찾아오시는 길].
+         ⚠ 제목은 `Contact` 다(2026-08-24 지시). 메뉴 이름은 `문의하기` 로 남는다 —
+           브레드크럼(`crumb`)이 그 이름을 쓴다.
+         ⚠ 문의 **폼은 여기에 두지 않는다.** 기획서에도 없고, 실제 접수 폼은 메인 `#contact`
+           한 곳에만 있다(백엔드 미연결 시 메일로 넘기는 분기까지 그쪽에 있다).
+           두 벌이 되면 한쪽만 고쳐져 접수가 새는 쪽이 생긴다 → 여기서는 그 폼으로 보낸다. -->
+    <section class="sec" id="contact-info">
       <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>PUBLICATION</b><span>발행물</span></p>
-        <h2 class="h2 rv">카달로그와 <em>사업 소개 자료</em></h2>
-        <p class="pr-empty">등록된 게시물이 없습니다.</p>
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
+        <h2 class="h2 rv">B-CITY를 만들어가는 <em>시행자</em></h2>
+        <p class="lede rv">사업 · 투자 · 입주에 관한 문의를 기다립니다</p>
+
+        <div class="ci-grid rv">
+          <!-- 시행자 정보 — 기획서의 [구분 | 내용] 표를 정의 목록으로 옮겼다.
+               두 열뿐이고 각 항목이 독립적이라 `<dl>` 이 표보다 읽기 쉽다(스크린리더 포함). -->
+          <dl class="ci-info">
+            <div>
+              <dt>주소</dt>
+              <dd>서울특별시 광진구 자양로 58, 태림빌딩 3층</dd>
+            </div>
+            <div>
+              <dt>대표 전화</dt>
+              <dd><a href="tel:07041300423">070-4130-0423</a></dd>
+            </div>
+            <div>
+              <dt>홈페이지</dt>
+              <dd><a href="https://www.biotech-iv.com/" target="_blank" rel="noopener">www.biotech-iv.com<span class="sr"> (새 창)</span></a></dd>
+            </div>
+          </dl>
+
+          <!-- 찾아오시는 길. ⚠ 기획서는 "카카오/네이버 지도 API 연동" 을 적어 뒀지만 키가
+               필요하다 → 키 없이 되는 **길찾기 링크**로 먼저 연결한다. 빈 회색 상자를
+               올려 두지 않는다(라이브 페이지다). API 키가 생기면 이 자리에 임베드한다. -->
+          <div class="ci-map">
+            <p class="ci-map-h">찾아오시는 길</p>
+            <p class="ci-map-a">서울특별시 광진구 자양로 58, 태림빌딩 3층</p>
+            <ul class="ci-acts">
+              <li><a class="ci-act" href="https://map.kakao.com/?q=%EC%84%9C%EC%9A%B8%EC%8A%A4%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EC%9E%90%EC%96%91%EB%A1%9C%2058"
+                     target="_blank" rel="noopener">카카오맵 길찾기<span class="sr"> (새 창)</span></a></li>
+              <li><a class="ci-act" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%EC%8A%A4%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EA%B4%91%EC%A7%84%EA%B5%AC%20%EC%9E%90%EC%96%91%EB%A1%9C%2058"
+                     target="_blank" rel="noopener">네이버지도 길찾기<span class="sr"> (새 창)</span></a></li>
+              <li><a class="ci-act ci-act--tel" href="tel:07041300423">전화 연결 070-4130-0423</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="closer rv">
+          <p>㈜바이오테크이노밸리피에프브이는 B-CITY를 만들어가는 <em>시행자</em>이자,<br />
+            대한민국 미래 도시의 새로운 가능성을 함께 그려가는 <em>동반자</em>입니다</p>
+        </div>
+
+        <!-- 접수는 메인의 문의 폼 한 곳에서 받는다 -->
+        <p class="ci-cta rv">
+          <a class="ci-cta-b" href="index.html#contact">문의 남기기</a>
+          <span>기업입주 · 투자 · 사업 문의를 남겨 주시면 담당자가 순차적으로 연락드립니다</span>
+        </p>
       </div>
     </section>
   </main>
@@ -885,40 +678,6 @@
       items.forEach(function (el, i) {
         el.style.transitionDelay = (i % 4) * 0.07 + 's';
         io.observe(el);
-      });
-    })();
-
-    /* 분류 필터 — 갤러리(행사·현장·조감도·기타)와 발행물(카달로그·IM·브로슈어·리포트)이
-       같은 코드를 쓴다. 카드에 hidden 을 세우고 보이기는 CSS 가 정한다.
-       ⚠ style.display 를 직접 건드리지 말 것. hidden 은 접근성 트리에서도 빠지므로
-         스크린리더가 감춰진 카드를 읽지 않는다. */
-    (function () {
-      var btns = [].slice.call(document.querySelectorAll('.pr-filter'));
-      if (!btns.length) return;
-      /* ⚠ 반드시 목록 컨테이너 안으로 한정한다. 예전에는 `[data-cat]` 전역이었는데
-         **분류 탭 자신도 data-cat 을 들고 있어서** 탭을 고르면 나머지 탭이 함께
-         hidden 이 됐다 — 한 번 고르면 다른 분류로 갈 수 없었다(2026-08-10 신고). */
-      var cards = [].slice.call(
-        document.querySelectorAll('.pr-cards [data-cat], .pub-list [data-cat]'));
-      var live = document.getElementById('filterCount');
-
-      var apply = function (cat) {
-        var n = 0;
-        cards.forEach(function (c) {
-          var on = cat === 'all' || c.dataset.cat === cat;
-          c.hidden = !on;
-          if (on) n++;
-        });
-        btns.forEach(function (b) {
-          var on = b.dataset.cat === cat;
-          b.classList.toggle('is-on', on);
-          b.setAttribute('aria-pressed', on ? 'true' : 'false');
-        });
-        if (live) live.textContent = n + '건 표시 중';
-      };
-
-      btns.forEach(function (b) {
-        b.addEventListener('click', function () { apply(b.dataset.cat); });
       });
     })();
   </script>

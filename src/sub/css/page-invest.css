@@ -146,28 +146,40 @@
 .iv-sum { list-style: none; display: grid; gap: clamp(12px, 1.2vw, 20px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: clamp(28px, 3vw, 48px) 0 0; padding: 0; }
-.iv-sum-i { padding: clamp(22px, 2.2vw, 32px);
-  background: var(--color-primary); border-radius: var(--radius-lg); color: #fff; }
-/* 아이콘은 짙은 면 위이므로 배지를 흰 반투명으로 두고 글리프를 흰색으로 둔다 —
-   특구 카드와 반대다(그쪽은 흰 면 위 프라이머리). */
-.iv-sum-ic { display: grid; place-items: center; width: 46px; height: 46px;
-  border-radius: 999px; background: rgba(255, 255, 255, .16); color: #fff; }
-.iv-sum-ic .iv-ic { width: 22px; height: 22px; }
-.iv-sum-no { margin: clamp(14px, 1.4vw, 20px) 0 0; display: flex; align-items: baseline; gap: 9px;
+/* ⚠ **밝은 카드**다(2026-08-24 지시). 흰 면 + 실선 + 위쪽 강조선 — 특구 카드와 같은 어법이라
+     한 페이지 안에서 카드 종류가 둘로 갈리지 않는다. 짙은 면을 쓰면 바로 아래 표의
+     짙은 머리(프라이머리)와 무게가 겹쳐 어느 쪽이 요약인지 읽히지 않았다. */
+.iv-sum-i { display: flex; flex-direction: column;
+  padding: clamp(22px, 2.2vw, 32px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line); border-top: 5px solid var(--color-primary);
+  border-radius: 0 0 var(--radius-md) var(--radius-md); }
+/* 머리 — 아이콘 옆에 번호·영문 라벨과 제목(2026-08-24 지시).
+   ⚠ 제목 칸에 `min-width: 0` 이 필요하다 — 없으면 긴 단어가 flex 최소 폭을 밀어낸다. */
+.iv-sum-h { display: flex; align-items: center; gap: clamp(14px, 1.4vw, 20px); }
+.iv-sum-h > div { min-width: 0; }
+/* 특구 배지(52px)보다 **크게** 잡는다 — 요약 카드가 둘뿐이라 시선을 먼저 받아야 한다 */
+.iv-sum-ic { flex: none; display: grid; place-items: center;
+  width: clamp(58px, 5.4vw, 76px); aspect-ratio: 1;
+  border-radius: 999px; background: var(--color-bg); color: var(--color-primary); }
+.iv-sum-ic .iv-ic { width: clamp(28px, 2.6vw, 36px); height: clamp(28px, 2.6vw, 36px); }
+.iv-sum-no { margin: 0; display: flex; align-items: baseline; gap: 9px;
   font-size: 11.5px; font-weight: 700; letter-spacing: .12em;
-  color: rgba(255, 255, 255, .7); }
-.iv-sum-no b { font-family: var(--font-display); font-size: 13px; letter-spacing: 0; color: #fff; }
-.iv-sum-t { display: block; margin-top: 6px; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(17px, 1.45vw, 22px); letter-spacing: -.015em; }
+  color: var(--color-text-muted); }
+.iv-sum-no b { font-family: var(--font-display); font-size: 13px; letter-spacing: 0;
+  color: var(--color-primary); }
+.iv-sum-t { display: block; margin-top: 4px; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(17px, 1.45vw, 22px); letter-spacing: -.015em; color: var(--color-text);
+  word-break: keep-all; }
 /* 핵심 값 한 줄 — 표를 열기 전에 규모가 읽혀야 한다(기획서에 이 줄이 있다) */
-.iv-sum-v { display: block; margin-top: clamp(8px, .9vw, 12px); font-style: normal;
+.iv-sum-v { display: block; margin-top: clamp(14px, 1.4vw, 20px); font-style: normal;
   font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em;
-  font-size: clamp(15px, 1.3vw, 19px); color: var(--color-light-blue); word-break: keep-all; }
+  font-size: clamp(16px, 1.4vw, 21px); color: var(--color-primary); word-break: keep-all; }
 .iv-sum-k { list-style: none; display: flex; flex-wrap: wrap; gap: 6px;
   margin: clamp(14px, 1.4vw, 20px) 0 0; padding: 0; }
 .iv-sum-k li { padding: 4px 11px; border-radius: 999px;
-  background: rgba(255, 255, 255, .14); font-size: 12.5px; font-weight: 600;
-  color: rgba(255, 255, 255, .92); }
+  background: var(--color-bg); font-size: 12.5px; font-weight: 600;
+  color: var(--color-text-muted); }
 
 /* ── 기업 유형별 지원 표 (주요 혜택) ────────────────────────────────
    원문 표(스토리보드 slide94)의 병합 구조를 rowspan/colspan 으로 그대로 옮겼다.
