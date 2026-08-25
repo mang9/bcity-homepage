@@ -709,6 +709,18 @@
     .dz-intro-in { position: relative; z-index: 4;
       width: min(var(--wrap, 1320px), 100% - clamp(28px, 4.4vw, 72px) * 2);
       margin-inline: auto; color: #ffffff; text-align: center; }
+    /* ── 도입부 타이포 위계 — 구역 소개 · 정주환경 **공용** (2026-08-25 지시) ──────────
+       이 두 페이지(도시소개)는 **히어로가 없다**(§11.61). 화면 하나를 채우는 이 띠가 그 자리를
+       대신하므로, 제목을 본문 섹션용 `.h2`(최대 42px)로 두면 풀스크린에서 작아 보인다.
+       → **히어로 h1 위계**를 쓴다.
+       ⚠ 값을 새로 만들지 않는다 — `30-hero-lnb.css` 의 `.hero h1` · `.hero-lede` 와 **같은 clamp** 다.
+         램프가 두 벌이 되면 `DESIGN.md` 의 census(§1.2)가 다시 어긋난다. 한쪽을 고치면 같이 고친다.
+       ⚠ 두 페이지를 **한 규칙**으로 묶는다. 따로 적으면 한쪽만 바뀌어 같은 자리의 글자 크기가
+         페이지마다 달라진다(이 지시가 나온 이유가 그것이다). */
+    .dz-intro .h2, .lv-intro .h2 { font-size: clamp(34px, 4.2vw, 62px);
+      line-height: 1.14; letter-spacing: -.025em; }
+    .dz-intro .lede, .lv-intro .lede { font-size: clamp(15px, 1.15vw, 19px); line-height: 1.7; }
+
     /* 이미지 위에 얹히므로 글자색을 전부 밝은 쪽으로 바꾼다 — 정주환경과 같은 규칙이다 */
     .dz-intro .h2 { color: #ffffff; }
     .dz-intro .h2 em { font-style: normal; color: var(--color-mint); }
@@ -1173,12 +1185,13 @@
     /* ⚠ `.lv-intro-tx` 에 `max-width: 24ch` 를 주면 안 된다. `ch` 가 제목의 큰 글자 기준이
          아니라 이 요소의 글자 기준이어서 제목이 좁은 기둥으로 짜부라졌다(실측 11줄).
          줄 길이는 `.wrap` 과 마크업의 `<br>` 로 잡고, 여기서는 제한하지 않는다.
-       ⚠ 제목 상한은 **가장 긴 줄**이 정한다 — `비즈니스 · 주거 · 교육 · 문화가`.
-         줄바꿈을 하나 더 넣어(2 → 3줄) 그 줄이 짧아졌기에 58px 까지 올릴 수 있었다. */
-    .lv-intro .h2 { font-size: clamp(28px, 4vw, 58px); line-height: 1.24;
-      letter-spacing: -.028em; }
-    .lv-intro .lede { margin-top: clamp(16px, 1.8vw, 26px);
-      font-size: clamp(15px, 1.15vw, 19px); }
+       ⚠ **크기는 여기서 정하지 않는다** — 구역 소개 도입부와 한 규칙으로 묶여 있다(위 참고).
+         전에는 여기에 `clamp(28px, 4vw, 58px)` 이 따로 있어 같은 자리의 제목이 두 페이지에서
+         서로 달랐다(1920 에서 58 vs 62px · 2026-08-25 지시로 통일).
+       ⚠ 제목 상한은 **가장 긴 줄**이 정한다 — `비즈니스 · 주거 · 교육 · 문화가`. 줄바꿈을 하나 더
+         넣어 그 줄이 짧아졌기에 히어로 h1 상한(62px)까지 올려도 3줄을 유지한다(실측 확인).
+         카피를 고치면 이 줄 수를 다시 재야 한다. */
+    .lv-intro .lede { margin-top: clamp(16px, 1.8vw, 26px); }
 
     /* ── 정주환경 — 고정 구간(런웨이). 여기서만 스크롤 전환이 일어난다 ──────────
        섹션 높이 = 화면 하나 + 런웨이. 화면 하나는 stage 가 sticky 로 붙잡고,
