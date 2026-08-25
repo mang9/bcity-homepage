@@ -23,10 +23,10 @@
         <!-- 제목까지 왼쪽 칸에 넣는다 — 그래야 지도가 **제목 옆까지 올라온다**(2026-08-24 지시).
              제목을 그리드 밖에 두면 오른쪽 제목 옆이 통째로 비고 지도는 그 아래에서 시작한다. -->
         <div class="ci-grid rv">
-          <!-- 왼쪽 칸 — 세 덩이를 **한 그리드 항목**으로 묶는다(2026-08-25).
-               따로 두면 지도가 3행에 놓여 왼쪽 칸보다 424px 늦게 시작하고
-               302px 아래로 삐져나온다(실측). 묶으면 두 칸의 위가 저절로 맞는다. -->
-          <div class="ci-col">
+          <!-- 격자는 **두 행**이다 — 1행 리드 / 2행 [정보+버튼 | 지도].
+               지도가 2행에서 시작하므로 윗변이 `시행자` 줄에 맞는다(2026-08-25 지시).
+               ⚠ 지도를 버튼 줄(3행)에 박으면 왼쪽 칸보다 424px 늦게 시작하고
+                 302px 아래로 삐져나온다(§11.73). 행은 두 개까지만 쓴다. -->
           <div class="ci-lead">
             <p class="eyebrow"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
             <h2 class="h2">B-CITY를 만들어가는 <em>시행자</em></h2>
@@ -36,6 +36,7 @@
                이 페이지에만 흰 카드가 또 있으면 투자·입주의 카드들과 구분이 안 된다.
                `구분` 에 시행자(회사명)를 더했다. 표기는 사이트가 이미 쓰는 `바이오테크 이노밸리 PFV`
                로 맞춘다 — 법인 전체 이름은 아래 마무리 카피에 그대로 있다. -->
+          <div class="ci-body">
           <dl class="ci-info">
             <div>
               <dt>시행자</dt>
@@ -62,26 +63,24 @@
           </div>
 
           <!-- 우: 카카오맵 정적 지도. 사용자가 준 퍼가기 코드를 바탕으로 했다.
-               ⚠ 요청을 **정사각(1000x1000)** 으로 바꿨다(2026-08-25). 왼쪽 칸과 아래를 맞추려면
-                 지도가 왼쪽보다 **같거나 커야** 한다 — 작으면 지도 밑에 빈 칸이 남아 그게
-                 "깨져 보이는" 상태다. 실측 왼쪽 칸 높이 대비 1024~1920 전 구간에서 정사각이
-                 항상 같거나 크다. 비율을 바꾸려면 그 관계를 다시 재고 바꾼다.
-               ⚠ **자르지 않는다**(`object-fit: cover` 금지). 카카오 로고가 이미지 **왼쪽 아래**에
-                 구워져 있어 잘라내면 표기가 사라진다 — 아래 바를 걷어낸 지금은 이게 유일한 표기다.
-               ⚠ 하단 `kakaomap` 바는 뺐다(2026-08-25 지시). 로고는 이미지 안에 남아 있고,
-                 "지도 크게 보기" 는 지도 전체가 이미 카카오맵으로 가는 링크라 `.sr` 로 낭독된다.
-               ⚠ 정적 이미지라 키가 필요 없다. 이 자리를 동적 지도로 바꾸려면 API 키가 필요하다.
-                 네이버 지도는 정적·동적 모두 키가 필요하고 iframe 도 막혀 있다(2026-08-25 실측). -->
+               ⚠ **2행에서 시작한다**(2026-08-25 지시) — 리드는 1행, [정보+버튼]과 지도가 2행이라
+                 지도 윗변이 `시행자` 줄에 저절로 맞는다. 그 간격은 `.ci-grid` 의 `row-gap` 이 정한다.
+                 여기서 `grid-row` 를 **버튼 줄**에 박으면 §11.73 의 결함이 그대로 재현된다.
+               ⚠ 비율 1000:590 은 **지도가 커지지 않게** 고른 값이다. 정사각으로 뒀더니
+                 오히려 전보다 훨씬 커졌다(2026-08-25 지적). 폭은 칸이 정하므로 비율이 곧 높이다.
+               ⚠ `SCALE` 이 확대 단계다(작을수록 확대 · `S`/`LEVEL` 은 무시된다). 실측 구간은
+                 0.5 / 0.75~1.25 / 1.5~2.5 / 3~5 / 6~ 다. 2.5 → **1.0** 으로 한 단계 당겼다.
+               ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고 하단 바를
+                 걷어낸 지금은 그것이 유일한 표기다 — `cover` 로 채우면 잘려 사라진다.
+               ⚠ 정적 이미지라 키가 필요 없다. 네이버 지도는 정적·동적 모두 키가 필요하고
+                 iframe 도 막혀 있다(2026-08-25 실측 · §11.73). -->
           <figure class="ci-map">
             <a class="ci-map-a" href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">
               <!-- ⚠ 좁은 화면에는 **가로가 넓은 원본**을 준다. 정사각은 쌓인 화면에서
                    너무 높고, 잘라서 줄이면 왼쪽 아래 카카오 로고가 사라진다.
                    CSS 의 `aspect-ratio` 두 값이 이 두 원본과 짝이다 — 한쪽만 고치면 눌린다. -->
-              <picture>
-                <source media="(max-width: 899px)" srcset="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=700&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="700" />
-                <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=1000&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="1000" loading="lazy" decoding="async"
-                     alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
-              </picture>
+              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=1.0&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=590&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="590" loading="lazy" decoding="async"
+                   alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
               <!-- 건물 표시(2026-08-24 지시). 정적 지도는 `MX`/`MY`(= 태림빌딩)를 **중심**으로
                    그려지므로 정확히 가운데에 두면 그 건물을 가리킨다.
                    ⚠ 카카오 정적 지도의 마커 파라미터는 이 엔드포인트에서 무시된다
