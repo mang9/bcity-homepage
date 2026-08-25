@@ -5,16 +5,32 @@
   "description": "AI·BIO·FOOD·MICE 4대 클러스터와 주거·교육·업무·레저 4대 콤플렉스. 총 110만평 8개 권역의 토지이용계획과 면적, 핵심 가치를 정리했습니다.",
   "nav": "districts",
   "h1": "구역 소개",
-  "css": ["page-shared", "page-invest", "page-city"],
-  "js": ["tabs"]
+  "css": [
+    "page-shared",
+    "page-invest",
+    "page-city"
+  ],
+  "js": [
+    "dissolve",
+    "tabs"
+  ]
 }
 -->
     <!-- ===== 구역 소개 (스토리보드 v2 slide58~75) ===== -->
     <section class="sec" id="districts">
       <div class="wrap">
-        <div class="dz-intro rv">
-          <img class="dz-intro-bg" src="assets/img/districts-aerial.avif" alt=""
-               loading="lazy" decoding="async" />
+        <div class="dz-intro rv" data-dissolve>
+          <!-- 배경 — **스케치 → 실사 조감도 디졸브**(2026-08-25 지시 · 납품 패키지 v2).
+               같은 구도의 두 장을 겹쳐 두고 위의 스케치를 걷어낸다.
+               ⚠ 두 장은 같은 3200x1800 원본에서 나온 **같은 구도**다. 크기 · `object-fit` ·
+                 `object-position` 이 하나라도 다르면 디졸브가 아니라 두 그림이 어긋나 보인다.
+               ⚠ `loading="lazy"` 를 쓰지 않는다. 이 띠는 페이지 첫 화면이라 지연시키면
+                 전환이 시작된 뒤에 그림이 들어온다. -->
+          <img class="dz-intro-bg" src="assets/img/districts-aerial-real.avif" alt=""
+               width="1920" height="1080" decoding="async" fetchpriority="high" />
+          <img class="dz-intro-bg dz-intro-sketch" src="assets/img/districts-aerial-sketch.avif" alt=""
+               width="1920" height="1080" decoding="async" fetchpriority="high" />
+          <span class="dz-intro-bloom" aria-hidden="true"></span>
           <div class="dz-intro-in">
             <p class="eyebrow"><i aria-hidden="true"></i><b>DISTRICTS</b><span>구역 소개</span></p>
             <h2 class="dz-intro-h">110만평,<br /><em>계획된 미래 도시의 청사진</em></h2>
