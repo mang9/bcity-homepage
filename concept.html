@@ -581,6 +581,53 @@
     .cc-shots figcaption { margin-top: 9px; font-size: 12.5px; line-height: 1.55;
       color: var(--color-text-muted); word-break: keep-all; }
 
+    /* ── PHYSICAL AI 전용 — IM 슬라이드 12 구성 (2026-08-25 지시) ────────────────
+       IM 실측(EMU→px): 카드 3장 나란히(x 46 · 449 · 852, 폭 382, 높이 405) ·
+       35px 번호 원 + 제목 한 줄 · 한 줄 설명 · 불릿 3개 · 카드 하단 이미지(약 368x199).
+       ⚠ 색은 IM 의 네이비가 아니라 **축 색**(`--ax`)을 쓴다. 컨셉 페이지는 축마다 색이 다르고
+         IM 은 한 벌이라 네이비였을 뿐이다.
+       ⚠ 작은 글자에는 `--ax-t`(밝은 바탕용 변종)를 쓴다. 8대 권역색 원본은 흰 바탕에서
+         4.4~4.5 라 본문 크기에서 AA 를 못 넘긴다(§11.44).
+       ⚠ 카드 높이를 맞추려고 `1fr` 을 쓰지 않는다 — 불릿 수가 같아 자연히 맞고, 이미지는
+         `margin-top: auto` 로 **바닥에 붙여** 세 장의 사진 윗선이 어긋나지 않게 한다. */
+    /* ⚠ `overflow-x: clip` 이 필요하다. 카드가 `.rv rv-x` 로 오른쪽에서 들어오는데 **등장 전**
+         시작 위치가 `translateX(28px)` 라 390px 화면에서 문서 가로 스크롤이 8px 생긴다
+         (§11.61 에서 `.cc-row` 에 같은 처리를 했다 — 이 블록은 `.cc-row` 가 아니라 따로 필요하다).
+         `hidden` 이 아니라 `clip` 이어야 안쪽에 스크롤 컨테이너가 생기지 않는다. */
+    .cc-im { list-style: none; display: grid; gap: clamp(14px, 1.6vw, 26px);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: clamp(26px, 3vw, 48px) 0 0; padding: 0; overflow-x: clip; }
+    .cc-im-c { display: flex; flex-direction: column; min-width: 0;
+      padding: clamp(20px, 2vw, 30px);
+      background: color-mix(in srgb, var(--ax, var(--color-primary)) 7%, var(--color-surface));
+      border: 1px solid color-mix(in srgb, var(--ax, var(--color-primary)) 18%, var(--color-surface));
+      border-radius: var(--radius-md); }
+    /* 번호 원 + 제목 — IM 은 한 줄에 나란히 둔다 */
+    .cc-im-h { display: flex; align-items: center; gap: clamp(10px, 1.1vw, 14px); margin: 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15.5px, 1.3vw, 19px); letter-spacing: -.015em;
+      color: var(--ax-t, var(--color-primary)); word-break: keep-all; }
+    .cc-im-h b { flex: none; display: grid; place-items: center;
+      width: clamp(28px, 2.6vw, 35px); aspect-ratio: 1; border-radius: 999px;
+      background: var(--ax, var(--color-primary)); color: #ffffff;
+      font-size: clamp(12px, 1vw, 14px); font-weight: 800; letter-spacing: 0; }
+    .cc-im-d { margin: clamp(12px, 1.2vw, 18px) 0 0; font-size: clamp(13px, 1vw, 14.5px);
+      font-weight: 700; line-height: 1.55; color: var(--color-text); word-break: keep-all; }
+    .cc-im-l { list-style: none; margin: clamp(12px, 1.2vw, 18px) 0 0; padding: 0;
+      display: grid; gap: 7px; }
+    .cc-im-l li { position: relative; padding-left: 13px; font-size: 13px; line-height: 1.65;
+      color: var(--color-text-muted); word-break: keep-all; }
+    .cc-im-l li::before { content: ""; position: absolute; left: 0; top: .6em;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--ax, var(--color-primary)); }
+    /* 하단 이미지 — `margin-top: auto` 로 바닥에 붙인다(카드 높이가 달라도 사진 윗선이 맞는다) */
+    .cc-im-f { margin: clamp(18px, 1.8vw, 26px) 0 0; padding-top: 0; }
+    .cc-im-c .cc-im-f { margin-top: auto; padding-top: clamp(18px, 1.8vw, 26px); }
+    .cc-im-f img { display: block; width: 100%; aspect-ratio: 1200 / 676; height: auto;
+      object-fit: cover; border-radius: var(--radius-sm); background: var(--color-bg); }
+    .cc-im-f figcaption { margin-top: 8px; font-size: 12px; line-height: 1.5;
+      color: var(--color-text-muted); word-break: keep-all; }
+
     /* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
 
     /* 권역별 면적 8칸 — 색은 권역 식별색이다. ⚠ 색만으로 구분하지 않는다(이름을 항상 함께 쓴다) */
@@ -1209,6 +1256,9 @@
       .cx-dia { max-width: 560px; margin-inline: auto; }
       /* 축 섹션 — 사진 칸이 좁아지면 [3항목] 아래로 내린다 */
       .cc-row { grid-template-columns: minmax(0, 1fr); }
+      /* IM 3카드도 나란히 두면 각 220px 로 좁아져 한글이 6~7자마다 끊긴다 → 한 열로 */
+      .cc-im { grid-template-columns: minmax(0, 1fr); }
+      .cc-im-c .cc-im-f { margin-top: 0; }
       /* 1단에서는 3등분하지 않는다 — 사진 칸과 나란하지 않으므로 기준이 없다 */
       .cc-side { grid-auto-rows: auto; }
       /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */
@@ -1550,33 +1600,45 @@
         </div>
       </figure>
 
-      <div class="wrap cc-row">
-        <ul class="cc-side">
-            <li class="rv rv-x"><b>지능형 로보틱스</b><span>휴머노이드 · 서비스 로봇 실증 트랙 · 로보틱스 R&amp;D 센터</span></li>
-            <li class="rv rv-x"><b>스마트 모빌리티</b><span>자율주행 실증 도로망 · UAM 이착륙 인프라 · 배송 로봇</span></li>
-            <li class="rv rv-x"><b>AI 자동화</b><span>디지털 트윈 시뮬레이션 · 도시 인프라 통합 관제</span></li>
-        </ul>
-        <ul class="cc-shots">
-            <li class="rv rv-x"><figure>
+      <!-- IM 슬라이드 12(도시 핵심 컨셉 3 · PHYSICAL AI)의 구성을 그대로 옮겼다
+           (2026-08-25 지시). 실측 배치 — 카드 3장(x 46 · 449 · 852, 폭 382, 높이 405),
+           각 카드는 [번호 원 + 제목] · [한 줄 설명] · [불릿 3개] · [하단 이미지].
+           ⚠ 색은 IM 의 네이비가 아니라 **이 축의 색(`--ax`)** 을 쓴다. 컨셉 페이지는 축마다
+             색이 다르고, IM 은 한 벌이라 네이비였을 뿐이다. 작은 글자는 `--ax-t` 를 쓴다
+             (8대 권역색 원본은 밝은 바탕에서 4.5 에 못 미친다 · §11.44).
+           ⚠ 이 축만 다른 구성이 된다 — 나머지 세 축은 [3항목 | 사진 2x2] 그대로다. -->
+      <div class="wrap">
+        <ul class="cc-im">
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>01</b>지능형 로보틱스</p>
+            <p class="cc-im-d">휴머노이드 · 서비스 로봇 실증 거점</p>
+            <ul class="cc-im-l"><li>AI 기반 로보틱스 R&amp;D 센터 유치</li><li>휴머노이드 · 서비스 로봇 실증 트랙 구축</li><li>로봇 부품 · 소재 협력 클러스터 조성</li></ul>
+            <figure class="cc-im-f">
               <img src="assets/img/concept/cc-phy-1.avif" width="1200" height="676"
                    loading="lazy" decoding="async" alt="생활 속 서비스 로봇" />
               <figcaption>생활 속 서비스 로봇</figcaption>
-            </figure></li>
-            <li class="rv rv-x"><figure>
-              <img src="assets/img/concept/cc-phy-2.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="도시 인터랙티브 인프라" />
-              <figcaption>도시 인터랙티브 인프라</figcaption>
-            </figure></li>
-            <li class="rv rv-x"><figure>
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>02</b>스마트 모빌리티</p>
+            <p class="cc-im-d">자율주행 · 미래 모빌리티 상용화 도시</p>
+            <ul class="cc-im-l"><li>자율주행 실증 도로망 구축</li><li>도심항공교통(UAM) 이착륙 인프라 조성</li><li>스마트 물류 · 배송 로봇 상용화 지원</li></ul>
+            <figure class="cc-im-f">
               <img src="assets/img/concept/cc-phy-3.avif" width="1200" height="676"
                    loading="lazy" decoding="async" alt="자율주행 실증 도로망" />
               <figcaption>자율주행 실증 도로망</figcaption>
-            </figure></li>
-            <li class="rv rv-x"><figure>
-              <img src="assets/img/concept/cc-phy-4.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="개인 단위 스마트 서비스" />
-              <figcaption>개인 단위 스마트 서비스</figcaption>
-            </figure></li>
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>03</b>AI 자동화</p>
+            <p class="cc-im-d">설계부터 관제까지 도시 전반의 디지털 통합 운영</p>
+            <ul class="cc-im-l"><li>도시 설계 단계 디지털 트윈 시뮬레이션 기반 최적화</li><li>설계 · 건설 · 에너지 · 교통 등 도시 인프라 통합 관리 시스템 구현</li><li>AI 를 통한 도시데이터 표준화 및 실시간 대응</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/cc-phy-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async" alt="도시 인터랙티브 인프라" />
+              <figcaption>도시 인터랙티브 인프라</figcaption>
+            </figure>
+          </li>
         </ul>
       </div>
     </section>
