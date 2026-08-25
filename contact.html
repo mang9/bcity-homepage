@@ -374,23 +374,26 @@
 
     /* 지도가 오른쪽에 온다(2026-08-24 지시). 지도 비율(504:310)이 정해져 있으므로
        왼쪽 정보 칸을 조금 넓게 잡아 두 칸의 아래가 크게 어긋나지 않게 한다. */
-    /* ⚠ **두 행짜리 격자**다 — 1행 리드 / 2행 [정보+버튼 | 지도].
-         지도가 2행에서 시작하므로 윗변이 `시행자` 줄에 저절로 맞는다(2026-08-25 지시).
-         그 간격은 `row-gap` 하나가 정한다 — `.ci-info` 에 위 마진을 되살리면 왼쪽만 내려가
-         지도와 어긋난다.
-       ⚠ 지도를 **버튼 줄(3행)에 박지 말 것.** 그러면 왼쪽 칸보다 424px 늦게 시작하고 302px
-         아래로 삐져나온다(§11.73 에서 겪은 그대로). 행은 두 개까지만 쓴다. */
+    /* ⚠ **세 행짜리 격자**다 — 1행 아이브로우 / 2행 제목+리드 / 3행 [정보+버튼].
+         지도는 **2~3행**을 차지해 윗변이 제목 줄(`B-CITY를 만들어가는 시행자`)에 정확히 맞는다
+         (2026-08-25 지시 — "시행자 글씨라인까지 높이를 높여줘").
+       ⚠ `row-gap` 은 **0** 이다. 행마다 필요한 간격이 달라서(아이브로우↔제목 20px,
+         리드↔정보 22~38px) 하나로는 못 맞춘다 — 각 항목의 **마진**이 갖는다.
+         마진은 그 항목이 속한 행 안에 들어가므로 행 경계는 흐트러지지 않는다.
+       ⚠ 지도를 **버튼 줄에 박지 말 것.** 왼쪽 칸보다 424px 늦게 시작하고 302px 아래로
+         삐져나온다(§11.73 에서 겪은 그대로). */
     .ci-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
-      column-gap: clamp(22px, 2.6vw, 48px); row-gap: clamp(22px, 2.4vw, 38px);
+      column-gap: clamp(22px, 2.6vw, 48px); row-gap: 0;
       margin-top: clamp(28px, 3vw, 48px); align-items: start; }
-    .ci-lead { grid-area: 1 / 1; }
-    .ci-body { grid-area: 2 / 1; min-width: 0; }
-    .ci-map  { grid-area: 2 / 2; }
-    /* ⚠ `.eyebrow` 는 `<p>` 이고 이 프로젝트에 `p { margin: 0 }` 리셋이 없다 → 브라우저
-         기본 `margin: 1em 0`(12.5px)이 붙어 왼쪽 칸이 오른쪽보다 12px 내려간다(실측).
-         두 칸의 시작을 맞추려면 이 마진을 지운다. `.sec` 의 위 여백이 이미 충분해
-         다른 섹션과 달라 보이지 않는다. */
-    .ci-lead > .eyebrow { margin-top: 0; }
+    /* ⚠ 아이브로우는 `<p>` 이고 이 프로젝트에 `p { margin: 0 }` 리셋이 없다 — 기본 `1em`(12.5px)이
+         위아래로 붙는다. 위는 지우고, 아래는 **제목까지의 간격**(원래 상쇄값 20px)으로 못 박는다.
+         그래야 2행의 윗변이 곧 제목 윗변이 된다. */
+    .ci-eye  { grid-area: 1 / 1; margin: 0 0 20px; }
+    .ci-lead { grid-area: 2 / 1; }
+    /* 제목의 위 마진은 아이브로우가 대신 갖는다 — 남겨 두면 그만큼 지도가 제목보다 위에서 시작한다 */
+    .ci-lead .h2 { margin-top: 0; }
+    .ci-body { grid-area: 3 / 1; min-width: 0; margin-top: clamp(22px, 2.4vw, 38px); }
+    .ci-map  { grid-area: 2 / 2 / 4 / 3; }
     /* ⚠ 지도가 왼쪽 칸보다 크므로 줄 높이는 **지도**가 정한다. 그 남는 높이를 버튼이 받아
          바닥으로 내려가면 두 칸의 아래가 정확히 맞는다. `margin-top: auto` 가 원래 있던
          위 여백을 덮어쓰므로 최소 간격은 `padding-top` 으로 따로 지킨다 — 안 그러면 정보가
@@ -406,8 +409,8 @@
        ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
     /* ⚠ 행을 늘려 높이를 맞추지 않는다(2026-08-25 지적 — "좌측 컨텐츠 간격이 너무 넓어졌어").
          `flex: 1` 로 남는 높이를 나눠 갖게 했더니 1920 에서 행마다 30px 씩 벌어졌다.
-         두 칸의 아래는 **지도 비율**로 맞춘다(1000:590) — 어긋남은 폭 전 구간에서 40px 이내다.
-       ⚠ 위 마진은 `.ci-grid` 의 `row-gap` 이 갖는다. 여기 되살리면 지도와 어긋난다. */
+         두 칸의 아래는 **지도 비율**로 맞춘다(1000:820) — 어긋남은 −45 ~ +53px 다.
+       ⚠ 위 마진은 `.ci-body` 가 갖는다. 여기 되살리면 왼쪽만 내려가 지도와 어긋난다. */
     .ci-info { margin: 0; }
     .ci-info > div { display: grid; grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
       gap: clamp(14px, 1.6vw, 28px); align-items: baseline;
@@ -471,13 +474,17 @@
     .ci-pin::after { content: ""; position: absolute; inset: 0; margin: auto;
       width: 7px; height: 7px; border-radius: 50%; background: #ffffff; }
     .ci-map-a picture { display: block; }
-    .ci-map-a img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 590; }
+    .ci-map-a img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 820; }
 
     @media (max-width: 899px) {
       /* 두 칸을 나란히 두면 주소가 3~4줄로 접히고 지도도 너무 작아진다 → 위아래로 쌓는다. */
       /* ⚠ 명시한 자리를 함께 푼다. 안 풀면 지도가 없는 2열에 남아 잘린다. */
-      .ci-grid { grid-template-columns: minmax(0, 1fr); row-gap: clamp(24px, 3.4vw, 36px); }
-      .ci-lead, .ci-body, .ci-map { grid-area: auto; }
+      /* ⚠ `row-gap` 을 되살리지 않는다. 데스크톱과 마찬가지로 간격은 각 항목의 마진이 갖는다 —
+           `row-gap` 을 주면 아이브로우 아래 마진(20px)에 얹혀 제목까지가 71px 로 벌어진다(실측).
+           쌓였을 때 새로 필요한 것은 **본문↔지도** 간격 하나뿐이다. */
+      .ci-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+      .ci-eye, .ci-lead, .ci-body, .ci-map { grid-area: auto; }
+      .ci-map { margin-top: clamp(24px, 3.4vw, 36px); }
       /* ⚠ 쌓이면 지도가 전체 폭을 쓴다. 비율이 이미 가로로 넓어(1000:590) 따로 줄이지 않는다 —
            `<picture>` 로 원본을 갈라 두었다가 걷었다(원본이 하나면 비율도 한 곳에서만 정한다). */
     }
@@ -601,12 +608,16 @@
         <!-- 제목까지 왼쪽 칸에 넣는다 — 그래야 지도가 **제목 옆까지 올라온다**(2026-08-24 지시).
              제목을 그리드 밖에 두면 오른쪽 제목 옆이 통째로 비고 지도는 그 아래에서 시작한다. -->
         <div class="ci-grid rv">
-          <!-- 격자는 **두 행**이다 — 1행 리드 / 2행 [정보+버튼 | 지도].
-               지도가 2행에서 시작하므로 윗변이 `시행자` 줄에 맞는다(2026-08-25 지시).
-               ⚠ 지도를 버튼 줄(3행)에 박으면 왼쪽 칸보다 424px 늦게 시작하고
-                 302px 아래로 삐져나온다(§11.73). 행은 두 개까지만 쓴다. -->
+          <!-- 격자는 **세 행**이다 — 1행 아이브로우 / 2행 제목+리드 / 3행 [정보+버튼].
+               지도는 **2~3행**을 차지해 윗변이 제목(`B-CITY를 만들어가는 시행자`) 줄에
+               정확히 맞는다(2026-08-25 지시).
+               ⚠ 아이브로우를 `.ci-lead` 밖으로 뺀 이유가 이것이다. 안에 두면 지도 시작점을
+                 `40px` 같은 **매직 넘버**로 맞춰야 한다(아이브로우 줄 20px + 상쇄된 마진 20px).
+                 자기 행으로 빼면 행 경계가 곧 제목 윗변이라 값을 적을 필요가 없다.
+               ⚠ 지도를 버튼 줄에 박지 말 것 — 왼쪽 칸보다 424px 늦게 시작하고 302px
+                 아래로 삐져나온다(§11.73). -->
+          <p class="eyebrow ci-eye"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
           <div class="ci-lead">
-            <p class="eyebrow"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
             <h2 class="h2">B-CITY를 만들어가는 <em>시행자</em></h2>
             <p class="lede">사업 · 투자 · 입주에 관한 문의를 기다립니다</p>
           </div>
@@ -641,11 +652,11 @@
           </div>
 
           <!-- 우: 카카오맵 정적 지도. 사용자가 준 퍼가기 코드를 바탕으로 했다.
-               ⚠ **2행에서 시작한다**(2026-08-25 지시) — 리드는 1행, [정보+버튼]과 지도가 2행이라
-                 지도 윗변이 `시행자` 줄에 저절로 맞는다. 그 간격은 `.ci-grid` 의 `row-gap` 이 정한다.
-                 여기서 `grid-row` 를 **버튼 줄**에 박으면 §11.73 의 결함이 그대로 재현된다.
-               ⚠ 비율 1000:590 은 **지도가 커지지 않게** 고른 값이다. 정사각으로 뒀더니
-                 오히려 전보다 훨씬 커졌다(2026-08-25 지적). 폭은 칸이 정하므로 비율이 곧 높이다.
+               ⚠ **2~3행**을 차지한다 — 윗변이 제목 줄, 아랫변이 버튼 아래다(2026-08-25 지시).
+                 `grid-row` 를 버튼 줄에 박으면 §11.73 의 결함이 그대로 재현된다.
+               ⚠ 비율 1000:820 은 **그 두 지점 사이를 채우도록** 고른 값이다. 폭은 칸이 정하므로
+                 비율이 곧 높이다 — 실측 필요비율이 폭마다 1.06~1.36 이라 하나로는 정확히 맞출 수
+                 없고, 1.22 가 어긋남을 가장 고르게 나눈다(−45 ~ +53px).
                ⚠ `SCALE` 이 확대 단계다(작을수록 확대 · `S`/`LEVEL` 은 무시된다). 실측 구간은
                  0.5 / 0.75~1.25 / 1.5~2.5 / 3~5 / 6~ 다. 2.5 → **1.0** 으로 한 단계 당겼다.
                ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고 하단 바를
@@ -657,7 +668,7 @@
               <!-- ⚠ 좁은 화면에는 **가로가 넓은 원본**을 준다. 정사각은 쌓인 화면에서
                    너무 높고, 잘라서 줄이면 왼쪽 아래 카카오 로고가 사라진다.
                    CSS 의 `aspect-ratio` 두 값이 이 두 원본과 짝이다 — 한쪽만 고치면 눌린다. -->
-              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=1.0&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=590&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="590" loading="lazy" decoding="async"
+              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=1.0&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=820&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="820" loading="lazy" decoding="async"
                    alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
               <!-- 건물 표시(2026-08-24 지시). 정적 지도는 `MX`/`MY`(= 태림빌딩)를 **중심**으로
                    그려지므로 정확히 가운데에 두면 그 건물을 가리킨다.
