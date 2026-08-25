@@ -31,12 +31,18 @@
           <img class="dz-intro-bg dz-intro-sketch" src="assets/img/districts-aerial-sketch.avif" alt=""
                width="1920" height="1080" decoding="async" fetchpriority="high" />
           <span class="dz-intro-bloom" aria-hidden="true"></span>
+          <!-- 카피는 정주환경 도입부와 **같은 어법**이다(2026-08-25 지시) —
+               공용 `.eyebrow` / `.h2` / `.lede` 를 그대로 쓰고 색만 밝은 쪽으로 덮는다.
+               전용 `.dz-intro-h` / `.dz-intro-d` 는 같은 것을 두 벌로 만들던 것이라 걷었다.
+               ⚠ 여기에 `.rv rv-rise` 를 붙이지 않는다. 이 카피는 스크롤이 아니라 **전환이
+                 끝난 시점**에 떠오르므로 등장을 `is-playing` 애니메이션이 맡는다 —
+                 둘을 겹치면 관찰자의 transform 과 서로를 덮는다(§11.56). -->
           <div class="dz-intro-in">
             <p class="eyebrow"><i aria-hidden="true"></i><b>DISTRICTS</b><span>구역 소개</span></p>
-            <h2 class="dz-intro-h">110만평,<br /><em>계획된 미래 도시의 청사진</em></h2>
-            <p class="dz-intro-d">산업 · 주거 · 상업 · 공공이 유기적으로 어우러지는 거대 융합도시.<br />
+            <h2 class="h2">110만평,<br /><em>계획된 미래 도시의 청사진</em></h2>
+            <p class="lede">산업 · 주거 · 상업 · 공공이 유기적으로 어우러지는 거대 융합도시<br />
               AI · BIO · FOOD · MICE 4대 클러스터와 주거 · 교육 · 업무 · 레저 4대 콤플렉스로
-              구성된 <b>8개 권역</b>이 하나의 도시 생태계를 완성합니다.</p>
+              구성된 <b>8개 권역</b>이 하나의 도시 생태계를 완성합니다</p>
             <p class="dz-intro-m"><span><b>권역 부지</b>약 65.2만평</span><span><b>총 사업면적</b>약 110만평</span></p>
           </div>
         </div>

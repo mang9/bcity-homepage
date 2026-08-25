@@ -941,8 +941,8 @@
     .dz-intro { position: relative; isolation: isolate; overflow: hidden;
       margin-inline: calc(50% - 50vw); width: 100vw;
       aspect-ratio: 16 / 9; min-height: clamp(460px, 64vh, 760px); max-height: 100svh;
-      display: grid; align-items: end;
-      padding-block: clamp(48px, 6vw, 96px) clamp(34px, 3.6vw, 56px); }
+      display: grid; align-items: center;
+      padding-block: clamp(40px, 5vw, 80px); }
     /* ⚠ 음수 z-index 를 쓰지 않는다. `isolation: isolate` 로 만든 쌓임 문맥에서
        z-index:-2 인 이미지가 화면에 나타나지 않았다(2026-08-20 실측 — 이미지는 로드·렌더
        되는데 안 보였다). 실사 0 · 스케치 1 · 블룸 2 · 스크림 3 · 카피 4 로 양수만 쓴다. */
@@ -959,7 +959,9 @@
          `--color-bg` 를 쓴다(납품본의 `#eef6fa` 와 같은 계열의 옅은 청백색이다).
        ⚠ 재생 중에는 배경이 **스케치(가장 밝음) ↔ 실사** 사이를 오간다. 카피 대비는
          **두 장 각각**으로 재야 한다 — 아래 스크림 주석의 실측값 참고. */
-    .dz-intro { --dz-dis: 4.5s; --dz-dis-wait: .5s; background: var(--color-bg); }
+    /* ⚠ 전환 시간(2026-08-25 지시로 5s → 2.75s). 두 값의 합이 곧 카피가 올라오는 시각이다 —
+         카피·스크림 애니메이션이 `calc(wait + dis)` 를 지연으로 쓰므로 여기만 고치면 전부 따라온다. */
+    .dz-intro { --dz-dis: 2.4s; --dz-dis-wait: .35s; background: var(--color-bg); }
     .dz-intro-sketch { z-index: 1; }
     .dz-intro-bloom { position: absolute; inset: 0; z-index: 2; pointer-events: none;
       opacity: 0; background: radial-gradient(ellipse at 58% 48%,
@@ -982,37 +984,51 @@
          **즉시** 붙이므로 그 창을 막는다.
        ⚠ 그래서 기본값은 **보이는 상태**다. JS 가 없거나 동작 최소화면 두 클래스가 다 붙지 않아
          카피가 그대로 남는다 — 중요한 내용을 JS 에 걸어 두지 않는다(§11.13 과 같은 원칙). */
-    .dz-intro.is-armed .dz-intro-in,
+    .dz-intro.is-armed .dz-intro-in > *,
     .dz-intro.is-armed::before { opacity: 0; }
-    .dz-intro.is-playing .dz-intro-in { animation: dzCopy .9s cubic-bezier(.22, .61, .36, 1)
-      calc(var(--dz-dis-wait) + var(--dz-dis)) both; }
+    /* 항목마다 조금씩 늦게 떠오른다 — 정주환경의 `rv-rise` 와 같은 느낌을 여기서는
+       전환이 끝난 시점 기준으로 만든다. */
+    .dz-intro.is-playing .dz-intro-in > * { animation: dzCopy .8s cubic-bezier(.22, .61, .36, 1)
+      calc(var(--dz-dis-wait) + var(--dz-dis) + var(--i, 0) * .09s) both; }
+    .dz-intro-in > :nth-child(2) { --i: 1; }
+    .dz-intro-in > :nth-child(3) { --i: 2; }
+    .dz-intro-in > :nth-child(4) { --i: 3; }
     .dz-intro.is-playing::before { animation: dzScrim 1.1s ease-out
       calc(var(--dz-dis-wait) + var(--dz-dis) - .25s) both; }
     @keyframes dzCopy  { from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: none; } }
     @keyframes dzScrim { from { opacity: 0; } to { opacity: 1; } }
-    /* 스크림 — **아래로 어두워지는 세로 그라데이션**이고 카피는 아래에 앉는다.
-       좌우 방향으로 덮어 봤더니 이 조감도는 하늘·흰 건물이 많아 밝은 지점에서 대비가
-       3.2 까지 떨어졌다. 위를 비워 두면 조감도가 그대로 보이고 카피도 안전하다.
-       ⚠ 실측값(캔버스에 사진+그라데이션을 같은 값으로 합성해 측정):
-         1440 / 1920 / 1024 / 390 폭에서 흰 글자 7.87~8.08 · 보조 글자 4.88~5.01 → 전부 AA 통과.
-       ⚠ **사진을 갈아끼우면 반드시 다시 재라.** 밝은 사진으로 바꾸면 그대로 미달이 된다
-         (§11.20 에서 실제로 6.98 → 4.67 로 떨어진 적이 있다). */
+    /* 스크림 — **정주환경 도입부와 같은 형태**다(2026-08-25 지시). 글자가 가운데 정렬이므로
+       가운데를 한 겹 더 눌러 글자 뒤만 확실히 어둡게 하고 가장자리는 조감도를 살린다.
+       ⚠ 아래로만 어두워지는 세로 그라데이션은 **카피가 아래에 있을 때의 형태**였다. 가운데로
+         옮기면 글자가 가장 밝은 구간에 앉는다 — 정렬을 바꾸면 스크림도 함께 바꿔야 한다.
+       ⚠ 실측값(글자를 숨기고 찍어 픽셀을 읽는다 — 배경이 두 장 + 블룸이라 계산으로는 못 낸다):
+         1920/1440/1280/1024/768/390 최저 5.29~7.31, 전부 기준 통과. 재생 중에는 카피가 아직
+         없으므로 **최종(실사 + 스크림) 상태만** 재면 된다.
+       ⚠ **사진을 갈아끼우거나 정렬을 바꾸면 반드시 다시 재라**(§11.20 에서 6.98 → 4.67 로
+         떨어진 적이 있다). */
     .dz-intro::before { content: ""; position: absolute; inset: 0; z-index: 3;
-      background: linear-gradient(180deg, rgb(var(--scrim-rgb) / .16) 0%,
-        rgb(var(--scrim-rgb) / .66) 41%, rgb(var(--scrim-rgb) / .95) 100%); }
+      background:
+        radial-gradient(126% 94% at 50% 50%,
+          rgb(var(--scrim-rgb) / .78) 0%, rgb(var(--scrim-rgb) / .66) 46%,
+          rgb(var(--scrim-rgb) / .34) 100%),
+        linear-gradient(180deg,
+          rgb(var(--scrim-rgb) / .34) 0%, rgb(var(--scrim-rgb) / .28) 46%,
+          rgb(var(--scrim-rgb) / .38) 100%); }
     .dz-intro-in { position: relative; z-index: 4;
       width: min(var(--wrap, 1320px), 100% - clamp(28px, 4.4vw, 72px) * 2);
-      margin-inline: auto; color: #ffffff; }
-    .dz-intro-h { margin: 10px 0 0; font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(30px, 3.4vw, 52px); line-height: 1.2; letter-spacing: -.02em; }
-    .dz-intro-h em { font-style: normal; color: var(--color-mint); }
-    .dz-intro-d { margin: clamp(16px, 1.6vw, 24px) 0 0; max-width: 62ch;
-      font-size: clamp(14px, 1.05vw, 17px); line-height: 1.75; color: var(--color-light-blue); }
-    .dz-intro-d b { color: #ffffff; font-weight: 700; }
-    .dz-intro-m { display: flex; flex-wrap: wrap; gap: clamp(14px, 2vw, 34px);
-      margin: clamp(22px, 2.2vw, 32px) 0 0; padding-top: clamp(18px, 1.8vw, 26px);
-      border-top: 1px solid rgb(255 255 255 / .22); }
+      margin-inline: auto; color: #ffffff; text-align: center; }
+    /* 이미지 위에 얹히므로 글자색을 전부 밝은 쪽으로 바꾼다 — 정주환경과 같은 규칙이다 */
+    .dz-intro .h2 { color: #ffffff; }
+    .dz-intro .h2 em { font-style: normal; color: var(--color-mint); }
+    .dz-intro .lede { margin: clamp(16px, 1.6vw, 24px) auto 0; max-width: 62ch;
+      color: rgb(255 255 255 / .84); }
+    .dz-intro .lede b { color: #ffffff; font-weight: 700; }
+    /* 두 수치는 정주환경에 없는 이 페이지만의 요소다. 가운데 정렬에 맞춰 가운데로 모은다. */
+    .dz-intro-m { display: flex; flex-wrap: wrap; justify-content: center;
+      gap: clamp(14px, 2vw, 34px);
+      margin: clamp(22px, 2.2vw, 32px) auto 0; padding-top: clamp(18px, 1.8vw, 26px);
+      width: fit-content; border-top: 1px solid rgb(255 255 255 / .22); }
     .dz-intro-m span { font-family: var(--font-display); font-weight: 700;
       font-size: clamp(17px, 1.5vw, 24px); letter-spacing: -.01em; }
     .dz-intro-m b { display: block; margin-bottom: 3px; font-family: var(--font-body);
@@ -1021,7 +1037,7 @@
 
     /* 어두운 배경 위 아이브로우 — 새 모디파이어 클래스를 만들지 않고 자손 선택자로 덮는다
        (page-location.css 의 `.inf-hero .eyebrow` 와 같은 방식). */
-    .dz-intro .eyebrow { color: var(--color-light-blue); }
+    .dz-intro .eyebrow { justify-content: center; color: var(--color-light-blue); }
     .dz-intro .eyebrow b { color: #ffffff; }
     .dz-intro .eyebrow i { background: var(--color-mint); }
 
@@ -1543,7 +1559,7 @@
            여기서 걷어 주지 않으면 되돌릴 방법이 없다. 두 조건은 **같은 값**이어야 한다. */
       .dz-intro-sketch, .dz-intro-bloom { opacity: 0 !important; animation: none !important; }
       /* 카피·스크림은 지연 없이 그대로 보인다 — JS 도 이 조건에서 클래스를 붙이지 않는다 */
-      .dz-intro-in, .dz-intro::before { opacity: 1 !important; animation: none !important; }
+      .dz-intro-in > *, .dz-intro::before { opacity: 1 !important; animation: none !important; }
       .lv-intro { min-height: 0; padding: 0; }
       .lv-intro .lv-stage--intro { position: static; height: auto; }
       /* ⚠ 겹침용 음수 마진을 **반드시 지운다.** 이 블록만 빼먹었더니 넓은 화면 + 동작 최소화에서
@@ -1740,12 +1756,18 @@
           <img class="dz-intro-bg dz-intro-sketch" src="assets/img/districts-aerial-sketch.avif" alt=""
                width="1920" height="1080" decoding="async" fetchpriority="high" />
           <span class="dz-intro-bloom" aria-hidden="true"></span>
+          <!-- 카피는 정주환경 도입부와 **같은 어법**이다(2026-08-25 지시) —
+               공용 `.eyebrow` / `.h2` / `.lede` 를 그대로 쓰고 색만 밝은 쪽으로 덮는다.
+               전용 `.dz-intro-h` / `.dz-intro-d` 는 같은 것을 두 벌로 만들던 것이라 걷었다.
+               ⚠ 여기에 `.rv rv-rise` 를 붙이지 않는다. 이 카피는 스크롤이 아니라 **전환이
+                 끝난 시점**에 떠오르므로 등장을 `is-playing` 애니메이션이 맡는다 —
+                 둘을 겹치면 관찰자의 transform 과 서로를 덮는다(§11.56). -->
           <div class="dz-intro-in">
             <p class="eyebrow"><i aria-hidden="true"></i><b>DISTRICTS</b><span>구역 소개</span></p>
-            <h2 class="dz-intro-h">110만평,<br /><em>계획된 미래 도시의 청사진</em></h2>
-            <p class="dz-intro-d">산업 · 주거 · 상업 · 공공이 유기적으로 어우러지는 거대 융합도시.<br />
+            <h2 class="h2">110만평,<br /><em>계획된 미래 도시의 청사진</em></h2>
+            <p class="lede">산업 · 주거 · 상업 · 공공이 유기적으로 어우러지는 거대 융합도시<br />
               AI · BIO · FOOD · MICE 4대 클러스터와 주거 · 교육 · 업무 · 레저 4대 콤플렉스로
-              구성된 <b>8개 권역</b>이 하나의 도시 생태계를 완성합니다.</p>
+              구성된 <b>8개 권역</b>이 하나의 도시 생태계를 완성합니다</p>
             <p class="dz-intro-m"><span><b>권역 부지</b>약 65.2만평</span><span><b>총 사업면적</b>약 110만평</span></p>
           </div>
         </div>
@@ -2485,7 +2507,7 @@
     var imgs = Array.prototype.slice.call(stage.querySelectorAll('img'));
     if (!imgs.length) return;
 
-    /* ⚠ 카피·스크림을 **지금 바로** 감춘다. 아래에서 이미지 디코드를 기다리는데, 그 사이에
+    /* ⚠ 카피 항목·스크림을 **지금 바로** 감춘다. 아래에서 이미지 디코드를 기다리는데, 그 사이에
          카피가 보였다 사라지면 깜빡인다. 이 스크립트는 본문 끝에 인라인되어 파싱 중에
          실행되므로 첫 페인트 전에 걸린다. */
     stage.classList.add('is-armed');

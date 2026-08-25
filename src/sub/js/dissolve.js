@@ -19,7 +19,7 @@
     var imgs = Array.prototype.slice.call(stage.querySelectorAll('img'));
     if (!imgs.length) return;
 
-    /* ⚠ 카피·스크림을 **지금 바로** 감춘다. 아래에서 이미지 디코드를 기다리는데, 그 사이에
+    /* ⚠ 카피 항목·스크림을 **지금 바로** 감춘다. 아래에서 이미지 디코드를 기다리는데, 그 사이에
          카피가 보였다 사라지면 깜빡인다. 이 스크립트는 본문 끝에 인라인되어 파싱 중에
          실행되므로 첫 페인트 전에 걸린다. */
     stage.classList.add('is-armed');
