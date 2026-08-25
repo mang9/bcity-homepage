@@ -75,48 +75,60 @@
           <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">법적 요건 비교</h3></div>
           <p class="sub-d">같은 개발사업이라도 어느 법을 적용받느냐에 따라 출발선이 다릅니다</p>
 
-          <!-- VS 대비(2026-08-24 지시) — **기준을 가운데 열**에 두고 두 법의 값이 그것을
-               마주 보게 한다.
-               ⚠ 두 법을 각각 카드로 세우면 값 길이가 달라 **행이 가로로 어긋난다**(오른쪽
-                 `50%` 를 크게 잡자 이후 행이 30px 씩 밀렸다). 가운데 열 방식은 한 행이
-                 곧 한 기준이라 정렬이 구조적으로 보장되고 라벨도 한 번만 나온다.
-               ⚠ `<table>` 을 유지한다. `scope="row"` 는 첫 칸이 아니어도 되므로 기준을
-                 가운데에 두어도 행·열 관계가 남는다.
-               ⚠ 좁은 화면에서는 세 열을 유지할 수 없다 → 기준을 위로 올리고 값 둘을
-                 아래에 나란히 둔다(아래 미디어 쿼리). -->
-          <div class="iv-scroll" tabindex="0" role="region" aria-label="법적 요건 비교 표">
-            <table class="iv-vs">
-              <caption class="sr-only">도시개발법과 기업도시개발 특별법의 토지확보 요건 비교</caption>
-              <thead>
-                <tr>
-                  <th scope="col">도시개발법</th>
-                  <td class="iv-vs-mid"><span class="iv-vs-b">VS</span></td>
-                  <th scope="col" class="is-on">기업도시개발 특별법<span>B-CITY 적용</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="iv-vs-old">66.7% 이상</td>
-                  <th scope="row">법적 최소요건</th>
-                  <td class="iv-vs-new"><b>50%</b></td>
-                </tr>
-                <tr>
-                  <td class="iv-vs-old">사업대상 토지의 2/3</td>
-                  <th scope="row">토지 면적 요건</th>
-                  <td class="iv-vs-new">사업대상 토지의 50%</td>
-                </tr>
-                <tr>
-                  <td class="iv-vs-old">토지소유자 총수의 &frac12; 이상 동의</td>
-                  <th scope="row">소유자 동의</th>
-                  <td class="iv-vs-new">소유권 취득 또는 사용동의</td>
-                </tr>
-                <tr>
-                  <td class="iv-vs-old">두 요건 모두 충족 필요</td>
-                  <th scope="row">충족 조건</th>
-                  <td class="iv-vs-new">50% 확보 시 미확보 토지까지 수용 가능</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- 두 법을 마주 보는 **카드** 로 세운다(2026-08-24 지시 — 중간에 만든 카드 모양이
+               낫다고 확인받았다). 값은 왼끝 정렬이고 행 사이에 선을 두지 않는다.
+               ⚠ 카드 두 장을 그냥 나란히 두면 **행이 가로로 어긋난다** — 값 길이가 다르고
+                 오른쪽 `50%` 를 크게 잡으면 이후 항목이 밀린다(먼저 그렇게 만들어 봤다).
+                 그래서 `grid-template-rows: subgrid` 로 두 카드가 **부모의 같은 행**을 쓰게
+                 한다. 카드 안의 `<dl>` 도 한 겹 더 subgrid 로 물려 준다.
+               ⚠ subgrid 를 모르는 브라우저에서는 행이 살짝 어긋날 뿐 내용은 그대로다 —
+                 카드마다 자기 라벨을 갖고 있어 비교가 성립한다.
+               ⚠ 좁은 화면에서는 가로 스크롤이 아니라 **위아래로 쌓는다**. 같은 이유로,
+                 세로로 쌓여도 각 카드가 스스로 읽힌다. -->
+          <div class="iv-vs">
+            <div class="iv-vs-c">
+              <p class="iv-vs-t">도시개발법</p>
+              <dl class="iv-vs-l">
+                <div>
+                  <dt>법적 최소요건</dt>
+                  <dd>66.7% 이상</dd>
+                </div>
+                <div>
+                  <dt>토지 면적 요건</dt>
+                  <dd>사업대상 토지의 2/3</dd>
+                </div>
+                <div>
+                  <dt>소유자 동의</dt>
+                  <dd>토지소유자 총수의 &frac12; 이상 동의</dd>
+                </div>
+                <div>
+                  <dt>충족 조건</dt>
+                  <dd>두 요건 모두 충족 필요</dd>
+                </div>
+              </dl>
+            </div>
+            <span class="iv-vs-b" aria-hidden="true">VS</span>
+            <div class="iv-vs-c iv-vs-c--on">
+              <p class="iv-vs-t">기업도시개발 특별법<span>B-CITY 적용</span></p>
+              <dl class="iv-vs-l">
+                <div>
+                  <dt>법적 최소요건</dt>
+                  <dd><b>50%</b></dd>
+                </div>
+                <div>
+                  <dt>토지 면적 요건</dt>
+                  <dd>사업대상 토지의 50%</dd>
+                </div>
+                <div>
+                  <dt>소유자 동의</dt>
+                  <dd>소유권 취득 또는 사용동의</dd>
+                </div>
+                <div>
+                  <dt>충족 조건</dt>
+                  <dd>50% 확보 시 미확보 토지까지 수용 가능</dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
       </div>

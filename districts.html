@@ -445,81 +445,54 @@
     .iv-figs .is-over dd { color: var(--color-mint); }
     .iv-figs dd span { font-size: .58em; margin-left: 1px; }
 
-    /* ── 법적 요건 비교 — VS 대비 (2026-08-24 지시) ─────────────────────────────
-       **기준을 가운데 열**에 두고 두 법의 값이 그것을 마주 보게 한다.
-       ⚠ 두 법을 각각 카드로 세우면 값 길이가 달라 **행이 가로로 어긋난다**(오른쪽 `50%` 를
-         크게 잡자 이후 행이 30px 씩 밀렸다). 가운데 열 방식은 한 행이 곧 한 기준이라 정렬이
-         구조적으로 보장되고 라벨도 한 번만 나온다.
-       ⚠ `<table>` 을 유지한다. `scope="row"` 는 첫 칸이 아니어도 되므로 기준을 가운데에
-         두어도 행·열 관계가 남는다. */
-    /* ⚠ `table-layout: fixed` 로 두 값 열의 폭을 **같게 못 박는다.** 자동 배분에 맡기면
-         내용이 긴 쪽(특별법)이 열을 다 먹어 왼쪽이 쪼그라들고 "마주 본다" 가 무너진다
-         (실측: 왼쪽 값이 x 500~590, 오른쪽이 720~1330). */
-    .iv-vs { width: 100%; min-width: 660px; table-layout: fixed;
-      border-collapse: separate; border-spacing: 0;
+    /* ── 법적 요건 비교 — 마주 보는 두 카드 (2026-08-24 지시) ────────────────────
+       값은 **왼끝 정렬**이고 행 사이에 선을 두지 않는다. 라벨은 카드 안에서 값 위에 온다.
+       ⚠ 카드 두 장을 그냥 나란히 두면 **행이 가로로 어긋난다** — 값 길이가 다르고 오른쪽
+         `50%` 를 크게 잡으면 이후 항목이 밀린다(실측 30px). `grid-template-rows: subgrid` 로
+         두 카드가 부모의 같은 행을 쓰게 하면 정렬이 구조적으로 맞는다. 카드 안의 `<dl>` 도
+         한 겹 더 물려 준다(중첩 subgrid).
+       ⚠ 부모(`.iv-vs`)에 **행을 명시**해야 subgrid 가 물릴 대상이 생긴다 — 제목 1행 + 항목 4행. */
+    .iv-vs { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-rows: auto repeat(4, auto);
+      align-items: stretch; column-gap: clamp(12px, 1.4vw, 24px);
       margin-top: clamp(22px, 2.2vw, 34px); }
-    .iv-vs thead th:first-child { width: 41%; }
-    .iv-vs-mid { width: 18%; }
-    .iv-vs thead th.is-on { width: 41%; }
-    .iv-vs th, .iv-vs td { padding: clamp(15px, 1.5vw, 22px) clamp(14px, 1.4vw, 24px);
-      line-height: 1.6; word-break: keep-all; vertical-align: middle; }
 
-    /* 머리 — 두 법 이름. B-CITY 쪽만 색을 준다(양쪽 다 칠하면 어느 쪽이 우리인지 사라진다). */
-    .iv-vs thead th { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(15px, 1.3vw, 19px); letter-spacing: -.015em;
-      color: var(--color-text-muted); }
-    .iv-vs thead th:first-child { text-align: right; }
-    .iv-vs thead th.is-on { text-align: left; color: var(--color-primary); }
-    .iv-vs thead th span { display: block; margin-top: 4px; font-family: var(--font-body);
-      font-size: 11.5px; font-weight: 600; color: var(--color-text-muted); }
-    /* VS 배지 — 가운데 열 머리에 앉는다. `position: absolute` 로 얹지 않는다(칸을 준다). */
-    .iv-vs-mid { text-align: center; }
-    .iv-vs-b { display: inline-grid; place-items: center;
-      width: clamp(42px, 4vw, 56px); aspect-ratio: 1; border-radius: 999px;
-      background: var(--color-navy); color: #ffffff;
-      font-family: var(--font-display); font-weight: 800; font-size: clamp(13px, 1.1vw, 16px);
+    /* VS 배지 — 가운데 열. `position: absolute` 로 얹지 않는다(자기 칸을 준다).
+       ⚠ 두 카드 사이 통로이므로 카드 면을 주지 않는다. */
+    .iv-vs-b { grid-row: 1 / -1; align-self: center; justify-self: center;
+      display: grid; place-items: center; width: clamp(44px, 4.2vw, 60px); aspect-ratio: 1;
+      border-radius: 999px; background: var(--color-navy); color: #ffffff;
+      font-family: var(--font-display); font-weight: 800; font-size: clamp(13px, 1.15vw, 17px);
       letter-spacing: .02em; }
 
-    /* 기준 — 가운데. 값보다 약하게 두어 두 값이 먼저 읽히게 한다.
-       ⚠ 가운데 열에는 카드 배경을 주지 않는다 — 두 카드 사이의 통로다. */
-    .iv-vs tbody th { text-align: center;
-      font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
-      color: var(--color-text-muted); }
-
-    /* 값 — 기준을 향해 마주 본다. 왼쪽은 오른끝 정렬, 오른쪽은 왼끝 정렬. */
-    .iv-vs-old { text-align: right; font-size: clamp(13.5px, 1.05vw, 15.5px);
-      color: var(--color-text-muted); }
-    .iv-vs-new { text-align: left; font-size: clamp(13.5px, 1.05vw, 15.5px);
-      font-weight: 700; color: var(--color-text); }
-    .iv-vs-new b { font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(20px, 1.8vw, 27px); letter-spacing: -.02em; color: var(--color-primary); }
-
-    /* ── 열을 **한 장의 카드**로 (2026-08-24 지시) ─────────────────────────────
-       괘선만으로는 눈에 잡히지 않았다. 두 값 열에 면과 테두리를 주어 각각 카드로 읽히게 한다.
-       ⚠ 두 법을 따로 `<div>` 카드로 세우면 값 길이가 달라 **행이 어긋난다**(먼저 그렇게
-         만들었다가 오른쪽 `50%` 때문에 이후 행이 30px 씩 밀렸다). 표의 열에 카드 옷을
-         입히면 카드로 보이면서 행 정렬은 표가 보장한다.
-       ⚠ `border-collapse: separate` 라야 셀마다 테두리를 줄 수 있다. 열 양옆에 좌·우 테두리를
-         모든 셀에 두고, 머리 셀에 위 테두리 + 위쪽 라운드, 마지막 행에 아래 테두리 + 아래쪽
-         라운드를 준다. 이렇게 하면 셀 여러 개가 한 장처럼 이어진다. */
-    .iv-vs thead th:first-child, .iv-vs-old,
-    .iv-vs thead th.is-on, .iv-vs-new {
+    .iv-vs-c { grid-row: 1 / -1; display: grid; grid-template-rows: subgrid;
+      align-content: start; padding: clamp(22px, 2.2vw, 34px);
       background: var(--color-surface);
-      border-left: 1px solid var(--color-line); border-right: 1px solid var(--color-line); }
-    .iv-vs thead th:first-child, .iv-vs thead th.is-on {
-      border-top: 1px solid var(--color-line);
-      border-radius: var(--radius-md) var(--radius-md) 0 0; }
-    .iv-vs tbody tr:last-child .iv-vs-old, .iv-vs tbody tr:last-child .iv-vs-new {
-      border-bottom: 1px solid var(--color-line);
-      border-radius: 0 0 var(--radius-md) var(--radius-md); }
-    /* 행 사이 얇은 구분선 — 카드 안쪽에서만 보이도록 좌우 여백을 두지 않는다 */
-    .iv-vs tbody tr + tr .iv-vs-old, .iv-vs tbody tr + tr .iv-vs-new {
-      border-top: 1px solid var(--color-line); }
-    /* B-CITY 쪽만 강조한다 — 양쪽 다 칠하면 어느 쪽이 우리인지 읽히지 않는다 */
-    .iv-vs thead th.is-on, .iv-vs-new { border-left-color: var(--color-primary);
-      border-right-color: var(--color-primary); }
-    .iv-vs thead th.is-on { border-top-color: var(--color-primary); }
-    .iv-vs tbody tr:last-child .iv-vs-new { border-bottom-color: var(--color-primary); }
+      border: 1px solid var(--color-line); border-radius: var(--radius-md); }
+    .iv-vs-c:first-child { grid-column: 1; }
+    .iv-vs-c--on { grid-column: 3; border-color: var(--color-primary);
+      box-shadow: 0 12px 34px -20px rgb(var(--primary-rgb) / .55); }
+
+    /* 카드 제목 = 법 이름. B-CITY 쪽만 색을 준다(양쪽 다 칠하면 어느 쪽이 우리인지 사라진다). */
+    .iv-vs-t { grid-row: 1; margin: 0 0 clamp(16px, 1.6vw, 24px);
+      padding-bottom: clamp(13px, 1.3vw, 18px); border-bottom: 1px solid var(--color-line);
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(15px, 1.3vw, 19px);
+      letter-spacing: -.015em; color: var(--color-text-muted); word-break: keep-all; }
+    .iv-vs-c--on .iv-vs-t { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+    .iv-vs-t span { display: block; margin-top: 4px; font-family: var(--font-body);
+      font-size: 11.5px; font-weight: 600; color: var(--color-text-muted); }
+
+    /* 항목 — 라벨 위, 값 아래. 행 사이 선 없이 여백으로만 나눈다. */
+    .iv-vs-l { grid-row: 2 / -1; display: grid; grid-template-rows: subgrid;
+      margin: 0; row-gap: clamp(14px, 1.4vw, 20px); }
+    .iv-vs-l > div { align-content: start; }
+    .iv-vs-l dt { font-size: 12px; font-weight: 700; letter-spacing: .02em;
+      color: var(--color-text-muted); }
+    .iv-vs-l dd { margin: 5px 0 0; font-size: clamp(13.5px, 1.05vw, 15.5px); line-height: 1.6;
+      color: var(--color-text-muted); word-break: keep-all; }
+    .iv-vs-c--on .iv-vs-l dd { font-weight: 700; color: var(--color-text); }
+    .iv-vs-c--on .iv-vs-l dd b { font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(20px, 1.8vw, 27px); letter-spacing: -.02em; color: var(--color-primary); }
 
     /* ── 특구 카드 (특구별 혜택) — IM 슬라이드 17 배치를 그대로 옮겼다 ──────────
        IM 실측(EMU→px): 카드 3장 나란히(x 65 · 453 · 841, 폭 372) · 카드 위 5px 네이비 바 ·
@@ -678,10 +651,16 @@
       /* 제목 옆에 그래프를 두면 왼쪽이 좁아져 값 셋이 접힌다 → 그래프를 아래로 내린다 */
       .iv-head { grid-template-columns: minmax(0, 1fr); justify-items: center; }
       .iv-head-l { width: 100%; }
-      /* 세 열을 유지하면 값 칸이 200px 대로 좁아진다. 표는 접지 않고 `min-width` 로
-         가로 스크롤한다 — 마주 보는 배치가 이 표의 전부이고, 세로로 쌓으면 비교가 사라진다.
-         스크롤 영역이므로 마크업에 `tabindex="0"` 이 있어야 키보드로 닿는다. */
-      .iv-vs { min-width: 660px; }
+      /* 카드 두 장을 나란히 두면 각 220px 로 좁아진다 → 위아래로 쌓고 VS 를 사이에 둔다.
+         ⚠ subgrid 지정을 함께 풀어야 한다. 안 풀면 카드가 부모의 5행을 그대로 물려받아
+           한 장이 화면 높이를 통째로 먹는다. */
+      .iv-vs { grid-template-columns: minmax(0, 1fr); grid-template-rows: none;
+        row-gap: clamp(12px, 1.4vw, 20px); }
+      .iv-vs-c, .iv-vs-c--on { grid-row: auto; grid-column: 1;
+        grid-template-rows: none; }
+      .iv-vs-t, .iv-vs-l { grid-row: auto; }
+      .iv-vs-l { grid-template-rows: none; }
+      .iv-vs-b { grid-row: auto; }
       /* 카드 3장이 320px 아래로 좁아지면 한글이 6~7자마다 끊긴다 → 한 열로 쌓는다 */
       .iv-szs { grid-template-columns: minmax(0, 1fr); }
       .iv-sz-t br { display: none; }
