@@ -652,7 +652,7 @@
          **두 장 각각**으로 재야 한다 — 아래 스크림 주석의 실측값 참고. */
     /* ⚠ 전환 시간(2026-08-25 지시로 5s → 2.75s). 두 값의 합이 곧 카피가 올라오는 시각이다 —
          카피·스크림 애니메이션이 `calc(wait + dis)` 를 지연으로 쓰므로 여기만 고치면 전부 따라온다. */
-    .dz-intro { --dz-dis: 2.4s; --dz-dis-wait: .35s; background: var(--color-bg); }
+    .dz-intro { --dz-dis: 1.4s; --dz-dis-wait: .25s; background: var(--color-bg); }
     .dz-intro-sketch { z-index: 1; }
     .dz-intro-bloom { position: absolute; inset: 0; z-index: 2; pointer-events: none;
       opacity: 0; background: radial-gradient(ellipse at 58% 48%,
@@ -754,16 +754,26 @@
        지금은 섹션이 둘이고 각자 자기 탭과 패널을 갖는다(tabs.js 의 `[data-tabs]` 범위 한정).
        ⚠ 흰 배경 박스로 감싸지 않는다. 탭도 박스가 아니라 **밑줄**로만 표시한다. */
     .dz-sec { margin-top: clamp(44px, 4.6vw, 84px); }
-    .dz-sec-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 clamp(14px, 1.4vw, 20px); }
-    .dz-sec-h b { font-family: var(--font-display); font-size: clamp(15px, 1.3vw, 19px);
+    /* ⚠ 크기는 **기존 램프에서 고른다**(2026-08-25 지시로 확대). 영문 라벨은 `page-shared.css` 의
+         `.sub-t`(clamp(19px, 1.65vw, 27px)) — 같은 '섹션 제목' 역할이다. 한글 설명은 `.lede`
+         (clamp(15px, 1.05vw, 18px))다. 새 단계를 만들면 `DESIGN.md` census(§1.2)가 어긋난다. */
+    .dz-sec-h { display: flex; align-items: baseline; gap: clamp(10px, 1vw, 16px);
+      margin: 0 0 clamp(16px, 1.6vw, 24px); }
+    .dz-sec-h b { font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 800; letter-spacing: .06em; color: var(--color-primary); }
-    .dz-sec-h span { font-size: clamp(12.5px, .95vw, 14px); font-weight: 600;
+    .dz-sec-h span { font-size: clamp(15px, 1.05vw, 18px); font-weight: 600;
       color: var(--color-text-muted); }
 
     /* 탭 — **전체 폭을 4등분한 박스**(2026-08-20 지시). 번호는 넣지 않는다 —
        권역 번호는 아래 제목(`.dz-name b`)이 이미 말해 주고, 탭에서는 이름만 읽히는 편이 낫다.
-       ⚠ 선택된 탭은 아래 라인을 **덮어** 콘텐츠로 이어진다:
-         비활성은 옅은 면 + 아래 라인, 활성은 흰 면 + 아래 라인 제거(`border-bottom-color: transparent`).
+       ⚠ **기본이 화이트, 선택되면 권역 색으로 채운다**(2026-08-25 지시). 전에는 반대였다
+         (비활성 옅은 면 / 활성 흰 면 + 색 윗줄). 채움으로 바꾸면 색 윗줄은 중복이라 걷었다.
+       ⚠ 흰 글자를 얹어도 안전하다 — 8대 권역색은 전부 흰 면 대비 **4.62~8.92** 이고,
+         그 값이 곧 그 색 위 흰 글자의 대비다(실측 ai 8.92 · edu 4.62 가 양 끝).
+         **색을 바꾸면 이 값을 다시 잰다.**
+       ⚠ 선택된 탭은 아래 라인을 **덮어** 콘텐츠로 이어진다(`border-bottom-color: transparent`
+         + `margin-bottom: -1px`). 채움이 되어도 이 구조는 그대로 둔다 — 안 그러면 색 박스와
+         흰 패널 사이에 회색 선 한 줄이 남는다.
          `margin-bottom: -1px` 로 tabline 의 1px 라인 위에 겹쳐 앉는다. */
     .dz-tabline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
       border-bottom: 1px solid var(--color-line); }
@@ -771,7 +781,7 @@
       display: flex; align-items: center; justify-content: center;
       min-height: clamp(46px, 4vw, 58px); padding: 10px clamp(10px, 1.2vw, 18px);
       margin-bottom: -1px;
-      background: var(--color-bg);
+      background: var(--color-surface);
       border: 1px solid var(--color-line); border-bottom-color: var(--color-line);
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(13.5px, 1.1vw, 17px); letter-spacing: -.01em; text-align: center;
@@ -779,11 +789,14 @@
       transition: color .18s, background-color .18s, border-color .18s; }
     /* 이웃한 박스가 라인을 나눠 갖는다 — 가운데가 2px 로 굵어지지 않게 */
     .dz-tab + .dz-tab { border-left: 0; }
-    .dz-tab:hover { color: var(--color-text); background: var(--color-surface); }
-    /* 선택 — 흰 면 + 권역 색 윗줄. 색만으로 구분하지 않는다(이름이 항상 함께 있다) */
-    .dz-tab.is-on { color: var(--c); background: var(--color-surface);
-      border-top: 2px solid var(--c); border-bottom-color: transparent;
-      padding-top: 9px; }
+    .dz-tab:hover { color: var(--color-text); background: var(--color-bg); }
+    /* 선택 — 권역 색 채움 + 흰 글자. 색만으로 구분하지 않는다(이름이 항상 함께 있다) */
+    .dz-tab.is-on { color: #ffffff; background: var(--c);
+      border-color: var(--c); border-bottom-color: transparent; }
+    /* ⚠ 이웃 탭이 라인을 나눠 갖는 규칙(`.dz-tab + .dz-tab { border-left: 0 }`) 때문에
+         채워진 탭 **오른쪽 이웃**의 왼쪽 선이 없어 색 박스가 한 칸 넓어 보인다.
+         선택된 탭 바로 다음 탭에만 왼쪽 선을 되살린다. */
+    .dz-tab.is-on + .dz-tab { border-left: 1px solid var(--color-line); }
     .dz-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -3px;
       z-index: 1; }
 
@@ -848,7 +861,18 @@
          끝난다**. 전에는 계획도 높이가 이미지 비율로 고정(508px 폭 → 653px)이라 표 행 수가
          적은 권역(02 · 05)에서 오른쪽 아래가 282px 씩 비었다(2026-08-20 지적).
          이제 줄 높이는 **오른쪽 칸(개요 + 면적표)** 이 정하고 계획도가 거기에 맞춘다. */
-    .dz-body { display: grid; grid-template-columns: minmax(200px, .66fr) minmax(0, 1.34fr);
+    /* ⚠ 계획도 칸을 넓혔다(2026-08-25 지시 — 그리드의 33% 뿐이었다). `.66fr` → `.9fr` 로
+         45% 를 차지한다. **그림은 세로 0.8 비율에 `object-fit: contain` 이라 칸을 넓히는 것만으로는
+         늘어나지 않는다** — 줄 높이가 오른쪽 칸(개요 + 면적표)이 정하므로 표가 짧은 권역에서는
+         높이가 상한이 된다(실측 02·05 는 폭이 아니라 높이에 걸려 있었다).
+         그래서 **상자가 그림 비율(880/1100)을 지키게** 했다 — 폭이 곧 크기다.
+       ⚠ 상자에는 배경 프레임(`--color-bg` + 라운드)이 있다. 줄 높이에 맞춰 늘리면
+         세로 그림이 가운데 놓이고 **좌우에 빈 띠가 보인다**(실측 1440 에서 137px).
+         그래서 `flex: 1 1 0`(줄 높이만큼 늘어남)을 **쓰지 않는다** — `flex: 0 0 auto` + 비율이다.
+       ⚠ 대가: 오른쪽 칸과 아래가 정확히 맞지 않는다(실측 ±87px 이내). §11.39 는 반대로
+         맞춰 두었는데, 그때는 상자가 늘어나도 레터박스가 안 보일 만큼 칸이 좁았다.
+         지금은 **칸이 넓어져 레터박스가 더 눈에 띈다** — 둘 다 가질 수는 없다. */
+    .dz-body { display: grid; grid-template-columns: minmax(240px, .82fr) minmax(0, 1.18fr);
       gap: clamp(18px, 2vw, 34px); margin-top: clamp(20px, 2.2vw, 32px); align-items: stretch; }
     /* ⚠ min-width:0 — 없으면 안쪽 표가 이 칸을 밀어내 페이지가 가로로 넘친다(.dz-area 와 같은 이유) */
     .dz-info { min-width: 0; }
@@ -873,8 +897,11 @@
          (예전에는 배경만 `width:100%; height:auto` 여서 상자 높이를 이미지가 정했다.)
        ⚠ `min-height` 를 명시해 둔다 — flex 기준이 0 이라 이게 상자의 최소 높이다. */
     .dz-map { margin: 0; display: flex; flex-direction: column; min-height: 0; }
-    .dz-map-in { position: relative; display: block; flex: 1 1 0; min-height: 300px;
-      aspect-ratio: 880 / 1100;
+    /* ⚠ 폭에 상한을 둔다. 1720 컨테이너(1800px 이상 · §6.3)에서는 칸이 553px 까지 벌어져
+         상자 높이가 691px 이 되고, 표가 짧은 권역(02 · 05)의 오른쪽 아래가 **249px** 비었다.
+         480px 이면 1440 · 1280(461 · 449)은 그대로고 아주 넓은 화면만 깎인다. */
+    .dz-map-in { position: relative; display: block; flex: 0 0 auto; min-height: 0;
+      max-inline-size: 480px; aspect-ratio: 880 / 1100;
       padding: clamp(10px, 1.2vw, 18px);
       background: var(--color-bg); border-radius: var(--radius-md); }
     .dz-map-base { position: absolute; inset: clamp(10px, 1.2vw, 18px);
