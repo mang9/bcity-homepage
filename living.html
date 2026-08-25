@@ -504,18 +504,18 @@
     .cc-ax-eye { display: flex; align-items: baseline; gap: 12px; margin: 0;
       font-size: clamp(12.5px, 1vw, 15px); font-weight: 700; color: var(--color-text-muted); }
     .cc-ax-eye b { font-family: var(--font-display); font-size: clamp(13px, 1.05vw, 16px);
-      letter-spacing: .04em; color: var(--ax-t, var(--color-primary)); }
+      letter-spacing: .04em; color: var(--color-primary); }
 
     /* 대형 영문 타이포 — 시스템에 이미 있는 스케일이다(index 의 `.lo-no` 128px · `.ov-title` 84px).
-       ⚠ 축 색은 **두 벌**이다. `--ax` 는 8대 권역 식별색 원본, `--ax-t` 는 작은 글자용 변종이다.
-         권역색은 **흰 면** 기준으로 4.62 이상이지만 이 페이지 바탕은 `--color-bg`(#f4f8fe) 라
-         바이오 4.45 · MICE 4.42 · 푸드 4.43 으로 AA(4.5) 아래로 떨어졌다(실측).
-         여기 대형 타이포는 38~104px 이라 WCAG large(3.0) 기준을 넉넉히 넘으므로 원색을 쓰고,
-         14~17px 인 `.cc-side b` 와 13~16px 인 `.cc-ax-eye b` 는 `--ax-t` 를 쓴다.
-         (§11.45 와 같은 함정 — 색 변종은 **배경이 바뀌면 다시 재야 한다.**) */
+       ⚠ **축마다 색을 달리하지 않는다**(2026-08-25 지시). 전에는 8대 권역 식별색을 축 색으로 쓰고
+         작은 글자용 변종(`--ax-t`)을 따로 뒀는데, 권역색은 **흰 면** 기준 4.62 라 이 페이지 바탕
+         (`--color-bg` #f4f8fe)에서는 바이오 4.45 · MICE 4.42 · 푸드 4.43 으로 AA 아래로 떨어져
+         두 벌이 필요했다. 지금은 네 축 모두 `--color-primary`(흰 면 9.52) 하나를 쓰므로
+         변종이 필요 없다 — 인라인 `--ax` / `--ax-t` 선언을 되살리지 말 것.
+         (권역 식별색 `--color-district-*` 토큰 자체는 구역소개가 계속 쓴다.) */
     .cc-big { margin: clamp(6px, .7vw, 12px) 0 0; font-family: var(--font-display); font-weight: 800;
       font-size: clamp(38px, 6.4vw, 104px); line-height: 1.02; letter-spacing: -.035em;
-      color: var(--ax, var(--color-primary)); }
+      color: var(--color-primary); }
 
     .cc-t { margin: clamp(16px, 1.8vw, 26px) 0 0; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(18px, 1.7vw, 27px); line-height: 1.42; letter-spacing: -.02em; }
@@ -549,67 +549,34 @@
     .cc-hero-tx .cc-t { color: #ffffff; }
     .cc-hero-tx .cc-s { color: rgb(255 255 255 / .84); }
 
-    /* [핵심 3항목 | 사진 2x2] */
-    /* ⚠ 3항목은 사진 칸 높이를 **3등분**한다(2026-08-21 지시).
-         `space-between` 은 항목 사이만 벌려 세 덩어리가 따로 읽혔고,
-         `start` + 좁은 gap 은 너무 붙었다. `grid-auto-rows: 1fr` 로 세 줄을
-         같은 높이로 나눠 각 항목이 자기 칸 안에서 위쪽에 앉는다. */
-    /* ⚠ `overflow-x: clip` 이 필요하다. 이 안의 항목들은 `.rv rv-x` 로 **오른쪽에서 들어오는데**,
-         등장 전 시작 위치가 `translateX(28px)` 라 390px 화면에서 여백 20 + 28 + 내용 350 = 398
-         로 문서 가로 스크롤이 8px 생겼다(실측, 이 변경 전부터 있던 문제).
-         `hidden` 이 아니라 `clip` 이어야 안쪽에 스크롤 컨테이너가 생기지 않는다. */
-    .cc-row { display: grid; grid-template-columns: minmax(260px, .82fr) minmax(0, 1.18fr);
-      gap: clamp(22px, 2.8vw, 52px); margin-top: clamp(26px, 3vw, 48px); align-items: stretch;
-      overflow-x: clip; }
-    .cc-side { list-style: none; margin: 0; padding: 0; display: grid;
-      grid-auto-rows: 1fr; gap: clamp(10px, 1.1vw, 16px); }
-    .cc-side li { display: grid; gap: 4px; align-content: start;
-      padding-bottom: clamp(9px, 1vw, 13px); border-bottom: 1px solid var(--color-line); }
-    .cc-side li:last-child { padding-bottom: 0; border-bottom: 0; }
-    .cc-side b { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14.5px, 1.15vw, 17px); letter-spacing: -.015em;
-      color: var(--ax-t, var(--color-primary)); }
-    .cc-side span { font-size: 13.5px; line-height: 1.7; color: var(--color-text-muted); }
-
-    /* 사진 2x2 — 캡션은 사진 **아래**에 둔다(레퍼런스와 같은 배치).
-       사진 위에 얹으면 사진마다 밝기가 달라 대비가 무너진다. */
-    .cc-shots { list-style: none; margin: 0; padding: 0;
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 22px); }
-    .cc-shots figure { margin: 0; }
-    .cc-shots img { display: block; width: 100%; aspect-ratio: 1200 / 676; height: auto;
-      object-fit: cover; border-radius: var(--radius-md); background: var(--color-bg); }
-    .cc-shots figcaption { margin-top: 9px; font-size: 12.5px; line-height: 1.55;
-      color: var(--color-text-muted); word-break: keep-all; }
-
-    /* ── PHYSICAL AI 전용 — IM 슬라이드 12 구성 (2026-08-25 지시) ────────────────
+    /* ── 축 본문 카드 — IM 슬라이드 12 구성 (2026-08-25 지시) ──────────────────
+       PHYSICAL AI 에만 쓰다가 **네 축 전부**로 넓혔다(같은 날 지시). 나머지 세 축의
+       IM 슬라이드(10 AI DATA · 11 BIO · 13 FOOD)는 카드 3장 형태가 아니어서
+       (차트 · 밸류체인 6단계 · 3분할) 문구는 각 권역 핵심가치에서 가져왔다.
        IM 실측(EMU→px): 카드 3장 나란히(x 46 · 449 · 852, 폭 382, 높이 405) ·
        35px 번호 원 + 제목 한 줄 · 한 줄 설명 · 불릿 3개 · 카드 하단 이미지(약 368x199).
-       ⚠ 색은 IM 의 네이비가 아니라 **축 색**(`--ax`)을 쓴다. 컨셉 페이지는 축마다 색이 다르고
-         IM 은 한 벌이라 네이비였을 뿐이다.
-       ⚠ 작은 글자에는 `--ax-t`(밝은 바탕용 변종)를 쓴다. 8대 권역색 원본은 흰 바탕에서
-         4.4~4.5 라 본문 크기에서 AA 를 못 넘긴다(§11.44).
+       ⚠ 색은 네 축 모두 `--color-primary` 하나다(2026-08-25 지시) — 위 대형 타이포 주석 참고.
        ⚠ 카드 높이를 맞추려고 `1fr` 을 쓰지 않는다 — 불릿 수가 같아 자연히 맞고, 이미지는
          `margin-top: auto` 로 **바닥에 붙여** 세 장의 사진 윗선이 어긋나지 않게 한다. */
     /* ⚠ `overflow-x: clip` 이 필요하다. 카드가 `.rv rv-x` 로 오른쪽에서 들어오는데 **등장 전**
          시작 위치가 `translateX(28px)` 라 390px 화면에서 문서 가로 스크롤이 8px 생긴다
-         (§11.61 에서 `.cc-row` 에 같은 처리를 했다 — 이 블록은 `.cc-row` 가 아니라 따로 필요하다).
          `hidden` 이 아니라 `clip` 이어야 안쪽에 스크롤 컨테이너가 생기지 않는다. */
     .cc-im { list-style: none; display: grid; gap: clamp(14px, 1.6vw, 26px);
       grid-template-columns: repeat(3, minmax(0, 1fr));
       margin: clamp(26px, 3vw, 48px) 0 0; padding: 0; overflow-x: clip; }
     .cc-im-c { display: flex; flex-direction: column; min-width: 0;
       padding: clamp(20px, 2vw, 30px);
-      background: color-mix(in srgb, var(--ax, var(--color-primary)) 7%, var(--color-surface));
-      border: 1px solid color-mix(in srgb, var(--ax, var(--color-primary)) 18%, var(--color-surface));
+      background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
+      border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-surface));
       border-radius: var(--radius-md); }
     /* 번호 원 + 제목 — IM 은 한 줄에 나란히 둔다 */
     .cc-im-h { display: flex; align-items: center; gap: clamp(10px, 1.1vw, 14px); margin: 0;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(15.5px, 1.3vw, 19px); letter-spacing: -.015em;
-      color: var(--ax-t, var(--color-primary)); word-break: keep-all; }
+      color: var(--color-primary); word-break: keep-all; }
     .cc-im-h b { flex: none; display: grid; place-items: center;
       width: clamp(28px, 2.6vw, 35px); aspect-ratio: 1; border-radius: 999px;
-      background: var(--ax, var(--color-primary)); color: #ffffff;
+      background: var(--color-primary); color: #ffffff;
       font-size: clamp(12px, 1vw, 14px); font-weight: 800; letter-spacing: 0; }
     .cc-im-d { margin: clamp(12px, 1.2vw, 18px) 0 0; font-size: clamp(13px, 1vw, 14.5px);
       font-weight: 700; line-height: 1.55; color: var(--color-text); word-break: keep-all; }
@@ -619,7 +586,7 @@
       color: var(--color-text-muted); word-break: keep-all; }
     .cc-im-l li::before { content: ""; position: absolute; left: 0; top: .6em;
       width: 4px; height: 4px; border-radius: 50%;
-      background: var(--ax, var(--color-primary)); }
+      background: var(--color-primary); }
     /* 하단 이미지 — `margin-top: auto` 로 바닥에 붙인다(카드 높이가 달라도 사진 윗선이 맞는다) */
     .cc-im-f { margin: clamp(18px, 1.8vw, 26px) 0 0; padding-top: 0; }
     .cc-im-c .cc-im-f { margin-top: auto; padding-top: clamp(18px, 1.8vw, 26px); }
@@ -1255,12 +1222,10 @@
       .cx-top { grid-template-columns: minmax(0, 1fr); }
       .cx-dia { max-width: 560px; margin-inline: auto; }
       /* 축 섹션 — 사진 칸이 좁아지면 [3항목] 아래로 내린다 */
-      .cc-row { grid-template-columns: minmax(0, 1fr); }
       /* IM 3카드도 나란히 두면 각 220px 로 좁아져 한글이 6~7자마다 끊긴다 → 한 열로 */
       .cc-im { grid-template-columns: minmax(0, 1fr); }
       .cc-im-c .cc-im-f { margin-top: 0; }
       /* 1단에서는 3등분하지 않는다 — 사진 칸과 나란하지 않으므로 기준이 없다 */
-      .cc-side { grid-auto-rows: auto; }
       /* 탭 묶음 두 개를 위아래로 쌓는다 — 나란히 두면 탭 하나가 90px 아래로 좁아져 이름이 넘친다 */
       .dz-tabs { grid-template-columns: minmax(0, 1fr); }
       .dz-keys { grid-template-columns: minmax(0, 1fr); }
