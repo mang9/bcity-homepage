@@ -23,6 +23,10 @@
         <!-- 제목까지 왼쪽 칸에 넣는다 — 그래야 지도가 **제목 옆까지 올라온다**(2026-08-24 지시).
              제목을 그리드 밖에 두면 오른쪽 제목 옆이 통째로 비고 지도는 그 아래에서 시작한다. -->
         <div class="ci-grid rv">
+          <!-- 왼쪽 칸 — 세 덩이를 **한 그리드 항목**으로 묶는다(2026-08-25).
+               따로 두면 지도가 3행에 놓여 왼쪽 칸보다 424px 늦게 시작하고
+               302px 아래로 삐져나온다(실측). 묶으면 두 칸의 위가 저절로 맞는다. -->
+          <div class="ci-col">
           <div class="ci-lead">
             <p class="eyebrow"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
             <h2 class="h2">B-CITY를 만들어가는 <em>시행자</em></h2>
@@ -55,18 +59,29 @@
             <a class="ci-act" href="tel:07041300423">전화 연결</a>
             <a class="ci-act ci-act--go" href="index.html#contact">문의하기</a>
           </p>
+          </div>
 
           <!-- 우: 카카오맵 정적 지도. 사용자가 준 퍼가기 코드를 바탕으로 했다.
-               ⚠ `IW`/`IH` 를 2배(1008x620)로 올렸다. 준 코드의 504x310 은 **실제 픽셀도 504** 라
-                 넓은 칸에서 늘리면 흐려진다(실측). 화면 크기는 CSS 의 `aspect-ratio` 가 잡는다.
-               ⚠ 퍼가기 코드의 고정 폭(504px · 482px)과 인라인 색은 걷었다 — 반응형이 아니고
-                 팔레트에 없는 색이 섞인다. 모양은 CSS 에서 토큰으로 다시 만든다.
-               ⚠ 카카오맵 로고와 "지도 크게 보기" 는 **남겨야 한다**(퍼가기 표기 조건).
-               ⚠ 정적 이미지라 키가 필요 없다. 이 자리를 동적 지도로 바꾸려면 API 키가 필요하다. -->
+               ⚠ 요청을 **정사각(1000x1000)** 으로 바꿨다(2026-08-25). 왼쪽 칸과 아래를 맞추려면
+                 지도가 왼쪽보다 **같거나 커야** 한다 — 작으면 지도 밑에 빈 칸이 남아 그게
+                 "깨져 보이는" 상태다. 실측 왼쪽 칸 높이 대비 1024~1920 전 구간에서 정사각이
+                 항상 같거나 크다. 비율을 바꾸려면 그 관계를 다시 재고 바꾼다.
+               ⚠ **자르지 않는다**(`object-fit: cover` 금지). 카카오 로고가 이미지 **왼쪽 아래**에
+                 구워져 있어 잘라내면 표기가 사라진다 — 아래 바를 걷어낸 지금은 이게 유일한 표기다.
+               ⚠ 하단 `kakaomap` 바는 뺐다(2026-08-25 지시). 로고는 이미지 안에 남아 있고,
+                 "지도 크게 보기" 는 지도 전체가 이미 카카오맵으로 가는 링크라 `.sr` 로 낭독된다.
+               ⚠ 정적 이미지라 키가 필요 없다. 이 자리를 동적 지도로 바꾸려면 API 키가 필요하다.
+                 네이버 지도는 정적·동적 모두 키가 필요하고 iframe 도 막혀 있다(2026-08-25 실측). -->
           <figure class="ci-map">
             <a class="ci-map-a" href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">
-              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1008&amp;IH=620&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1008" height="620" loading="lazy" decoding="async"
-                   alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
+              <!-- ⚠ 좁은 화면에는 **가로가 넓은 원본**을 준다. 정사각은 쌓인 화면에서
+                   너무 높고, 잘라서 줄이면 왼쪽 아래 카카오 로고가 사라진다.
+                   CSS 의 `aspect-ratio` 두 값이 이 두 원본과 짝이다 — 한쪽만 고치면 눌린다. -->
+              <picture>
+                <source media="(max-width: 899px)" srcset="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=700&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="700" />
+                <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=2.5&amp;MX=518908&amp;MY=1119990&amp;S=0&amp;IW=1000&amp;IH=1000&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="1000" loading="lazy" decoding="async"
+                     alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
+              </picture>
               <!-- 건물 표시(2026-08-24 지시). 정적 지도는 `MX`/`MY`(= 태림빌딩)를 **중심**으로
                    그려지므로 정확히 가운데에 두면 그 건물을 가리킨다.
                    ⚠ 카카오 정적 지도의 마커 파라미터는 이 엔드포인트에서 무시된다
@@ -75,11 +90,6 @@
               <span class="ci-pin" aria-hidden="true"></span>
               <span class="sr">카카오맵에서 크게 보기 (새 창)</span>
             </a>
-            <figcaption class="ci-map-bar">
-              <img class="ci-map-logo" src="https://t1.kakaocdn.net/localimg/localimages/07/2018/pc/common/logo_kakaomap.png"
-                   width="72" height="16" loading="lazy" decoding="async" alt="카카오맵" />
-              <a href="https://map.kakao.com/?urlX=518908&amp;urlY=1119991&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">지도 크게 보기<span class="sr"> (새 창)</span></a>
-            </figcaption>
           </figure>
         </div>
 
