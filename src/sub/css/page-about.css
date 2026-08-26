@@ -78,7 +78,11 @@
    상자를 쓰지 않고 **밑줄로만** 나누는 사양 목록이다 — 문의하기 페이지(`.ci-info`)와 같은
    어법을 써서 같은 성격의 정보가 페이지마다 다른 모양으로 나오지 않게 한다.
    ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
-.ab-info { margin: clamp(20px, 2.2vw, 32px) 0 0; }
+/* 연락처 + 지도 2단(2026-08-26 지시). ⚠ `align-items: start` — 지도는 비율이 고정이라
+   왼쪽이 길어져도 늘어나지 않는다. `stretch` 로 두면 이미지 아래에 빈 상자만 늘어난다. */
+.ab-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+  gap: clamp(24px, 3vw, 52px); align-items: start; }
+.ab-info { margin: 0; }
 .ab-info > div { display: grid; grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
   gap: clamp(14px, 1.6vw, 28px); align-items: baseline;
   padding: clamp(14px, 1.5vw, 21px) 0; border-bottom: 1px solid var(--color-line); }
@@ -90,6 +94,31 @@
   color: var(--color-text); word-break: keep-all; }
 .ab-info a { color: var(--color-primary); text-decoration: none; }
 .ab-info a:hover, .ab-info a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+
+/* 지도 — ⚠ 자르지 않는다(`cover` 금지). 카카오 로고가 이미지 왼쪽 아래에 구워져 있고
+   하단 바가 없는 지금은 그것이 유일한 표기라, 잘리면 표기가 사라진다.
+   ⚠ `aspect-ratio` 는 원본(1000x616)과 **짝이다** — 한쪽만 고치면 지도가 눌린다.
+   ⚠ 문의하기 페이지(`page-contact.css`)에 같은 모양이 있지만 그 페이지는 지금 빌드에서
+     빠져 있다(2026-08-26 숨김) — 살아 있는 정의는 여기 하나뿐이다.
+     그 페이지를 되살릴 때 둘을 공용으로 합칠 것. */
+.ab-map { margin: 0; border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  overflow: hidden; background: var(--color-bg); }
+.ab-map-a { position: relative; display: block; }
+.ab-map-a img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 616; }
+/* 건물 핀 — ⚠ `bottom: 50%` 라야 **핀 끝**이 중심에 닿는다.
+   45° 회전은 경계 상자를 키운다(26px → 36.8px) — 그만큼 아래 여백으로 끌어올린다(§11.65). */
+.ab-pin { position: absolute; left: 50%; bottom: 50%; width: 26px; height: 26px;
+  margin-left: -13px; margin-bottom: 5px;
+  background: var(--color-primary); border: 3px solid #ffffff;
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  box-shadow: 0 3px 10px -2px rgb(var(--navy-rgb) / .45); }
+.ab-pin::after { content: ""; position: absolute; inset: 0; margin: auto;
+  width: 7px; height: 7px; border-radius: 50%; background: #ffffff; }
+
+@media (max-width: 1023px) {
+  /* 두 칸을 나란히 두면 주소가 6~7자마다 끊기고 지도도 작아진다 → 쌓는다 */
+  .ab-contact { grid-template-columns: minmax(0, 1fr); }
+}
 
 @media (max-width: 767px) {
   /* 두 카드를 나란히 두면 설명이 6~7자마다 끊긴다 → 위아래로 쌓는다 */

@@ -134,7 +134,12 @@ function bundleOf(file) {
 let problems = 0;
 const deadPerFile = new Map();
 
-for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.html')).sort()) {
+/* ⚠ 빌더와 **같은 규칙**으로 거른다(pages.mjs 679행). `_` 로 시작하는 파일 중
+     `_detail-` 만 템플릿이고, 나머지(`_contact.html` 처럼 숨긴 페이지)는 산출물이
+     없으므로 검사 대상이 아니다 — 안 거르면 루트에 없는 HTML 을 읽다 ENOENT 로 죽는다. */
+for (const file of readdirSync(join(SUB, 'pages'))
+  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || f.startsWith('_detail-')))
+  .sort()) {
   const { slugs, files } = bundleOf(file);
   const def = definedIn(files);
   for (const slug of slugs) {
@@ -156,7 +161,8 @@ for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.ht
 
 // 전역 사용 집합 = 마크업 + JS 가 만들어 내는 것
 const allUsed = new Set(jsClasses.keys());
-for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.html'))) {
+for (const file of readdirSync(join(SUB, 'pages'))
+  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || f.startsWith('_detail-')))) {
   for (const slug of bundleOf(file).slugs) {
     for (const c of usedIn(slug).keys()) allUsed.add(c);
   }

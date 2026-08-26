@@ -562,14 +562,6 @@
     .bs-cap b { font-family: var(--font-display); font-weight: 700; color: var(--color-primary); }
 
     /* CI 도급 관계 문구 */
-    .orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
-      gap: 4px 12px; margin: clamp(14px, 1.4vw, 22px) 0 0;
-      padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 20px);
-      border: 1px dashed var(--color-line);
-      font-size: 12.5px; color: var(--color-text-muted); }
-    .orgc-side span { font-size: 12.5px; }
-    .orgc-side b { font-family: var(--font-display); font-weight: 700; font-size: 13px;
-      color: var(--color-text); }
 
     /* ── 반응형 ───────────────────────────────────────────────────────── */
     @media (max-width: 1023px) {
@@ -602,7 +594,6 @@
       .bs-holder-s { grid-template-columns: minmax(0, 1fr); }
       .bs-fund { width: 100%; }
     }
-
 
     /* ── 다섯 가지 강점 ────────────────────────────────────────────────────
        카드(테두리 박스)에서 **번호 + 상단 룰의 편집형**으로 바꿨다(2026-08-10 지시).
@@ -768,9 +759,9 @@
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
         <a href="overview.html" class="is-on" aria-current="page">사업소개</a>
-        <a href="index.html#concept">도시소개</a>
+        <a href="brand.html">도시소개</a>
         <a href="invest.html">투자·입주</a>
-        <a href="index.html#pr">홍보센터</a>
+        <a href="notice.html">홍보센터</a>
       </nav>
       <div class="gnb-side">
         <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
@@ -810,7 +801,7 @@
       <a href="invest.html#land">토지확보 현황</a>
       <a href="invest.html#zone">특구별 혜택</a>
       <a href="invest.html#benefit">주요 혜택</a>
-      <a href="contact.html">문의하기</a>
+      <a href="index.html#contact">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
@@ -982,10 +973,6 @@
               <span><b>AMC</b> (바이오테크이노밸리자산관리㈜) — 자산관리 업무 전문 수탁자</span>
             </figcaption>
           </figure>
-
-          <!-- CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다 -->
-          <p class="orgc-side"><b>공사도급계약 및 책임준공</b><span>CI(시공)는 출자자이면서 동시에 PFV 와 도급 관계를 맺습니다</span></p>
-
         </div>
 
         <div class="tr-block rv">

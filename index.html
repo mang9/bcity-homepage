@@ -820,7 +820,7 @@
         ['추진일정','schedule.html'],
         ['사업주체','company.html'],
       ]},
-      { no:'02', title:'도시소개', href:'#concept', items:[
+      { no:'02', title:'도시소개', href:'brand.html', items:[
         /* 02 도시소개 서브페이지 4개 완성(2026-08-13).
            ⚠ src/sub/nav.json 과 항목·순서를 맞출 것 — 두 벌이라 한쪽만 고치면 어긋난다. */
         ['브랜드','brand.html'],
@@ -835,7 +835,7 @@
         ['토지확보 현황','invest.html#land'],
         ['특구별 혜택','invest.html#zone'],
         ['주요 혜택','invest.html#benefit'],
-        ['문의하기','contact.html'],
+        ['문의하기','index.html#contact'],
       ]},
       { no:'04', title:'홍보센터', href:'notice.html', items:[
         /* 04 홍보센터 서브페이지 5개 완성(2026-08-07).
@@ -2034,6 +2034,20 @@
         if (!el || !el.classList.contains('pv')) return;
         a.addEventListener('click', e=>{ e.preventDefault(); open(el, a); });
       });
+
+      /* 다른 페이지에서 `index.html#contact` 로 들어온 경우 — 해시가 가리키는 모달을 연다.
+         ⚠ 위 바인딩은 **같은 페이지 안의 클릭**만 잡는다. 서브페이지의 `문의하기` 와
+           푸터 `개인정보이용약관` 이 이 경로로 들어오는데, 이게 없으면 메인에 도착만 하고
+           폼이 열리지 않는다(2026-08-26 이전까지 실제로 그랬다).
+         ⚠ `open` 의 두 번째 인수는 닫은 뒤 포커스를 돌려줄 요소다 — 해시 진입에는 없으므로
+           `null` 을 준다(그러면 `document.activeElement` 로 떨어진다). */
+      const openFromHash = () => {
+        const id = location.hash.slice(1);
+        const el = id && document.getElementById(id);
+        if (el && el.classList.contains('pv')) open(el, null);
+      };
+      openFromHash();
+      window.addEventListener('hashchange', openFromHash);
 
       // ESC → 가장 위 모달만 닫기
       document.addEventListener('keydown', e=>{

@@ -157,14 +157,6 @@
 .bs-cap b { font-family: var(--font-display); font-weight: 700; color: var(--color-primary); }
 
 /* CI 도급 관계 문구 */
-.orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
-  gap: 4px 12px; margin: clamp(14px, 1.4vw, 22px) 0 0;
-  padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 20px);
-  border: 1px dashed var(--color-line);
-  font-size: 12.5px; color: var(--color-text-muted); }
-.orgc-side span { font-size: 12.5px; }
-.orgc-side b { font-family: var(--font-display); font-weight: 700; font-size: 13px;
-  color: var(--color-text); }
 
 /* ── 반응형 ───────────────────────────────────────────────────────── */
 @media (max-width: 1023px) {
@@ -197,7 +189,6 @@
   .bs-holder-s { grid-template-columns: minmax(0, 1fr); }
   .bs-fund { width: 100%; }
 }
-
 
 /* ── 다섯 가지 강점 ────────────────────────────────────────────────────
    카드(테두리 박스)에서 **번호 + 상단 룰의 편집형**으로 바꿨다(2026-08-10 지시).
