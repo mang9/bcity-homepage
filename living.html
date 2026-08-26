@@ -364,6 +364,44 @@
     @media (max-width: 640px) { .lb-close { top: auto; bottom: -46px; right: 50%;
       transform: translateX(50%); } }
 
+    /* ===== 사양 표 `.spec` =====
+       사업개요와 회사소개가 **같은 표**를 쓴다(2026-08-26 지시: "동일한 구성은 스타일을
+       여러개로 분산시키지마"). 예전에는 회사소개가 `.ab-spec` 으로 같은 모양을 다시
+       정의하고 있었다 — 한쪽만 고치면 두 페이지의 같은 표가 갈라진다.
+       ⚠ 여기로 올리면서 `overview.html` 의 css 배열에 `page-shared` 를 추가했다.
+         그 페이지만 공용 번들을 안 싣고 있었다(19개 중 유일). */
+    .spec { width: 100%; margin-top: clamp(34px, 3.4vw, 54px); border-top: 2px solid var(--color-primary);
+      font-size: clamp(14.5px, 1vw, 16px); }
+    .spec th, .spec td { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.4vw, 24px);
+      text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+    .spec thead th { padding-block: 13px; background: rgb(var(--primary-rgb) / .08); font-size: 13.5px;
+      font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
+    .spec tbody th { width: clamp(104px, 13vw, 188px); font-weight: 600; color: var(--color-text-muted);
+      background: rgba(255,255,255,.6); }
+    .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
+    .spec td { background: var(--color-surface); }
+    .spec .k { display: block; font-weight: 600; color: var(--color-primary); font-size: .92em;
+      letter-spacing: .02em; }
+    .spec .sub { display: block; margin-top: 3px; color: var(--color-text-muted); }
+    .spec b { font-weight: 700; }
+    .spec .num { font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 767px) {
+      /* 표를 행 단위 블록으로 접는다 — 좁은 화면에서 라벨 열이 본문을 압박한다 */
+      .spec thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: auto; }
+      .spec tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
+      .spec tbody th { width: auto; padding: 13px 16px 0; background: none;
+        border: 0; font-size: 12.5px; letter-spacing: .04em; color: var(--color-primary); }
+      .spec td { padding: 5px 16px 15px; border: 0; }
+      .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 0; }
+      .spec tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
+    }
+
+    /* ⚠ 하이픈이 든 이름(B-CITY)은 하이픈에서 줄이 넘어가 `B-` / `CITY` 로 쪼개진다.
+         `word-break: keep-all` 로는 막히지 않는다 — 이 유틸로 감싼다. */
+    .nowrap { white-space: nowrap; }
+
     /* ── page-city.css ─────────────────────────────────────────── */
     /* ===== 도시소개 — 컨셉 · 구역 소개 · 정주환경 =====
        세 페이지가 이 한 벌을 공유한다. 내용 출처는 스토리보드 v2 slide53~87.
@@ -572,10 +610,12 @@
     .cc-im { list-style: none; display: grid; gap: clamp(14px, 1.6vw, 26px);
       grid-template-columns: repeat(3, minmax(0, 1fr));
       margin: clamp(26px, 3vw, 48px) 0 0; padding: 0; overflow-x: clip; }
+    /* ⚠ 카드 면은 **연한 하늘색**이다(2026-08-26 지시). 프라이머리(남보라)를 섞으면
+         회보라로 앉아 아이소메트릭의 하늘색 계열과 어긋난다 — `--color-light-blue` 를 섞는다. */
     .cc-im-c { display: flex; flex-direction: column; min-width: 0;
       padding: clamp(20px, 2vw, 30px);
-      background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
-      border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-surface));
+      background: color-mix(in srgb, var(--color-light-blue) 30%, var(--color-surface));
+      border: 1px solid color-mix(in srgb, var(--color-light-blue) 72%, var(--color-surface));
       border-radius: var(--radius-md); }
     /* 번호 원 + 제목 — IM 은 한 줄에 나란히 둔다 */
     .cc-im-h { display: flex; align-items: center; gap: clamp(10px, 1.1vw, 14px); margin: 0;
@@ -605,7 +645,11 @@
          (241,242,248)과 미묘하게 달라 이미지 자리만 색 블록으로 읽힌다.
        ⚠ 라운드도 뺀다 — 배경이 없으면 자를 모서리가 없고, 남겨 두면 오브젝트 끝이
          둥글게 깎일 수 있다. */
-    .cc-im-f--iso img { background: none; border-radius: 0; }
+    /* ⚠ 그림자는 `box-shadow` 가 아니라 `drop-shadow` 다(2026-08-26 지시) — 알파를 따라
+         오브젝트 실루엣에 붙는다. box-shadow 는 이미지 **사각 상자**에 붙어, 배경이 투명한
+         이 그림에서는 허공에 네모 그림자가 뜬다. */
+    .cc-im-f--iso img { background: none; border-radius: 0;
+      filter: drop-shadow(0 8px 10px rgb(var(--navy-rgb) / .16)); }
 
     /* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
 

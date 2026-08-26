@@ -364,6 +364,44 @@
     @media (max-width: 640px) { .lb-close { top: auto; bottom: -46px; right: 50%;
       transform: translateX(50%); } }
 
+    /* ===== 사양 표 `.spec` =====
+       사업개요와 회사소개가 **같은 표**를 쓴다(2026-08-26 지시: "동일한 구성은 스타일을
+       여러개로 분산시키지마"). 예전에는 회사소개가 `.ab-spec` 으로 같은 모양을 다시
+       정의하고 있었다 — 한쪽만 고치면 두 페이지의 같은 표가 갈라진다.
+       ⚠ 여기로 올리면서 `overview.html` 의 css 배열에 `page-shared` 를 추가했다.
+         그 페이지만 공용 번들을 안 싣고 있었다(19개 중 유일). */
+    .spec { width: 100%; margin-top: clamp(34px, 3.4vw, 54px); border-top: 2px solid var(--color-primary);
+      font-size: clamp(14.5px, 1vw, 16px); }
+    .spec th, .spec td { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.4vw, 24px);
+      text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+    .spec thead th { padding-block: 13px; background: rgb(var(--primary-rgb) / .08); font-size: 13.5px;
+      font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
+    .spec tbody th { width: clamp(104px, 13vw, 188px); font-weight: 600; color: var(--color-text-muted);
+      background: rgba(255,255,255,.6); }
+    .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
+    .spec td { background: var(--color-surface); }
+    .spec .k { display: block; font-weight: 600; color: var(--color-primary); font-size: .92em;
+      letter-spacing: .02em; }
+    .spec .sub { display: block; margin-top: 3px; color: var(--color-text-muted); }
+    .spec b { font-weight: 700; }
+    .spec .num { font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 767px) {
+      /* 표를 행 단위 블록으로 접는다 — 좁은 화면에서 라벨 열이 본문을 압박한다 */
+      .spec thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: auto; }
+      .spec tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
+      .spec tbody th { width: auto; padding: 13px 16px 0; background: none;
+        border: 0; font-size: 12.5px; letter-spacing: .04em; color: var(--color-primary); }
+      .spec td { padding: 5px 16px 15px; border: 0; }
+      .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 0; }
+      .spec tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
+    }
+
+    /* ⚠ 하이픈이 든 이름(B-CITY)은 하이픈에서 줄이 넘어가 `B-` / `CITY` 로 쪼개진다.
+         `word-break: keep-all` 로는 막히지 않는다 — 이 유틸로 감싼다. */
+    .nowrap { white-space: nowrap; }
+
     /* ── page-effect.css ─────────────────────────────────────────── */
     /* ===== 기대효과 ===== */
 

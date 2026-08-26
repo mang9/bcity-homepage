@@ -205,10 +205,12 @@
 .cc-im { list-style: none; display: grid; gap: clamp(14px, 1.6vw, 26px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: clamp(26px, 3vw, 48px) 0 0; padding: 0; overflow-x: clip; }
+/* ⚠ 카드 면은 **연한 하늘색**이다(2026-08-26 지시). 프라이머리(남보라)를 섞으면
+     회보라로 앉아 아이소메트릭의 하늘색 계열과 어긋난다 — `--color-light-blue` 를 섞는다. */
 .cc-im-c { display: flex; flex-direction: column; min-width: 0;
   padding: clamp(20px, 2vw, 30px);
-  background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
-  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-surface));
+  background: color-mix(in srgb, var(--color-light-blue) 30%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-light-blue) 72%, var(--color-surface));
   border-radius: var(--radius-md); }
 /* 번호 원 + 제목 — IM 은 한 줄에 나란히 둔다 */
 .cc-im-h { display: flex; align-items: center; gap: clamp(10px, 1.1vw, 14px); margin: 0;
@@ -238,7 +240,11 @@
      (241,242,248)과 미묘하게 달라 이미지 자리만 색 블록으로 읽힌다.
    ⚠ 라운드도 뺀다 — 배경이 없으면 자를 모서리가 없고, 남겨 두면 오브젝트 끝이
      둥글게 깎일 수 있다. */
-.cc-im-f--iso img { background: none; border-radius: 0; }
+/* ⚠ 그림자는 `box-shadow` 가 아니라 `drop-shadow` 다(2026-08-26 지시) — 알파를 따라
+     오브젝트 실루엣에 붙는다. box-shadow 는 이미지 **사각 상자**에 붙어, 배경이 투명한
+     이 그림에서는 허공에 네모 그림자가 뜬다. */
+.cc-im-f--iso img { background: none; border-radius: 0;
+  filter: drop-shadow(0 8px 10px rgb(var(--navy-rgb) / .16)); }
 
 /* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
 
