@@ -516,7 +516,9 @@ function navBits(cat, navKey) {
     return `        <a href="${g.href}"${on ? ' class="is-on" aria-current="page"' : ''}>${esc(g.label)}</a>`;
   }).join('\n');
 
-  const mnavItems = nav.categories.map((c) => {
+  /* ⚠ `menu: false` 카테고리는 대메뉴에도 모바일 메뉴에도 넣지 않는다 — 푸터에서만 닿는
+       단일 페이지다(회사소개). 여기서 거르지 않으면 GNB 에는 없는데 모바일에만 나온다. */
+  const mnavItems = nav.categories.filter((c) => c.menu !== false).map((c) => {
     const head = `      <h2>${c.no} ${esc(c.label)}</h2>`;
     const links = c.items.map((i) => {
       const on = i.key === navKey;
@@ -552,6 +554,10 @@ function heroBlock(cat, fm, ctx, file) {
   const on = cat.hero !== false;
   if (on && !fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 있는 카테고리다 — front-matter 에 heroImg 가 필요하다`);
   if (!on && fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 없다 — 쓰이지 않는 heroImg 를 지울 것`);
+  /* 세 갈래다 — [히어로 + LNB] · [LNB 만] · [히어로만].
+     ⚠ 마지막은 대메뉴에 속하지 않는 단일 페이지용이다(`lnb: false`). LNB 를 그대로 두면
+       항목이 자기 자신 하나뿐인 메뉴 줄이 남는다. */
+  if (on && cat.lnb === false) return render(partial('hero-only'), ctx, 1);
   return render(partial(on ? 'hero' : 'hero-lnb'), ctx, 1);
 }
 
