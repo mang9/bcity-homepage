@@ -270,8 +270,6 @@
     /* ⚠ 제목(`.sub-t`, 최대 27px) 대비 비율을 확인해 올렸다(2026-08-24 지시).
          19px 는 제목의 73% 로 "라벨" 처럼 작게 읽혔다 — 88% 로 맞춰 한 쌍으로 읽히게 한다.
          ⚠ 이 클래스는 공용이다(company · invest 등 `.sub-h` 를 쓰는 모든 블록). */
-    .sub-no { font-family: var(--font-display); font-size: clamp(17px, 1.45vw, 24px);
-      font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
     .sub-t { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 700; line-height: 1.34; letter-spacing: -.018em; }
     .sub-d { margin: 10px 0 0; font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted);
@@ -403,6 +401,20 @@
     .nowrap { white-space: nowrap; }
 
     /* ── page-pr.css ─────────────────────────────────────────── */
+    /* ── 히어로 스크림 — 이 카테고리만 진하게 ────────────────────────────
+       홍보센터 5페이지의 히어로를 배포에 안 쓰이는 렌더 이미지로 갈았는데(2026-08-26 지시),
+       그 그림들이 밝아 공용 스크림(가운데 .30)으로는 작은 글자가 AA 에 못 미친다 —
+       실측 최저 **4.37**(언론보도 아이브로우 · 1440). 크럼·아이브로우 색이
+       `rgba(255,255,255,.72)` / `--color-light-blue` 라 늘 여기가 최저다.
+       ⚠ 공용 `30-hero-lnb.css` 를 고치지 않는다. 다른 히어로들은 지금 값으로 통과 중이라
+         전역으로 올리면 그 사진들이 필요 이상으로 어두워진다.
+       ⚠ **페이지별로 덮지 않는다.** 다섯 페이지가 이 파일을 함께 싣으므로 여기 한 번만 둔다 —
+         페이지마다 두면 사진을 갈 때 한쪽만 고쳐진다.
+       ⚠ 사진을 갈아끼우면 **다시 잰다**(§11.20). */
+    .hero-scrim { background: linear-gradient(180deg,
+      rgb(var(--scrim-rgb) / .78) 0%, rgb(var(--scrim-rgb) / .52) 46%,
+      rgb(var(--scrim-rgb) / .84) 100%); }
+
     /* ===== 홍보센터 — 목록형(공지·언론) · 카드형(영상·갤러리·발행물) =====
        마크업은 tools/build/pages.mjs 의 renderRows / renderCards 가 만든다.
        클래스 이름을 바꾸면 그 함수도 같이 고쳐야 한다(정적 마크업이 아니다). */
@@ -791,7 +803,7 @@
       <a href="invest.html#land">토지확보 현황</a>
       <a href="invest.html#zone">특구별 혜택</a>
       <a href="invest.html#benefit">주요 혜택</a>
-      <a href="index.html#contact">문의하기</a>
+      <a href="#contact">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
@@ -809,7 +821,7 @@
          구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/img-bio.jpg" alt="" />
+      <img class="hero-bg" src="assets/still/seg04.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
@@ -883,6 +895,11 @@
       </div>
     </div>
   </footer>
+
+  <!-- 문의 모달 — front-matter 에 "contactModal": true 인 페이지만 값이 들어온다.
+       ⚠ 파티셜 호출을 여기 직접 쓰지 않는다. 전 페이지에 실리면 마크업 6.8KB +
+         CSS 11KB + JS 5KB 가 18개 페이지에 붙는다 — 쓰는 페이지만 싣는다. -->
+
 
   <script>
     /* GNB: 히어로 위에서는 투명, 스크롤하면 흰 배경 */

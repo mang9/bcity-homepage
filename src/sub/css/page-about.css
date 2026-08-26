@@ -80,7 +80,9 @@
    ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
 /* 연락처 + 지도 2단(2026-08-26 지시). ⚠ `align-items: start` — 지도는 비율이 고정이라
    왼쪽이 길어져도 늘어나지 않는다. `stretch` 로 두면 이미지 아래에 빈 상자만 늘어난다. */
-.ab-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+/* ⚠ 서브 카피 아래 간격을 따로 준다(2026-08-26 지시: "내용이 너무 붙어있어").
+     `.sub-d` 는 공용이라 그쪽을 벌리면 다른 페이지까지 함께 벌어진다. */
+.ab-contact { margin-top: clamp(26px, 3vw, 48px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
   gap: clamp(24px, 3vw, 52px); align-items: start; }
 .ab-info { margin: 0; }
 .ab-info > div { display: grid; grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
@@ -94,6 +96,20 @@
   color: var(--color-text); word-break: keep-all; }
 .ab-info a { color: var(--color-primary); text-decoration: none; }
 .ab-info a:hover, .ab-info a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+
+/* 버튼 3개 — 정보 목록 아래(2026-08-26 지시). 문의하기만 면을 채운다.
+   ⚠ 문의하기는 `href="#contact"` 다 — `contact.js` 가 가로채 **이 페이지에서** 모달을 연다. */
+.ab-col { min-width: 0; }
+.ab-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: clamp(20px, 2.2vw, 30px) 0 0; }
+.ab-act { padding: clamp(9px, .9vw, 12px) clamp(16px, 1.7vw, 24px);
+  border: 1px solid var(--color-line); border-radius: 999px;
+  background: var(--color-surface); font-size: 13.5px; font-weight: 700;
+  color: var(--color-primary); text-decoration: none;
+  transition: border-color .2s, background .2s; }
+.ab-act:hover, .ab-act:focus-visible { border-color: var(--color-primary); background: var(--color-bg); }
+.ab-act--go { background: var(--color-primary); border-color: var(--color-primary); color: #ffffff; }
+.ab-act--go:hover, .ab-act--go:focus-visible { background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover); }
 
 /* 지도 — ⚠ 자르지 않는다(`cover` 금지). 카카오 로고가 이미지 왼쪽 아래에 구워져 있고
    하단 바가 없는 지금은 그것이 유일한 표기라, 잘리면 표기가 사라진다.

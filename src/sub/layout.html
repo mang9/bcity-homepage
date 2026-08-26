@@ -42,6 +42,11 @@
 
 {{> footer}}
 
+  <!-- 문의 모달 — front-matter 에 "contactModal": true 인 페이지만 값이 들어온다.
+       ⚠ 파티셜 호출을 여기 직접 쓰지 않는다. 전 페이지에 실리면 마크업 6.8KB +
+         CSS 11KB + JS 5KB 가 18개 페이지에 붙는다 — 쓰는 페이지만 싣는다. -->
+{{contactModal}}
+
   <script>
 {{js}}
   </script>

@@ -270,8 +270,6 @@
     /* ⚠ 제목(`.sub-t`, 최대 27px) 대비 비율을 확인해 올렸다(2026-08-24 지시).
          19px 는 제목의 73% 로 "라벨" 처럼 작게 읽혔다 — 88% 로 맞춰 한 쌍으로 읽히게 한다.
          ⚠ 이 클래스는 공용이다(company · invest 등 `.sub-h` 를 쓰는 모든 블록). */
-    .sub-no { font-family: var(--font-display); font-size: clamp(17px, 1.45vw, 24px);
-      font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
     .sub-t { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 700; line-height: 1.34; letter-spacing: -.018em; }
     .sub-d { margin: 10px 0 0; font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted);
@@ -710,6 +708,184 @@
       .iv-figs > div { padding: clamp(14px, 1.5vw, 20px) 0; }
       .iv-figs > div + div { border-left: 0; border-top: 1px solid var(--color-line); }
     }
+
+    /* ── 70-contact.css ─────────────────────────────────────────── */
+    /* ===== 문의 모달 (서브페이지) =====
+       메인 `index.html` 의 문의 폼을 **서브페이지 셸로 옮긴 것**이다(2026-08-26 지시:
+       "문의하기 버튼 팝업 띄울때 해당 페이지에서 모달창으로 띄워줘").
+       전에는 `index.html#contact` 로 보내서 페이지가 통째로 넘어갔다.
+
+       ⚠ 규칙은 `src/css/app.css` 에서 **그대로 옮긴 것**이다(순수 CSS · @apply 없음).
+         메인 쪽을 고치면 여기도 함께 고쳐야 한다 — 두 벌이다.
+         합칠 수 없는 이유: 메인은 Tailwind 빌드, 서브는 평문 CSS 라 번들이 다르다.
+       ⚠ `.sr-only` 는 가져오지 않았다 — 서브페이지는 `page-shared.css` 에 이미 있다. */
+
+    .pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
+    .pv[hidden] { display: none; }
+    .pv-back { position: absolute; inset: 0; background: rgba(0,39,66,.55); backdrop-filter: blur(4px);
+      opacity: 0; transition: opacity .3s ease; }
+    .pv.on .pv-back { opacity: 1; }
+    .pv--wide .pv-panel { max-width: 1040px; }
+    .pv-panel { position: relative; display: flex; flex-direction: column; overflow: hidden;
+      width: 100%; max-width: 720px; max-height: min(86vh, 860px);
+      max-height: min(86dvh, 860px);          /* 모바일 주소창 높이 변화 대응 */
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-lg, 16px); box-shadow: 0 30px 80px rgba(0,10,30,.3);
+      opacity: 0; transform: translateY(18px) scale(.98);
+      transition: opacity .32s ease, transform .42s cubic-bezier(.22,1,.36,1); }
+    .pv.on .pv-panel { opacity: 1; transform: none; }
+    .pv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 26px 28px 20px; border-bottom: 1px solid var(--color-line); }
+    .pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
+      border-radius: 999px; color: var(--color-text-muted);
+      transition: background .22s, color .22s; }
+    .pv-x svg { width: 20px; height: 20px; }
+    .pv-x:hover { background: var(--color-bg); color: var(--color-text); }
+    /* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
+       overflow-y:auto가 동작하지 않고 패널 밖으로 내용이 넘쳐 잘린다. */
+    .pv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+      padding: 24px 28px 0; -webkit-overflow-scrolling: touch; }
+    .pv-sec { margin-top: 26px; }
+    .pv-sec--last { padding-bottom: 8px; }
+    .pv-h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 11px;
+      font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-text); }
+    .pv-tag { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+    .pv-tag--req { background: var(--color-primary); color: #fff; }
+    .pv-tag--opt { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .pv-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6;
+      border-top: 1px solid var(--color-line); }
+    .pv-tbl th, .pv-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--color-line);
+      text-align: left; vertical-align: top; }
+    .pv-tbl th { width: 34%; background: var(--color-bg); font-weight: 700; color: var(--color-text); white-space: nowrap; }
+    .pv-tbl td { color: var(--color-text-muted); }
+    .pv-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .pv-list { margin: 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
+    .pv-list li { position: relative; padding-left: 14px; }
+    .pv-list li + li { margin-top: 7px; }
+    .pv-list li::before { content: ''; position: absolute; left: 0; top: .62em;
+      width: 4px; height: 4px; border-radius: 999px; background: var(--color-mint); }
+    .pv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 18px 28px 22px; border-top: 1px solid var(--color-line); }
+    .pv-ok { padding: 12px 30px; border-radius: 999px; background: var(--color-primary); color: #fff;
+      font-size: 14px; font-weight: 700; transition: background .25s, transform .3s; }
+    .pv-ok:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+    @media (max-width: 640px) {
+      .pv { padding: 14px; }
+      .pv-head { padding: 20px 18px 16px; }
+      .pv-body { padding: 18px 18px 4px; }
+      .pv-foot { padding: 14px 18px 18px; }
+      .pv-tbl { font-size: 12.5px; }
+      .pv-tbl th, .pv-tbl td { padding: 9px 10px; }
+      .pv-tbl th { width: 38%; white-space: normal; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pv-back, .pv-panel { transition: none; }
+    }
+
+    /* ===== 문의하기 폼 ===== */
+    .ct-form { display: flex; flex-direction: column; gap: 22px; padding-bottom: 32px; }
+    .ct-row { display: block; }
+    .ct-label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; color: var(--color-text); }
+    /* 관심분야: 라벨 옆에 선택 버튼을 한 줄로 → 세로 공간 절약
+       (.ct-row 와 명시도가 같으므로 반드시 뒤에 와야 display:flex 가 적용된다) */
+    .ct-row--inline { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
+    .ct-row--inline .ct-label { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; }
+    .ct-row--inline .ct-chips { flex: 1 1 auto; }
+    .ct-row--inline .ct-err { flex: 1 1 100%; margin-top: 0; }
+    .ct-req { color: var(--color-mint); }
+    .ct-input { width: 100%; padding: 14px 16px; font-size: 15px; color: var(--color-text);
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
+    .ct-input::placeholder { color: #9aa8bb; }
+    .ct-input:focus { outline: none; border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(52,65,152,.12); }
+    .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
+    /* 관심분야 칩 */
+    .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ct-chip { position: relative; cursor: pointer; }
+    .ct-chip input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .ct-chip span { display: inline-flex; align-items: center; padding: 10px 18px;
+      font-size: 14px; font-weight: 600; color: var(--color-text-muted);
+      background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 999px;
+      transition: background .22s, color .22s, border-color .22s; }
+    .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(52,65,152,.18); }
+    /* 동의 */
+    .ct-agree { display: flex; flex-direction: column; gap: 10px;
+      padding: 18px 22px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer;
+      font-size: 14px; line-height: 1.55; color: var(--color-text); }
+    .ct-check input { flex-shrink: 0; width: 19px; height: 19px; margin-top: 1px;
+      accent-color: var(--color-primary); cursor: pointer; }
+    .ct-tag { margin-right: 6px; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; vertical-align: 1.5px; }
+    .ct-tag--req { background: var(--color-primary); color: #fff; }
+    .ct-tag--opt { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-view { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+      text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+    .ct-view:hover { color: var(--color-primary); text-decoration-color: currentColor; }
+    /* 에러 */
+    .ct-err { display: none; margin-top: 8px; font-size: 13px; font-weight: 600; color: #d8564f; }
+    .ct-err.on { display: block; }
+    .ct-input.bad { border-color: #d8564f; box-shadow: 0 0 0 3px rgba(216,86,79,.12); }
+    /* 버튼 — 우측 안내 컬럼 하단.
+       컬럼이 그리드 행 높이만큼 늘어나므로 sticky로 스크롤 내내 붙어 있는다. */
+    .ct-actions { position: sticky; bottom: 0; margin-top: auto;
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 32px;   /* 좌측 폼과 동일한 32px */
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0, var(--color-surface) 14px); }
+    .ct-actions .ct-submit, .ct-actions .ct-reset { flex: 1 1 0; min-width: 116px;
+      padding: 15px 18px; }
+    .ct-actions .ct-status { flex: 1 1 100%; margin: 0; }
+    .ct-submit, .ct-reset { padding: 16px 40px; border-radius: 999px;
+      font-size: 15px; font-weight: 700; transition: background .25s, color .25s, border-color .25s, transform .3s; }
+    .ct-submit { background: var(--color-primary); color: #fff; }
+    .ct-submit:hover { background: var(--color-primary-hover); transform: translateY(-2px); }
+    .ct-submit[disabled] { opacity: .6; pointer-events: none; }
+    .ct-reset { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-reset:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-status { display: none; font-size: 14px; font-weight: 600; }
+    .ct-status.on { display: block; }
+    .ct-status.ok { color: #1a8f74; }
+    .ct-status.ng { color: #d8564f; }
+    /* 우측 안내 */
+    .ct-side { display: flex; flex-direction: column; gap: 14px; }  /* 그리드 기본 stretch로 행 전체 높이 */
+    .ct-card { padding: 22px 24px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-azure); }
+    .ct-card-a { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--color-primary); }
+    .ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
+    .ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
+      font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .ct-steps li { counter-increment: s; position: relative; padding-left: 26px; }
+    .ct-steps li + li { margin-top: 9px; }
+    .ct-steps li::before { content: counter(s); position: absolute; left: 0; top: 0;
+      display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
+      background: var(--color-primary); color: #fff; font-size: 10.5px; font-weight: 700; }
+    .ct-card-note { padding: 0 4px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+    /* 모바일: 1단으로 스택되면 컬럼 높이가 콘텐츠에 딱 맞아 sticky가 의미 없다 */
+    @media (max-width: 1023px) {
+      .ct-actions { position: static; margin-top: 8px; padding-bottom: 0; background: none; }
+    }
+
+    /* ── 메인의 Tailwind 유틸리티를 대신하는 평문 규칙 6개 ────────────────
+       메인 마크업은 헤더·격자를 유틸리티로 짜는데 서브페이지에는 그 클래스가 없다.
+       ⚠ 값은 메인의 유틸리티를 그대로 푼 것이다(`text-xs`=12px · `tracking-[0.18em]` 등).
+         메인 쪽 유틸리티를 바꾸면 여기도 맞춰야 한다. */
+    .ct-eyebrow { margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .18em; color: var(--color-azure); }
+    .ct-title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px;
+      font-weight: 700; color: var(--color-text); }
+    .ct-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+    .ct-grid { display: grid; gap: 40px; }
+    .ct-two { display: grid; gap: 24px; }
+    .ct-strong { font-weight: 600; color: var(--color-text); }
+    @media (min-width: 640px)  { .ct-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 768px)  { .ct-title { font-size: 30px; } }
+    @media (min-width: 1024px) { .ct-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
   </style>
 </head>
 
@@ -774,7 +950,7 @@
       <a href="invest.html#land" class="is-on">토지확보 현황</a>
       <a href="invest.html#zone">특구별 혜택</a>
       <a href="invest.html#benefit">주요 혜택</a>
-      <a href="index.html#contact">문의하기</a>
+      <a href="#contact">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
@@ -814,7 +990,7 @@
         <a href="invest.html#land" class="is-on" aria-current="page">토지확보 현황</a>
         <a href="invest.html#zone">특구별 혜택</a>
         <a href="invest.html#benefit">주요 혜택</a>
-        <a href="index.html#contact">문의하기</a>
+        <a href="#contact">문의하기</a>
       </div>
     </nav>
 
@@ -838,7 +1014,7 @@
             <h2 class="h2">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
             <p class="lede">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
 
-            <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
+            <div class="sub-h"><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
             <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
               토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
 
@@ -878,7 +1054,7 @@
         </div>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">02</span><h3 class="sub-t">법적 요건 비교</h3></div>
+          <div class="sub-h"><h3 class="sub-t">법적 요건 비교</h3></div>
           <p class="sub-d">같은 개발사업이라도 어느 법을 적용받느냐에 따라 출발선이 다릅니다</p>
 
           <!-- 두 법을 마주 보는 **카드** 로 세운다(2026-08-24 지시 — 중간에 만든 카드 모양이
@@ -1065,7 +1241,7 @@
         </ul>
 
         <div class="tr-block rv">
-          <div class="sub-h"><span class="sub-no">01</span><h3 class="sub-t">기업 유형별 지원 내용</h3></div>
+          <div class="sub-h"><h3 class="sub-t">기업 유형별 지원 내용</h3></div>
           <p class="sub-d">어디에서 오는 기업인지에 따라 지원 내용이 달라집니다</p>
 
           <!-- ⚠ 좁은 화면에서는 표를 접지 않고 **가로 스크롤**한다.
@@ -1199,6 +1375,127 @@
     </div>
   </footer>
 
+  <!-- 문의 모달 — front-matter 에 "contactModal": true 인 페이지만 값이 들어온다.
+       ⚠ 파티셜 호출을 여기 직접 쓰지 않는다. 전 페이지에 실리면 마크업 6.8KB +
+         CSS 11KB + JS 5KB 가 18개 페이지에 붙는다 — 쓰는 페이지만 싣는다. -->
+<!-- ===== 문의 모달 =====
+     메인 `index.html` 의 `#contact` 폼을 서브페이지로 옮긴 것이다(2026-08-26 지시:
+     "해당 페이지에서 모달창으로"). 전에는 `index.html#contact` 로 보내 페이지가 넘어갔다.
+     ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
+       합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
+       옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
+     ⚠ 약관 보기는 **메인 새 창**으로 보낸다 — 서브페이지에는 약관 모달이 없다. -->
+  <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <p class="ct-eyebrow">Contact</p>
+          <h2 id="ctTitle" class="ct-title">문의하기</h2>
+          <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+      <div class="pv-body">
+        <div class="ct-grid">
+        <form id="contactForm" class="ct-form" novalidate>
+          <!-- 관심분야 -->
+          <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
+            <p class="ct-label" id="ctInterestLabel">관심분야 <span class="ct-req" aria-hidden="true">*</span></p>
+            <div class="ct-chips">
+              <label class="ct-chip"><input type="checkbox" name="interest" value="기업입주문의" /><span>기업입주문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="투자문의" /><span>투자문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="사업문의" /><span>사업문의</span></label>
+            </div>
+            <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
+          </div>
+
+          <div class="ct-two">
+            <div class="ct-row">
+              <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
+              <p class="ct-err" data-err="name">회사명 또는 이름을 입력해 주세요.</p>
+            </div>
+            <div class="ct-row">
+              <label class="ct-label" for="ctTel">휴대전화 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctTel" name="tel" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" />
+              <p class="ct-err" data-err="tel">휴대전화번호를 정확히 입력해 주세요.</p>
+            </div>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctEmail">이메일 <span class="ct-req" aria-hidden="true">*</span></label>
+            <input class="ct-input" id="ctEmail" name="email" type="email" autocomplete="email" placeholder="name@company.com" />
+            <p class="ct-err" data-err="email">이메일 주소를 정확히 입력해 주세요.</p>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctMsg">문의 내용 <span class="ct-req" aria-hidden="true">*</span></label>
+            <textarea class="ct-input ct-area" id="ctMsg" name="message" rows="4" placeholder="문의하실 내용을 입력해 주세요."></textarea>
+            <p class="ct-err" data-err="message">문의 내용을 입력해 주세요.</p>
+          </div>
+
+          <!-- 동의 -->
+          <div class="ct-agree">
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeReq" name="agreeRequired" />
+              <span>
+                <b class="ct-tag ct-tag--req">필수</b>
+                개인정보 수집 · 이용에 모두 동의합니다
+                <a href="index.html#privacy" class="ct-view" target="_blank" rel="noopener">약관 보기</a>
+              </span>
+            </label>
+            <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeOpt" name="agreeMarketing" />
+              <span>
+                <b class="ct-tag ct-tag--opt">선택</b>
+                마케팅 활용 동의에 동의합니다
+                <a href="index.html#privacy" class="ct-view" target="_blank" rel="noopener">약관 보기</a>
+              </span>
+            </label>
+          </div>
+
+        </form>
+
+        <!-- 안내 -->
+        <aside class="ct-side">
+          <div class="ct-card">
+            <p class="ct-card-h">담당자 연락처</p>
+            <a class="ct-card-a" href="mailto:invest@biotech-iv.com">invest@biotech-iv.com</a>
+            <p class="ct-card-p">평일 09:00 – 18:00 (주말 · 공휴일 제외)</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">사업 주관</p>
+            <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">처리 절차</p>
+            <ol class="ct-steps">
+              <li>문의 접수</li>
+              <li>담당자 배정 · 내용 검토</li>
+              <li>유선 또는 이메일 회신</li>
+            </ol>
+          </div>
+          <p class="ct-card-note">
+            수집된 개인정보는 &lsquo;개인정보 보호법&rsquo;에 따라 안전하게 보관되며, 입주/이주 완료 후 자동 파기됩니다.
+          </p>
+          <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
+          <div class="ct-actions">
+            <button type="submit" form="contactForm" class="ct-submit">등록하기</button>
+            <button type="reset" form="contactForm" class="ct-reset">다시쓰기</button>
+            <p id="ctStatus" class="ct-status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* GNB: 히어로 위에서는 투명, 스크롤하면 흰 배경 */
     (function () {
@@ -1317,7 +1614,11 @@
     var file = href.slice(0, href.indexOf('#'));
     if (file && file !== here) return;          // 다른 페이지 앵커는 대상이 아니다
     var sec = document.getElementById(hash);
-    if (sec) pairs.push({ a: a, sec: sec });
+    /* ⚠ 모달을 섹션으로 오인하지 않는다. 문의 모달의 id 가 `contact` 라 LNB 의 `#contact`
+         가 그걸 집어 온다 — `hidden` 요소의 rect.top 은 0 이라 "기준선을 지났다" 로 읽히고,
+         목록 마지막이라 **문의하기가 늘 현재로 표시된다**(2026-08-26 실측). */
+    if (!sec || sec.classList.contains('pv') || sec.hasAttribute('aria-modal')) return;
+    pairs.push({ a: a, sec: sec });
   });
   if (pairs.length < 2) return;
 
@@ -1359,6 +1660,157 @@
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
   tick();
+})();
+
+/* 문의 모달 — 메인 `index.html` 의 폼 로직을 **그대로 옮긴 것**이다(2026-08-26 지시).
+   ⚠ 메인 쪽을 고치면 여기도 함께 고쳐야 한다 — 두 벌이다.
+   ⚠ 모달 열고 닫기도 여기서 한다(메인은 페이지 스크립트가 갖고 있다).
+     `a[href="#contact"]` 클릭을 가로채 여는 방식이라, 링크만 그렇게 두면 어느 서브페이지에서도 열린다. */
+(function () {
+  const modal = document.getElementById('contact');
+  if (!modal) return;
+
+  /* ── 열고 닫기 ── */
+  let returnTo = null;
+  const lock = () => { document.body.style.overflow = 'hidden'; };
+  const unlock = () => { document.body.style.overflow = ''; };
+  function open(trigger) {
+    returnTo = trigger || document.activeElement;
+    modal.hidden = false; lock();
+    void modal.offsetWidth;                 /* 리플로우 강제 → rAF 없이 전환 시작 */
+    modal.classList.add('on');
+    (modal.querySelector('.pv-x') || modal.querySelector('.pv-panel')).focus({ preventScroll: true });
+  }
+  function close() {
+    modal.classList.remove('on');
+    const panel = modal.querySelector('.pv-panel');
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; modal.hidden = true; unlock(); };
+    panel.addEventListener('transitionend', done, { once: true });
+    setTimeout(done, 420);                  /* 전환이 없거나 끝나지 않는 환경 대비 */
+    if (returnTo && returnTo.focus) returnTo.focus({ preventScroll: true });
+  }
+  modal.querySelectorAll('[data-pv-close]').forEach((b) => b.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) close();
+  });
+  /* 이 페이지의 `#contact` 링크 전부가 모달을 연다 — LNB · 버튼 · 푸터 어디서든 */
+  document.querySelectorAll('a[href="#contact"], a[href$="#contact"]').forEach((a) => {
+    if (/^https?:/.test(a.getAttribute('href'))) return;
+    a.addEventListener('click', (e) => { e.preventDefault(); open(a); });
+  });
+  /* 패널 안 포커스 순환 */
+  modal.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const f = [...modal.querySelectorAll('.pv-panel a[href],.pv-panel button,.pv-panel input,.pv-panel textarea,.pv-panel [tabindex]:not([tabindex="-1"])')]
+      .filter((n) => n.offsetParent !== null && !n.disabled);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  window.bcityCloseModal = close;
+
+  /* ── 폼 (메인에서 옮김) ── */
+  const CT_ENDPOINT = '';
+      const form = document.getElementById('contactForm');
+      if (!form) return;
+      const status = document.getElementById('ctStatus');
+      const showErr = (key, on) => {
+        const el = form.querySelector('[data-err="'+key+'"]');
+        if (el) el.classList.toggle('on', on);
+      };
+      const setBad = (el, on) => el && el.classList.toggle('bad', on);
+
+      // 휴대전화 자동 하이픈
+      const tel = form.elements.tel;
+      tel.addEventListener('input', () => {
+        const d = tel.value.replace(/\D/g,'').slice(0,11);
+        tel.value = d.length < 4 ? d
+          : d.length < 8 ? d.slice(0,3)+'-'+d.slice(3)
+          : d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);
+      });
+
+      const checks = {
+        interest: () => [...form.querySelectorAll('input[name="interest"]')].some(c=>c.checked),
+        name:     () => form.elements.name.value.trim().length > 0,
+        tel:      () => /^01[016789]-?\d{3,4}-?\d{4}$/.test(form.elements.tel.value.replace(/\s/g,'')),
+        email:    () => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.elements.email.value.trim()),
+        message:  () => form.elements.message.value.trim().length > 0,
+        agreeRequired: () => form.elements.agreeRequired.checked,
+      };
+
+      // 입력 중 에러 해제
+      ['name','tel','email','message'].forEach(k=>{
+        form.elements[k].addEventListener('input', ()=>{
+          if (checks[k]()) { showErr(k,false); setBad(form.elements[k],false); }
+        });
+      });
+      form.querySelectorAll('input[name="interest"]').forEach(c=>
+        c.addEventListener('change', ()=>{ if(checks.interest()) showErr('interest',false); }));
+      form.elements.agreeRequired.addEventListener('change', ()=>{
+        if (checks.agreeRequired()) showErr('agreeRequired',false); });
+
+      form.addEventListener('submit', e=>{
+        e.preventDefault();
+        status.className = 'ct-status';
+        let firstBad = null;
+        for (const key of Object.keys(checks)) {
+          const ok = checks[key]();
+          showErr(key, !ok);
+          // name이 여러 개인 필드(interest)는 RadioNodeList가 오므로 focus 가능한 요소로 바꾼다
+          let field = form.elements[key];
+          if (!field || typeof field.focus !== 'function') field = form.querySelector('[name="'+key+'"]');
+          if (field && field.classList.contains('ct-input')) setBad(field, !ok);
+          if (!ok && !firstBad) firstBad = field;
+        }
+        if (firstBad) {
+          firstBad.focus({ preventScroll:false });
+          status.textContent = '입력하지 않은 필수 항목이 있습니다.';
+          status.className = 'ct-status on ng';
+          return;
+        }
+
+        const data = {
+          관심분야: [...form.querySelectorAll('input[name="interest"]:checked')].map(c=>c.value).join(', '),
+          '회사명/이름': form.elements.name.value.trim(),
+          휴대전화: form.elements.tel.value.trim(),
+          이메일: form.elements.email.value.trim(),
+          문의내용: form.elements.message.value.trim(),
+          마케팅활용동의: form.elements.agreeMarketing.checked ? '동의' : '미동의',
+        };
+
+        if (CT_ENDPOINT) {
+          const btn = document.querySelector('#contact .ct-submit');
+          btn.disabled = true;
+          status.textContent = '전송 중입니다…';
+          status.className = 'ct-status on';
+          fetch(CT_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'},
+                               body: JSON.stringify(data) })
+            .then(r=>{ if(!r.ok) throw new Error(r.status); form.reset();
+              status.textContent = '문의가 정상적으로 접수되었습니다. 담당자가 확인 후 연락드립니다.';
+              status.className = 'ct-status on ok';
+              setTimeout(()=>{ if (window.bcityCloseModal) close(); }, 1800); })
+            .catch(()=>{ status.textContent = '전송에 실패했습니다. invest@biotech-iv.com 로 직접 보내주세요.';
+              status.className = 'ct-status on ng'; })
+            .finally(()=>{ btn.disabled = false; });
+          return;
+        }
+
+        // 백엔드 미연결: 메일 본문으로 넘긴다
+        const body = Object.entries(data).map(([k,v])=>k+' : '+v).join('\n');
+        const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
+        location.href = 'mailto:invest@biotech-iv.com?subject=' + encodeURIComponent(subject)
+                      + '&body=' + encodeURIComponent(body);
+        status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 invest@biotech-iv.com 로 보내주세요.';
+        status.className = 'ct-status on ok';
+      });
+
+      form.addEventListener('reset', ()=>{
+        form.querySelectorAll('.ct-err.on').forEach(el=>el.classList.remove('on'));
+        form.querySelectorAll('.ct-input.bad').forEach(el=>el.classList.remove('bad'));
+        status.className = 'ct-status';
+      });
 })();
   </script>
 </body>

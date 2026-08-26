@@ -23,7 +23,11 @@
     var file = href.slice(0, href.indexOf('#'));
     if (file && file !== here) return;          // 다른 페이지 앵커는 대상이 아니다
     var sec = document.getElementById(hash);
-    if (sec) pairs.push({ a: a, sec: sec });
+    /* ⚠ 모달을 섹션으로 오인하지 않는다. 문의 모달의 id 가 `contact` 라 LNB 의 `#contact`
+         가 그걸 집어 온다 — `hidden` 요소의 rect.top 은 0 이라 "기준선을 지났다" 로 읽히고,
+         목록 마지막이라 **문의하기가 늘 현재로 표시된다**(2026-08-26 실측). */
+    if (!sec || sec.classList.contains('pv') || sec.hasAttribute('aria-modal')) return;
+    pairs.push({ a: a, sec: sec });
   });
   if (pairs.length < 2) return;
 

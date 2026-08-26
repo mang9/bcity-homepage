@@ -550,6 +550,19 @@ const heroLede = (fm) => fm.heroLede
 /** 상단 블록 — 카테고리의 `hero` 가 false 면 [LNB 만], 아니면 [히어로 + LNB].
  *  ⚠ **미리 펼쳐서** 넘긴다. `render()` 는 ctx 값을 치환만 하고 그 안을 다시 훑지 않으므로
  *    (본문 `main` 과 같은 사정) 여기서 펼치지 않으면 `{{ }}` 가 남아 빌드가 죽는다. */
+/* 문의 모달 — front-matter `contactModal: true` 인 페이지에만 넣는다.
+   ⚠ 값으로 넣는다(파티셜 호출을 layout 에 직접 쓰지 않는다) — 안 쓰는 페이지에
+     마크업·CSS·JS 22KB 를 붙이지 않기 위해서다.
+   ⚠ 플래그를 켰으면 css 에 `70-contact`, js 에 `contact` 도 함께 있어야 한다.
+     하나만 켜면 스타일 없는 폼이 문서 흐름에 쏟아진다(§11.29 의 실제 사고). */
+function contactModalBlock(fm, file) {
+  if (!fm.contactModal) return '';
+  const css = fm.css || [], js = fm.js || [];
+  if (!css.includes('70-contact')) throw new Error(`${file}: contactModal 인데 css 에 70-contact 가 없다`);
+  if (!js.includes('contact')) throw new Error(`${file}: contactModal 인데 js 에 contact 가 없다`);
+  return partial('contact-modal');
+}
+
 function heroBlock(cat, fm, ctx, file) {
   const on = cat.hero !== false;
   if (on && !fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 있는 카테고리다 — front-matter 에 heroImg 가 필요하다`);
@@ -607,6 +620,7 @@ function build(file) {
   };
   const heroCtx = { ...heroCtx0,
     hero: heroBlock(cat, fm, heroCtx0, file),
+    contactModal: contactModalBlock(fm, file),
     bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
 
   const html = render(layout, {
@@ -646,6 +660,7 @@ function buildDetails(file) {
   };
   const dHeroCtx = { ...dHeroCtx0,
     hero: heroBlock(cat, fm, dHeroCtx0, file),
+    contactModal: contactModalBlock(fm, file),
     bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
 
   rows.forEach((r, i) => {
