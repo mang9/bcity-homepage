@@ -104,7 +104,6 @@
   .bc-call b[data-short]::after { content: attr(data-short); font-size: 12px; }
 }
 
-.cl-note { margin: clamp(22px, 2.2vw, 32px) 0 0; font-size: 12px; color: var(--color-text-muted); }
 
 /* ===== 반응형 ===== */
 @media (max-width: 1023px) {
