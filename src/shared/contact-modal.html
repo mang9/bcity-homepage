@@ -4,7 +4,7 @@
      ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
        합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
        옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
-     ⚠ 약관 보기는 **그 자리에서 모달**로 연다 — 약관 모달도 공용이라 세 화면 모두에 있다
+     ⚠ `처리방침 보기` 는 **그 자리에서 모달**로 연다 — 처리방침도 공용이라 세 화면 모두에 있다
        (2026-08-27 이전에는 서브만 `index.html#privacy` 새 창이었다). -->
   <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
     <div class="pv-back" data-pv-close></div>
@@ -66,7 +66,7 @@
               <span>
                 <b class="ct-tag ct-tag--req">필수</b>
                 개인정보 수집 · 이용에 모두 동의합니다
-                <a href="#privacy" class="ct-view">약관 보기</a>
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
               </span>
             </label>
             <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
@@ -75,7 +75,7 @@
               <span>
                 <b class="ct-tag ct-tag--opt">선택</b>
                 마케팅 활용 동의에 동의합니다
-                <a href="#privacy" class="ct-view">약관 보기</a>
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
               </span>
             </label>
           </div>

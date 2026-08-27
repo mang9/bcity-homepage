@@ -73,6 +73,6 @@
 
   "footer": [
     { "label": "회사소개",         "href": "about.html" },
-    { "label": "개인정보이용약관", "href": "#privacy" }
+    { "label": "개인정보처리방침", "href": "#privacy" }
   ]
 }
