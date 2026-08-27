@@ -31,7 +31,11 @@
   <link rel="stylesheet" href="assets/css/app.css" />
 
   <!-- Design tokens: DESIGN.md -->
-  
+
+  <!-- 문의 모달 · 문의 폼 — 서브페이지와 **같은 파일**을 쓴다(정본 src/shared/contact.js).
+       `assets/js/contact.js` 는 `npm run build:pages` 가 만드는 생성물이므로 직접 고치지 말 것.
+       ⚠ `defer` 라 DOM 이 준비된 뒤 돈다 — 스크립트 안에서 DOMContentLoaded 를 기다리지 않는다. -->
+  <script src="assets/js/contact.js" defer></script>
 </head>
 
 <body class="antialiased">
@@ -606,15 +610,24 @@
     </div>
   </section>
 
-  <!-- ============ 문의하기 모달 (관심고객등록) ============ -->
+  <!-- @shared:contact-modal — 이 구간은 `tools/build/pages.mjs` 가 `src/shared/contact-modal.html`
+       에서 생성한다. **여기를 직접 고치지 말고 그 파일을 고칠 것.** 서브페이지가 같은 파일을 쓴다.
+       (마커 한 쌍을 지우면 빌드가 실패한다 — 조용히 어긋나지 않게 하려는 의도다.) -->
+<!-- ===== 문의 모달 =====
+     메인 `index.html` 의 `#contact` 폼을 서브페이지로 옮긴 것이다(2026-08-26 지시:
+     "해당 페이지에서 모달창으로"). 전에는 `index.html#contact` 로 보내 페이지가 넘어갔다.
+     ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
+       합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
+       옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
+     ⚠ 약관 보기는 **메인 새 창**으로 보낸다 — 서브페이지에는 약관 모달이 없다. -->
   <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
     <div class="pv-back" data-pv-close></div>
     <div class="pv-panel" role="document">
       <header class="pv-head">
         <div>
-          <p class="text-xs font-bold uppercase tracking-[0.18em] text-azure">Contact</p>
-          <h2 id="ctTitle" class="font-display mt-1.5 text-2xl font-bold text-text md:text-3xl">문의하기</h2>
-          <p class="mt-2 text-sm leading-relaxed text-text-muted">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+          <p class="ct-eyebrow">Contact</p>
+          <h2 id="ctTitle" class="ct-title">문의하기</h2>
+          <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
         </div>
         <button type="button" class="pv-x" data-pv-close aria-label="닫기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -623,7 +636,7 @@
         </button>
       </header>
       <div class="pv-body">
-        <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div class="ct-grid">
         <form id="contactForm" class="ct-form" novalidate>
           <!-- 관심분야 -->
           <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
@@ -636,7 +649,7 @@
             <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
           </div>
 
-          <div class="grid gap-6 sm:grid-cols-2">
+          <div class="ct-two">
             <div class="ct-row">
               <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
               <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
@@ -668,7 +681,7 @@
               <span>
                 <b class="ct-tag ct-tag--req">필수</b>
                 개인정보 수집 · 이용에 모두 동의합니다
-                <a href="#privacy" class="ct-view">약관 보기</a>
+                <a href="index.html#privacy" class="ct-view" target="_blank" rel="noopener">약관 보기</a>
               </span>
             </label>
             <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
@@ -677,7 +690,7 @@
               <span>
                 <b class="ct-tag ct-tag--opt">선택</b>
                 마케팅 활용 동의에 동의합니다
-                <a href="#privacy" class="ct-view">약관 보기</a>
+                <a href="index.html#privacy" class="ct-view" target="_blank" rel="noopener">약관 보기</a>
               </span>
             </label>
           </div>
@@ -693,7 +706,7 @@
           </div>
           <div class="ct-card">
             <p class="ct-card-h">사업 주관</p>
-            <p class="ct-card-p"><span class="font-semibold text-text">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+            <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
           </div>
           <div class="ct-card">
             <p class="ct-card-h">처리 절차</p>
@@ -717,6 +730,7 @@
       </div>
     </div>
   </div>
+  <!-- /@shared:contact-modal -->
 
   <!-- ============ 개인정보 수집·이용약관 (문의하기 동의 항목) ============ -->
   <div id="privacy" class="pv" role="dialog" aria-modal="true" aria-labelledby="pvTitle" hidden>
@@ -1379,110 +1393,6 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('.reveal, .lr, .cn-dia').forEach(el=>io.observe(el));
 
-    /* ---------- 문의하기 폼 ----------
-       서버가 없으므로 기본 동작은 메일 클라이언트로 내용을 넘기는 방식이다.
-       백엔드가 준비되면 CT_ENDPOINT에 URL을 넣으면 fetch POST로 전송된다. */
-    const CT_ENDPOINT = '';   // 예: 'https://api.b-city.kr/inquiry'
-    (function(){
-      const form = document.getElementById('contactForm');
-      if (!form) return;
-      const status = document.getElementById('ctStatus');
-      const showErr = (key, on) => {
-        const el = form.querySelector('[data-err="'+key+'"]');
-        if (el) el.classList.toggle('on', on);
-      };
-      const setBad = (el, on) => el && el.classList.toggle('bad', on);
-
-      // 휴대전화 자동 하이픈
-      const tel = form.elements.tel;
-      tel.addEventListener('input', () => {
-        const d = tel.value.replace(/\D/g,'').slice(0,11);
-        tel.value = d.length < 4 ? d
-          : d.length < 8 ? d.slice(0,3)+'-'+d.slice(3)
-          : d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);
-      });
-
-      const checks = {
-        interest: () => [...form.querySelectorAll('input[name="interest"]')].some(c=>c.checked),
-        name:     () => form.elements.name.value.trim().length > 0,
-        tel:      () => /^01[016789]-?\d{3,4}-?\d{4}$/.test(form.elements.tel.value.replace(/\s/g,'')),
-        email:    () => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.elements.email.value.trim()),
-        message:  () => form.elements.message.value.trim().length > 0,
-        agreeRequired: () => form.elements.agreeRequired.checked,
-      };
-
-      // 입력 중 에러 해제
-      ['name','tel','email','message'].forEach(k=>{
-        form.elements[k].addEventListener('input', ()=>{
-          if (checks[k]()) { showErr(k,false); setBad(form.elements[k],false); }
-        });
-      });
-      form.querySelectorAll('input[name="interest"]').forEach(c=>
-        c.addEventListener('change', ()=>{ if(checks.interest()) showErr('interest',false); }));
-      form.elements.agreeRequired.addEventListener('change', ()=>{
-        if (checks.agreeRequired()) showErr('agreeRequired',false); });
-
-      form.addEventListener('submit', e=>{
-        e.preventDefault();
-        status.className = 'ct-status';
-        let firstBad = null;
-        for (const key of Object.keys(checks)) {
-          const ok = checks[key]();
-          showErr(key, !ok);
-          // name이 여러 개인 필드(interest)는 RadioNodeList가 오므로 focus 가능한 요소로 바꾼다
-          let field = form.elements[key];
-          if (!field || typeof field.focus !== 'function') field = form.querySelector('[name="'+key+'"]');
-          if (field && field.classList.contains('ct-input')) setBad(field, !ok);
-          if (!ok && !firstBad) firstBad = field;
-        }
-        if (firstBad) {
-          firstBad.focus({ preventScroll:false });
-          status.textContent = '입력하지 않은 필수 항목이 있습니다.';
-          status.className = 'ct-status on ng';
-          return;
-        }
-
-        const data = {
-          관심분야: [...form.querySelectorAll('input[name="interest"]:checked')].map(c=>c.value).join(', '),
-          '회사명/이름': form.elements.name.value.trim(),
-          휴대전화: form.elements.tel.value.trim(),
-          이메일: form.elements.email.value.trim(),
-          문의내용: form.elements.message.value.trim(),
-          마케팅활용동의: form.elements.agreeMarketing.checked ? '동의' : '미동의',
-        };
-
-        if (CT_ENDPOINT) {
-          const btn = document.querySelector('#contact .ct-submit');
-          btn.disabled = true;
-          status.textContent = '전송 중입니다…';
-          status.className = 'ct-status on';
-          fetch(CT_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'},
-                               body: JSON.stringify(data) })
-            .then(r=>{ if(!r.ok) throw new Error(r.status); form.reset();
-              status.textContent = '문의가 정상적으로 접수되었습니다. 담당자가 확인 후 연락드립니다.';
-              status.className = 'ct-status on ok';
-              setTimeout(()=>{ if (window.bcityCloseModal) window.bcityCloseModal(document.getElementById('contact')); }, 1800); })
-            .catch(()=>{ status.textContent = '전송에 실패했습니다. invest@biotech-iv.com 로 직접 보내주세요.';
-              status.className = 'ct-status on ng'; })
-            .finally(()=>{ btn.disabled = false; });
-          return;
-        }
-
-        // 백엔드 미연결: 메일 본문으로 넘긴다
-        const body = Object.entries(data).map(([k,v])=>k+' : '+v).join('\n');
-        const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
-        location.href = 'mailto:invest@biotech-iv.com?subject=' + encodeURIComponent(subject)
-                      + '&body=' + encodeURIComponent(body);
-        status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 invest@biotech-iv.com 로 보내주세요.';
-        status.className = 'ct-status on ok';
-      });
-
-      form.addEventListener('reset', ()=>{
-        form.querySelectorAll('.ct-err.on').forEach(el=>el.classList.remove('on'));
-        form.querySelectorAll('.ct-input.bad').forEach(el=>el.classList.remove('bad'));
-        status.className = 'ct-status';
-      });
-    })();
 
     /* ---------- 입지: 경로 모션그래픽 ----------
        좌표계 = 배경 지도 이미지의 픽셀 공간(viewBox 1600×900 · 16:9).
@@ -1990,84 +1900,11 @@
       }, { threshold: 0.15 }).observe(sec);
     })();
 
-    /* ---------- 모달 (문의하기 · 개인정보 약관) ----------
-       #contact 안에서 #privacy를 열 수 있으므로 스택으로 관리한다. */
-    (function(){
-      const stack = [];
-      const modals = [...document.querySelectorAll('.pv')];
-      if (!modals.length) return;
-
-      const lock   = () => { document.body.style.overflow = 'hidden'; };
-      const unlock = () => { if (!stack.length) document.body.style.overflow = ''; };
-
-      function open(el, trigger){
-        if (!el || stack.includes(el)) return;
-        el.__return = trigger || document.activeElement;
-        el.style.zIndex = 120 + stack.length * 10;   // 위에 열리는 모달이 항상 앞
-        el.hidden = false;
-        lock();
-        void el.offsetWidth;                          // 리플로우 강제 → rAF 없이 전환 시작
-        el.classList.add('on');
-        stack.push(el);
-        (el.querySelector('.pv-x') || el.querySelector('.pv-panel')).focus({ preventScroll:true });
-      }
-
-      function close(el){
-        const i = stack.indexOf(el);
-        if (i === -1) return;
-        stack.splice(i, 1);
-        el.classList.remove('on');
-        const panel = el.querySelector('.pv-panel');
-        let fired = false;
-        const done = () => { if (fired) return; fired = true; el.hidden = true; unlock(); };
-        // 트랜지션이 없거나 끝나지 않는 환경에서도 확실히 닫히도록
-        panel.addEventListener('transitionend', done, { once:true });
-        setTimeout(done, 420);
-        if (el.__return && el.__return.focus) el.__return.focus({ preventScroll:true });
-      }
-
-      modals.forEach(el=>{
-        el.querySelector('.pv-panel').setAttribute('tabindex','-1');
-        el.querySelectorAll('[data-pv-close]').forEach(b=>b.addEventListener('click', ()=>close(el)));
-        el.addEventListener('keydown', e=>{                       // 패널 안 포커스 순환
-          if (e.key !== 'Tab') return;
-          const f = [...el.querySelectorAll('.pv-panel a[href],.pv-panel button,.pv-panel input,.pv-panel textarea,.pv-panel [tabindex]:not([tabindex="-1"])')]
-            .filter(n=>n.offsetParent !== null && !n.disabled);
-          if (!f.length) return;
-          const first = f[0], last = f[f.length-1];
-          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-        });
-      });
-
-      // 해당 id를 가리키는 모든 링크가 모달을 연다
-      document.querySelectorAll('a[href^="#"]').forEach(a=>{
-        const el = document.getElementById(a.getAttribute('href').slice(1));
-        if (!el || !el.classList.contains('pv')) return;
-        a.addEventListener('click', e=>{ e.preventDefault(); open(el, a); });
-      });
-
-      /* 다른 페이지에서 `index.html#contact` 로 들어온 경우 — 해시가 가리키는 모달을 연다.
-         ⚠ 위 바인딩은 **같은 페이지 안의 클릭**만 잡는다. 서브페이지의 `문의하기` 와
-           푸터 `개인정보이용약관` 이 이 경로로 들어오는데, 이게 없으면 메인에 도착만 하고
-           폼이 열리지 않는다(2026-08-26 이전까지 실제로 그랬다).
-         ⚠ `open` 의 두 번째 인수는 닫은 뒤 포커스를 돌려줄 요소다 — 해시 진입에는 없으므로
-           `null` 을 준다(그러면 `document.activeElement` 로 떨어진다). */
-      const openFromHash = () => {
-        const id = location.hash.slice(1);
-        const el = id && document.getElementById(id);
-        if (el && el.classList.contains('pv')) open(el, null);
-      };
-      openFromHash();
-      window.addEventListener('hashchange', openFromHash);
-
-      // ESC → 가장 위 모달만 닫기
-      document.addEventListener('keydown', e=>{
-        if (e.key === 'Escape' && stack.length) close(stack[stack.length - 1]);
-      });
-
-      window.bcityCloseModal = close;   // 폼 전송 완료 후 닫기용
-    })();
+    /* ---------- 문의 모달 · 문의 폼 ----------
+       ⚠ 스크립트는 여기 없다 — `assets/js/contact.js`(소스 `src/shared/contact.js`)를
+         `<head>` 에서 defer 로 받는다. **서브페이지가 같은 파일을 쓴다.**
+         2026-08-27 에 합쳤다 — 전에는 모달 엔진과 검증 로직이 여기와
+         `src/sub/js/contact.js` 두 곳에 있었고 기능이 서로 달랐다. */
 
     /* ---------- 도시컨셉 다이어그램: Figma 1320px 좌표를 컨테이너 폭에 맞춰 축소 ---------- */
     (function(){

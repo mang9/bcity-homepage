@@ -156,32 +156,10 @@
     .gnb.is-open .logo { color: var(--color-logo); }
     .gnb-side { display: flex; align-items: center; gap: 14px; height: var(--gnb-h); }
     .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-    /* ⚠ **`opacity` 를 쓰지 않는다.** 0~1 사이면 쌓임 문맥이 생겨 안쪽 말풍선의 `z-index` 가
-         그 안에서만 통하고, 결국 구분선이 말풍선 위로 그려진다(실측: 선이 말풍선을 가로지름).
-         게다가 말풍선 색까지 함께 흐려진다. 글자만 흐리게 하려면 **색에 알파**를 준다. */
-    .gnb-lang > span:last-child { color: color-mix(in srgb, currentColor 60%, transparent);
-      font-weight: 600; }
-    /* EN 안내 — 영문 페이지가 아직 없다. 호버·포커스에 아래로 띄운다(2026-08-27 지시).
-       ⚠ `.gnb-lang` 은 `overflow` 가 없어야 한다 — 잘리면 말풍선이 보이지 않는다.
-       ⚠ 바가 `z-index: 50` 이라 말풍선은 그 안에서만 겹치면 된다. */
-    /* ⚠ **직계 자식(`>`)** 이어야 한다. 그냥 후손으로 두면 이 규칙이 안에 넣은
-         말풍선(`.gnb-tip` · EN 스팬의 마지막 자식)까지 잡아 `position: relative` 를 덮어써
-         말풍선이 글자 위로 겹친다(실측 −30px).
-       ⚠ `inline-block` 이어야 한다. 인라인 상자에서는 `top: 100%` 가 줄 상자 기준으로
-         풀려 말풍선이 글자 위로 22px 겹쳤다(실측). */
-    .gnb-lang > span:last-child { position: relative; display: inline-block; cursor: default; }
-    /* ⚠ `z-index` 가 필요하다. 구분선(`.gnb::after`)도 absolute 인데 **트리에서 뒤에** 오므로
-         둘 다 `z-index: auto` 면 구분선이 위에 그려져 말풍선을 가른다(2026-08-27 지적). */
-    .gnb-tip { position: absolute; z-index: 3; top: calc(100% + 9px); left: 50%; transform: translate(-50%, -4px);
-      padding: 6px 11px; border-radius: var(--radius-sm); white-space: nowrap;
-      background: var(--color-navy); color: #fff; font-size: 11.5px; font-weight: 600;
-      letter-spacing: 0; opacity: 0; pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease; }
-    /* 꼬리 */
-    .gnb-tip::before { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -4px;
-      border: 4px solid transparent; border-bottom-color: var(--color-navy); }
-    .gnb-lang > span:last-child:hover .gnb-tip,
-    .gnb-lang > span:last-child:focus-visible .gnb-tip { opacity: 1; transform: translate(-50%, 0); }
+    /* EN 안내 · 말풍선 — 규칙은 여기 없다. `src/shared/gnb-en.css` 한 벌을
+       메인과 **함께 쓴다**(CSS_COMMON 의 `gnb-en`). 고칠 일이 있으면 그 파일을 고친다.
+       ⚠ 트리거는 `.gnb-en` 클래스다 — `partials/gnb.html` 의 EN 스팬이 갖고 있다.
+         `span:last-child` 로 잡던 옛 방식은 말풍선 자신까지 매칭해 위치가 깨졌다. */
     .gnb-sns { display: flex; gap: 8px; }
     .gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
     .gnb-sns a { opacity: .85; transition: opacity .2s; }
@@ -208,6 +186,54 @@
     .mnav a { display: block; padding: 11px 4px; border-bottom: 1px solid var(--color-line);
       font-size: 15px; color: var(--color-text); }
     .mnav a.is-on { color: var(--color-primary); font-weight: 700; }
+
+    /* ── gnb-en.css ─────────────────────────────────────────── */
+    /* ===== GNB 영문(EN) 안내 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+       영문 페이지가 아직 없어 EN 은 링크가 아니라 안내다. 호버·포커스에 아래로 말풍선을 띄운다.
+
+       2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙이 `src/css/app.css`(`#gnb .gnb-en`)와
+       `src/sub/css/20-gnb.css`(`.gnb-lang > span:last-child`)에 나뉘어 있었고, 실제로 갈라졌다 —
+       **서브만 흰 바탕에 흰 글자**가 되어 EN 이 보이지 않았다(사용자 지적).
+
+       싣는 경로가 둘이다 — 파일은 하나다:
+         메인   `src/css/app.css` 의 `@import ... layer(utilities)`
+         서브   `pages.mjs` 의 CSS_COMMON 에 `gnb-en` 이 들어 있다
+       말풍선을 **넣는 쪽은 JS 다**(메인 `index.html` · 서브 `common.js`) — 마크업에 글자를 박으면
+       CSS 가 늦거나 실패할 때 "준비중입니다" 가 그대로 드러난다(2026-08-27 지시).
+
+       ⚠⚠ **`color-mix()` 안에 `currentColor` 를 넣지 않는다.** `color` 가 자기를 참조하는 꼴이라
+         크롬이 상속색 변화를 따라오지 못해 바가 흰 면으로 바뀌어도 글자가 흰색에 머문다.
+         실측값이 `color(srgb 1 1 1 / .6)` 로 굳어 있었다 — 두 상태의 색을 **각각** 적는다.
+       ⚠ `opacity` 도 쓰지 않는다. 0~1 사이면 쌓임 문맥이 생겨 안쪽 말풍선의 `z-index` 가
+         그 안에 갇히고, 결국 GNB 구분선이 말풍선 위로 그려진다(실측: 선이 말풍선을 가로지름).
+       ⚠ 바의 상태 클래스 이름이 메인 · 서브가 다르다(`open`/`solid` ↔ `is-open`/`is-solid`).
+         한 규칙에 둘 다 적는다 — 한쪽만 적으면 그 화면에서 색이 안 바뀐다. */
+
+    /* 흰 글자(히어로 사진 위)가 기본이다 */
+    .gnb-en { position: relative; display: inline-block; cursor: default;
+      color: rgba(255,255,255,.7); font-weight: 600; transition: color .3s ease; }
+    /* 바가 흰 면일 때 — 스크롤(solid) · 메가메뉴 펼침(open) · 히어로 없는 페이지(no-hero) */
+    #gnb.solid .gnb-en, #gnb.open .gnb-en,
+    .gnb.is-solid .gnb-en, .gnb.is-open .gnb-en, .no-hero .gnb .gnb-en { color: var(--color-text-muted); }
+    .gnb-en:hover { color: #fff; }
+    #gnb.solid .gnb-en:hover, #gnb.open .gnb-en:hover,
+    .gnb.is-solid .gnb-en:hover, .gnb.is-open .gnb-en:hover,
+    .no-hero .gnb .gnb-en:hover { color: var(--color-text); }
+
+    /* 말풍선 — JS 가 `.gnb-en` 안에 넣는다
+       ⚠ `.gnb-lang` 에 `overflow` 가 있으면 잘려서 보이지 않는다.
+       ⚠ `z-index` 가 필요하다. GNB 구분선도 absolute 인데 **트리에서 뒤에** 오므로
+         둘 다 `auto` 면 구분선이 위에 그려져 말풍선을 가른다(2026-08-27 지적). */
+    .gnb-tip { position: absolute; z-index: 3; top: calc(100% + 9px); left: 50%;
+      transform: translate(-50%, -4px); padding: 6px 11px; border-radius: var(--radius-sm, 8px);
+      white-space: nowrap; background: var(--color-navy); color: #fff;
+      font-size: 11.5px; font-weight: 600; letter-spacing: 0; opacity: 0;
+      pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+    /* 꼬리 */
+    .gnb-tip::before { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -4px;
+      border: 4px solid transparent; border-bottom-color: var(--color-navy); }
+    .gnb-en:hover .gnb-tip,
+    .gnb-en:focus-visible .gnb-tip { opacity: 1; transform: translate(-50%, 0); }
 
     /* ── 30-hero-lnb.css ─────────────────────────────────────────── */
     /* ===== 히어로 ===== */
@@ -860,7 +886,7 @@
         </div>
       </nav>
       <div class="gnb-side">
-        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
+        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span class="gnb-en">EN</span></div>
         <div class="gnb-sns">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
@@ -1029,7 +1055,7 @@
     (function () {
       var lang = document.querySelector('.gnb-lang');
       if (!lang) return;
-      var en = lang.querySelector('span:last-child');
+      var en = lang.querySelector('.gnb-en');
       if (!en || en.textContent.trim() !== 'EN') return;
       en.setAttribute('tabindex', '0');
       en.setAttribute('role', 'button');

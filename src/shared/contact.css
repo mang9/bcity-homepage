@@ -1,12 +1,16 @@
-/* ===== 문의 모달 (서브페이지) =====
-   메인 `index.html` 의 문의 폼을 **서브페이지 셸로 옮긴 것**이다(2026-08-26 지시:
-   "문의하기 버튼 팝업 띄울때 해당 페이지에서 모달창으로 띄워줘").
-   전에는 `index.html#contact` 로 보내서 페이지가 통째로 넘어갔다.
+/* ===== 문의 · 약관 모달 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+   2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙 49개가 `src/css/app.css` 와
+   `src/sub/css/70-contact.css` 에 나뉘어 있었고, 한쪽만 고쳐져 실제로 갈라졌다
+   (닫기 버튼 회색 라인이 서브에만 있었다).
 
-   ⚠ 규칙은 `src/css/app.css` 에서 **그대로 옮긴 것**이다(순수 CSS · @apply 없음).
-     메인 쪽을 고치면 여기도 함께 고쳐야 한다 — 두 벌이다.
-     합칠 수 없는 이유: 메인은 Tailwind 빌드, 서브는 평문 CSS 라 번들이 다르다.
-   ⚠ `.sr-only` 는 가져오지 않았다 — 서브페이지는 `page-shared.css` 에 이미 있다. */
+   싣는 경로가 둘이다 — 파일은 하나다:
+     메인   `src/css/app.css` 의 `@import "../shared/contact.css" layer(utilities)`
+     서브   front-matter `"css": ["contact"]` → `pages.mjs` 가 인라인
+   ⚠ 순수 CSS 로만 쓴다(`@apply` · Tailwind 지시어 금지) — 서브 번들은 Tailwind 를 거치지 않는다.
+   ⚠ `.sr-only` 는 여기 두지 않는다. 모달 전용이 아니라 일반 유틸리티이며
+     메인은 `app.css`, 서브는 `page-shared.css` 가 각각 갖고 있다.
+   ⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — 아래 `:where()` 버튼 리셋이 그 자리를 메운다.
+     `:where()` 라 명시도 0 이므로 `.ct-reset` 의 테두리를 덮지 않는다(§11.87). */
 
 .pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
 .pv[hidden] { display: none; }

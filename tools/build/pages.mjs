@@ -18,30 +18,56 @@
  *   {{key}}        치환. 값이 없으면 빌드를 실패시킨다(조용한 빈칸 방지)
  *   {{> partial}}  src/sub/partials/<partial>.html|svg 삽입 (1단 중첩까지)
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, rmSync, mkdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SUB = join(ROOT, 'src', 'sub');
+/** 메인(`index.html`)과 **함께 쓰는** 소스. 서브 전용 파일과 섞지 않으려고 폴더를 나눴다.
+ *  CSS · JS · 파티셜 이름을 여기서 먼저 찾고, 없으면 `src/sub/` 로 떨어진다. */
+const SHARED = join(ROOT, 'src', 'shared');
 const CHECK = process.argv.includes('--check');
 
 const read = (...p) => readFileSync(join(...p), 'utf8');
 
 /** 공통 CSS — 이 순서가 곧 캐스케이드 순서다. 페이지 CSS 는 항상 뒤에 붙는다.
  *  overview.html 원본과 같은 순서를 유지하고 있다(리팩터 제로디프의 근거). */
-const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', '30-hero-lnb', '40-section', '80-footer', '90-motion'];
+const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion'];
 
 const nav = JSON.parse(read(SUB, 'nav.json'));
 const layout = read(SUB, 'layout.html');
 
-const partial = (name) => {
-  for (const ext of ['.html', '.svg']) {
-    const f = join(SUB, 'partials', name + ext);
-    if (existsSync(f)) return readFileSync(f, 'utf8').replace(/\n$/, '');
-  }
-  throw new Error(`파티셜 없음: ${name}`);
+/** 공용(`src/shared/`) 을 먼저 보고 없으면 서브 전용에서 찾는다.
+ *  ⚠ 같은 이름을 양쪽에 두지 않는다 — 공용이 조용히 이기므로 어느 쪽이 쓰였는지 알 수 없다.
+ *    `assertNoShadow()` 가 빌드 때마다 검사한다. */
+const pick = (kind, name, exts) => {
+  for (const base of [SHARED, kind === 'partial' ? join(SUB, 'partials') : join(SUB, kind)])
+    for (const ext of exts) {
+      const f = join(base, name + ext);
+      if (existsSync(f)) return f;
+    }
+  return null;
 };
+
+const partial = (name) => {
+  const f = pick('partial', name, ['.html', '.svg']);
+  if (!f) throw new Error(`파티셜 없음: ${name}`);
+  return readFileSync(f, 'utf8').replace(/\n$/, '');
+};
+
+/** 같은 이름이 `src/shared/` 와 `src/sub/` 양쪽에 있으면 공용이 조용히 이긴다 —
+ *  어느 파일이 쓰였는지 알 수 없어지므로 빌드를 죽인다. */
+(function assertNoShadow() {
+  if (!existsSync(SHARED)) return;
+  const dup = [];
+  for (const f of readdirSync(SHARED)) {
+    for (const dir of ['css', 'js', 'partials']) {
+      if (existsSync(join(SUB, dir, f))) dup.push(`src/shared/${f} ↔ src/sub/${dir}/${f}`);
+    }
+  }
+  if (dup.length) throw new Error('공용과 서브 전용에 같은 이름이 있다 — 하나를 없앨 것:\n  ' + dup.join('\n  '));
+})();
 
 /** 파티셜 전개 → 치환. 남은 {{...}} 가 있으면 실패시킨다. */
 function render(tpl, ctx, depth = 0) {
@@ -565,12 +591,13 @@ const heroLede = (fm) => fm.heroLede
 /* 문의 모달 — front-matter `contactModal: true` 인 페이지에만 넣는다.
    ⚠ 값으로 넣는다(파티셜 호출을 layout 에 직접 쓰지 않는다) — 안 쓰는 페이지에
      마크업·CSS·JS 22KB 를 붙이지 않기 위해서다.
-   ⚠ 플래그를 켰으면 css 에 `70-contact`, js 에 `contact` 도 함께 있어야 한다.
-     하나만 켜면 스타일 없는 폼이 문서 흐름에 쏟아진다(§11.29 의 실제 사고). */
+   ⚠ 플래그를 켰으면 css · js 에 `contact` 도 함께 있어야 한다.
+     하나만 켜면 스타일 없는 폼이 문서 흐름에 쏟아진다(§11.29 의 실제 사고).
+   ⚠ 마크업 · CSS · JS 세 벌 모두 `src/shared/` 한 곳에서 온다 — 메인과 같은 파일이다. */
 function contactModalBlock(fm, file) {
   if (!fm.contactModal) return '';
   const css = fm.css || [], js = fm.js || [];
-  if (!css.includes('70-contact')) throw new Error(`${file}: contactModal 인데 css 에 70-contact 가 없다`);
+  if (!css.includes('contact')) throw new Error(`${file}: contactModal 인데 css 에 contact 가 없다`);
   if (!js.includes('contact')) throw new Error(`${file}: contactModal 인데 js 에 contact 가 없다`);
   return partial('contact-modal');
 }
@@ -589,7 +616,9 @@ function heroBlock(cat, fm, ctx, file) {
 /** CSS 번들 — 공통 순서 뒤에 페이지 CSS. 파일마다 구분 주석을 남긴다 */
 function cssBundle(fm) {
   return [...CSS_COMMON, ...(fm.css || [])].map((n) => {
-    const src = read(SUB, 'css', n + '.css').replace(/\s*$/, '');
+    const f = pick('css', n, ['.css']);
+    if (!f) throw new Error(`CSS 없음: ${n}.css (src/shared · src/sub/css 둘 다 확인했다)`);
+    const src = readFileSync(f, 'utf8').replace(/\s*$/, '');
     return `    /* ── ${n}.css ─────────────────────────────────────────── */\n` +
       src.split('\n').map((l) => (l ? '    ' + l : l)).join('\n');
   }).join('\n\n');
@@ -597,8 +626,11 @@ function cssBundle(fm) {
 
 /** JS 번들 — common 은 항상 첫 번째 */
 function jsBundle(fm) {
-  return ['common', ...(fm.js || [])]
-    .map((n) => read(SUB, 'js', n + '.js').replace(/\s*$/, '')).join('\n\n');
+  return ['common', ...(fm.js || [])].map((n) => {
+    const f = pick('js', n, ['.js']);
+    if (!f) throw new Error(`JS 없음: ${n}.js (src/shared · src/sub/js 둘 다 확인했다)`);
+    return readFileSync(f, 'utf8').replace(/\s*$/, '');
+  }).join('\n\n');
 }
 
 const banner = (srcFile) =>
@@ -752,10 +784,44 @@ for (const { out, html, slug } of jobs) {
   writeFileSync(out, html);
   console.log(`  → ${slug}.html (${(html.length / 1024).toFixed(1)} KB)`);
 }
+/* ── 공용 소스를 메인(`index.html`)에도 반영한다 ──────────────────────
+   서브페이지는 위에서 파티셜·번들로 받았고, 메인은 손글씨 파일이라 여기서 맞춰 준다.
+   ⚠ **`src/shared/` 가 정본이다.** `index.html` 의 마커 구간과 `assets/js/contact.js` 는
+     생성물이므로 직접 고치면 다음 빌드에 덮어써진다.
+   ⚠ 마커가 없으면 조용히 넘기지 않고 **빌드를 죽인다** — 한쪽만 갈라지는 것이
+     이 정리로 없애려던 바로 그 상태다. */
+function syncShared(write) {
+  const changed = [];
+
+  // ① index.html 의 마커 구간 = src/shared/contact-modal.html
+  const idxPath = join(ROOT, 'index.html');
+  const idx = readFileSync(idxPath, 'utf8');
+  const re = /([ \t]*<!-- @shared:contact-modal[\s\S]*?-->\n)[\s\S]*?(\n[ \t]*<!-- \/@shared:contact-modal -->)/;
+  if (!re.test(idx)) throw new Error('index.html 에 @shared:contact-modal 마커 한 쌍이 없다 — 지웠으면 되살릴 것');
+  const body = readFileSync(join(SHARED, 'contact-modal.html'), 'utf8').replace(/\n$/, '');
+  const next = idx.replace(re, (_, head, tail) => head + body + tail);
+  if (next !== idx) { if (write) writeFileSync(idxPath, next); changed.push('index.html (문의 모달 마크업)'); }
+
+  // ② assets/js/contact.js = src/shared/contact.js  (메인이 <script src> 로 받는다)
+  const jsDir = join(ROOT, 'assets', 'js');
+  const jsOut = join(jsDir, 'contact.js');
+  const jsSrc = '/* 생성물이다. 이 파일을 고치지 말 것 — 소스는 src/shared/contact.js 다.\n'
+    + '   서브페이지는 같은 소스를 인라인으로 받는다(tools/build/pages.mjs). */\n'
+    + readFileSync(join(SHARED, 'contact.js'), 'utf8');
+  if (!existsSync(jsOut) || readFileSync(jsOut, 'utf8') !== jsSrc) {
+    if (write) { mkdirSync(jsDir, { recursive: true }); writeFileSync(jsOut, jsSrc); }
+    changed.push('assets/js/contact.js');
+  }
+  return changed;
+}
+
 if (CHECK) {
+  const drift = syncShared(false);
+  if (drift.length) { stale += drift.length; drift.forEach((f) => console.log(`  ✗ ${f} 이 src/shared 와 다르다`)); }
   console.log(stale ? `  ${stale}개 생성물이 낡았다 — npm run build:pages 를 돌려라` : '  생성물 최신 상태');
   process.exit(stale ? 1 : 0);
 }
+syncShared(true).forEach((f) => console.log(`  → ${f}`));
 console.log(`  서브페이지 ${jobs.length}개 빌드 완료 (목록 ${files.length} · 상세 ${jobs.length - files.length})`);
 
 if (SAMPLE_WARNINGS.length) {

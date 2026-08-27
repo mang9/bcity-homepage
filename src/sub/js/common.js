@@ -31,7 +31,7 @@
     (function () {
       var lang = document.querySelector('.gnb-lang');
       if (!lang) return;
-      var en = lang.querySelector('span:last-child');
+      var en = lang.querySelector('.gnb-en');
       if (!en || en.textContent.trim() !== 'EN') return;
       en.setAttribute('tabindex', '0');
       en.setAttribute('role', 'button');
