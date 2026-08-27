@@ -588,6 +588,10 @@ const heroLede = (fm) => fm.heroLede
 /** 상단 블록 — 카테고리의 `hero` 가 false 면 [LNB 만], 아니면 [히어로 + LNB].
  *  ⚠ **미리 펼쳐서** 넘긴다. `render()` 는 ctx 값을 치환만 하고 그 안을 다시 훑지 않으므로
  *    (본문 `main` 과 같은 사정) 여기서 펼치지 않으면 `{{ }}` 가 남아 빌드가 죽는다. */
+/** 히어로 사진의 구도 — front-matter `heroPos` 가 있을 때만 인라인 `object-position` 을 낸다.
+ *  ⚠ 값이 없으면 **속성을 아예 내지 않는다.** 빈 `style=""` 을 남기면 마크업만 지저분해진다. */
+const heroPos = (fm) => (fm.heroPos ? ` style="object-position: ${esc(fm.heroPos)}"` : '');
+
 function heroBlock(cat, fm, ctx, file) {
   const on = cat.hero !== false;
   if (on && !fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 있는 카테고리다 — front-matter 에 heroImg 가 필요하다`);
@@ -643,7 +647,7 @@ function build(file) {
   }
 
   const heroCtx0 = {
-    heroImg: fm.heroImg, h1: fm.h1, heroLede: heroLede(fm),
+    heroImg: fm.heroImg, heroPos: heroPos(fm), h1: fm.h1, heroLede: heroLede(fm),
     catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
     navLabel: esc(fm.crumb || item.label),
     ...navBits(cat, fm.nav),
@@ -682,7 +686,7 @@ function buildDetails(file) {
   const out = [];
 
   const dHeroCtx0 = {
-    heroImg: fm.heroImg, h1: fm.h1, heroLede: heroLede(fm),
+    heroImg: fm.heroImg, heroPos: heroPos(fm), h1: fm.h1, heroLede: heroLede(fm),
     catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
     navLabel: esc(item.label),
     ...navBits(cat, fm.nav),

@@ -1184,6 +1184,11 @@
          구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
+      <!-- ⚠ `heroPos` 는 front-matter 의 선택 키다. 값이 없으면 속성 자체가 나오지 않고
+           공용 `object-position: center`(기본)이 쓰인다. **이미지를 다시 굽지 않고**
+           구도만 다시 잡을 때 쓴다(§11.15 의 광역 인프라 사진과 같은 어법).
+           `center 72%` 처럼 두 번째 값이 클수록 **보이는 창이 아래로** 내려가므로
+           화면에서는 그림이 위로 올라간다. -->
       <img class="hero-bg" src="assets/slide-night.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
