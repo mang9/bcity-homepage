@@ -781,13 +781,20 @@
       .dz-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
       .dz-grid { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
       /* 좌측 정보 패널 — 화면 높이를 꽉 채우고 3구역으로 분배 */
+      /* ⚠ `space-between` 을 쓰지 않는다. 자식 수에 따라 배분이 달라져서,
+           2026-08-27 에 아래 인디케이터 텍스트(`#dzIndex`)를 지웠더니 자식이 3 → 2 가 되며
+           남는 높이가 한 군데로 몰려 카드가 1920 에서 77px 내려앉았다.
+           `flex-start` + 카드에 `margin-block: auto` 면 **자식 수와 무관하게**
+           카드가 남는 공간의 가운데에 온다. 좁은 화면(칸이 넘치는 구간)에서는
+           남는 공간이 없어 auto 가 0 으로 풀리므로 예전과 같다. */
       .dz-left { position: relative; display: flex; flex-direction: column;
-        justify-content: space-between; overflow: hidden;
+        justify-content: flex-start; overflow: hidden;
         background: var(--color-bg);
         padding-top: clamp(60px, 7vh, 104px); padding-bottom: clamp(28px, 4vh, 56px);
         /* 위쪽 섹션들의 콘텐츠 시작선(가운데 1320px 컨테이너 + 좌우 24px)과 동일하게 */
         padding-left: var(--gut);
         padding-right: clamp(28px, 3vw, 56px); }
+      .dz-left #dzAcc { margin-block: auto; }
       /* 우측 이미지 */
       .dz-right { position: relative; overflow: hidden; background: var(--color-navy); }
       .dz-imgs { position: absolute; inset: 0; }

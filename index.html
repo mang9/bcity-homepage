@@ -455,7 +455,6 @@
           <!-- 상세 구역 아코디언 (펼치면 부지개요) -->
           <div id="dzAcc" class="flex flex-col gap-3"></div>
 
-          <p id="dzIndex" class="font-display text-xs font-bold text-text-muted"></p>
         </div>
 
         <!-- 우: 풀블리드 이미지 (스크롤 시 위아래 슬라이드) -->
@@ -552,17 +551,15 @@
   <!-- ============ 8. 파트너 + 푸터 (슬라이드 21) — 밝은 톤 ============ -->
   <section id="footer" class="page border-t border-line bg-bg">
     <div class="mx-auto wrap-x px-6 py-24">
-      <div class="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
+      <div class="reveal mb-14">
         <!-- max-w-3xl(768px) 캡이 있으면 md:text-h3(38px, 큰 화면 44/50px)에서 둘째 줄
              「…완성합니다」의 끝 글자가 떨어진다. 캡을 없애고 break-keep 으로 어절 중간
-             분리도 막는다. 부모가 flex-wrap 이라 폭이 부족하면 버튼이 아래로 내려가고
-             h2 가 전체 폭을 쓰므로 좁은 화면에서도 2줄이 유지된다. -->
+             분리도 막는다.
+             ⚠ `flex justify-between` 을 걷었다(2026-08-27 지시로 파트너 보기 버튼 삭제) —
+               나란히 놓을 상대가 없으면 flex 는 아무 일도 하지 않고 이름만 남는다. -->
         <h2 class="font-display break-keep text-3xl font-bold leading-snug tracking-tight text-text md:text-h3">
           대한민국 AI·바이오 산업의 중심에서<br />글로벌 경쟁력을 갖춘 혁신 생태계를 완성합니다
         </h2>
-        <a href="#" class="inline-flex shrink-0 items-center gap-2 rounded-md bg-primary px-7 py-4 text-base font-bold text-white transition hover:bg-primary-hover">
-          파트너 보기 <span aria-hidden="true">→</span>
-        </a>
       </div>
       <p class="reveal mb-4 text-xs font-bold uppercase tracking-widest text-text-muted">참여기관 &amp; 파트너</p>
       <!-- 흐르는 로고 (마퀴) — 호버 시 일시정지 -->
@@ -1204,8 +1201,6 @@
         document.getElementById('dzHead').textContent  = z.n + ' · ' + z.head;
         document.getElementById('dzTitle').textContent = z.t;
         document.getElementById('dzDesc').textContent  = z.desc;
-        document.getElementById('dzIndex').textContent =
-          z.n + ' · ' + (dzGroup === 'cluster' ? 'CLUSTER' : 'COMPLEX') + ' ' + (i+1) + '/' + dzItems().length;
         dzStage.classList.remove('dz-swap');
       }, 200);
       dzCur = i;
@@ -1226,13 +1221,19 @@
       window.scrollTo({ top: dzSec.offsetTop + total * ((i + 0.5) / n), behavior: 'smooth' });
     }
 
-    // 탭 전환: 그룹 교체 후 현재 스크롤 위치에 맞는 항목 표시
+    /* 탭 전환: 그룹을 갈고 **그 그룹의 첫 카드**로 간다 (2026-08-27 지시).
+       ⚠ 전에는 `dzUpdate()` 로 현재 스크롤 위치에 맞는 항목을 띄웠다. 그래서 클러스터
+         3번을 보다가 콤플렉스를 누르면 콤플렉스 3번(에듀)이 나왔다 — 탭을 바꾼 사용자는
+         그 그룹의 처음을 기대한다.
+       ⚠ `dzRender(0)` 만으로는 안 된다. 항목 번호는 **스크롤 위치**가 정하므로
+         다음 스크롤에 `dzUpdate()` 가 곧바로 원래 번호로 되돌린다 —
+         런웨이 위치까지 함께 옮겨야 한다(도트·아코디언 클릭과 같은 경로다). */
     document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
       if (b.dataset.tab === dzGroup) return;
       dzGroup = b.dataset.tab;
       dzRenderGroup();
-      dzUpdate();
-      if (dzCur < 0) dzRender(0);
+      dzRender(0);
+      dzScrollTo(0);
     }));
 
     dzRenderGroup();
