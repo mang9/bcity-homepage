@@ -100,6 +100,7 @@
     /* ===== GNB ===== */
     .gnb {
       position: fixed; inset: 0 0 auto; z-index: 50; height: var(--gnb-h);
+      /* ⚠ 펼치면 `.is-open` 이 height 를 auto 로 푼다(위 규칙) */
       color: #fff; border-bottom: 1px solid transparent;
       transition: background .3s ease, color .3s ease, border-color .3s ease;
     }
@@ -113,15 +114,54 @@
     .logo { width: 118px; height: auto; color: currentColor; }
     .gnb.is-solid .logo,
     .no-hero .gnb .logo { color: var(--color-logo); }
-    .gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
-    .gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
-    .gnb-menu a:hover { opacity: 1; }
-    .gnb-menu a.is-on { opacity: 1; }
-    .gnb-menu a.is-on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
-      height: 2px; background: currentColor; }
+    /* ⚠ 대메뉴는 **전체 폭 드롭**이다(§9-1 확정 사양 · 개별 드롭다운으로 바꿨다가 되돌린 이력).
+         `.gnb` 가 `height: var(--gnb-h)` 로 고정돼 있으면 펼친 패널이 잘리므로,
+         펼칠 때는 높이를 풀고(`min-height`) 바가 바탕째 내려온다. */
+    .gnb-menu { display: none; align-items: flex-start;
+      gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
+    .gnb-item { display: flex; flex-direction: column; }
+    .gnb-link { position: relative; display: flex; align-items: center; height: var(--gnb-h);
+      padding: 0 2px; opacity: .82; transition: opacity .2s; }
+    .gnb-link:hover { opacity: 1; }
+    .gnb-link.is-on { opacity: 1; }
+    .gnb-link.is-on::after { content: ""; position: absolute; left: 0; right: 0;
+      bottom: calc(50% - .8em - 8px); height: 2px; background: currentColor; }
+    /* 하위 패널 — 닫힌 상태는 높이 0 이라 자리를 차지하지 않는다 */
+    .gnb-sub { display: flex; flex-direction: column; gap: 9px;
+      max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+      font-size: 14px; font-weight: 500;
+      transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
+    .gnb-sub a { opacity: .7; transition: opacity .2s, color .2s; white-space: nowrap; }
+    .gnb-sub a:hover, .gnb-sub a.is-on { opacity: 1; color: var(--color-primary); }
+    .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
+    /* ⚠ 펼친 바는 **항상 흰 면**이다. 히어로 위 투명 상태로 두면 하위 글자가 사진에 묻힌다. */
+    .gnb.is-open { height: auto; min-height: var(--gnb-h);
+      background: rgba(255,255,255,.97); backdrop-filter: blur(10px);
+      color: var(--color-text); border-bottom-color: var(--color-line); }
+    .gnb.is-open .logo { color: var(--color-logo); }
+    .gnb.is-open .wrap { align-items: flex-start; }
     .gnb-side { display: flex; align-items: center; gap: 14px; }
     .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-    .gnb-lang span:last-child { opacity: .6; font-weight: 600; }
+    .gnb-lang > span:last-child { opacity: .6; font-weight: 600; }
+    /* EN 안내 — 영문 페이지가 아직 없다. 호버·포커스에 아래로 띄운다(2026-08-27 지시).
+       ⚠ `.gnb-lang` 은 `overflow` 가 없어야 한다 — 잘리면 말풍선이 보이지 않는다.
+       ⚠ 바가 `z-index: 50` 이라 말풍선은 그 안에서만 겹치면 된다. */
+    /* ⚠ **직계 자식(`>`)** 이어야 한다. 그냥 후손으로 두면 이 규칙이 안에 넣은
+         말풍선(`.gnb-tip` · EN 스팬의 마지막 자식)까지 잡아 `position: relative` 를 덮어써
+         말풍선이 글자 위로 겹친다(실측 −30px).
+       ⚠ `inline-block` 이어야 한다. 인라인 상자에서는 `top: 100%` 가 줄 상자 기준으로
+         풀려 말풍선이 글자 위로 22px 겹쳤다(실측). */
+    .gnb-lang > span:last-child { position: relative; display: inline-block; cursor: default; }
+    .gnb-tip { position: absolute; top: calc(100% + 9px); left: 50%; transform: translate(-50%, -4px);
+      padding: 6px 11px; border-radius: var(--radius-sm); white-space: nowrap;
+      background: var(--color-navy); color: #fff; font-size: 11.5px; font-weight: 600;
+      letter-spacing: 0; opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease; }
+    /* 꼬리 */
+    .gnb-tip::before { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -4px;
+      border: 4px solid transparent; border-bottom-color: var(--color-navy); }
+    .gnb-lang > span:last-child:hover .gnb-tip,
+    .gnb-lang > span:last-child:focus-visible .gnb-tip { opacity: 1; transform: translate(-50%, 0); }
     .gnb-sns { display: flex; gap: 8px; }
     .gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
     .gnb-sns a { opacity: .85; transition: opacity .2s; }
@@ -468,10 +508,44 @@
 <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
-        <a href="overview.html" class="is-on" aria-current="page">사업소개</a>
-        <a href="brand.html">도시소개</a>
-        <a href="invest.html">투자·입주</a>
-        <a href="notice.html">홍보센터</a>
+        <div class="gnb-item">
+          <a class="gnb-link is-on" href="overview.html" aria-current="page">사업소개</a>
+          <div class="gnb-sub">
+            <a href="overview.html">사업개요</a>
+            <a href="location.html">입지</a>
+            <a href="effect.html">기대효과</a>
+            <a href="schedule.html" class="is-on">추진일정</a>
+            <a href="company.html">사업주체</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="brand.html">도시소개</a>
+          <div class="gnb-sub">
+            <a href="brand.html">브랜드</a>
+            <a href="concept.html">컨셉</a>
+            <a href="districts.html">구역 소개</a>
+            <a href="living.html">정주환경</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="invest.html">투자·입주</a>
+          <div class="gnb-sub">
+            <a href="invest.html#land">토지확보 현황</a>
+            <a href="invest.html#zone">특구별 혜택</a>
+            <a href="invest.html#benefit">주요 혜택</a>
+            <a href="#contact">문의하기</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="notice.html">홍보센터</a>
+          <div class="gnb-sub">
+            <a href="notice.html">공지사항</a>
+            <a href="press.html">언론보도</a>
+            <a href="video.html">홍보영상</a>
+            <a href="gallery.html">갤러리</a>
+            <a href="publication.html">발행물</a>
+          </div>
+        </div>
       </nav>
       <div class="gnb-side">
         <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
@@ -692,6 +766,42 @@
       var onScroll = function () { gnb.classList.toggle('is-solid', window.scrollY > 40); };
       onScroll();
       addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    /* 대메뉴 호버 — 하위 메뉴 펼치기(2026-08-27 지시).
+       ⚠ 바(`#gnb`) 전체에 걸어야 한다. 항목마다 걸면 항목 사이 빈틈에서 닫혔다 열리며 깜빡인다.
+       ⚠ 포커스로도 열어야 키보드로 하위 메뉴에 닿는다 — 그래서 focusin/focusout 을 함께 쓴다.
+       ⚠ 좁은 화면(대메뉴가 숨는 구간)에서는 아무것도 하지 않는다. `.gnb-menu` 가
+         `display: none` 이라 열어 봐야 보이지 않고, 바 높이만 늘어난다. */
+    (function () {
+      var gnb = document.getElementById('gnb');
+      if (!gnb || !gnb.querySelector('.gnb-sub')) return;
+      var wide = function () { return matchMedia('(min-width: 1024px)').matches; };
+      var set = function (on) { gnb.classList.toggle('is-open', on && wide()); };
+      gnb.addEventListener('mouseenter', function () { set(true); });
+      gnb.addEventListener('mouseleave', function () { set(false); });
+      gnb.addEventListener('focusin', function () { set(true); });
+      gnb.addEventListener('focusout', function (e) {
+        if (!gnb.contains(e.relatedTarget)) set(false);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+      addEventListener('resize', function () { if (!wide()) set(false); });
+    })();
+
+    /* KO / EN — 영문은 아직 없다. 호버·포커스에 안내를 띄운다(2026-08-27 지시).
+       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다. */
+    (function () {
+      var lang = document.querySelector('.gnb-lang');
+      if (!lang) return;
+      var en = lang.querySelector('span:last-child');
+      if (!en || en.textContent.trim() !== 'EN') return;
+      en.setAttribute('tabindex', '0');
+      en.setAttribute('role', 'button');
+      en.setAttribute('aria-disabled', 'true');
+      var tip = document.createElement('span');
+      tip.className = 'gnb-tip';
+      tip.textContent = '준비중입니다';
+      en.appendChild(tip);
     })();
 
     /* 모바일 메뉴 */

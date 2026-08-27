@@ -511,9 +511,21 @@ function filterTabs(CAT, rows, keyOf, label) {
 
 /** GNB · 모바일 메뉴 · LNB · 푸터 — nav.json 에서 유도 */
 function navBits(cat, navKey) {
+  /* 대메뉴 — 호버하면 하위 메뉴가 펼쳐진다(2026-08-27 지시). 메인 `index.html` 과 같은
+     **전체 폭 드롭**(§9-1 확정 사양)이며, 하위 항목은 같은 `nav.json` 에서 온다.
+     ⚠ 카테고리 키로 짝지운다 — `gnb` 배열과 `categories` 배열이 따로라 순서에 기대면 어긋난다. */
   const gnbItems = nav.gnb.map((g) => {
     const on = g.key === cat.key;
-    return `        <a href="${g.href}"${on ? ' class="is-on" aria-current="page"' : ''}>${esc(g.label)}</a>`;
+    const c = nav.categories.find((x) => x.key === g.key);
+    const subs = (c ? c.items : []).map((i) =>
+      `            <a href="${i.href}"${i.key === navKey ? ' class="is-on"' : ''}>${esc(i.label)}</a>`
+    ).join('\n');
+    return `        <div class="gnb-item">
+          <a class="gnb-link${on ? ' is-on' : ''}" href="${g.href}"${on ? ' aria-current="page"' : ''}>${esc(g.label)}</a>
+          <div class="gnb-sub">
+${subs}
+          </div>
+        </div>`;
   }).join('\n');
 
   /* ⚠ `menu: false` 카테고리는 대메뉴에도 모바일 메뉴에도 넣지 않는다 — 푸터에서만 닿는

@@ -205,12 +205,14 @@
 .cc-im { list-style: none; display: grid; gap: clamp(14px, 1.6vw, 26px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: clamp(26px, 3vw, 48px) 0 0; padding: 0; overflow-x: clip; }
-/* ⚠ 카드 면은 **연한 하늘색**이다(2026-08-26 지시). 프라이머리(남보라)를 섞으면
-     회보라로 앉아 아이소메트릭의 하늘색 계열과 어긋난다 — `--color-light-blue` 를 섞는다. */
+/* ⚠ 카드 면은 **화이트**다(2026-08-26 지시). 하늘색을 섞었다가 되돌린 자리다 —
+     v5 아이소메트릭 12장의 배경이 순백이라 카드 면도 흰색이어야 그림이 판처럼 뜨지 않는다.
+   ⚠ 면이 흰색이면 테두리가 유일한 경계다. 너무 옅으면 카드가 사라지므로
+     `--color-line` 보다 한 단계 진한 값을 쓴다. */
 .cc-im-c { display: flex; flex-direction: column; min-width: 0;
   padding: clamp(20px, 2vw, 30px);
-  background: color-mix(in srgb, var(--color-light-blue) 30%, var(--color-surface));
-  border: 1px solid color-mix(in srgb, var(--color-light-blue) 72%, var(--color-surface));
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-light-blue) 62%, var(--color-surface));
   border-radius: var(--radius-md); }
 /* 번호 원 + 제목 — IM 은 한 줄에 나란히 둔다 */
 .cc-im-h { display: flex; align-items: center; gap: clamp(10px, 1.1vw, 14px); margin: 0;
@@ -234,18 +236,7 @@
 .cc-im-f { margin: clamp(18px, 1.8vw, 26px) 0 0; padding-top: 0; }
 .cc-im-c .cc-im-f { margin-top: auto; padding-top: clamp(18px, 1.8vw, 26px); }
 .cc-im-f img { display: block; width: 100%; aspect-ratio: 1200 / 676; height: auto;
-  object-fit: cover; border-radius: var(--radius-sm); background: var(--color-bg); }
-/* 투명 배경 일러스트(AI DATA 축) — 카드 면이 그대로 비쳐야 한다.
-   ⚠ 사진용 `background: var(--color-bg)`(244,248,254)를 그대로 두면 카드 면
-     (241,242,248)과 미묘하게 달라 이미지 자리만 색 블록으로 읽힌다.
-   ⚠ 라운드도 뺀다 — 배경이 없으면 자를 모서리가 없고, 남겨 두면 오브젝트 끝이
-     둥글게 깎일 수 있다. */
-/* ⚠ 그림자는 `box-shadow` 가 아니라 `drop-shadow` 다(2026-08-26 지시) — 알파를 따라
-     오브젝트 실루엣에 붙는다. box-shadow 는 이미지 **사각 상자**에 붙어, 배경이 투명한
-     이 그림에서는 허공에 네모 그림자가 뜬다. */
-.cc-im-f--iso img { background: none; border-radius: 0;
-  filter: drop-shadow(0 8px 10px rgb(var(--navy-rgb) / .16)); }
-
+  object-fit: cover; border-radius: var(--radius-sm); background: var(--color-surface); }
 /* ── 2. 구역 소개 ─────────────────────────────────────────────────── */
 
 /* 권역별 면적 8칸 — 색은 권역 식별색이다. ⚠ 색만으로 구분하지 않는다(이름을 항상 함께 쓴다) */

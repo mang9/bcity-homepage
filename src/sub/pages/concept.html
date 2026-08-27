@@ -124,41 +124,44 @@
         </div>
       </figure>
 
-      <!-- ⚠ 이 축의 카드 사진만 **아이소메트릭 일러스트**다(2026-08-25 지시).
-           IM 13페이지의 아이소메트릭 모듈을 카드용으로 단순화한 것이라 세 장이
-           카드 3항목과 1:1로 대응한다 — 송전 3단 · 5블록 · 연산 코어.
-           나머지 세 축은 실사 사진 그대로다. 다른 축까지 바꾸려면 같은 대응 관계가
-           성립하는지 먼저 본다(축마다 IM 슬라이드 구성이 다르다 · §11.71). -->
+      <!-- ⚠ 네 축 12장이 **한 세트**다(v5 · 2026-08-26 지시). IM 12·13페이지 아이소메트릭을
+           기준으로 다시 만든 것이라 시점 · 색 · 여백이 통일돼 있다 — 한 장만 다른 데서
+           가져오면 그 카드만 튄다.
+           ⚠ 배경이 **순백(#FFFFFF)** 이다. 앞선 AI DATA 투명본과 달라 `.cc-im-f--iso`
+             (배경 없음 · 라운드 0 · drop-shadow)를 쓰지 않는다 — 기본 카드 이미지 규칙이
+             흰 판에 라운드를 준다.
+           ⚠ FOOD 03 은 납품 라스터에 **연결선이 없다**(별도 SVG 오버레이). 구울 때 합성했다 —
+             선이 빠지면 '지역 연계' 라는 카드 뜻이 사라진다. -->
       <div class="wrap">
         <ul class="cc-im">
           <li class="cc-im-c rv rv-x">
             <p class="cc-im-h"><b>01</b>전력 인프라</p>
             <p class="cc-im-d">최대 330MW 하이퍼스케일 수전 체계</p>
             <ul class="cc-im-l"><li>최대 수전용량 330MW · 154kV 직접 수전</li><li>IT Load 240MW 규모의 안정적 전력 공급</li><li>목표 PUE 1.2 의 저비용 · 고효율 설계</li></ul>
-            <figure class="cc-im-f cc-im-f--iso">
-              <img src="assets/img/concept/cc-ai-iso-1.avif" width="1200" height="676"
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-ai-1.avif" width="1200" height="676"
                    loading="lazy" decoding="async"
-                   alt="송전탑에서 154kV 변전 설비를 거쳐 데이터센터로 이어지는 3단 전력 흐름" />
+                   alt="송전탑 · 변전 설비 · UPS · 냉각을 거쳐 데이터센터로 이어지는 전력 체계" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
             <p class="cc-im-h"><b>02</b>집적 규모</p>
             <p class="cc-im-d">DC1~DC5 5개 블록의 데이터센터 집적단지</p>
             <ul class="cc-im-l"><li>DC1~DC5 5개 블록 순차 개발</li><li>Low &amp; Wide 설계로 초기 투자비 절감</li><li>입주기업 전용 데이터센터 구축</li></ul>
-            <figure class="cc-im-f cc-im-f--iso">
-              <img src="assets/img/concept/cc-ai-iso-2.avif" width="1200" height="676"
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-ai-2.avif" width="1200" height="676"
                    loading="lazy" decoding="async"
-                   alt="중앙 유틸리티 허브를 둘러싼 데이터센터 5개 블록" />
+                   alt="공용 유틸리티를 가운데 둔 DC1~DC5 저층형 5개 블록" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
             <p class="cc-im-h"><b>03</b>연산 기반</p>
             <p class="cc-im-d">AI 연산부터 도시 운영까지 담당하는 컴퓨팅 기반</p>
             <ul class="cc-im-l"><li>NVIDIA 기반 고성능 GPU 바이오 플랫폼</li><li>바이오 · 의료 데이터 수집 · 관리 · 연구</li><li>도시 운영 시스템 실시간 연산 지원</li></ul>
-            <figure class="cc-im-f cc-im-f--iso">
-              <img src="assets/img/concept/cc-ai-iso-3.avif" width="1200" height="676"
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-ai-3.avif" width="1200" height="676"
                    loading="lazy" decoding="async"
-                   alt="GPU 연산 코어가 바이오 데이터 · AI 분석 · 도시 운영으로 이어지는 구조" />
+                   alt="GPU 연산 · 바이오 분석 · 도시 운영을 담당하는 컴퓨팅 기반" />
             </figure>
           </li>
         </ul>
@@ -193,8 +196,9 @@
             <p class="cc-im-d">AI 신약개발 · 유전체 분석 기반 R&amp;D</p>
             <ul class="cc-im-l"><li>AI 기반 신약 R&amp;D (암 · 당뇨 등 난치 · 희귀 질환)</li><li>유전체 분석 기반 바이오마커 발굴</li><li>AI 기반 디지털 헬스케어 연구 · 개발</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-bio-1.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="AI 기반 데이터 분석" />
+              <img src="assets/img/concept/iso-bio-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="AI 신약개발과 유전체 분석 연구 환경" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
@@ -202,8 +206,9 @@
             <p class="cc-im-d">위탁생산부터 임상까지 완결형 밸류체인</p>
             <ul class="cc-im-l"><li>중소형 CDMO 공장 신 · 증설에 적합한 부지</li><li>중소 규모 바이오 · 제약 기업 집적</li><li>임상 연구 지원 인프라를 통한 상용화 지원</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-bio-4.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="자동화 실험 · 분석 설비" />
+              <img src="assets/img/concept/iso-bio-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="상단 생산 설비와 하단 품질관리 · 임상 지원의 2단 구성" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
@@ -211,8 +216,9 @@
             <p class="cc-im-d">82,000평 규모 첨단 바이오 클러스터</p>
             <ul class="cc-im-l"><li>첨단 바이오 클러스터 82,000평 조성</li><li>데이터 수집 · AI 분석 · 생산으로 이어지는 밸류체인</li><li>생산 · 임상 데이터 환류로 선순환 구조 실현</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-bio-3.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="첨단 바이오 클러스터 조감" />
+              <img src="assets/img/concept/iso-bio-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="연구 · 데이터 · 생산 · 임상이 이어지는 클러스터" />
             </figure>
           </li>
         </ul>
@@ -253,8 +259,9 @@
             <p class="cc-im-d">휴머노이드 · 서비스 로봇 실증 거점</p>
             <ul class="cc-im-l"><li>AI 기반 로보틱스 R&amp;D 센터 유치</li><li>휴머노이드 · 서비스 로봇 실증 트랙 구축</li><li>로봇 부품 · 소재 협력 클러스터 조성</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-phy-1.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="생활 속 서비스 로봇" />
+              <img src="assets/img/concept/iso-phy-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="휴머노이드 · 서비스 로봇 · 부품 시험 실증 환경" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
@@ -262,8 +269,9 @@
             <p class="cc-im-d">자율주행 · 미래 모빌리티 상용화 도시</p>
             <ul class="cc-im-l"><li>자율주행 실증 도로망 구축</li><li>도심항공교통(UAM) 이착륙 인프라 조성</li><li>스마트 물류 · 배송 로봇 상용화 지원</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-phy-3.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="자율주행 실증 도로망" />
+              <img src="assets/img/concept/iso-phy-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="자율주행 · UAM · 배송 로봇 실증 환경" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
@@ -271,8 +279,9 @@
             <p class="cc-im-d">설계부터 관제까지 도시 전반의 디지털 통합 운영</p>
             <ul class="cc-im-l"><li>도시 설계 단계 디지털 트윈 시뮬레이션 기반 최적화</li><li>설계 · 건설 · 에너지 · 교통 등 도시 인프라 통합 관리 시스템 구현</li><li>AI 를 통한 도시데이터 표준화 및 실시간 대응</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-phy-2.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="도시 인터랙티브 인프라" />
+              <img src="assets/img/concept/iso-phy-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="소형 도시 운영 모듈과 AI 통합 관제" />
             </figure>
           </li>
         </ul>
@@ -306,8 +315,9 @@
             <p class="cc-im-d">대규모 저온 · 냉동 저장소와 전국 물류 네트워크</p>
             <ul class="cc-im-l"><li>AI 환경제어 스마트 보관 시스템</li><li>대규모 저온 · 냉동 저장소 운영</li><li>강원 · 수도권 · 전국 통합 물류 네트워크</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-food-3.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="물류 · 가공 시설" />
+              <img src="assets/img/concept/iso-food-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="대규모 저온 · 냉동 저장과 전력 · 물류 네트워크" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
@@ -315,8 +325,9 @@
             <p class="cc-im-d">ICT · R&amp;D 기반 미래형 식품산업</p>
             <ul class="cc-im-l"><li>ICT 환경제어 스마트 연구관리</li><li>라이프로그 · 헬스데이터 기반 맞춤 케이터링</li><li>차세대 먹거리 연구 · 양산 산업 환경 조성</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-food-1.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="푸드물류 클러스터 조감" />
+              <img src="assets/img/concept/iso-food-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="ICT 환경제어 · R&amp;D · 맞춤형 케이터링 생태계" />
             </figure>
           </li>
           <li class="cc-im-c rv rv-x">
@@ -324,8 +335,9 @@
             <p class="cc-im-d">광역 물류 거점과 군 급식 위탁 수요 연계</p>
             <ul class="cc-im-l"><li>강원 · 수도권 · 전국을 잇는 광역 물류 거점</li><li>강원권 군 부대 급식 위탁 수요 연계</li><li>안정적 대규모 판로 확보</li></ul>
             <figure class="cc-im-f">
-              <img src="assets/img/concept/cc-food-2.avif" width="1200" height="676"
-                   loading="lazy" decoding="async" alt="광역 물류 동선" />
+              <img src="assets/img/concept/iso-food-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="중앙 물류 거점과 냉동창고 · 군부대 · 단체급식 수요처 연계" />
             </figure>
           </li>
         </ul>

@@ -6,6 +6,42 @@
       addEventListener('scroll', onScroll, { passive: true });
     })();
 
+    /* 대메뉴 호버 — 하위 메뉴 펼치기(2026-08-27 지시).
+       ⚠ 바(`#gnb`) 전체에 걸어야 한다. 항목마다 걸면 항목 사이 빈틈에서 닫혔다 열리며 깜빡인다.
+       ⚠ 포커스로도 열어야 키보드로 하위 메뉴에 닿는다 — 그래서 focusin/focusout 을 함께 쓴다.
+       ⚠ 좁은 화면(대메뉴가 숨는 구간)에서는 아무것도 하지 않는다. `.gnb-menu` 가
+         `display: none` 이라 열어 봐야 보이지 않고, 바 높이만 늘어난다. */
+    (function () {
+      var gnb = document.getElementById('gnb');
+      if (!gnb || !gnb.querySelector('.gnb-sub')) return;
+      var wide = function () { return matchMedia('(min-width: 1024px)').matches; };
+      var set = function (on) { gnb.classList.toggle('is-open', on && wide()); };
+      gnb.addEventListener('mouseenter', function () { set(true); });
+      gnb.addEventListener('mouseleave', function () { set(false); });
+      gnb.addEventListener('focusin', function () { set(true); });
+      gnb.addEventListener('focusout', function (e) {
+        if (!gnb.contains(e.relatedTarget)) set(false);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+      addEventListener('resize', function () { if (!wide()) set(false); });
+    })();
+
+    /* KO / EN — 영문은 아직 없다. 호버·포커스에 안내를 띄운다(2026-08-27 지시).
+       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다. */
+    (function () {
+      var lang = document.querySelector('.gnb-lang');
+      if (!lang) return;
+      var en = lang.querySelector('span:last-child');
+      if (!en || en.textContent.trim() !== 'EN') return;
+      en.setAttribute('tabindex', '0');
+      en.setAttribute('role', 'button');
+      en.setAttribute('aria-disabled', 'true');
+      var tip = document.createElement('span');
+      tip.className = 'gnb-tip';
+      tip.textContent = '준비중입니다';
+      en.appendChild(tip);
+    })();
+
     /* 모바일 메뉴 */
     (function () {
       var nav = document.getElementById('mnav'), btn = document.getElementById('burger');
