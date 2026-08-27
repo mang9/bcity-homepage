@@ -1,13 +1,13 @@
 <!-- 생성물이다. 이 파일을 고치지 말 것.
-     소스: src/sub/pages/schedule.html + src/sub/{layout.html,partials,css,js,nav.json}
+     소스: src/sub/pages/_detail-press.html + src/sub/{layout.html,partials,css,js,nav.json}
      빌드: npm run build:pages -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>추진일정 · B-CITY 춘천기업혁신파크</title>
-  <meta name="description" content="2023년 기업혁신파크 선도사업 공모부터 2033년 전체 사업 준공까지, B-CITY 의 추진 경과와 향후 일정을 연도별로 정리했습니다." />
+  <title>기업혁신파크 선도사업, 2033년 준공 목표 · 언론보도 · B-CITY 춘천기업혁신파크</title>
+  <meta name="description" content="※ 샘플 항목입니다. 실제 보도 자료가 확정되면 교체합니다." />
   <!-- 파비콘 — 원본 심볼은 assets/favicon/favicon.svg 이고 PNG·ICO 는 거기서 파생된다.
        SVG 를 먼저 두면 지원 브라우저는 그것만 쓴다(선명하고 4KB 미만).
        루트의 favicon.ico 는 <link> 와 무관하게 브라우저가 자동으로 요청하므로 함께 둔다. -->
@@ -706,53 +706,345 @@
          `word-break: keep-all` 로는 막히지 않는다 — 이 유틸로 감싼다. */
     .nowrap { white-space: nowrap; }
 
-    /* ── page-schedule.css ─────────────────────────────────────────── */
-    /* ===== 추진일정 — 연도별 타임라인 =====
-       구조: .tl > .tl-year* > (.tl-y + .tl-items > .tl-item*)
-       세로 축선은 .tl-items 의 ::before 로 그린다(연도 라벨을 축 왼쪽에 두기 위해). */
+    /* ── page-pr.css ─────────────────────────────────────────── */
+    /* ── 히어로 스크림 — 이 카테고리만 진하게 ────────────────────────────
+       홍보센터 5페이지의 히어로를 배포에 안 쓰이는 렌더 이미지로 갈았는데(2026-08-26 지시),
+       그 그림들이 밝아 공용 스크림(가운데 .30)으로는 작은 글자가 AA 에 못 미친다 —
+       실측 최저 **4.37**(언론보도 아이브로우 · 1440). 크럼·아이브로우 색이
+       `rgba(255,255,255,.72)` / `--color-light-blue` 라 늘 여기가 최저다.
+       ⚠ 공용 `30-hero-lnb.css` 를 고치지 않는다. 다른 히어로들은 지금 값으로 통과 중이라
+         전역으로 올리면 그 사진들이 필요 이상으로 어두워진다.
+       ⚠ **페이지별로 덮지 않는다.** 다섯 페이지가 이 파일을 함께 싣으므로 여기 한 번만 둔다 —
+         페이지마다 두면 사진을 갈 때 한쪽만 고쳐진다.
+       ⚠ 사진을 갈아끼우면 **다시 잰다**(§11.20). */
+    .hero-scrim { background: linear-gradient(180deg,
+      rgb(var(--scrim-rgb) / .78) 0%, rgb(var(--scrim-rgb) / .52) 46%,
+      rgb(var(--scrim-rgb) / .84) 100%); }
 
-    .tl { margin-top: clamp(30px, 3vw, 48px); display: grid; gap: 0; }
+    /* ===== 홍보센터 — 목록형(공지·언론) · 카드형(영상·갤러리·발행물) =====
+       마크업은 tools/build/pages.mjs 의 renderRows / renderCards 가 만든다.
+       클래스 이름을 바꾸면 그 함수도 같이 고쳐야 한다(정적 마크업이 아니다). */
 
-    .tl-year { display: grid; grid-template-columns: minmax(0, 1fr); }
-    @media (min-width: 768px) {
-      /* 연도 라벨을 고정 폭 칼럼으로 빼면 항목 들여쓰기가 연도 자릿수와 무관해진다 */
-      .tl-year { grid-template-columns: clamp(84px, 9vw, 128px) minmax(0, 1fr); gap: clamp(16px, 2vw, 34px); }
+    /* ── 목록형 ─────────────────────────────────────────────────────── */
+    /* ⚠ 세 목록의 상단 여백은 같은 값이어야 한다 — 분류 탭이 꺼져 있어(SHOW_LIST_FILTERS)
+       목록이 곧바로 제목 아래 오므로, 다르면 페이지를 옮길 때마다 제목 아래가 들쭉날쭉하다. */
+    .pr-rows { margin: clamp(28px, 3vw, 46px) 0 0; padding: 0; list-style: none;
+      border-top: 2px solid var(--color-primary); }
+    .pr-row { display: flex; flex-wrap: wrap; gap: 6px clamp(16px, 2vw, 36px);
+      align-items: baseline; justify-content: space-between;
+      padding: clamp(18px, 1.8vw, 26px) 2px; border-bottom: 1px solid var(--color-line); }
+    .pr-row-main { flex: 1 1 min(100%, 42ch); min-width: 0; }
+    .pr-title { margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(15px, 1.15vw, 18px); line-height: 1.45; letter-spacing: -.015em;
+      color: var(--color-text); }
+    .pr-title a { transition: color .2s; }
+    .pr-title a:hover { color: var(--color-primary); }
+    .pr-sum { margin: 7px 0 0; font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
+    .pr-row-meta { flex: none; display: flex; align-items: baseline; gap: 12px; margin: 0;
+      font-size: 13px; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+    .pr-outlet { font-weight: 600; color: var(--color-primary); }
+
+    /* ── 카드형 ─────────────────────────────────────────────────────── */
+    .pr-cards { display: grid; gap: clamp(14px, 1.5vw, 26px); margin: clamp(28px, 3vw, 46px) 0 0;
+      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 768px)  { .pr-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 1200px) { .pr-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .pr-card { display: flex; flex-direction: column; }
+    .pr-thumb { position: relative; display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 16 / 9; margin-bottom: 12px; border-radius: var(--radius-md);
+      border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
+    .pr-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .pr-noimg { font-size: 12.5px; font-weight: 600; letter-spacing: .06em;
+      color: var(--color-text-muted); opacity: .8; }
+    /* 카드 전체를 링크로 덮는다 — 제목만 링크로 두면 눌리는 영역이 너무 좁다 */
+    .pr-cover { position: absolute; inset: 0; }
+    .pr-cover:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .pr-badge { position: absolute; left: 10px; top: 10px; padding: 3px 9px; border-radius: 999px;
+      background: rgb(var(--navy-rgb) / .82); color: #fff; font-size: 11.5px; font-weight: 700;
+      letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+    .pr-card .pr-title { font-size: clamp(14px, 1.05vw, 16px); }
+    .pr-card .pr-row-meta { margin-top: 7px; }
+    /* 썸네일 위 재생·확대 아이콘 — 화면 안에서 열린다는 신호 */
+    .pr-play { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px;
+      transform: translate(-50%, -50%); color: #fff; opacity: .92;
+      filter: drop-shadow(0 2px 8px rgb(var(--navy-rgb) / .5));
+      transition: transform .2s, opacity .2s; }
+    .pr-cover:hover .pr-play { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+
+    /* ── 발행물 — 표지 위 / 텍스트 아래 세로 카드 (첨부 와이어프레임 2026-08-10) ── */
+    /* 카드 크기 — 2026-08-10 에 두 번 줄였다(4열 → 5열 → **6열**).
+       간격(gap)은 갤러리·홍보영상(.pr-cards)과 **같은 값**을 쓴다. 한 카테고리 안에서
+       목록끼리 리듬이 다르면 페이지를 옮길 때마다 밀도가 달라 보인다.
+       표지 비율은 3:4 → **4:5** 로 낮췄다. 세로가 카드 높이를 지배하는 요소라
+       열 수만 늘리면 폭만 줄고 여전히 길어 보인다. 인쇄물 비율에서 크게 벗어나지도 않는다. */
+    .pub-list { display: grid; gap: clamp(14px, 1.5vw, 26px); margin: clamp(28px, 3vw, 46px) 0 0;
+      padding: 0; list-style: none; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 600px)  { .pub-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 900px)  { .pub-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    @media (min-width: 1120px) { .pub-list { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+    @media (min-width: 1360px) { .pub-list { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+    /* ⚠ **바깥 상자를 두르지 않는다**(2026-08-14 지시). 표지에 이미 테두리가 있어
+       상자를 한 겹 더 두르면 액자 안의 액자가 된다. 같은 카테고리의 갤러리·홍보영상
+       (`.pr-card`)도 상자가 없으므로 이쪽이 홍보센터 전체와도 맞는다. */
+    .pub-item { display: flex; flex-direction: column; }
+    .pub-item[hidden] { display: none; }
+    /* 표지는 세로로 긴 인쇄물 비율. **모서리를 둥글리지 않는다** — 종이는 각지다 */
+    .pub-thumb { position: relative; display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 4 / 5; margin-bottom: 11px; border-radius: 0;
+      border: 1px solid var(--color-line); background: var(--color-bg); overflow: hidden; }
+    .pub-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+    /* 이미지가 없을 때의 기본 표지 — 로고를 얹은 책자.
+       면은 아주 옅은 그라데이션(종이), 왼쪽은 제본 등이다. */
+    .pub-blank { position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, var(--color-surface) 0%, var(--color-bg) 58%,
+                  rgb(var(--primary-rgb) / .06) 100%); }
+
+    /* 제본 등 — 그라데이션만으로는 접힌 느낌이 약해서 **선으로 끊는다**.
+       면 색이 이어지면 그냥 얼룩처럼 보인다(2026-08-10 지적).
+         · 띠 오른쪽 경계선 = 표지와 등을 가르는 접지선
+         · ::after = 등 안쪽의 두 번째 선(박음질/접힘 자국) */
+    .pub-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 14px;
+      background: linear-gradient(90deg, rgb(var(--primary-rgb) / .10) 0%,
+                  rgb(var(--primary-rgb) / .03) 70%, transparent 100%);
+      border-right: 1px solid rgb(var(--primary-rgb) / .22); }
+    .pub-spine::after { content: ""; position: absolute; left: 5px; top: 0; bottom: 0;
+      width: 1px; background: rgb(var(--primary-rgb) / .13); }
+
+    .pub-mark { display: block; width: 58%; max-width: 104px; margin-left: 14px; }
+    /* 원톤·저채도 — 표지의 워터마크처럼 깔린다. 진하면 목록에서 로고만 튄다 */
+    .pub-logo { width: 100%; height: auto; color: var(--color-primary); opacity: .22; }
+    /* 간격 배분 — 제목과 날짜는 한 덩어리로 붙이고, 남는 세로 여백은 **버튼 앞**에 몰아준다.
+       앞서 제목에 두 줄 자리(min-height)를 잡았더니 한 줄짜리 카드는 제목과 날짜 사이가
+       한 줄만큼 벌어지고 정작 날짜와 버튼은 붙어 버렸다(2026-08-10 지적).
+       제목은 두 줄에서 자르되 자리를 미리 잡지 않는다 — 대신 buttons 가 margin-top:auto 로
+       바닥에 붙으므로 **버튼 줄은 카드끼리 그대로 맞는다**(그리드가 높이를 맞춰 준다).
+       ⚠ 대신 제목 줄 수가 다르면 날짜 높이는 카드마다 달라진다 — 둘 다는 성립하지 않고,
+         이 화면에서는 버튼 정렬이 더 중요하다. */
+    .pub-item .pr-title { font-size: clamp(14px, 1.05vw, 16px); line-height: 1.45;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pub-item .pr-row-meta { margin-top: 5px; }
+
+    /* ── 표지 위 보기·다운로드 오버레이 (2026-08-14 지시) ─────────────────
+       전에는 카드 아래에 텍스트 버튼 두 개가 폭을 반씩 나눠 갖고 있었다. 6열 그리드에서는
+       그 줄이 카드 높이의 상당 부분을 먹고 목록이 버튼 밭처럼 보인다. 표지 위로 올려
+       **평소에는 표지만 보이고, 가리켰을 때 도구가 나타나게** 했다.
+
+       ⚠ 호버 전용 컨트롤의 두 가지 함정을 CSS 에서 막는다.
+         · 키보드 — `:focus-within` 을 호버와 **같이** 건다. 빠뜨리면 탭으로 버튼에 가도
+           화면에는 아무것도 안 보여 어디에 있는지 알 수 없다
+         · 터치   — `@media (hover: none)` 에서 항상 보이게 한다. 이 분기가 없으면
+           휴대폰에서 **보기·다운로드에 아예 닿지 못한다**
+       ⚠ 오버레이가 표지를 덮으므로 스크림이 필요하다 — 흰 아이콘을 밝은 표지 위에 그냥
+         올리면 사라진다. */
+    /* ⚠ 분류 배지(.pr-badge)가 오버레이보다 위에 있어야 한다. 스크림에 덮이면 호버하는 동안
+       무슨 분류인지 사라진다 — 배지는 표지 위에 얹힌 라벨이지 오버레이의 일부가 아니다.
+       갤러리(.pr-thumb)에서는 오버레이가 없어 이 문제가 없었다. */
+    .pub-thumb .pr-badge { z-index: 1; }
+    /* ⚠ 이미지가 없는 **책자 표지**에서는 배지를 제본 등 오른쪽으로 물린다.
+       기본 위치(왼쪽 10px)는 등(0~14px)과 접지선(15px)에 4px 걸쳐 선을 끊어 놓는다(실측).
+       등 15px + 이미지 표지와 같은 여백 10px = 25px.
+       `.pub-blank` 는 마크업에서 배지 **앞**에 오므로 일반 형제 결합자로 잡힌다 —
+       `:has()` 가 필요 없다(빌더의 `<span class="pub-thumb">{표지}{배지}` 순서에 의존한다). */
+    .pub-blank ~ .pr-badge { left: 25px; }
+    .pub-ov { position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; gap: 10px;
+      background: rgb(var(--navy-rgb) / .52);
+      opacity: 0; transition: opacity .2s; }
+    .pub-thumb:hover .pub-ov,
+    .pub-thumb:focus-within .pub-ov { opacity: 1; }
+    .pub-ov-btn { display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 999px;
+      background: rgb(255 255 255 / .94); color: var(--color-primary);
+      transform: translateY(6px); transition: transform .2s, background .2s, color .2s; }
+    .pub-thumb:hover .pub-ov-btn,
+    .pub-thumb:focus-within .pub-ov-btn { transform: none; }
+    .pub-ov-btn:hover { background: #fff; color: var(--color-primary-hover); }
+    .pub-ov-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    /* 터치 기기 — 호버가 없다. 스크림을 옅게 깔고 도구를 늘 띄운다.
+       ⚠ 크기를 줄이지 않는다. 손가락 타깃이라 40px 를 유지하고(2열 375px 에서 표지 폭
+         약 163px → 40×2 + gap 8 + padding 16 = 104px 로 들어간다) 대신 모서리로 붙여
+         표지를 최대한 가리지 않게 한다. */
+    @media (hover: none) {
+      .pub-ov { opacity: 1; background: rgb(var(--navy-rgb) / .34);
+        align-items: flex-end; justify-content: flex-end; padding: 8px; gap: 8px; }
+      .pub-ov-btn { transform: none; }
     }
+    @media (prefers-reduced-motion: reduce) {
+      .pub-ov, .pub-ov-btn { transition: none; }
+      .pub-ov-btn { transform: none; }
+    }
+    .pr-ic { flex: none; width: 17px; height: 17px; }
+    .pub-ov-btn .pr-ic { width: 20px; height: 20px; }
 
-    .tl-y { margin: 0; padding-top: 2px; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(24px, 2.4vw, 38px); line-height: 1; letter-spacing: -.03em;
-      color: var(--color-primary); font-variant-numeric: tabular-nums; }
-    /* 지난 연도는 톤을 낮춰 '진행 중 시점'이 눈에 먼저 들어오게 한다 */
-    .tl-year--done .tl-y { color: var(--color-text-muted); opacity: .72; }
-    .tl-year--now .tl-y { color: var(--color-primary); }
+    /* ── 언론보도 목록 — 분류 · 검색 · 페이지네이션 ────────────────────── */
+    .pl-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      justify-content: space-between; margin: clamp(24px, 2.6vw, 40px) 0 0; }
+    .pl-modes { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pl-mode { padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
+      background: var(--color-surface); font: inherit; font-size: 13.5px; font-weight: 600;
+      color: var(--color-text-muted); cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s; }
+    .pl-mode:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+    .pl-mode.is-on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .pl-search { display: flex; gap: 0; min-width: min(100%, 340px); }
+    .pl-search input { flex: 1 1 auto; min-width: 0; padding: 10px 14px; font: inherit; font-size: 14px;
+      border: 1px solid var(--color-line); border-right: 0;
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm); background: var(--color-surface);
+      color: var(--color-text); }
+    .pl-search input:focus { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+    .pl-go { flex: none; padding: 10px 20px; border: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: var(--color-navy); color: #fff; font: inherit; font-size: 13.5px; font-weight: 700;
+      cursor: pointer; transition: background .2s; }
+    .pl-go:hover { background: var(--color-primary); }
 
-    .tl-items { position: relative; margin: 10px 0 0; padding: 0 0 clamp(26px, 2.6vw, 40px) 26px;
-      list-style: none; display: grid; gap: 11px; }
-    @media (min-width: 768px) { .tl-items { margin-top: 0; } }
-    /* 세로 축선. 마지막 연도는 아래로 새지 않게 잘라 준다 */
-    .tl-items::before { content: ""; position: absolute; left: 5px; top: 7px; bottom: 0;
-      width: 2px; background: var(--color-line); }
-    .tl-year:last-child .tl-items { padding-bottom: 0; }
-    .tl-year:last-child .tl-items::before { bottom: 10px; }
+    .pl-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 0; }
+    .pl-chips[hidden] { display: none; }
+    .pl-chip { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--color-line);
+      background: var(--color-surface); font: inherit; font-size: 13px; font-weight: 600;
+      color: var(--color-text-muted); cursor: pointer; transition: background .2s, color .2s; }
+    .pl-chip.is-on { background: rgb(var(--primary-rgb) / .1); border-color: var(--color-primary);
+      color: var(--color-primary); }
 
-    .tl-item { position: relative; font-size: clamp(14px, 1vw, 15.5px); line-height: 1.6; }
-    /* 도트 — 축선 위에 얹는다. 축선(left:5px, width:2px)의 중심이 6px 이므로 좌표를 맞춘다 */
-    .tl-item::before { content: ""; position: absolute; left: -26px; top: .52em;
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--color-surface); border: 2px solid var(--color-line); }
-    .tl-item--key::before { background: var(--color-primary); border-color: var(--color-primary); }
-    /* 예정 항목은 '옅은 링'으로 구분한다.
-       ⚠ border-style: dashed 를 쓰지 말 것 — 지름 12px · 테두리 2px 에서는 파선 조각이
-         3~4개밖에 안 그려져 원이 아니라 알파벳 C 처럼 보인다(실측). */
-    .tl-item--plan::before { border-color: var(--color-primary); opacity: .45; }
+    /* 언론보도 행 — 제목 아래 매체·보도일자 한 줄(첨부 와이어프레임) */
+    .pr-row--stack { display: block; }
+    .pr-row--stack[hidden] { display: none; }
+    .pr-row--stack .pr-row-meta { margin-top: 8px; }
 
-    .tl-d { display: inline-block; min-width: 4.6em; margin-right: 8px;
-      font-family: var(--font-display); font-weight: 700; color: var(--color-primary);
+    .pl-pager { display: flex; justify-content: center; align-items: center; gap: 4px;
+      margin: clamp(28px, 3vw, 46px) 0 0; }
+    .pl-pager[hidden] { display: none; }
+    .pl-pg { min-width: 34px; height: 34px; padding: 0 9px; border: 0; border-radius: var(--radius-sm);
+      background: none; font: inherit; font-size: 14px; font-weight: 600;
+      color: var(--color-text-muted); cursor: pointer; font-variant-numeric: tabular-nums;
+      transition: background .2s, color .2s; }
+    .pl-pg:hover:not(:disabled) { background: rgb(var(--primary-rgb) / .08); color: var(--color-primary); }
+    .pl-pg.is-on { background: var(--color-primary); color: #fff; }
+    .pl-pg:disabled { opacity: .3; cursor: default; }
+
+    /* ── 갤러리 분류 탭 ─────────────────────────────────────────────── */
+    .pr-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: clamp(24px, 2.4vw, 36px) 0 0; }
+    /* 형태는 언론보도의 분류 컨트롤(.pl-mode)과 맞춘다 — 같은 홍보센터 안에서
+       페이지마다 탭 모양이 다르면 다른 기능처럼 보인다(2026-08-10 지적).
+       하나를 골라도 나머지 분류에 몇 건이 있는지 탭에서 바로 보이게 건수를 붙였다.
+       0건 분류도 탭을 지우지 않고 흐리게 남긴다 — 탭이 데이터에 따라 나타났다 사라지면
+       어떤 분류가 있는지 자체를 알 수 없다(2026-08-10 지적). */
+    .pr-filter { display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--color-line);
+      background: var(--color-surface); font-size: 13.5px; font-weight: 600;
+      color: var(--color-text-muted); transition: background .2s, color .2s, border-color .2s; }
+    .pr-filter:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+    .pr-filter-n { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+      color: var(--color-text-muted); opacity: .75; }
+    .pr-filter.is-on .pr-filter-n { color: #fff; opacity: .8; }
+    /* 0건 — 누를 수 없다는 것이 보여야 한다. disabled 라 hover 도 걸리지 않는다 */
+    .pr-filter.is-empty { opacity: .45; cursor: default; }
+    .pr-filter.is-empty:hover { color: var(--color-text-muted); border-color: var(--color-line); }
+    .pr-filter.is-on { background: var(--color-primary); border-color: var(--color-primary);
+      color: #fff; }
+    /* 필터가 걸리면 JS 가 카드에 hidden 을 세운다 — display 는 CSS 가 정한다 */
+    .pr-card[hidden] { display: none; }
+
+    /* ── 비어 있을 때 ───────────────────────────────────────────────── */
+    .pr-empty { margin: clamp(28px, 3vw, 46px) 0 0; padding: clamp(44px, 5vw, 84px) 20px;
+      border: 1px dashed var(--color-line); border-radius: var(--radius-lg);
+      background: var(--color-surface); text-align: center;
+      font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted); }
+
+    /* ── 게시글 상세 ────────────────────────────────────────────────────
+       스토리보드에는 공개용 상세 화면이 없다(slide106~116 은 전부 관리자 CMS 이고
+       §11.3 에서 도입하지 않기로 한 범위다). 관리자 등록 폼(slide108)의 필드
+       — 제목 · 내용 · 첨부파일 — 을 기준으로 공개 화면을 새로 짰다.
+       마크업은 tools/build/pages.mjs 의 buildDetails() 가 만든다. */
+
+    /* 본문은 읽는 글이라 컨테이너를 좁힌다. 한 줄이 길면 눈이 다음 줄을 놓친다 */
+    .wrap--narrow { max-width: 860px; }
+
+    .post { margin: 0; }
+    .post-head { padding-bottom: clamp(20px, 2vw, 30px);
+      border-bottom: 2px solid var(--color-primary); }
+    .post-title { margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(21px, 2vw, 31px); line-height: 1.4; letter-spacing: -.022em;
+      color: var(--color-text); }
+    .post-meta { margin: 12px 0 0; font-size: 13px; color: var(--color-text-muted);
       font-variant-numeric: tabular-nums; }
-    .tl-t { color: var(--color-text); }
-    .tl-t small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--color-text-muted); }
-    .tl-item--plan .tl-d, .tl-item--plan .tl-t { color: var(--color-text-muted); }
-    .tl-item--plan .tl-d { color: var(--color-primary); opacity: .78; }
+
+    .post-body { padding: clamp(26px, 2.8vw, 44px) 0; }
+    .post-body p { margin: 0 0 1.1em; font-size: clamp(15px, 1.05vw, 17px); line-height: 1.85;
+      color: var(--color-text); }
+    .post-body p:last-child { margin-bottom: 0; }
+    .post-empty { padding: clamp(40px, 4vw, 64px) 0; text-align: center;
+      font-size: 14px; color: var(--color-text-muted); }
+
+    .post-files { margin: 0 0 clamp(26px, 2.8vw, 40px); padding: clamp(16px, 1.6vw, 22px);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md);
+      background: var(--color-bg); }
+    .post-files-h { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      color: var(--color-text-muted); }
+    .post-files-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    /* 아이콘·이름·확장자 한 줄. 이름이 길면 이름만 줄고 아이콘·확장자는 안 눌린다 */
+    .post-files-list a { display: flex; align-items: center; gap: 10px; min-width: 0;
+      padding: 9px 11px; margin: -9px -11px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600; color: var(--color-primary);
+      transition: background .2s; }
+    .post-files-list a:hover { background: rgb(var(--primary-rgb) / .07); }
+    /* 아이콘은 currentColor 를 따라간다(§5) — 링크 색이 바뀌면 함께 바뀐다 */
+    .post-file-ic { flex: none; width: 19px; height: 19px; }
+    .post-file-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .post-file-ext { flex: none; padding: 2px 7px; border-radius: 999px;
+      background: rgb(var(--primary-rgb) / .1); font-size: 11px; font-weight: 700;
+      letter-spacing: .04em; }
+
+    /* 이전·다음·목록 — 본문 끝에 카드가 또 오면 무게가 본문과 비슷해져 끝이 흐려진다.
+       얇은 구분선으로 나눈 행 목록으로 낮추고, 목록 버튼은 아래 가운데로 뺐다(2026-08-10 지적). */
+    .post-nav { margin-top: clamp(20px, 2.2vw, 32px);
+      border-top: 1px solid var(--color-line); }
+    .post-nav-item { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      align-items: center; gap: clamp(12px, 1.6vw, 26px);
+      padding: clamp(13px, 1.3vw, 17px) 6px;
+      border-bottom: 1px solid var(--color-line); transition: background .2s; }
+    a.post-nav-item:hover { background: rgb(var(--primary-rgb) / .045); }
+    .post-nav-label { display: inline-flex; align-items: center; gap: 7px; min-width: 74px;
+      font-size: 13px; font-weight: 700; color: var(--color-text-muted); }
+    .post-nav-ic { flex: none; width: 15px; height: 15px; }
+    a.post-nav-item:hover .post-nav-label { color: var(--color-primary); }
+    /* 제목이 길어도 행 높이가 변하지 않게 한 줄로 자른다 */
+    .post-nav-title { font-size: 15px; color: var(--color-text);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .post-nav-item.is-off .post-nav-title { color: var(--color-text-muted); }
+
+    /* 목록으로 — 채운 버튼이 아니라 가운데 정렬한 외곽선 링크 */
+    /* ⚠ display 는 flex(블록 레벨)여야 한다. inline-flex 는 인라인이라
+       margin-inline:auto 로 가운데 정렬되지 않고 왼쪽에 붙는다. */
+    .post-back { display: flex; align-items: center; gap: 8px; width: max-content;
+      margin: clamp(20px, 2.2vw, 30px) auto 0;
+      padding: 11px 22px; border-radius: 999px;
+      border: 1px solid var(--color-line); background: var(--color-surface);
+      font-size: 14px; font-weight: 600; color: var(--color-text);
+      transition: border-color .2s, color .2s; }
+    .post-back:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .post-back-ic { flex: none; width: 15px; height: 15px; }
+
+    /* ── 상세 본문 이미지 (공지사항에 이미지가 등록됐을 때) ────────────── */
+    .post-fig { margin: clamp(22px, 2.4vw, 34px) 0; }
+    .post-fig img { width: 100%; height: auto; border-radius: var(--radius-md);
+      border: 1px solid var(--color-line); }
+    .post-fig figcaption { margin-top: 10px; font-size: 13px; color: var(--color-text-muted); }
+
+    /* 언론보도 상세 — 매체명 · 원문 기사 보기 */
+    .post-outlet { font-weight: 700; color: var(--color-primary); margin-right: 10px; }
+    .post-source { margin: 0 0 clamp(26px, 2.8vw, 40px); }
+    /* 본문 옆 보조 동작이다. 채운 원형 화살표 · 볼드 · 그림자를 걷었다(2026-08-10 지적).
+       아이콘은 새 창으로 나간다는 뜻의 외부링크 표시다. */
+    .src-btn { display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 17px; border-radius: 999px;
+      border: 1px solid var(--color-line); background: var(--color-surface);
+      font-size: 13px; font-weight: 500; color: var(--color-text-muted);
+      transition: border-color .2s, color .2s; }
+    .src-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+    .src-arrow { display: inline-flex; flex: none; width: 15px; height: 15px; }
+    .src-arrow svg { width: 100%; height: 100%; }
   </style>
 </head>
 
@@ -775,12 +1067,12 @@
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
         <div class="gnb-item">
-          <a class="gnb-link is-on" href="overview.html" aria-current="page">사업소개</a>
+          <a class="gnb-link" href="overview.html">사업소개</a>
           <div class="gnb-sub">
             <a href="overview.html">사업개요</a>
             <a href="location.html">입지</a>
             <a href="effect.html">기대효과</a>
-            <a href="schedule.html" class="is-on">추진일정</a>
+            <a href="schedule.html">추진일정</a>
             <a href="company.html">사업주체</a>
           </div>
         </div>
@@ -803,10 +1095,10 @@
           </div>
         </div>
         <div class="gnb-item">
-          <a class="gnb-link" href="notice.html">홍보센터</a>
+          <a class="gnb-link is-on" href="notice.html" aria-current="page">홍보센터</a>
           <div class="gnb-sub">
             <a href="notice.html">공지사항</a>
-            <a href="press.html">언론보도</a>
+            <a href="press.html" class="is-on">언론보도</a>
             <a href="video.html">홍보영상</a>
             <a href="gallery.html">갤러리</a>
             <a href="publication.html">발행물</a>
@@ -840,7 +1132,7 @@
       <a href="overview.html">사업개요</a>
       <a href="location.html">입지</a>
       <a href="effect.html">기대효과</a>
-      <a href="schedule.html" class="is-on">추진일정</a>
+      <a href="schedule.html">추진일정</a>
       <a href="company.html">사업주체</a>
       <h2>02 도시소개</h2>
       <a href="brand.html">브랜드</a>
@@ -854,7 +1146,7 @@
       <a href="#contact">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
-      <a href="press.html">언론보도</a>
+      <a href="press.html" class="is-on">언론보도</a>
       <a href="video.html">홍보영상</a>
       <a href="gallery.html">갤러리</a>
       <a href="publication.html">발행물</a>
@@ -869,15 +1161,15 @@
          구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/slide-day.jpg" alt="" />
+      <img class="hero-bg" src="assets/slide-night.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
           <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>사업소개</span><span aria-hidden="true">›</span><b>추진일정</b>
+          <span>홍보센터</span><span aria-hidden="true">›</span><b>언론보도</b>
         </nav>
-        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>01</b><span>BUSINESS · 사업소개</span></p>
-        <h1>추진일정</h1>
+        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>04</b><span>PR CENTER · 홍보센터</span></p>
+        <h1>언론보도</h1>
         <!-- 페이지가 front-matter 에 `heroLede` 를 두면 제목 아래 한 줄이 붙는다.
              원페이지로 합친 투자·입주가 상단 카피를 여기 담기 위해 생겼다(2026-08-24 지시).
              ⚠ 값이 없으면 **문단 자체가 나오지 않는다** — 빈 `<p>` 를 남기면 여백만 생긴다. -->
@@ -886,98 +1178,36 @@
     </section>
 
     <!-- ===== LNB ===== -->
-    <nav class="lnb" aria-label="사업소개 하위 메뉴">
+    <nav class="lnb" aria-label="홍보센터 하위 메뉴">
       <div class="wrap">
-        <a href="overview.html">사업개요</a>
-        <a href="location.html">입지</a>
-        <a href="effect.html">기대효과</a>
-        <a href="schedule.html" class="is-on" aria-current="page">추진일정</a>
-        <a href="company.html">사업주체</a>
+        <a href="notice.html">공지사항</a>
+        <a href="press.html" class="is-on" aria-current="page">언론보도</a>
+        <a href="video.html">홍보영상</a>
+        <a href="gallery.html">갤러리</a>
+        <a href="publication.html">발행물</a>
       </div>
     </nav>
 
-<!-- ===== 추진일정 (스토리보드 v2 slide39~40) =====
-         상태 구분은 2026-08 기준이다. 2026-09 이후 항목이 실행되면
-         해당 .tl-year 의 --now / .tl-item 의 --plan 을 옮겨 주면 된다.
-         일자·공문번호는 스토리보드 원문 그대로다(임의 보정하지 않았다). -->
-    <section class="sec" id="journey">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>OUR JOURNEY TO 2033</b><span>추진일정</span></p>
-        <h2 class="h2 rv">2024년 사업 선정부터 <em>2033년 최종 준공</em>까지</h2>
-        <p class="lede rv">B-CITY가 그려 나갈 10년의 여정을 한눈에 확인하실 수 있습니다</p>
-
-        <div class="tl rv">
-          <div class="tl-year tl-year--done">
-            <p class="tl-y">2023</p>
-            <ul class="tl-items">
-              <li class="tl-item"><span class="tl-d">09.05</span><span class="tl-t">기업혁신파크 선도사업 공모 공고<small>국토부 공고 제2023-1077호</small></span></li>
-              <li class="tl-item"><span class="tl-d">11.09</span><span class="tl-t">기업혁신파크 선도사업 제안서 제출<small>더존비즈온 / 춘천시</small></span></li>
-              <li class="tl-item"><span class="tl-d">12.07</span><span class="tl-t">기업혁신파크 선도사업 제안서 평가</span></li>
-            </ul>
+<!-- 언론보도 상세. 원문 기사는 본문 아래 "원문 기사 보기" 버튼으로 나간다
+         (사용자 지시 2026-08-10 — 목록에서 바로 외부로 보내지 않는다). -->
+    <section class="sec" id="post">
+      <div class="wrap wrap--narrow">
+        <article class="post">
+          <header class="post-head">
+            <h2 class="post-title">기업혁신파크 선도사업, 2033년 준공 목표</h2>
+            <p class="post-meta"><span class="post-outlet">매체명 C</span><time datetime="2026-03-30">보도일자 2026.03.30</time></p>
+          </header>
+                    <div class="post-body">
+            <p>매체명 C 에 보도된 기사입니다. 원문은 아래 '원문 기사 보기' 버튼으로 확인하실 수 있습니다.</p>
+            <p>이 문단은 화면 확인용 샘플 텍스트이며, 실제 기사 본문이나 요약으로 교체됩니다.</p>
           </div>
-
-          <div class="tl-year tl-year--done">
-            <p class="tl-y">2024</p>
-            <ul class="tl-items">
-              <li class="tl-item"><span class="tl-d">03.11</span><span class="tl-t">제19차 국민행복포럼 대통령 발언</span></li>
-              <li class="tl-item"><span class="tl-d">03.18</span><span class="tl-t">강원특별자치도 토지거래허가구역 지정<small>강원특별자치도 공고 제2024-426호</small></span></li>
-              <li class="tl-item tl-item--key"><span class="tl-d">03.27</span><span class="tl-t">기업혁신파크 선도사업 공모 결과 알림<small>국토교통부 성장거점정책과-691</small></span></li>
-              <li class="tl-item"><span class="tl-d">06.12</span><span class="tl-t">기업혁신파크 선도사업 국토부 1차 협의</span></li>
-              <li class="tl-item tl-item--key"><span class="tl-d">06.27</span><span class="tl-t">바이오 국가첨단전략산업 특화단지 선정<small>춘천 · 홍천</small></span></li>
-              <li class="tl-item"><span class="tl-d">08.29</span><span class="tl-t">개발행위허가 제한지역 지정 고시<small>춘천시 고시 제2024-468호</small></span></li>
-              <li class="tl-item"><span class="tl-d">09.09</span><span class="tl-t">강원특별자치도 및 춘천시 PFV 출자지분 확정</span></li>
-              <li class="tl-item"><span class="tl-d">11.20</span><span class="tl-t">환경영향평가협의회 심의</span></li>
-              <li class="tl-item"><span class="tl-d">12.30</span><span class="tl-t">토지거래허가구역 조정 공고<small>강원특별자치도 공고 제2024-1965호</small></span></li>
-            </ul>
-          </div>
-
-          <div class="tl-year tl-year--done">
-            <p class="tl-y">2025</p>
-            <ul class="tl-items">
-              <li class="tl-item"><span class="tl-d">01.09</span><span class="tl-t">개발행위허가제한지역 지정 변경 고시<small>춘천시 고시 제2025-14호</small></span></li>
-              <li class="tl-item tl-item--key"><span class="tl-d">04.23</span><span class="tl-t">AMC 설립<small>바이오테크이노밸리자산관리㈜ — 자산관리회사</small></span></li>
-              <li class="tl-item tl-item--key"><span class="tl-d">08.28</span><span class="tl-t">PFV 설립<small>바이오테크이노밸리피에프브이㈜ — 프로젝트금융회사</small></span></li>
-              <li class="tl-item"><span class="tl-d">08~10월</span><span class="tl-t">강원특별자치도 · 춘천시 관련 실과 협의, 주민공람 및 공청회</span></li>
-              <li class="tl-item"><span class="tl-d">11월</span><span class="tl-t">국토교통부 통합개발계획 승인 신청</span></li>
-            </ul>
-          </div>
-
-          <div class="tl-year tl-year--now">
-            <p class="tl-y">2026</p>
-            <ul class="tl-items">
-              <li class="tl-item tl-item--plan"><span class="tl-d">9월</span><span class="tl-t">통합심의 <span class="st st--plan">예정</span></span></li>
-              <li class="tl-item tl-item--plan"><span class="tl-d">10월</span><span class="tl-t">통합개발계획 국토부 승인, 토지보상 개시 <span class="st st--plan">예정</span></span></li>
-            </ul>
-          </div>
-
-          <div class="tl-year">
-            <p class="tl-y">2027</p>
-            <ul class="tl-items">
-              <li class="tl-item tl-item--plan"><span class="tl-d">1Q</span><span class="tl-t">사업비 조달 (PF)</span></li>
-              <li class="tl-item tl-item--plan"><span class="tl-d">2Q</span><span class="tl-t">부지조성공사 착공</span></li>
-            </ul>
-          </div>
-
-          <div class="tl-year">
-            <p class="tl-y">2029</p>
-            <ul class="tl-items">
-              <li class="tl-item tl-item--plan"><span class="tl-d">4Q</span><span class="tl-t">1단계 사업 준공</span></li>
-            </ul>
-          </div>
-
-          <div class="tl-year">
-            <p class="tl-y">2033</p>
-            <ul class="tl-items">
-              <li class="tl-item tl-item--key"><span class="tl-d">4Q</span><span class="tl-t">전체 사업 준공</span></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="closer rv">
-          <p>B-CITY는 정부·지자체·민간이 함께<br />
-            <em>약속된 일정에 따라</em> 차질 없이 추진되고 있습니다</p>
-        </div>
-
+                    <p class="post-source"><a class="src-btn" href="https://mang9.github.io/bcity-homepage/" target="_blank" rel="noopener"><span>원문 기사 보기</span><span class="src-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4 11 13"/><path d="M19 14v4.5A1.5 1.5 0 0 1 17.5 20h-12A1.5 1.5 0 0 1 4 18.5v-12A1.5 1.5 0 0 1 5.5 5H10"/></svg></span></a></p>
+        </article>
+                <nav class="post-nav" aria-label="게시글 이동">
+          <a class="post-nav-item" href="press-05.html"><span class="post-nav-label"><svg class="post-nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>이전 글</span><span class="post-nav-title">AI·바이오 융합 클러스터로 조성되는 춘천 B-CITY</span></a>
+          <a class="post-nav-item" href="press-07.html"><span class="post-nav-label"><svg class="post-nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>다음 글</span><span class="post-nav-title">B-CITY 계획인구 15,917명… 자족형 도시로</span></a>
+          <a class="post-back" href="press.html"><svg class="post-back-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>목록으로</a>
+        </nav>
       </div>
     </section>
   </main>

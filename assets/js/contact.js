@@ -187,7 +187,7 @@
           }, 1800);
         })
         .catch(() => {
-          status.textContent = '전송에 실패했습니다. invest@biotech-iv.com 로 직접 보내주세요.';
+          status.textContent = '전송에 실패했습니다. juyoung@biotech-iv.com 로 직접 보내주세요.';
           status.className = 'ct-status on ng';
         })
         .finally(() => { btn.disabled = false; });
@@ -197,9 +197,9 @@
     // 백엔드 미연결: 메일 본문으로 넘긴다
     const body = Object.entries(data).map(([k, v]) => k + ' : ' + v).join('\n');
     const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
-    location.href = 'mailto:invest@biotech-iv.com?subject=' + encodeURIComponent(subject)
+    location.href = 'mailto:juyoung@biotech-iv.com?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
-    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 invest@biotech-iv.com 로 보내주세요.';
+    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 juyoung@biotech-iv.com 로 보내주세요.';
     status.className = 'ct-status on ok';
   });
 

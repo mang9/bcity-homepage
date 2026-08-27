@@ -4,13 +4,13 @@
      ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
        합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
        옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
-     ⚠ 약관 보기는 **메인 새 창**으로 보낸다 — 서브페이지에는 약관 모달이 없다. -->
+     ⚠ 약관 보기는 **그 자리에서 모달**로 연다 — 약관 모달도 공용이라 세 화면 모두에 있다
+       (2026-08-27 이전에는 서브만 `index.html#privacy` 새 창이었다). -->
   <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
     <div class="pv-back" data-pv-close></div>
     <div class="pv-panel" role="document">
       <header class="pv-head">
         <div>
-          <p class="ct-eyebrow">Contact</p>
           <h2 id="ctTitle" class="ct-title">문의하기</h2>
           <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
         </div>
@@ -66,7 +66,7 @@
               <span>
                 <b class="ct-tag ct-tag--req">필수</b>
                 개인정보 수집 · 이용에 모두 동의합니다
-                <a href="index.html#privacy" class="ct-view" target="_blank" rel="noopener">약관 보기</a>
+                <a href="#privacy" class="ct-view">약관 보기</a>
               </span>
             </label>
             <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
@@ -75,7 +75,7 @@
               <span>
                 <b class="ct-tag ct-tag--opt">선택</b>
                 마케팅 활용 동의에 동의합니다
-                <a href="index.html#privacy" class="ct-view" target="_blank" rel="noopener">약관 보기</a>
+                <a href="#privacy" class="ct-view">약관 보기</a>
               </span>
             </label>
           </div>
@@ -86,7 +86,7 @@
         <aside class="ct-side">
           <div class="ct-card">
             <p class="ct-card-h">담당자 연락처</p>
-            <a class="ct-card-a" href="mailto:invest@biotech-iv.com">invest@biotech-iv.com</a>
+            <a class="ct-card-a" href="mailto:juyoung@biotech-iv.com">juyoung@biotech-iv.com</a>
             <p class="ct-card-p">평일 09:00 – 18:00 (주말 · 공휴일 제외)</p>
           </div>
           <div class="ct-card">

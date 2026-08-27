@@ -33,7 +33,7 @@ const read = (...p) => readFileSync(join(...p), 'utf8');
 
 /** 공통 CSS — 이 순서가 곧 캐스케이드 순서다. 페이지 CSS 는 항상 뒤에 붙는다.
  *  overview.html 원본과 같은 순서를 유지하고 있다(리팩터 제로디프의 근거). */
-const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion'];
+const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion', 'contact'];
 
 const nav = JSON.parse(read(SUB, 'nav.json'));
 const layout = read(SUB, 'layout.html');
@@ -588,20 +588,6 @@ const heroLede = (fm) => fm.heroLede
 /** 상단 블록 — 카테고리의 `hero` 가 false 면 [LNB 만], 아니면 [히어로 + LNB].
  *  ⚠ **미리 펼쳐서** 넘긴다. `render()` 는 ctx 값을 치환만 하고 그 안을 다시 훑지 않으므로
  *    (본문 `main` 과 같은 사정) 여기서 펼치지 않으면 `{{ }}` 가 남아 빌드가 죽는다. */
-/* 문의 모달 — front-matter `contactModal: true` 인 페이지에만 넣는다.
-   ⚠ 값으로 넣는다(파티셜 호출을 layout 에 직접 쓰지 않는다) — 안 쓰는 페이지에
-     마크업·CSS·JS 22KB 를 붙이지 않기 위해서다.
-   ⚠ 플래그를 켰으면 css · js 에 `contact` 도 함께 있어야 한다.
-     하나만 켜면 스타일 없는 폼이 문서 흐름에 쏟아진다(§11.29 의 실제 사고).
-   ⚠ 마크업 · CSS · JS 세 벌 모두 `src/shared/` 한 곳에서 온다 — 메인과 같은 파일이다. */
-function contactModalBlock(fm, file) {
-  if (!fm.contactModal) return '';
-  const css = fm.css || [], js = fm.js || [];
-  if (!css.includes('contact')) throw new Error(`${file}: contactModal 인데 css 에 contact 가 없다`);
-  if (!js.includes('contact')) throw new Error(`${file}: contactModal 인데 js 에 contact 가 없다`);
-  return partial('contact-modal');
-}
-
 function heroBlock(cat, fm, ctx, file) {
   const on = cat.hero !== false;
   if (on && !fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 있는 카테고리다 — front-matter 에 heroImg 가 필요하다`);
@@ -626,7 +612,7 @@ function cssBundle(fm) {
 
 /** JS 번들 — common 은 항상 첫 번째 */
 function jsBundle(fm) {
-  return ['common', ...(fm.js || [])].map((n) => {
+  return ['common', 'contact', ...(fm.js || [])].map((n) => {
     const f = pick('js', n, ['.js']);
     if (!f) throw new Error(`JS 없음: ${n}.js (src/shared · src/sub/js 둘 다 확인했다)`);
     return readFileSync(f, 'utf8').replace(/\s*$/, '');
@@ -664,7 +650,6 @@ function build(file) {
   };
   const heroCtx = { ...heroCtx0,
     hero: heroBlock(cat, fm, heroCtx0, file),
-    contactModal: contactModalBlock(fm, file),
     bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
 
   const html = render(layout, {
@@ -704,7 +689,6 @@ function buildDetails(file) {
   };
   const dHeroCtx = { ...dHeroCtx0,
     hero: heroBlock(cat, fm, dHeroCtx0, file),
-    contactModal: contactModalBlock(fm, file),
     bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
 
   rows.forEach((r, i) => {
@@ -796,11 +780,14 @@ function syncShared(write) {
   // ① index.html 의 마커 구간 = src/shared/contact-modal.html
   const idxPath = join(ROOT, 'index.html');
   const idx = readFileSync(idxPath, 'utf8');
-  const re = /([ \t]*<!-- @shared:contact-modal[\s\S]*?-->\n)[\s\S]*?(\n[ \t]*<!-- \/@shared:contact-modal -->)/;
-  if (!re.test(idx)) throw new Error('index.html 에 @shared:contact-modal 마커 한 쌍이 없다 — 지웠으면 되살릴 것');
-  const body = readFileSync(join(SHARED, 'contact-modal.html'), 'utf8').replace(/\n$/, '');
-  const next = idx.replace(re, (_, head, tail) => head + body + tail);
-  if (next !== idx) { if (write) writeFileSync(idxPath, next); changed.push('index.html (문의 모달 마크업)'); }
+  let next = idx;
+  for (const name of ['contact-modal', 'privacy-modal']) {
+    const re = new RegExp(`([ \\t]*<!-- @shared:${name}[\\s\\S]*?-->\\n?)[\\s\\S]*?([ \\t]*<!-- /@shared:${name} -->)`);
+    if (!re.test(next)) throw new Error(`index.html 에 @shared:${name} 마커 한 쌍이 없다 — 지웠으면 되살릴 것`);
+    const body = readFileSync(join(SHARED, name + '.html'), 'utf8').replace(/\n$/, '');
+    next = next.replace(re, (_, head, tail) => head + body + '\n' + tail);
+  }
+  if (next !== idx) { if (write) writeFileSync(idxPath, next); changed.push('index.html (문의 · 약관 모달 마크업)'); }
 
   // ② assets/js/contact.js = src/shared/contact.js  (메인이 <script src> 로 받는다)
   const jsDir = join(ROOT, 'assets', 'js');

@@ -36,7 +36,7 @@ const pickFile = (kind, name, ext) => {
 const SHOW_DEAD = process.argv.includes('--dead');
 
 // pages.mjs 의 CSS_COMMON 과 같아야 한다. 바뀌면 여기도 고칠 것.
-const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion'];
+const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion', 'contact'];
 
 /** JS 가 classList 로 붙였다 떼는 상태 클래스. 마크업·JS 문자열 어디에도 안 보여서
  *  자동 수집이 안 되므로 여기 적는다. */

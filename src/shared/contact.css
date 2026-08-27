@@ -36,10 +36,16 @@
 /* ⚠ `:where()` 로 감싸 **특이도를 0 으로** 만든다. 그냥 `.pv button` 으로 두면 (0,1,1) 이라
    뒤에 오는 `.ct-reset`(0,1,0)의 `border: 1px solid` 를 이겨 다시쓰기 버튼의 테두리가
    사라진다(실측). 리셋은 이겨서는 안 되고 바닥만 깔아야 한다. */
-.pv :where(button, input, textarea, select) {
+/* ⚠⚠ **체크박스 · 라디오는 빼야 한다.** `appearance: none` 이 브라우저가 그려 주는
+   네모·체크 표시를 통째로 지워, 19x19 빈 칸만 남고 **체크박스가 사라진다**
+   (2026-08-27 지적). `.ct-check input` 은 크기와 `accent-color` 만 정하므로
+   기본 렌더링에 의존한다 — 대신 그릴 스타일이 없다.
+   ⚠ `.ct-chip input` 은 일부러 숨기는 체크박스인데(`opacity: 0; width: 0`)
+     그건 appearance 와 무관하게 동작하므로 여기서 빼도 안전하다. */
+.pv :where(button, input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
   appearance: none; -webkit-appearance: none;
   font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-.pv :where(input, textarea, select) { cursor: auto; }
+.pv :where(input:not([type="checkbox"]):not([type="radio"]), textarea, select) { cursor: auto; }
 
 /* ⚠ 테두리는 여기서 **명시**한다(2026-08-27 지시). 위 리셋이 `border: 0` 을 깔아 두므로
      안 적으면 테두리가 없다 — 등록하기 · 다시쓰기와 같은 어법으로 회색 선을 준다. */
@@ -163,7 +169,16 @@
   border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
 .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
   letter-spacing: .08em; text-transform: uppercase; color: var(--color-azure); }
-.ct-card-a { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--color-primary); }
+/* ⚠ 이메일 주소는 **한 줄이어야 한다**(2026-08-27 지시). 주소가 길어지면 조용히 두 줄로
+     접혀 `juyoung@biotech-` / `iv.com` 처럼 도메인이 잘려 읽힌다(실측: 19px 에서 필요 254px
+     vs 카드 안쪽 250px — **4px 모자랐다**).
+     세 가지를 함께 해야 다시 안 깨진다:
+       ① 오른쪽 칸을 300 → 320px (카드 안쪽 250 → 270px)
+       ② 글자 19 → 18px  ③ `nowrap` 으로 접힘 자체를 막는다
+     지금 여유는 약 29px 다 — 폰트 폴백 차이(Paperlogy 가 Pretendard 보다 1.5% 넓다)를
+     흡수할 만큼이다. **주소를 더 긴 것으로 바꾸면 이 세 값을 다시 재라.** */
+.ct-card-a { display: block; white-space: nowrap;
+  font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-primary); }
 .ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
 .ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
@@ -191,6 +206,13 @@
 .ct-grid { display: grid; gap: 40px; }
 .ct-two { display: grid; gap: 24px; }
 .ct-strong { font-weight: 600; color: var(--color-text); }
+/* 약관 모달에서 Tailwind 유틸리티를 대신하는 세 개 — 값은 옛 유틸리티와 같다
+   (`text-sm leading-relaxed text-text-muted` · `text-primary underline …` · `text-xs text-text-muted`) */
+.pv-p { font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+.pv-link { color: var(--color-primary); text-decoration: underline;
+  text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+.pv-link:hover { text-decoration-color: var(--color-primary); }
+.pv-foot-note { font-size: 12px; color: var(--color-text-muted); }
 @media (min-width: 640px)  { .ct-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 768px)  { .ct-title { font-size: 30px; } }
-@media (min-width: 1024px) { .ct-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
+@media (min-width: 1024px) { .ct-grid { grid-template-columns: minmax(0, 1fr) 320px; } }
