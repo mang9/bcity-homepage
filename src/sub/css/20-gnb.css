@@ -5,7 +5,12 @@
   color: #fff; border-bottom: 1px solid transparent;
   transition: background .3s ease, color .3s ease, border-color .3s ease;
 }
-.gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
+/* ⚠ 정렬은 **항상 `flex-start`** 다. 펼칠 때만 바꾸면 로고와 우측(KO/EN · SNS)이
+     그 순간 위로 튄다(실측 −22px). 대신 로고 · 우측이 각자 한 줄 높이(`--gnb-h`)를 갖고
+     그 안에서 세로 가운데에 놓이므로 닫힌 모습은 그대로다 — 메인과 같은 방식이다. */
+.gnb .wrap { display: flex; min-height: 100%; align-items: flex-start;
+  justify-content: space-between; gap: 20px; }
+.gnb .wrap > a { display: flex; align-items: center; height: var(--gnb-h); }
 /* ⚠ `.no-hero` 를 함께 넣는다(§11.61). 히어로가 없는 페이지는 맨 위에서도 밝은 배경
      위에 놓이므로 흰 글자로 두면 로고와 메뉴가 보이지 않는다. 값을 복사하지 않고
      선택자만 더해 한 곳에서 관리한다. */
@@ -28,20 +33,29 @@
 .gnb-link.is-on::after { content: ""; position: absolute; left: 0; right: 0;
   bottom: calc(50% - .8em - 8px); height: 2px; background: currentColor; }
 /* 하위 패널 — 닫힌 상태는 높이 0 이라 자리를 차지하지 않는다 */
-.gnb-sub { display: flex; flex-direction: column; gap: 9px;
-  max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
-  font-size: 14px; font-weight: 500;
+/* ⚠ 글자 값은 메인 `#gnb .gnb-sub a` 와 **같아야 한다**(실측으로 맞췄다):
+     14px · weight 400 · `--color-text-muted` · 위아래 6px 패딩.
+     전에는 500 + 상속색이라 서브페이지만 굵고 진했다. */
+.gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+  font-size: 14px; font-weight: 400;
   transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
-.gnb-sub a { opacity: .7; transition: opacity .2s, color .2s; white-space: nowrap; }
-.gnb-sub a:hover, .gnb-sub a.is-on { opacity: 1; color: var(--color-primary); }
+.gnb-sub a { display: block; padding: 6px 0; white-space: nowrap;
+  color: var(--color-text-muted); transition: color .15s; }
+.gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
 .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
+/* 대메뉴와 하위 사이 구분선 — 메인 `#gnb .gnb-divider` 와 같은 어법이다.
+   ⚠ 요소를 새로 만들지 않고 `::after` 로 그린다. 바 전체 폭에 걸쳐야 하므로
+     `.gnb` 기준 absolute 이며, 위치는 **한 줄 높이(`--gnb-h`)** 바로 아래다. */
+.gnb::after { content: ""; position: absolute; left: 0; right: 0; top: var(--gnb-h);
+  height: 1px; background: var(--color-line); opacity: 0;
+  transition: opacity .28s ease; pointer-events: none; }
+.gnb.is-open::after { opacity: 1; }
 /* ⚠ 펼친 바는 **항상 흰 면**이다. 히어로 위 투명 상태로 두면 하위 글자가 사진에 묻힌다. */
 .gnb.is-open { height: auto; min-height: var(--gnb-h);
   background: rgba(255,255,255,.97); backdrop-filter: blur(10px);
   color: var(--color-text); border-bottom-color: var(--color-line); }
 .gnb.is-open .logo { color: var(--color-logo); }
-.gnb.is-open .wrap { align-items: flex-start; }
-.gnb-side { display: flex; align-items: center; gap: 14px; }
+.gnb-side { display: flex; align-items: center; gap: 14px; height: var(--gnb-h); }
 .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
 .gnb-lang > span:last-child { opacity: .6; font-weight: 600; }
 /* EN 안내 — 영문 페이지가 아직 없다. 호버·포커스에 아래로 띄운다(2026-08-27 지시).

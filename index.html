@@ -84,7 +84,7 @@
         <div class="gnb-lang hidden items-center gap-1 text-xs font-semibold transition-colors sm:flex">
           <button class="rounded px-1.5 py-0.5 font-bold">KO</button>
           <span class="opacity-40">|</span>
-          <button class="rounded px-1.5 py-0.5 opacity-70 transition hover:opacity-100">EN</button>
+          <button class="gnb-en rounded px-1.5 py-0.5 opacity-70 transition hover:opacity-100" aria-disabled="true">EN</button>
         </div>
         <div class="gnb-sns flex items-center gap-2 transition-colors">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube" class="transition hover:opacity-80">
@@ -892,6 +892,18 @@
       const sec = el ? el.closest('section') : null;
       return sec ? ['hero','business','zones'].includes(sec.id) : false;
     }
+    /* EN 안내 — 영문 페이지가 아직 없다(2026-08-27 지시).
+       ⚠ 마크업에 글자를 박지 않는다. CSS 가 늦거나 실패하면 `준비중입니다` 가 그대로
+         보인다 — 서브페이지(`src/sub/js/common.js`)와 **같은 방식**으로 JS 가 넣는다. */
+    (function(){
+      const en = document.querySelector('#gnb .gnb-en');
+      if (!en || en.querySelector('.gnb-tip')) return;
+      const tip = document.createElement('span');
+      tip.className = 'gnb-tip';
+      tip.textContent = '준비중입니다';
+      en.appendChild(tip);
+    })();
+
     gnb.addEventListener('mouseenter', ()=>{ menuOpen=true; gnb.classList.add('open'); syncGnb(); });
     gnb.addEventListener('mouseleave', ()=>{ menuOpen=false; gnb.classList.remove('open'); syncGnb(); });
     document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ menuOpen=false; gnb.classList.remove('open'); syncGnb(); } });
