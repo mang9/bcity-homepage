@@ -185,8 +185,14 @@
       /* EN 안내 — 영문 페이지가 아직 없다(2026-08-27 지시). 서브페이지의 `.gnb-tip` 과
          **같은 값**이다(`src/sub/css/20-gnb.css`) — 한쪽만 고치면 두 화면이 달라진다.
          ⚠ 버튼이 `inline` 이면 `top: 100%` 가 줄 상자 기준으로 풀려 글자 위로 겹친다. */
-      #gnb .gnb-en { position: relative; display: inline-block; cursor: default; }
-      #gnb .gnb-tip { position: absolute; top: calc(100% + 9px); left: 50%;
+      /* ⚠ Tailwind `opacity-70` 을 쓰지 않는다 — 쌓임 문맥이 생겨 안쪽 말풍선의
+         `z-index` 가 그 안에 갇히고 `.gnb-divider` 가 위로 올라온다(서브와 같은 함정).
+         글자만 흐리게 하려면 **색에 알파**를 준다. */
+      #gnb .gnb-en { position: relative; display: inline-block; cursor: default;
+        color: color-mix(in srgb, currentColor 70%, transparent); }
+      #gnb .gnb-en:hover { color: currentColor; }
+      /* ⚠ `z-index` 가 필요하다 — `.gnb-divider` 가 트리에서 뒤에 와서 말풍선을 가른다. */
+      #gnb .gnb-tip { position: absolute; z-index: 3; top: calc(100% + 9px); left: 50%;
         transform: translate(-50%, -4px); padding: 6px 11px; border-radius: 8px;
         white-space: nowrap; background: var(--color-navy); color: #fff;
         font-size: 11.5px; font-weight: 600; letter-spacing: 0; opacity: 0;
