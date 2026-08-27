@@ -78,13 +78,18 @@
 
 
               <div class="dz-body">
-                <!-- 토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
+                <!-- ⚠ zone SVG · 배경에 **버전 쿼리**를 붙인다(2026-08-27).
+         개발 서버는 HTML 만 `no-store` 고 이미지에는 캐시 헤더를 안 보낸다 —
+         쿼리가 없으면 브라우저가 예전에 받아 둔 판을 계속 쓴다. 실제로 메인은
+         `?v=7` 이라 새 그림이 보이는데 여기만 옛 그림이 보였다.
+         ⚠ SVG 를 갈아끼우면 **이 번호를 올린다**(메인 index.html 쪽도 함께).
+    토지이용계획도 — 전체 배치도 위에 해당 권역만 색으로 얹는다.
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-01.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-01.svg?v=8"
                          alt="토지이용계획도에서 AI 데이터 클러스터이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -157,9 +162,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-02.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-02.svg?v=8"
                          alt="토지이용계획도에서 첨단 바이오 클러스터이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -228,9 +233,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-03.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-03.svg?v=8"
                          alt="토지이용계획도에서 푸드 물류 클러스터이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -301,9 +306,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-04.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-04.svg?v=8"
                          alt="토지이용계획도에서 바이오MICE 클러스터이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -396,9 +401,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-07.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-07.svg?v=8"
                          alt="토지이용계획도에서 비즈니스 콤플렉스이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -467,9 +472,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-05.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-05.svg?v=8"
                          alt="토지이용계획도에서 하우징 콤플렉스이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -540,9 +545,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-06.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-06.svg?v=8"
                          alt="토지이용계획도에서 에듀 콤플렉스이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>
@@ -614,9 +619,9 @@
                      ⚠ 레이어 파일명은 표시 번호와 다르다(§7.2): 05→zone-07 · 06→zone-05 · 07→zone-06. -->
                 <figure class="dz-map">
                   <span class="dz-map-in">
-                    <img class="dz-map-base" src="assets/landuse/zone-base.avif" alt=""
+                    <img class="dz-map-base" src="assets/landuse/zone-base.avif?v=8" alt=""
                          width="880" height="1100" loading="lazy" decoding="async" />
-                    <img class="dz-map-hl" src="assets/landuse/zone-08.svg"
+                    <img class="dz-map-hl" src="assets/landuse/zone-08.svg?v=8"
                          alt="토지이용계획도에서 골프레저 콤플렉스이(가) 차지하는 위치"
                          width="462" height="577" loading="lazy" decoding="async" />
                   </span>

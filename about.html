@@ -638,9 +638,12 @@
       font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     .pv :where(input, textarea, select) { cursor: auto; }
 
+    /* ⚠ 테두리는 여기서 **명시**한다(2026-08-27 지시). 위 리셋이 `border: 0` 을 깔아 두므로
+         안 적으면 테두리가 없다 — 등록하기 · 다시쓰기와 같은 어법으로 회색 선을 준다. */
     .pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
-      border-radius: 999px; color: var(--color-text-muted);
-      transition: background .22s, color .22s; }
+      border: 1px solid var(--color-line); border-radius: 999px; color: var(--color-text-muted);
+      transition: background .22s, color .22s, border-color .22s; }
+    .pv-x:hover { border-color: var(--color-primary); }
     .pv-x svg { width: 20px; height: 20px; }
     .pv-x:hover { background: var(--color-bg); color: var(--color-text); }
     /* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
