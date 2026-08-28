@@ -491,7 +491,7 @@
       </div>
       <!-- 아이콘 카드 (사진 대신 우측 상단 아이콘) -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg">
+        <a href="press.html" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg">
           <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
             <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2Z"/>
@@ -506,7 +506,7 @@
           </div>
         </a>
 
-        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.09s">
+        <a href="video.html" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.09s">
           <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
             <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
               <rect x="2.5" y="5" width="19" height="14" rx="3"/>
@@ -521,7 +521,7 @@
           </div>
         </a>
 
-        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.18s">
+        <a href="gallery.html" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.18s">
           <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
             <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
               <rect x="3" y="4.5" width="18" height="15" rx="3"/>
@@ -538,10 +538,10 @@
         </a>
       </div>
       <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <a href="#" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
+        <a href="notice.html" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
           <span class="font-display font-bold text-text">공지사항</span><span class="text-primary" aria-hidden="true">→</span>
         </a>
-        <a href="#" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
+        <a href="publication.html" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
           <span class="font-display font-bold text-text">B-CITY 발행물</span><span class="text-primary" aria-hidden="true">→</span>
         </a>
       </div>
@@ -713,8 +713,15 @@
               <li>유선 또는 이메일 회신</li>
             </ol>
           </div>
+          <!-- ⚠⚠ **처리방침(`privacy-modal.html`)과 값이 어긋나면 안 된다.** 여기는 동의를 받는
+               자리이고 그쪽은 공개하는 자리라, 다르면 '동의받은 내용' 과 '공개한 내용' 이 갈린다.
+               2026-08-27 에 실제로 갈렸다 — 처리방침만 3년으로 고치고 이 문구는
+               `입주/이주 완료 후 자동 파기` 로 남아 있었다(사용자 지적).
+               ⚠ **보유기간을 바꿀 때는 두 파일을 함께 고친다.** 처리방침 제3조가 정본이다. -->
           <p class="ct-card-note">
-            수집된 개인정보는 &lsquo;개인정보 보호법&rsquo;에 따라 안전하게 보관되며, 입주/이주 완료 후 자동 파기됩니다.
+            수집한 개인정보는 &lsquo;개인정보 보호법&rsquo;에 따라 안전하게 보관하며,
+            <span class="ct-strong">수집일로부터 3년</span>이 지나거나 문의 처리 목적이 달성되면 지체 없이 파기합니다.
+            자세한 내용은 <a href="#privacy" class="ct-view">개인정보처리방침</a>을 확인해 주세요.
           </p>
           <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
           <div class="ct-actions">
