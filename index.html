@@ -254,7 +254,7 @@
   </section>
 
   <!-- ============ 3. 사업개요 (슬라이드 8·9) — 스크럽 영상 2페이지 ============ -->
-  <section id="business" class="page cine ov" data-cine="biz" data-clip="assets/vid/business.mp4?v=bio2" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio2" style="height:400vh">
+  <section id="business" class="page cine ov" data-cine="biz" data-play="loop" data-clip="assets/vid/business.mp4?v=bio2" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio2" style="height:400vh">
     <div class="cine-stage bg-navy">
       <video muted playsinline preload="auto" data-scrub="biz"></video>
       <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/still/seg05@m.avif" /><source type="image/avif" srcset="assets/still/seg05.avif" /><img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" /></picture>
@@ -1447,6 +1447,10 @@
     window.addEventListener('resize', dzUpdate);
 
     /* ---------- 스크럽 시네마 엔진 ---------- */
+    /* 동작 최소화 설정 — `data-play="loop"` 섹션의 자동재생을 끄는 데 쓴다.
+       ⚠ 스크럽 섹션은 여기 영향을 받지 않는다. 스크럽은 사용자가 스크롤한 만큼만 움직이므로
+         '스스로 움직이는 모션' 이 아니다. */
+    const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
     /* HEVC(H.265) 재생 가능하면 2560 고화질을, 아니면 1920 H.264를 쓴다 */
     const CAN_HEVC = (()=>{
       const v = document.createElement('video');
@@ -1484,6 +1488,9 @@
         video: sec.querySelector('video[data-scrub="'+key+'"]'),
         poster: sec.querySelector('[data-poster="'+key+'"]'),
         clip: (CAN_HEVC && sec.dataset.clipHevc) ? sec.dataset.clipHevc : (sec.dataset.clip || null),
+        /* `data-play="loop"` 인 섹션은 **스크럽하지 않는다** — 영상이 스스로 돌고
+           스크롤은 카피 페이지만 넘긴다(2026-08-28 지시). 없으면 기존 스크럽 그대로다. */
+        playLoop: sec.dataset.play === 'loop',
         cur: 0, loaded: false, seeking: false, target: 0
       };
     });
@@ -1506,6 +1513,13 @@
       }
       await ready();
       if (c.video.readyState >= 2 && c.poster) c.poster.style.opacity = '0';
+      /* 스스로 도는 섹션은 여기서 재생을 건다.
+         ⚠ `muted` + `playsinline` 이라야 자동재생이 허용된다(마크업에 이미 있다).
+         ⚠ 동작 최소화 설정에서는 **재생하지 않는다** — 첫 프레임에 멈춰 있게 둔다. */
+      if (c.playLoop && !REDUCE) {
+        c.video.loop = true;
+        c.video.play().catch(()=>{});
+      }
     }
     const loadIO = new IntersectionObserver(es=>{
       es.forEach(e=>{ if(e.isIntersecting){ const c=cines.find(x=>x.sec===e.target); if(c) loadClip(c); } });
@@ -1543,9 +1557,23 @@
       cines.forEach(c=>{
         if (c.prog) c.prog.style.width = (c.p*100).toFixed(1) + '%';
 
-        // 영상: 목표 시간으로 부드럽게 수렴 (스크롤이 멈춘 뒤에도 잔여 이동 → 영상 느낌)
         const v = c.video;
-        if (v && v.duration && c.visible) {
+        /* ⚠ `return` 을 쓰지 않는다 — `forEach` 콜백에서 빠져나가면 **아래 카피 페이지 전환까지**
+             건너뛴다. 스크롤로 씬을 넘기는 것이 이 섹션의 남은 역할이므로 분기로만 가른다. */
+        if (v && c.playLoop) {
+          /* 스스로 도는 섹션 — `currentTime` 을 건드리지 않는다. 스크롤이 멈춰도 계속 움직인다.
+             화면 밖에서는 세워 둔다(배터리·디코딩 낭비를 막는다). */
+          if (!REDUCE) {
+            if (c.visible && v.paused) v.play().catch(()=>{});
+            else if (!c.visible && !v.paused) v.pause();
+          }
+        }
+        /* 스크럽 경로 — 스크롤이 `currentTime` 을 직접 끈다.
+           ⚠ **2026-08-28 현재 이 가지를 타는 섹션이 없다.** `#business` 는 자동재생으로
+             바뀌었고 `#location` 은 영상이 아니라 지도 SVG 다. 지우지 않는 이유는
+             스크럽 섹션을 다시 넣을 때 필요한 유일한 구현이기 때문이다(`linger()` 포함). */
+        // 영상: 목표 시간으로 부드럽게 수렴 (스크롤이 멈춘 뒤에도 잔여 이동 → 영상 느낌)
+        else if (v && v.duration && c.visible) {
           const target = Math.min(linger(c.p, c.pages.length) * v.duration, v.duration - 0.05);
           c.shown = (c.shown == null) ? target : c.shown + (target - c.shown) * 0.18;
           if (!v.seeking && Math.abs(v.currentTime - c.shown) > 0.016) {
