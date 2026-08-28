@@ -818,7 +818,7 @@ pages['partner-form.html'] = shell({
         + '로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
       field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.' }),
-      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.' }),
+      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '정식 상호를 적습니다. 카드와 사업구조도에 그대로 표시됩니다.' }),
       field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: '영문 페이지를 만들 때 씁니다. 비워 두어도 됩니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 로고 둘레의 빈 여백은 잘라내고 씁니다')
