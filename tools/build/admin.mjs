@@ -566,12 +566,12 @@ pages['notice-form.html'] = shell({
     title: '공지사항 등록 / 수정',
     slug: 'notice', preview: '../notice.html',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '필수 · 최대 100자' }),
-      field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '리치 텍스트 에디터 · 이미지 삽입 가능' }),
-      field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '다중 첨부 · 파일당 최대 20MB')
+      field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '꼭 입력해 주세요. 100자까지.' }),
+      field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '글자 꾸미기와 이미지 넣기를 할 수 있습니다.' }),
+      field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.')
         + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
-        hint: '다중 첨부 · 파일당 최대 20MB' }),
-      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '목록 최상단에 고정합니다. (상단 고정은 아직 만들어지지 않았습니다 — 개발 필요)' }),
+        hint: '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.' }),
+      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '켜면 목록 맨 위에 고정됩니다.' }),
       pubState(1),
     ],
   }),
@@ -616,12 +616,12 @@ pages['press-form.html'] = shell({
   body: formCard({
     title: '언론보도 등록 / 수정',
     slug: 'press', preview: '../press.html',
-    note: '※ 링크를 클릭하면 해당 기사 URL 로 이동합니다(새 창).',
+    note: '※ 목록에서 제목을 누르면 언론사 기사가 새 창으로 열립니다.',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '필수 · 최대 200자' }),
-      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '목록의 매체명 표기에 쓰입니다. (분류 · 검색 바는 현재 꺼져 있습니다 — 게시물이 늘면 켭니다)' }),
-      field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '원 기사 게재일' }),
-      field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 웹사이트 URL · http(s):// 로 시작' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '꼭 입력해 주세요. 200자까지.' }),
+      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '기사 목록에 매체명으로 표시됩니다.' }),
+      field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '기사가 실린 날짜입니다.' }),
+      field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 기사 주소를 붙여 넣습니다.' }),
       pubState(2),
     ],
   }),
@@ -656,14 +656,14 @@ pages['video-form.html'] = shell({
   body: formCard({
     title: '홍보영상 등록 / 수정',
     slug: 'video', preview: '../video.html',
-    note: '※ 메인 노출 지정은 아직 만들어지지 않았습니다 — 메인 홍보센터는 현재 고정 카드입니다(개발 필요).',
+    note: '※ 메인 화면에 보여 줄 영상은 4편까지 고를 수 있습니다.',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '카드 썸네일 아래 노출' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '목록 카드에서 제목 아래에 표시됩니다.' }),
       field({ label: '영상 소스', req: true, type: 'SELECT + URL',
         control: `<div style="display:flex;gap:8px;flex-wrap:wrap">${sel(['YouTube', '직접 업로드'])}
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
-        hint: 'YouTube 링크. 썸네일은 아래에서 직접 등록합니다 (링크에서 자동으로 가져오는 기능은 개발 필요)' }),
-      field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 · 초과 시 경고 (개발 필요)' }),
+        hint: 'YouTube 주소를 붙여 넣습니다. 목록에 보이는 이미지는 아래에서 따로 등록합니다.' }),
+      field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 고를 수 있습니다.' }),
       pubState(3),
     ],
   }),
@@ -699,17 +699,17 @@ pages['gallery-form.html'] = shell({
   body: formCard({
     title: '갤러리 등록 / 수정',
     slug: 'gallery', preview: '../gallery.html',
-    note: '※ 다중 이미지 업로드 및 드래그로 순서를 조정합니다.',
+    note: '※ 사진을 여러 장 한 번에 올리고, 끌어서 순서를 바꿀 수 있습니다.',
     fields: [
-      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 — 표지 배지에 쓰입니다. (분류 탭은 현재 꺼져 있습니다)' }),
-      field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '앨범 단위 제목' }),
+      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 중에서 고릅니다. 표지 왼쪽 위에 표시됩니다.' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '사진 묶음 전체의 제목입니다.' }),
       field({ label: '대표 이미지', req: true, type: 'IMAGE UPLOAD',
-        control: drop('썸네일 · 리스트 대표 이미지', '권장 1600×900 이상 · JPG · PNG · WebP')
+        control: drop('썸네일 · 리스트 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))"><div class="ad-thumb"><b>대표</b></div></div>',
-        hint: '권장 1600×900 이상 · JPG · PNG · WebP' }),
+        hint: '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.' }),
       field({ label: '이미지 업로드', req: true, type: 'MULTI UPLOAD',
         control: drop('여러 장을 한 번에 끌어다 놓으세요', '드래그 앤 드롭 · 순서 조정 가능') + thumbs(8),
-        hint: '썸네일을 끌어 순서를 바꿉니다. 순서가 화면 노출 순서입니다.' }),
+        hint: '사진을 끌어 순서를 바꿉니다. 이 순서대로 화면에 보입니다.' }),
       pubState(4),
     ],
   }),
@@ -751,19 +751,19 @@ pages['publication-form.html'] = shell({
   body: formCard({
     title: '발행물 등록 / 수정',
     slug: 'publication', preview: '../publication.html',
-    note: '※ PDF 우선 · 파일당 최대 100MB.',
+    note: '※ PDF 를 권장합니다. 파일 하나에 100MB 까지.',
     fields: [
-      field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']), hint: '표지 왼쪽 위 배지로 노출됩니다.' }),
-      field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목'), hint: '목록에서 두 줄까지 노출됩니다.' }),
+      field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']), hint: '표지 왼쪽 위에 표시됩니다.' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목'), hint: '목록에서 두 줄까지 보입니다.' }),
       field({ label: '표지 이미지', type: 'IMAGE UPLOAD',
         control: drop('발행물 표지 이미지', '권장 세로형 4:5 · 등록하지 않으면 기본 표지가 생성됩니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"><div class="ad-thumb" style="aspect-ratio:4/5"><b>표지</b></div></div>',
-        hint: '권장 세로형 4:5 · 등록하지 않으면 기본 표지가 자동 생성됩니다.' }),
+        hint: '세로로 긴 4:5 비율을 권장합니다. 올리지 않으면 기본 표지가 자동으로 만들어집니다.' }),
       field({ label: '파일 업로드', req: true, type: 'FILE UPLOAD',
         control: drop('PDF 파일을 끌어다 놓으세요', 'PDF 우선 · 최대 100MB')
           + fileList([['bcity-im.pdf', '12.4MB']]),
-        hint: 'PDF 우선 · 파일당 최대 100MB' }),
-      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '비활성화하면 [보기]만 노출되고 [다운로드] 버튼이 안 보입니다.' }),
+        hint: 'PDF 를 권장합니다. 파일 하나에 100MB 까지.' }),
+      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '끄면 [보기]만 남고 [다운로드] 버튼이 사라집니다.' }),
       pubState(5),
     ],
   }),
@@ -817,13 +817,13 @@ pages['partner-form.html'] = shell({
     note: '※ 로고마다 여백과 글자 굵기가 달라, 높이를 똑같이 맞추면 어떤 로고는 크게 · 어떤 로고는 작게 보입니다. '
         + '로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
-      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 파트너 그룹과 구조도 위치를 결정합니다.' }),
-      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지 카드와 구조도에 함께 쓰입니다.' }),
-      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: 'EN 페이지 대비 · 선택 항목입니다.' }),
+      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지에서 어느 묶음에 들어갈지, 체계도의 어느 자리에 놓일지가 정해집니다.' }),
+      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지의 카드와 체계도에 함께 쓰입니다.' }),
+      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: '영문 페이지를 만들 때 씁니다. 비워 두어도 됩니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 로고 둘레의 빈 여백은 잘라내고 씁니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
-        hint: '흰배경의 JPG 는 어두운 배경에서 흰 박스로 보입니다 — 투명 png 파일을 권장합니다.' }),
+        hint: '배경이 흰색인 JPG 는 어두운 화면에서 흰 네모로 보입니다. 배경이 비치는 PNG 를 올려 주세요.' }),
       /* 지분율은 상태가 **세 가지**다 — 확정된 값 / 확정 전(TBD) / 표기 안 함.
          텍스트 입력 하나로는 구분되지 않아 '확정 전' 체크박스를 함께 둔다.
          (2026-08-18 지적: 문구만 보면 입력칸에 '확정 전' 이라고 적는 것처럼 읽힌다) */
@@ -833,9 +833,9 @@ pages['partner-form.html'] = shell({
                   placeholder="37.3" id="eq" /><i>%</i></span>
                 <label class="ad-cb"><input type="checkbox" id="eqTbd" /> 확정 전 (TBD 로 표시)</label>
               </div>`,
-        hint: '확정된 지분율만 숫자로 적습니다. 확정 전이면 체크하세요 — 구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율을 표기하지 않습니다.' }),
-      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '구조도 상호 아래 설명 부분입니다.' }),
-      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '비활성화하면 사업주체 페이지에만 노출됩니다.' }),
+        hint: '확정된 지분율만 숫자로 적습니다. 아직 정해지지 않았으면 체크해 주세요 — 사업추진 체계도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.' }),
+      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '사업추진 체계도에서 상호 아래에 들어가는 설명입니다.' }),
+      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '끄면 메인 화면에는 나오지 않고 사업주체 페이지에만 표시됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
       pubState(6),
@@ -921,24 +921,24 @@ pages['account-form.html'] = shell({
   h1: '계정 등록 / 수정',
   body: formCard({
     title: '계정 등록 / 수정', slug: 'account', preview: 'account.html',
-    note: '※ 등급을 바꾸면 메뉴 권한이 기본값으로 다시 채워집니다',
+    note: '※ 등급을 바꾸면 아래 메뉴 권한이 그 등급의 기본값으로 다시 채워집니다.',
     dev: '권한 집행 확인 — 화면 체크는 표시일 뿐이다. 서버가 막지 않으면 URL 직접 입력으로 모두 접근된다.',
     fields: [
       field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
-        hint: '목록과 게시물 작성자에 표시됩니다.' }),
+        hint: '목록과 게시물의 작성자 이름으로 표시됩니다.' }),
       field({ label: '아이디', req: true, type: 'EMAIL INPUT',
         control: '<input class="ad-in" type="email" placeholder="name@biotech-iv.com" />',
-        hint: '로그인 아이디로 사용됩니다' }),
+        hint: '로그인할 때 쓰는 아이디입니다.' }),
       // DEV: 아이디 정책 확인 — 회사 메일(@biotech-iv.com) 도메인만 허용할지 결정 필요.
       field({ label: '임시 비밀번호', req: true, type: 'BUTTON',
         control: '<button type="button" class="ad-btn" onclick="document.getElementById(\'pwDlg\').showModal()">임시 비밀번호 발급</button>',
-        hint: '서버가 생성해 본인 메일로 보내고, 첫 로그인에서 변경을 강제합니다.' }),
+        hint: '임시 비밀번호를 본인 메일로 보내 드립니다. 첫 로그인 때 새 비밀번호로 바꾸게 됩니다.' }),
       // 힌트를 두지 않는다 — 같은 내용이 폼 하단 안내에 있어 한 화면에서 두 번 읽혔다(2026-08-18 감사).
       field({ label: '권한 등급', req: true, type: 'SELECT', control: sel(ROLES) }),
       field({ label: '메뉴 권한', type: 'CHECKBOX MATRIX', control: permMatrix('편집자'),
-        hint: '등급 기본값에서 개별 조정할 수 있습니다. 계정 관리 삭제 권한은 최고관리자만 갖습니다.' }),
+        hint: '등급 기본값에서 하나씩 바꿀 수 있습니다. 계정 삭제 권한은 최고관리자만 가집니다.' }),
       field({ label: '계정 상태', type: 'TOGGLE', control: toggle(true, '활성'),
-        hint: '비활성화하면 로그인할 수 없습니다. 삭제하지 않고 잠글 때 씁니다.' }),
+        hint: '끄면 로그인할 수 없습니다. 계정을 지우지 않고 잠가 둘 때 씁니다.' }),
     ],
   }),
 });
