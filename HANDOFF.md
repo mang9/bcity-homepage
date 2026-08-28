@@ -1,0 +1,227 @@
+# B-CITY 홈페이지 — 개발 인계 문서
+
+춘천기업혁신파크 B-CITY 마케팅 홈페이지. **이 문서 하나로 시작할 수 있게** 썼습니다.
+
+| | |
+|---|---|
+| 저장소 | `https://github.com/mang9/bcity-homepage` (public) |
+| 배포 | GitHub Pages — **`main` 브랜치 루트를 그대로 서비스**합니다 |
+| 라이브 | `https://mang9.github.io/bcity-homepage/` |
+| 빌드 의존성 | `@tailwindcss/cli` **하나뿐**입니다. 번들러·프레임워크 없음 |
+| Node | 20 이상 (개발 확인은 24.16.0) |
+
+```bash
+git clone https://github.com/mang9/bcity-homepage.git
+cd bcity-homepage && npm install
+npm run build          # CSS + 서브페이지 전체 빌드
+```
+
+정적 파일이라 `index.html` 을 그냥 열어도 대부분 동작하지만, 상대 경로 자산 때문에
+**로컬 서버로 여는 것을 권합니다** — `python3 tools/devserver.py` (포트 8893).
+
+---
+
+## 1. 무엇이 진짜이고 무엇이 시안인가
+
+인계에서 가장 먼저 알아야 할 구분입니다.
+
+| 대상 | 상태 |
+|---|---|
+| 메인 + 서브페이지 18종 | **실제 운영 중**입니다. 카피·수치는 기획서 대조를 마친 확정본 |
+| 홍보센터 게시물 | **전부 샘플**입니다. 실제 콘텐츠 아님 (아래 §4) |
+| 관리자 화면 20종 | **기능 없는 정적 시안**입니다. 화면·필드 명세 전달용 (아래 §5) |
+| 문의 폼 전송 | **백엔드 없음.** 지금은 메일 클라이언트를 여는 방식 (아래 §3) |
+
+---
+
+## 2. 소스 구조 — 루트의 `*.html` 을 직접 고치지 마세요
+
+루트의 서브페이지 HTML 은 **전부 빌드 산출물**입니다. 파일 선두에 그 경고 배너가 있고,
+다음 빌드에 덮어써집니다.
+
+```
+index.html            메인 — 유일하게 손으로 고치는 HTML
+src/
+  css/app.css         메인용 Tailwind 소스 → assets/css/app.css 로 컴파일
+  shared/             ★ 메인과 서브가 **함께 쓰는** 소스 (§2.1)
+  sub/
+    layout.html       서브페이지 문서 골격
+    nav.json          IA 단일 소스 — GNB · LNB · 모바일메뉴 · 브레드크럼 · 푸터가 전부 여기서 나옴
+    pages/*.html      선두 <!--build {JSON}--> front-matter + <main> 본문만
+    partials/         gnb · hero · footer · svg
+    css/  js/         서브 전용
+    data/*.json       홍보센터 콘텐츠 (§4)
+tools/build/
+  pages.mjs           서브페이지 빌더 (의존성 0)
+  lint-classes.mjs    클래스 정합성 검사
+  admin.mjs           관리자 화면 생성기
+```
+
+**서브페이지를 고치려면** `src/sub/pages/<slug>.html` 을 고치고 `npm run build:pages`.
+**메뉴를 고치려면** `src/sub/nav.json` 과 `index.html` 의 `siteMap` 배열 **두 곳**을 함께 고칩니다
+(메인 메가메뉴만 별도 배열을 씁니다 — 한쪽만 고치면 어긋납니다).
+
+### 2.1 `src/shared/` — 두 화면이 같은 파일을 씁니다
+
+문의 모달과 개인정보처리방침은 메인과 서브페이지가 **한 벌**을 공유합니다.
+
+| 파일 | 메인이 받는 법 | 서브가 받는 법 |
+|---|---|---|
+| `contact.css` · `gnb-en.css` | `app.css` 의 `@import ... layer(utilities)` | `pages.mjs` 가 인라인 |
+| `contact.js` | `<script src="assets/js/contact.js">` (빌드가 복사) | `pages.mjs` 가 인라인 |
+| `contact-modal.html` · `privacy-modal.html` | `index.html` 의 `@shared:*` 마커 구간을 빌드가 채움 | `layout.html` 이 파티셜로 삽입 |
+
+> ⚠ **`index.html` 의 `@shared:` 마커 구간과 `assets/js/contact.js` 는 생성물입니다.**
+> 직접 고치면 다음 빌드에 덮어써집니다 — `src/shared/` 를 고치세요.
+
+> ⚠ 이 파일들은 **두 개의 다른 리셋 위에서** 돕니다. 메인은 Tailwind preflight,
+> 서브는 평문 CSS + 브라우저 기본값입니다. 그래서 `src/shared/contact.css` 는
+> 자기가 쓰는 요소의 기본값(`p` 마진 · `line-height` · 폼 요소)을 **스스로 못 박습니다.**
+> 그 리셋을 지우면 두 화면이 조용히 갈라집니다 — 실제로 세 번 겪었습니다.
+
+---
+
+## 3. 문의 폼 — 백엔드를 붙이는 지점
+
+`src/shared/contact.js` 의 **한 줄**입니다.
+
+```js
+const CT_ENDPOINT = '';   // 예: 'https://api.b-city.kr/inquiry'
+```
+
+- **비어 있으면** `mailto:` 로 메일 클라이언트를 엽니다(현재 동작).
+- **URL 을 넣으면** 그 주소로 `fetch` POST 합니다. 전송 성공·실패 UI 와 버튼 비활성화까지
+  이미 들어 있으니 서버만 받으면 됩니다.
+
+보내는 본문(JSON):
+
+```json
+{ "관심분야": "기업입주문의, 투자문의", "회사명/이름": "…", "휴대전화": "010-…",
+  "이메일": "…", "문의내용": "…", "마케팅활용동의": "동의" }
+```
+
+> ⚠ **개인정보처리방침을 함께 고쳐야 합니다.** 전송 API 사업자가 생기면
+> `src/shared/privacy-modal.html` 제5조(처리 위탁) 표에 수탁자로 추가해야 합니다.
+> 지금은 메일 서비스(더존비즈온) 한 곳만 적혀 있습니다.
+
+---
+
+## 4. 홍보센터 콘텐츠 — 지금은 샘플입니다
+
+목록·상세는 화면에 하드코딩돼 있지 않고 `src/sub/data/*.json` 에서 읽습니다.
+**필드 명세는 `src/sub/data/_SCHEMA.md`** 를 보세요.
+
+```
+notice.json  press.json  video.json  gallery.json  publication.json
+```
+
+접근 지점은 `tools/build/pages.mjs` 의 **`loadContent(kind)` 함수 하나**입니다.
+API 로 바꿀 때 그 함수 내부만 갈아끼우면 되고, 호출부와 템플릿은 그대로입니다
+(`async` 로 바꾸고 `build()` 를 `await` 하면 됩니다).
+
+### 샘플 스위치
+
+현재 JSON 의 항목에는 `_sample: true` 가 붙어 있습니다.
+
+```bash
+npm run build:pages                        # 샘플 제외 — 배포용(기본)
+SHOW_SAMPLES=1 npm run build:pages         # 샘플 포함 — 화면 확인용
+touch .claude/SAMPLES                      # 이 사본에서는 항상 샘플 포함
+```
+
+> ⚠ **배포본에 샘플이 들어가면 안 됩니다.** 실제 운영 사이트입니다.
+> 커밋 절차는 §7 을 반드시 지켜 주세요.
+
+---
+
+## 5. 관리자 화면 — `admin-design` 브랜치
+
+**기능이 구현되지 않은 정적 HTML 20개**입니다. 화면 구성과 입력 필드를 전달하는 것이 목적입니다.
+
+```bash
+git checkout admin-design
+npm run build:admin        # admin/ 20개 생성
+```
+
+화면 목록과 기획서 대응은 **`admin/README.md`** 에 있습니다. 화면 안의
+`<!-- DEV: … -->` 주석이 개발 시 확인할 사항입니다 (`grep -rn 'DEV:' admin/*.html`).
+
+> ⚠ **`admin/` 을 `main` 에 커밋하지 마세요.** GitHub Pages 가 `main` 루트를 그대로
+> 서비스하므로, 실제로 막는 것이 없는 로그인 화면이 공개 도메인에 노출됩니다.
+> `main` 의 `.gitignore` 가 `/admin/` 을 무시하는 이유입니다.
+>
+> ⚠ 브랜치를 오가면 `admin/` 이 작업트리에서 사라집니다(한쪽은 추적 파일, 한쪽은 무시 대상).
+> 놀라지 마시고 `npm run build:admin` 을 다시 돌리면 됩니다.
+
+---
+
+## 6. 브랜치
+
+| 브랜치 | 내용 | 배포 |
+|---|---|---|
+| `main` | 운영 배포본. **샘플 없음 · admin 없음** | **O** (Pages) |
+| `admin-design` | 관리자 화면 시안 | X |
+| `review/20260828-confirm` | 컨펌용 스냅숏 — 샘플 + admin 을 한 번에 볼 수 있게 | X |
+| `backup/*` | 대규모 변경 전 롤백 지점 | X |
+
+---
+
+## 7. 커밋 절차 — 이 순서를 지켜 주세요
+
+작업트리에는 샘플이 보이는 편이 편하고, 배포본에는 없어야 합니다. 그래서 스크립트가
+**인덱스에는 배포본을, 작업트리에는 샘플을** 남깁니다.
+
+```bash
+npm run commit:prep     # 배포 빌드 → git add -A → 샘플 빌드
+git commit -m "…"       # ← 인덱스(배포본)가 커밋된다
+git push
+```
+
+> ⚠⚠ **`commit:prep` 다음에 `git add` 를 다시 하지 마세요.** 작업트리(샘플)가
+> 인덱스를 덮어써 샘플이 배포됩니다. 실제로 18시간 동안 라이브에 노출된 적이 있습니다.
+>
+> 커밋 전 확인 — **`0` 이 아니면 샘플이 섞인 것입니다.**
+> ```bash
+> git ls-files --cached | grep -cE "^(notice|press)-[0-9a-z-]+\.html"
+> ```
+
+`npm run build:deploy` 는 단독으로 돌리지 마세요 — 화면에서 샘플이 사라집니다.
+
+---
+
+## 8. 검사 도구
+
+```bash
+npm run build:check    # 생성물이 소스와 일치하는지 + 클래스 정합성 (커밋 전)
+npm run lint:classes   # 클래스 정합성만
+```
+
+`lint-classes` 는 **페이지마다** "그 페이지가 실제로 싣는 CSS 번들"과 마크업을 대조합니다.
+전역 검사가 아니라서, 정의는 어딘가 있는데 그 페이지 번들에는 없는 경우까지 잡습니다.
+
+---
+
+## 9. 인계 시점의 미결 사항
+
+| 항목 | 내용 |
+|---|---|
+| 홍보센터 콘텐츠 | 전부 샘플. 실제 게시물로 교체 필요 |
+| 문의 폼 백엔드 | 미연결 (§3) |
+| 개인정보처리방침 | 수탁자 **서버 소재지** 확인 필요 — 국외면 법 제28조의8(국외 이전) 항목 추가 |
+| 공문 PDF | 사업주체 페이지의 [보기] 5건 중 일부가 이미지로만 있음 |
+| `DIGITAL TWIN` 버튼 | 메인 히어로. 대상 페이지 미정으로 `href="#"` |
+| `assets/css/app.css` | 소스보다 낡은 상태가 있었음 — `npm run build:css` 로 갱신 |
+
+---
+
+## 10. 함께 보면 좋은 문서
+
+| 파일 | 내용 |
+|---|---|
+| `DESIGN.md` | 디자인 토큰 SSOT (컬러 19종 · 타이포 스케일) |
+| `src/sub/data/_SCHEMA.md` | 홍보센터 콘텐츠 JSON 필드 명세 |
+| `admin/README.md` | 관리자 화면 20종 목록 · 기획서 대응 (`admin-design` 브랜치) |
+| `tools/video/README.md` | 영상 인코딩 도구와 함정 |
+
+> 저장소에 들어 있지 않은 내부 작업 문서(`CLAUDE.md` · `CONTENT.md`)가 있습니다.
+> 상세한 구현 이력과 함정 기록이 필요하시면 담당자에게 요청하세요.
