@@ -817,8 +817,8 @@ pages['partner-form.html'] = shell({
     note: '※ 로고마다 여백과 글자 굵기가 달라, 높이를 똑같이 맞추면 어떤 로고는 크게 · 어떤 로고는 작게 보입니다. '
         + '로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
-      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지에서 어느 묶음에 들어갈지, 체계도의 어느 자리에 놓일지가 정해집니다.' }),
-      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지의 카드와 체계도에 함께 쓰입니다.' }),
+      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.' }),
+      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.' }),
       field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: '영문 페이지를 만들 때 씁니다. 비워 두어도 됩니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 로고 둘레의 빈 여백은 잘라내고 씁니다')
@@ -833,8 +833,8 @@ pages['partner-form.html'] = shell({
                   placeholder="37.3" id="eq" /><i>%</i></span>
                 <label class="ad-cb"><input type="checkbox" id="eqTbd" /> 확정 전 (TBD 로 표시)</label>
               </div>`,
-        hint: '확정된 지분율만 숫자로 적습니다. 아직 정해지지 않았으면 체크해 주세요 — 사업추진 체계도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.' }),
-      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '사업추진 체계도에서 상호 아래에 들어가는 설명입니다.' }),
+        hint: '확정된 지분율만 숫자로 적습니다. 아직 정해지지 않았으면 체크해 주세요 — 사업구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.' }),
+      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '사업구조도에서 상호 아래에 들어가는 설명입니다.' }),
       field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '끄면 메인 화면에는 나오지 않고 사업주체 페이지에만 표시됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
