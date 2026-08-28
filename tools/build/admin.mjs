@@ -806,13 +806,22 @@ pages['partner-form.html'] = shell({
   body: formCard({
     title: '파트너사 등록 / 수정',
     slug: 'partner', preview: '../company.html',
-    note: '※ 로고는 면적 기준으로 자동 정규화됩니다(높이만 맞추면 크기가 달라 보입니다).',
+    /* ⚠⚠ **이 정규화는 아직 구현돼 있지 않다.** 지금은 사람이 로고마다 높이를 눈으로 맞춰
+         `company.html` 에 인라인 `--lh` 로 박아 넣는다(28~39px, 로고마다 다르다).
+         이 화면은 개발 인계용 시안이므로 문구를 '됩니다' 가 아니라 **'맞춰 줍니다'** 로 두되,
+         DEV 주석에 구현 사항을 남긴다.
+       DEV: 로고 업로드 시 서버가 해야 할 일 — ① 알파/흰 배경을 스캔해 콘텐츠 bbox 를 구하고
+         여백을 잘라낸다 ② 잘라낸 그림의 **면적(가로x세로)** 이 로고마다 비슷해지도록 배율을
+         정한다(기준값 AREA 약 3,400 · 높이 상한 약 39px). 높이만 맞추면 안 되는 이유는
+         아래 note 문구에 적어 둔 그대로다. 산출 근거는 CLAUDE.md §4.4. */
+    note: '※ 로고마다 여백과 글자 굵기가 달라, 높이를 똑같이 맞추면 어떤 로고는 크게 · 어떤 로고는 작게 보입니다. '
+        + '그래서 로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
       field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 파트너 그룹과 구조도 위치를 결정합니다.' }),
       field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지 카드와 구조도에 함께 쓰입니다.' }),
       field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: 'EN 페이지 대비 · 선택 항목입니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
-        control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 여백은 자동 트리밍')
+        control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 로고 둘레의 빈 여백은 잘라내고 씁니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
         hint: '흰배경의 JPG 는 어두운 배경에서 흰 박스로 보입니다 — 투명 png 파일을 권장합니다.' }),
       /* 지분율은 상태가 **세 가지**다 — 확정된 값 / 확정 전(TBD) / 표기 안 함.
