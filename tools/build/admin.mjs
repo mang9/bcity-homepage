@@ -571,7 +571,7 @@ pages['notice-form.html'] = shell({
       field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '다중 첨부 · 파일당 최대 20MB')
         + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
         hint: '다중 첨부 · 파일당 최대 20MB' }),
-      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '목록 최상단에 [공지] 배지와 함께 노출됩니다.' }),
+      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '목록 최상단에 고정합니다. (상단 고정은 아직 만들어지지 않았습니다 — 개발 필요)' }),
       pubState(1),
     ],
   }),
@@ -619,7 +619,7 @@ pages['press-form.html'] = shell({
     note: '※ 링크를 클릭하면 해당 기사 URL 로 이동합니다(새 창).',
     fields: [
       field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '필수 · 최대 200자' }),
-      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '목록의 매체명 필터에 그대로 쓰입니다.' }),
+      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '목록의 매체명 표기에 쓰입니다. (분류 · 검색 바는 현재 꺼져 있습니다 — 게시물이 늘면 켭니다)' }),
       field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '원 기사 게재일' }),
       field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 웹사이트 URL · http(s):// 로 시작' }),
       pubState(2),
@@ -656,14 +656,14 @@ pages['video-form.html'] = shell({
   body: formCard({
     title: '홍보영상 등록 / 수정',
     slug: 'video', preview: '../video.html',
-    note: '※ 메인 노출은 최대 4편까지 지정할 수 있습니다.',
+    note: '※ 메인 노출 지정은 아직 만들어지지 않았습니다 — 메인 홍보센터는 현재 고정 카드입니다(개발 필요).',
     fields: [
       field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '카드 썸네일 아래 노출' }),
       field({ label: '영상 소스', req: true, type: 'SELECT + URL',
         control: `<div style="display:flex;gap:8px;flex-wrap:wrap">${sel(['YouTube', '직접 업로드'])}
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
-        hint: 'YouTube 링크 · 썸네일은 링크에서 자동 추출' }),
-      field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 노출 · 초과 지정 시 경고' }),
+        hint: 'YouTube 링크. 썸네일은 아래에서 직접 등록합니다 (링크에서 자동으로 가져오는 기능은 개발 필요)' }),
+      field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 · 초과 시 경고 (개발 필요)' }),
       pubState(3),
     ],
   }),
@@ -701,7 +701,7 @@ pages['gallery-form.html'] = shell({
     slug: 'gallery', preview: '../gallery.html',
     note: '※ 다중 이미지 업로드 및 드래그로 순서를 조정합니다.',
     fields: [
-      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 — 갤러리 분류 탭 기준' }),
+      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 — 표지 배지에 쓰입니다. (분류 탭은 현재 꺼져 있습니다)' }),
       field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '앨범 단위 제목' }),
       field({ label: '대표 이미지', req: true, type: 'IMAGE UPLOAD',
         control: drop('썸네일 · 리스트 대표 이미지', '권장 1600×900 이상 · JPG · PNG · WebP')
@@ -815,7 +815,7 @@ pages['partner-form.html'] = shell({
          정한다(기준값 AREA 약 3,400 · 높이 상한 약 39px). 높이만 맞추면 안 되는 이유는
          아래 note 문구에 적어 둔 그대로다. 산출 근거는 CLAUDE.md §4.4. */
     note: '※ 로고마다 여백과 글자 굵기가 달라, 높이를 똑같이 맞추면 어떤 로고는 크게 · 어떤 로고는 작게 보입니다. '
-        + '그래서 로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
+        + '로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
       field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 파트너 그룹과 구조도 위치를 결정합니다.' }),
       field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지 카드와 구조도에 함께 쓰입니다.' }),
