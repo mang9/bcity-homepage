@@ -885,7 +885,7 @@
        프라이머리 컬러다(2026-08-24 지시). ⚠ SVG 안에 색을 박아 두면 이 값이 무시된다. */
     .iv-sz-ic { flex: none; display: grid; place-items: center; width: 52px; height: 52px;
       border-radius: 999px; background: var(--color-bg); color: var(--color-primary); }
-    /* ⚠ 아이콘을 `<img>` 로 넣으면 안 된다. **외부 SVG 는 문서의 `currentColor` 를 상속하지
+    /* ⚠ 아이콘을 img 태그로 넣으면 안 된다. **외부 SVG 는 문서의 `currentColor` 를 상속하지
          않아** 글리프가 검정으로 찍힌다(실측 #000000, computed 는 프라이머리였다).
          `mask-image` 로 모양만 쓰고 색은 `background: currentColor` 가 낸다 — 그래야 같은
          파일 하나로 특구 카드(프라이머리)와 주요 혜택 카드(흰색)를 모두 칠할 수 있다.
@@ -1565,8 +1565,10 @@
     /* 토지이용계획도 — 전체 배치도 위에 해당 권역 레이어를 겹친다.
        ⚠ 두 이미지의 비율이 미세하게 다르다(배경 880x1100 = 0.800 · 레이어 462x577 = 0.801).
          둘 다 `object-fit: contain` 이라 같은 방식으로 레터박싱되어 정합이 유지된다.
-       ⚠ `<picture>` 로 감싸지 말 것 — inline 요소가 흐름에 끼어들어 absolute 겹침 전제를 깬다
-         (§11.5-4 의 실제 회귀 이력). AVIF 는 `<img src>` 에 그대로 넣으면 된다. */
+       ⚠ picture 요소로 감싸지 말 것 — inline 요소가 흐름에 끼어들어 absolute 겹침 전제를 깬다
+         (§11.5-4 의 실제 회귀 이력). AVIF 는 img 태그의 src 에 그대로 넣으면 된다.
+         ⚠ 주석에 태그를 꺾쇠로 적지 않는다 — 디자인 훅이 실제 마크업으로 오인해
+           '깨진 이미지' 로 잡는다(2026-08-28). */
     /* ⚠ 두 이미지 **모두** absolute + `object-fit: contain` 이다. 상자 높이가 오른쪽 칸에
          따라 달라져도 똑같은 방식으로 레터박싱되므로 정합이 유지된다.
          (예전에는 배경만 `width:100%; height:auto` 여서 상자 높이를 이미지가 정했다.)

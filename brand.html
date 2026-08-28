@@ -789,7 +789,7 @@
          viewBox 의 기본 preserveAspectRatio(xMidYMid meet)가 그 안에서 contain 을 해 준다. */
     /* ⚠ 02 만 **파일**이다. path 가 10KB 라 페이지에 인라인하지 않고 SVG 로 두고,
          **마스크**로 currentColor 를 입힌다 — 이러면 01 · 03 의 인라인 SVG 와 색이 같아진다.
-         `<img>` 로는 색을 맞출 수 없다. CSS 는 문서에 인라인되므로 url() 은 페이지(루트) 기준이다. */
+         img 태그로는 색을 맞출 수 없다. CSS 는 문서에 인라인되므로 url() 은 페이지(루트) 기준이다. */
     .br-motif-mask { background: currentColor;
       -webkit-mask: url(assets/brand/motif-dna.svg) center / contain no-repeat;
               mask: url(assets/brand/motif-dna.svg) center / contain no-repeat; }

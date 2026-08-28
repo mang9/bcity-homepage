@@ -153,7 +153,7 @@
    프라이머리 컬러다(2026-08-24 지시). ⚠ SVG 안에 색을 박아 두면 이 값이 무시된다. */
 .iv-sz-ic { flex: none; display: grid; place-items: center; width: 52px; height: 52px;
   border-radius: 999px; background: var(--color-bg); color: var(--color-primary); }
-/* ⚠ 아이콘을 `<img>` 로 넣으면 안 된다. **외부 SVG 는 문서의 `currentColor` 를 상속하지
+/* ⚠ 아이콘을 img 태그로 넣으면 안 된다. **외부 SVG 는 문서의 `currentColor` 를 상속하지
      않아** 글리프가 검정으로 찍힌다(실측 #000000, computed 는 프라이머리였다).
      `mask-image` 로 모양만 쓰고 색은 `background: currentColor` 가 낸다 — 그래야 같은
      파일 하나로 특구 카드(프라이머리)와 주요 혜택 카드(흰색)를 모두 칠할 수 있다.
