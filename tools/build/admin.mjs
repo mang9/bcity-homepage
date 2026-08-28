@@ -359,6 +359,9 @@ function field({ label, req, type, control, hint }) {
 const input = (ph) => `<input class="ad-in" type="text" placeholder="${esc(ph)}" />`;
 const sel = (opts) => `<select class="ad-sel">${opts.map((o) => `<option>${esc(o)}</option>`).join('')}</select>`;
 const date = () => '<input class="ad-in" type="date" style="max-width:220px" />';
+/* 요약처럼 짧은 여러 줄 입력. 본문은 `editor()` 를 쓴다 — 이쪽은 서식이 필요 없다. */
+const area = (ph, rows = 2) => `<textarea class="ad-in" rows="${rows}"`
+  + ` placeholder="${esc(ph)}" style="resize:vertical"></textarea>`;
 /* 토글은 실제로 눌린다(2026-08-18 지시). `<div>` 가 아니라 `<button aria-pressed>` 로
    내야 키보드·스크린리더에서도 상태가 읽힌다 — 상태 전환은 셸의 인라인 스크립트가 맡는다. */
 const toggle = (on, t) => `<button type="button" class="ad-toggle${on ? ' is-on' : ''}"`
@@ -567,6 +570,10 @@ pages['notice-form.html'] = shell({
     slug: 'notice', preview: '../notice.html',
     fields: [
       field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '꼭 입력해 주세요. 100자까지.' }),
+      /* ⚠ 요약 칸이 없었다(2026-08-28 점검). notice.json 의 summary 가 목록에 실제로
+           나온다(.pr-sum) — 비면 제목만 남아 목록이 허전해진다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('목록에 보일 한두 줄'),
+        hint: '목록에서 제목 아래에 보입니다. 비워 두면 제목만 나옵니다.' }),
       field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '글자 꾸미기와 이미지 넣기를 할 수 있습니다.' }),
       field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.')
         + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
@@ -621,6 +628,12 @@ pages['press-form.html'] = shell({
       field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '꼭 입력해 주세요. 200자까지.' }),
       field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '기사 목록에 매체명으로 표시됩니다.' }),
       field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '기사가 실린 날짜입니다.' }),
+      /* ⚠ 요약 · 본문 칸이 없었다. press.json 은 둘 다 쓴다 —
+           summary 는 목록 줄, body 는 상세 페이지(.post-body)다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('목록에 보일 한두 줄'),
+        hint: '목록에서 제목 아래에 보입니다.' }),
+      field({ label: '내용', type: 'TEXT EDITOR', control: editor(),
+        hint: '상세 페이지에 실릴 본문입니다. 비워 두면 기사 링크로만 안내합니다.' }),
       field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 기사 주소를 붙여 넣습니다.' }),
       pubState(2),
     ],
@@ -663,6 +676,14 @@ pages['video-form.html'] = shell({
         control: `<div style="display:flex;gap:8px;flex-wrap:wrap">${sel(['YouTube', '직접 업로드'])}
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
         hint: 'YouTube 주소를 붙여 넣습니다. 목록에 보이는 이미지는 아래에서 따로 등록합니다.' }),
+      /* ⚠ 썸네일 칸이 **없었다**(2026-08-28 지적). 위 안내가 '아래에서 따로 등록합니다' 라고
+           하는데 등록할 자리가 없었다. `video.json` 은 `image` 를 실제로 쓴다 —
+           빠뜨리면 목록 카드가 빈다. 갤러리 폼의 '대표 이미지' 와 같은 어법으로 맞춘다. */
+      field({ label: '썸네일', req: true, type: 'IMAGE UPLOAD',
+        control: drop('목록에 보이는 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
+          + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>썸네일</b></div></div>',
+        hint: '목록 카드에 이 이미지가 보입니다. 영상 화면과 다른 장면을 써도 됩니다.' }),
+      field({ label: '재생 시간', type: 'INPUT', control: input('예: 2:14'), hint: '카드 오른쪽 아래에 표시됩니다. 비워 두어도 됩니다.' }),
       field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 고를 수 있습니다.' }),
       pubState(3),
     ],
@@ -703,6 +724,9 @@ pages['gallery-form.html'] = shell({
     fields: [
       field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 중에서 고릅니다. 표지 왼쪽 위에 표시됩니다.' }),
       field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '사진 묶음 전체의 제목입니다.' }),
+      /* ⚠ 요약 칸이 없었다. gallery.json 의 summary 를 카드가 쓴다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('카드에 보일 한두 줄'),
+        hint: '카드에서 제목 아래에 보입니다.' }),
       field({ label: '대표 이미지', req: true, type: 'IMAGE UPLOAD',
         control: drop('썸네일 · 리스트 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))"><div class="ad-thumb"><b>대표</b></div></div>',
