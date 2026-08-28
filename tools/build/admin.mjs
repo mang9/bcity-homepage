@@ -683,7 +683,10 @@ pages['video-form.html'] = shell({
         control: drop('목록에 보이는 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>썸네일</b></div></div>',
         hint: '목록 카드에 이 이미지가 보입니다. 영상 화면과 다른 장면을 써도 됩니다.' }),
-      field({ label: '재생 시간', type: 'INPUT', control: input('예: 2:14'), hint: '카드 오른쪽 아래에 표시됩니다. 비워 두어도 됩니다.' }),
+      /* 재생 시간 칸은 두지 않는다(2026-08-28 지시). 사람이 적을 값이 아니다 —
+         직접 업로드는 파일 메타데이터에서, YouTube 는 Data API 로 서버가 읽어 채운다.
+         DEV: 못 읽으면 `duration` 을 비워 두면 된다. 빌더가 값이 없으면 배지를
+         아예 그리지 않으므로(`pages.mjs` 의 `badge ? … : ''`) 빈 배지가 남지 않는다. */
       field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 고를 수 있습니다.' }),
       pubState(3),
     ],
