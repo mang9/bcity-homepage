@@ -1414,6 +1414,16 @@
       [...dzDots.children].forEach((b,k)=>b.classList.toggle('on', k === i));
       dzAcc.querySelectorAll('.za').forEach((c,k)=>c.classList.toggle('open', k === i));
 
+      /* '자세히 보기' 는 **그 권역의 탭**을 연다(2026-08-28 지시).
+         구역소개 페이지의 탭 버튼 id 가 `tab-01`~`tab-08` 이고 여기 `z.n` 과 1:1 이다.
+         ⚠ 전환 애니메이션(`dz-swap`) 밖에서 바로 바꾼다 — 카드를 넘긴 직후 링크를 누를 때
+           200ms 동안 이전 권역으로 가는 것을 막는다. */
+      const dzA = document.getElementById('dzArea');
+      if (dzA) {
+        dzA.href = 'districts.html#tab-' + z.n;
+        dzA.setAttribute('aria-label', z.t + ' 자세히 보기');
+      }
+
       dzStage.classList.add('dz-swap');
       setTimeout(()=>{
         document.getElementById('dzHead').textContent  = z.n + ' · ' + z.head;
