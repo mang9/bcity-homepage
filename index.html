@@ -254,7 +254,7 @@
   </section>
 
   <!-- ============ 3. 사업개요 (슬라이드 8·9) — 스크럽 영상 2페이지 ============ -->
-  <section id="business" class="page cine ov" data-cine="biz" data-play="loop" data-clip="assets/vid/business.mp4?v=bio2" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio2" style="height:400vh">
+  <section id="business" class="page cine ov" data-cine="biz" data-play="loop" data-clip="assets/vid/business.mp4?v=bio2" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio2" style="height:100vh">
     <div class="cine-stage bg-navy">
       <video muted playsinline preload="auto" data-scrub="biz"></video>
       <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/still/seg05@m.avif" /><source type="image/avif" srcset="assets/still/seg05.avif" /><img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" /></picture>
@@ -1481,16 +1481,26 @@
       const dots = sec.querySelector('[data-dots="'+key+'"]');
       if (dots && pages.length > 1) {
         // 인디케이터는 표시 전용이 아니라 조작 가능해야 한다.
-        // 페이지 전환은 스크롤 진행률(c.p)이 구동하므로, 클릭하면 해당 구간으로 스크롤한다
-        // (입지 하단 탭과 같은 방식). 그러면 tick() 이 나머지를 알아서 맞춘다.
         dots.innerHTML = pages.map((_,i)=>
           '<i role="button" tabindex="0" aria-label="'+(i+1)+'페이지로 이동"'
           + (i===0 ? ' class="on"' : '') + '></i>').join('');
+        /* 두 갈래다.
+           · 런웨이가 있는 섹션 — 그 구간으로 스크롤하면 tick() 이 나머지를 맞춘다.
+           · 런웨이가 없는 자동재생 섹션(`data-play="loop"`) — 스크롤로는 옮길 수 없다.
+             씬을 직접 바꾸고 **영상을 처음으로 되감는다** — 안 되감으면 남은 몇 초 뒤
+             바로 다음 씬으로 넘어가 방금 고른 씬을 읽을 시간이 없다. */
         const go = i => {
           const runway = sec.offsetHeight - innerHeight;
-          if (runway <= 0) return;
-          scrollTo({ top: sec.offsetTop + runway * ((i + 0.5) / pages.length),
-                     behavior: 'smooth' });
+          if (runway > 0) {
+            scrollTo({ top: sec.offsetTop + runway * ((i + 0.5) / pages.length),
+                       behavior: 'smooth' });
+            return;
+          }
+          const c = cines.find(x => x.sec === sec);
+          if (!c) return;
+          c.autoIdx = i;
+          const v = c.video;
+          if (v && v.duration) { try { v.currentTime = 0; c.lastT = 0; } catch(e){} }
         };
         [...dots.children].forEach((el, i) => {
           el.addEventListener('click', ()=>go(i));
@@ -1615,15 +1625,14 @@
         // 카피 페이지 전환
         if (c.pages.length > 1) {
           const scrollIdx = Math.min(Math.floor(c.p * c.pages.length), c.pages.length - 1);
-          /* 스스로 도는 섹션은 **영상 루프**가 씬을 정한다. 다만 사용자가 스크롤로 씬을
-             바꾸면 그쪽이 이긴다 — 그 순간부터 다시 영상 루프가 이어받는다.
-             ⚠ 동작 최소화에서는 영상이 돌지 않으므로 스크롤이 계속 씬을 정한다. */
+          /* 스스로 도는 섹션은 **영상 루프만** 씬을 정한다(2026-08-28 지시).
+             ⚠ 전에는 스크롤 위치도 씬을 바꿨는데, 런웨이가 400vh 라 스크롤을 내릴수록
+               카피가 따라 바뀌어 **스크롤이 영상을 감는 것처럼** 보였다. 그게 지적받은 증상이다.
+               지금은 런웨이가 없고(100vh) 스크롤은 다음 섹션으로 지나갈 뿐이다.
+             ⚠ 동작 최소화에서는 영상이 돌지 않아 자동 전환이 없다 —
+               그때는 스크롤 위치(= 0)로 첫 씬을 보여 준다. 카피가 사라지지 않게 하는 최소 보장이다. */
           let idx = scrollIdx;
-          if (c.playLoop && !REDUCE) {
-            if (c.scrollIdx != null && scrollIdx !== c.scrollIdx) c.autoIdx = scrollIdx;
-            c.scrollIdx = scrollIdx;
-            if (c.autoIdx != null) idx = c.autoIdx;
-          }
+          if (c.playLoop && !REDUCE && c.autoIdx != null) idx = c.autoIdx;
           if (idx !== c.cur) {
             c.pages[c.cur].classList.remove('on');
             c.pages[idx].classList.add('on');
