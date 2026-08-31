@@ -68,6 +68,15 @@ const OVERRIDE = `
      JS 가 인라인 style 로 넣는 값보다 !important 가 이긴다. */
   .lv-stage, .lv-ed, .lv-intro, .lv-split { --p: 1 !important; --pw: 1 !important; --pin: 1 !important; --pinl: 1 !important; }
   .lv-side > *, .lv-frame, .lv-thumbs li { opacity: 1 !important; transform: none !important; }
+  /* ⚠⚠ 정주환경 **도입부는 --p: 0 이 시작 상태**다(다른 곳과 반대 · §11.58).
+     위 줄이 1 을 주면 도입 무대가 translateX(-100%) 로 화면 밖으로 나가 그 자리가
+     통째로 빈다 — 실측 x=-1920. 사용자가 '상단 화면 디자인이 없다'고 본 것이 이것이다.
+     아래 줄이 뒤에 와야 이긴다(특이도가 같아 순서로 결정된다). */
+  .lv-intro, .lv-stage--intro { --p: 0 !important; }
+  /* 풀화면 상태 — 주소에 figfull=1 을 붙이면 오른쪽 칸을 접어 사진이 화면을 채운다.
+     정주환경은 한 섹션이 [사진 전체] → [사진 | 본문] 두 상태를 지나므로 두 벌로 캡처한다. */
+  html.cap-full .lv-ed, html.cap-full .lv-ed .lv-stage, html.cap-full .lv-ed .lv-split {
+    --p: 0 !important; --pw: 0 !important; }
 
   /* 구역소개 도입부 — 스케치→실사 디졸브. 카피는 전환 뒤에만 보이므로 강제로 켠다 */
   .dz-intro-sketch { opacity: 0 !important; }
@@ -102,12 +111,51 @@ const OVERRIDE = `
     var on = function (sel, cls) {
       [].slice.call(document.querySelectorAll(sel)).forEach(function (e) { e.classList.add(cls); });
     };
+    if (location.search.indexOf('figfull=1') >= 0) document.documentElement.classList.add('cap-full');
     on('.rv, .cn-dia, .cx-dia, .bc-panel', 'in');
     /* 메인 전용 — '.in' 을 붙여야 켜지는 것들. 서브페이지에는 없어 무해하다. */
     on('.reveal, .ov, .az-card, .lr', 'in');
     [].slice.call(document.querySelectorAll('.dz-intro')).forEach(function (e) {
       e.classList.remove('is-armed'); e.classList.add('is-playing');
     });
+    /* ⚠⚠ mask-image 로 그리는 아이콘은 캡처가 **단색 면**으로 가져간다.
+       사이트는 'background: currentColor + mask: url(...svg)' 로 아이콘을 칠한다
+       (외부 SVG 가 currentColor 를 상속하지 않아서 쓰는 방식 · page-invest.css 주석 참고).
+       캡처 스크립트는 mask 를 이해하지 못해 배경색 사각형만 남긴다 —
+       2026-08-31 실측: 투자·입주 6곳 · 브랜드 1곳이 색면으로 들어갔다.
+       그래서 여기서 **SVG 를 받아 인라인으로 심고** 마스크를 걷는다.
+       ⚠ currentColor 는 상속이라 캡처가 따라가지 못한다 → 계산된 배경색으로 굳힌다.
+       ⚠ 이 apply() 는 세 번 돈다 — data 속성으로 한 번만 처리한다. */
+    [].slice.call(document.querySelectorAll('*')).forEach(function (e) {
+      if (e.dataset.capMask) return;
+      var cs = getComputedStyle(e);
+      var mi = cs.maskImage || cs.webkitMaskImage || '';
+      var u = /url[(]["']?([^"')]+[.]svg[^"')]*)["']?[)]/.exec(mi);
+      if (!u) return;
+      e.dataset.capMask = '1';
+      var color = cs.backgroundColor;
+      fetch(u[1]).then(function (r) { return r.text(); }).then(function (txt) {
+        var box = document.createElement('div');
+        box.innerHTML = txt;
+        var svg = box.querySelector('svg');
+        if (!svg) return;
+        svg.setAttribute('width', '100%');
+        svg.setAttribute('height', '100%');
+        svg.style.display = 'block';
+        [].slice.call(svg.querySelectorAll('*')).concat([svg]).forEach(function (k) {
+          ['fill', 'stroke'].forEach(function (a) {
+            var v = k.getAttribute(a);
+            if (!v || v === 'none') return;
+            k.setAttribute(a, color);
+          });
+        });
+        e.style.background = 'none';
+        e.style.webkitMaskImage = 'none';
+        e.style.maskImage = 'none';
+        e.appendChild(svg);
+      }).catch(function () {});
+    });
+
     /* 지연 이미지를 즉시 받게 한다 — 안 하면 빈 칸으로 잡힌다 */
     [].slice.call(document.querySelectorAll('img[loading="lazy"]')).forEach(function (i) { i.loading = 'eager'; });
     /* ⚠⚠ 영상은 **포스터 이미지로 바꾼다**(§8.2). 소스를 주입하면 안 된다 —
