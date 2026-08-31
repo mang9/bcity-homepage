@@ -28,11 +28,11 @@
        ⚠ DESIGN.md 가 바뀌면 여기와 src/css/app.css 를 **둘 다** 고친다.
           서브페이지는 Tailwind 를 쓰지 않으므로 @theme 트리셰이킹(§1.3)은 해당 없다. */
     :root {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
+      --color-primary: #2C3E91;
+      --color-primary-hover: #253479;
       --color-navy: #002742;
       --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
+      --color-label-blue: #4e7ac7;
       --color-light-blue: #bbccf0;
       --color-bg: #f4f8fe;
       --color-surface: #ffffff;
@@ -43,7 +43,7 @@
       /* 8대 권역 식별색 — DESIGN.md 에 있는 토큰인데 서브페이지 사본에는 빠져 있었다.
          구역소개 페이지가 쓰기 시작하면서 채워 넣는다. 흰색 대비 전부 4.62 이상(DESIGN.md §색).
          ⚠ index.html 은 이 값을 @theme 과 :root 양쪽에 갖는다(§1.3 트리셰이킹). */
-      --color-district-ai: #344198;
+      --color-district-ai: #2C3E91;
       --color-district-bio: #288074;
       --color-district-food: #a1662b;
       --color-district-mice: #337aa3;
@@ -54,11 +54,11 @@
 
       /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
          여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
-      --color-logo: #2c3e91;
+      --color-logo: var(--color-primary);   /* 통일(2026-08-31) — 별칭이라 갈라질 수 없다 */
       /* 브랜드 정본 3색(스토리보드 slide51 — Pantone 까지 지정돼 있다). 사이트 UI 토큰과 **다르다**:
-           Indigo #2C3E91 = --color-logo (UI 의 --color-primary #344198 과 다름)
+           Indigo #2C3E91 = --color-logo = --color-primary (2026-08-31 통일 · 별칭)
            Mint   #3DBFA8 = --color-mint (일치)
-           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-azure #4E7AC7 은 아이브로우용 다른 색)
+           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-label-blue #4E7AC7 은 아이브로우용 다른 색)
          brand.html 만 쓴다. UI 색을 이걸로 바꾸지 말 것 — 대비·톤이 전부 다시 계산돼야 한다. */
       --brand-azure: #0095d9;
       --scrim-rgb: 0 17 34;
@@ -476,7 +476,7 @@
       border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
     .ct-input::placeholder { color: #9aa8bb; }
     .ct-input:focus { outline: none; border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(52,65,152,.12); }
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); }
     .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
     /* 관심분야 칩 */
     .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -488,7 +488,7 @@
       transition: background .22s, color .22s, border-color .22s; }
     .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
     .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(52,65,152,.18); }
+    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
     /* 동의 */
     .ct-agree { display: flex; flex-direction: column; gap: 10px;
       padding: 18px 22px; background: var(--color-bg);
@@ -534,7 +534,7 @@
     .ct-card { padding: 22px 24px; background: var(--color-bg);
       border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
     .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--color-azure); }
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-label-blue); }
     /* ⚠ 이메일 주소는 **한 줄이어야 한다**(2026-08-27 지시). 주소가 길어지면 조용히 두 줄로
          접혀 `juyoung@biotech-` / `iv.com` 처럼 도메인이 잘려 읽힌다(실측: 19px 에서 필요 254px
          vs 카드 안쪽 250px — **4px 모자랐다**).
@@ -565,7 +565,7 @@
        ⚠ 값은 메인의 유틸리티를 그대로 푼 것이다(`text-xs`=12px · `tracking-[0.18em]` 등).
          메인 쪽 유틸리티를 바꾸면 여기도 맞춰야 한다. */
     .ct-eyebrow { margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .18em; color: var(--color-azure); }
+      letter-spacing: .18em; color: var(--color-label-blue); }
     .ct-title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px;
       font-weight: 700; color: var(--color-text); }
     .ct-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
@@ -864,7 +864,7 @@
        67px 원형 배지 안에 40px 아이콘 · 제목 2줄 · 선정 지역 · 1px 구분선 ·
        그룹 제목 + 항목 · 맨 아래 근거 고시 알약.
        ⚠ 색은 전부 기존 토큰으로 맞아떨어진다 — 리터럴을 새로 들이지 않았다.
-         IM #344198=--color-primary · #002742=--color-navy · #5B6B82=--color-text-muted ·
+         IM #344198≈--color-primary(#2C3E91 · 2026-08-31 통일 전 값) · #002742=--color-navy · #5B6B82=--color-text-muted ·
          #D8E2F0≈--color-line · #E8F0FC·#F1F5FA≈--color-bg.
        ⚠ 세 카드의 그룹 수가 달라(2~3개) 아래 알약 높이가 어긋난다 →
          카드를 flex 열로 만들고 그룹 묶음이 남는 높이를 먹게 한다(`flex: 1 1 auto`). */

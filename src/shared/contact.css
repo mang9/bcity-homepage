@@ -133,7 +133,7 @@
   border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
 .ct-input::placeholder { color: #9aa8bb; }
 .ct-input:focus { outline: none; border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(52,65,152,.12); }
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); }
 .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
 /* 관심분야 칩 */
 .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -145,7 +145,7 @@
   transition: background .22s, color .22s, border-color .22s; }
 .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
 .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
-.ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(52,65,152,.18); }
+.ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
 /* 동의 */
 .ct-agree { display: flex; flex-direction: column; gap: 10px;
   padding: 18px 22px; background: var(--color-bg);
@@ -191,7 +191,7 @@
 .ct-card { padding: 22px 24px; background: var(--color-bg);
   border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
 .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--color-azure); }
+  letter-spacing: .08em; text-transform: uppercase; color: var(--color-label-blue); }
 /* ⚠ 이메일 주소는 **한 줄이어야 한다**(2026-08-27 지시). 주소가 길어지면 조용히 두 줄로
      접혀 `juyoung@biotech-` / `iv.com` 처럼 도메인이 잘려 읽힌다(실측: 19px 에서 필요 254px
      vs 카드 안쪽 250px — **4px 모자랐다**).
@@ -222,7 +222,7 @@
    ⚠ 값은 메인의 유틸리티를 그대로 푼 것이다(`text-xs`=12px · `tracking-[0.18em]` 등).
      메인 쪽 유틸리티를 바꾸면 여기도 맞춰야 한다. */
 .ct-eyebrow { margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .18em; color: var(--color-azure); }
+  letter-spacing: .18em; color: var(--color-label-blue); }
 .ct-title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px;
   font-weight: 700; color: var(--color-text); }
 .ct-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }

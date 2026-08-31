@@ -132,7 +132,7 @@
    67px 원형 배지 안에 40px 아이콘 · 제목 2줄 · 선정 지역 · 1px 구분선 ·
    그룹 제목 + 항목 · 맨 아래 근거 고시 알약.
    ⚠ 색은 전부 기존 토큰으로 맞아떨어진다 — 리터럴을 새로 들이지 않았다.
-     IM #344198=--color-primary · #002742=--color-navy · #5B6B82=--color-text-muted ·
+     IM #344198≈--color-primary(#2C3E91 · 2026-08-31 통일 전 값) · #002742=--color-navy · #5B6B82=--color-text-muted ·
      #D8E2F0≈--color-line · #E8F0FC·#F1F5FA≈--color-bg.
    ⚠ 세 카드의 그룹 수가 달라(2~3개) 아래 알약 높이가 어긋난다 →
      카드를 flex 열로 만들고 그룹 묶음이 남는 높이를 먹게 한다(`flex: 1 1 auto`). */

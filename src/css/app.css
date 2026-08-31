@@ -27,18 +27,18 @@
 
 /* ── 2. Tailwind 토큰 ─────────────────────────────────────────────────── */
 @theme {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
+      --color-primary: #2C3E91;
+      --color-primary-hover: #253479;
       --color-navy: #002742;
       --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
+      --color-label-blue: #4e7ac7;
       --color-light-blue: #bbccf0;
       --color-bg: #f4f8fe;
       --color-surface: #ffffff;
       --color-text: #111111;
       --color-text-muted: #5b6b82;
       --color-line: #d8e3f2;
-      --color-district-ai: #344198;
+      --color-district-ai: #2C3E91;
       --color-district-bio: #288074;
       --color-district-food: #a1662b;
       --color-district-mice: #337aa3;
@@ -81,18 +81,18 @@
 
 /* ── 3. 평문 토큰 재선언 (레이어 없음 — 삭제 금지) ──────────────────────── */
 :root {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
+      --color-primary: #2C3E91;
+      --color-primary-hover: #253479;
       --color-navy: #002742;
       --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
+      --color-label-blue: #4e7ac7;
       --color-light-blue: #bbccf0;
       --color-bg: #f4f8fe;
       --color-surface: #ffffff;
       --color-text: #111111;
       --color-text-muted: #5b6b82;
       --color-line: #d8e3f2;
-      --color-district-ai: #344198;
+      --color-district-ai: #2C3E91;
       --color-district-bio: #288074;
       --color-district-food: #a1662b;
       --color-district-mice: #337aa3;

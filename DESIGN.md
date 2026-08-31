@@ -1,11 +1,15 @@
 ---
 name: B-CITY Unified Digital
 colors:
-  primary: "#344198"
-  primary-hover: "#2A3680"
+  # 2026-08-31 — 브랜드 정본 인디고로 통일했다. 예전 값 #344198 은 정본과
+  #   ΔE 2.9 로 사람 눈에 구분되지 않는데 토큰만 둘이라 혼동을 낳았다.
+  primary: "#2C3E91"
+  primary-hover: "#253479"
   navy: "#002742"
   mint: "#3DBFA8"
-  azure: "#4E7AC7"
+  # 아이브로우 라벨 전용. 브랜드 심볼의 azure(brand-azure #0095D9)와 **역할도 값도**
+  #   다르다 — 같은 이름이라 헷갈려 2026-08-31 에 역할 이름으로 바꿨다.
+  label-blue: "#4E7AC7"
   light-blue: "#BBCCF0"
   bg: "#F4F8FE"
   surface: "#FFFFFF"
@@ -15,9 +19,11 @@ colors:
   # 브랜드 정본 2색 — UI 토큰과 **다른 값**이다(§11.21).
   #   logo(Indigo) ≠ primary  ·  brand-azure ≠ azure(아이브로우용)
   #   코드에서는 --color-logo · --brand-azure 다(src/sub/css/00-tokens.css).
+  # primary 와 **같은 값**이다(위 통일). 이름은 브랜드 규정 쪽 호칭으로 남긴다 —
+  #   코드에서는 --color-logo: var(--color-primary) 별칭이라 갈라질 수 없다.
   logo: "#2C3E91"
   brand-azure: "#0095D9"
-  district-ai: "#344198"
+  district-ai: "#2C3E91"
   district-bio: "#288074"
   district-food: "#A1662B"
   district-mice: "#337AA3"
@@ -166,11 +172,11 @@ PPT·홈페이지·제안서·지도·아이콘이 하나의 토큰을 공유한
 팔레트는 블루 계열을 중심으로 하고, 민트는 포인트로만 제한한다. 사용 비율은 Primary Blue 60~70%,
 White/Blue White 20~30%, Point Mint 5~10%를 기준으로 한다.
 
-- **primary (#344198) — Primary / Indigo:** 메인 타이틀, 핵심 숫자, 표 헤더, 주요 아이콘, Primary CTA.
-- **primary-hover (#2A3680):** Primary CTA·링크의 hover/active 상태. (웹 인터랙션용으로 추가)
+- **primary (#2C3E91) — Primary / Indigo:** 메인 타이틀, 핵심 숫자, 표 헤더, 주요 아이콘, Primary CTA.
+- **primary-hover (#253479):** Primary CTA·링크의 hover/active 상태. (웹 인터랙션용으로 추가)
 - **navy (#002742):** 최종 IM 표지 톤. 다크 섹션·푸터 배경 등 강한 대비가 필요한 곳에 제한적으로 사용.
 - **mint (#3DBFA8) — Point Mint:** 생명·바이오·순환·긍정 지표, 선택 상태 포인트. 넓은 배경 사용 금지.
-- **azure (#4E7AC7) — Azure / Data Blue:** 데이터·교통·보조 그래프, 라인 강조.
+- **label-blue (#4E7AC7) — Azure / Data Blue:** 데이터·교통·보조 그래프, 라인 강조.
 - **light-blue (#BBCCF0):** 카드 라인, 비활성 단계, 지도 보조 영역.
 - **bg (#F4F8FE) — Blue White BG:** 페이지 배경, 카드 내부 배경, 표 보조 행.
 - **surface (#FFFFFF):** 카드 표면. 배경과 밝은 대비를 유지한다.
@@ -187,7 +193,7 @@ White/Blue White 20~30%, Point Mint 5~10%를 기준으로 한다.
 | `zone-*` | 토지이용계획도 면색 (`assets/landuse/zone-0N.svg`, fill-opacity 0.85) | 밝은 톤 L 82~83% 로 통일 |
 | `zone-line-*` | 지도 외곽선 | 같은 Hue 의 짙은 톤 |
 
-`district-ai` #344198(AI 데이터), `district-bio` #288074(첨단바이오), `district-food` #A1662B(푸드물류),
+`district-ai` #2C3E91(AI 데이터), `district-bio` #288074(첨단바이오), `district-food` #A1662B(푸드물류),
 `district-mice` #337AA3(바이오 MICE), `district-biz` #7758AD(비즈니스), `district-housing` #877240(하우징),
 `district-edu` #667D31(에듀), `district-golf` #378152(골프레저).
 
