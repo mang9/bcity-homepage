@@ -156,6 +156,65 @@ const OVERRIDE = `
       }).catch(function () {});
     });
 
+    /* ⚠⚠ conic-gradient 로 그린 도넛(토지 확보율)은 캡처가 **통째로 버린다** —
+       2026-08-31 실측: 바깥 원 296x296 의 채움이 비었고 안쪽 흰 원만 들어왔다.
+       링을 인라인 SVG(원 + stroke-dasharray)로 그려 벡터로 남긴다.
+       ⚠ 비율은 인라인 --v 를 그대로 읽는다. 배경 문자열의 각도를 파싱하면
+         브라우저마다 표기가 달라 깨지기 쉽다.
+       ⚠ 링 두께는 가운데를 파내는 ::before 의 inset 이 정한다 — 그 값을 읽어 맞춘다. */
+    [].slice.call(document.querySelectorAll('*')).forEach(function (e) {
+      if (e.dataset.capConic) return;
+      var cs = getComputedStyle(e);
+      if ((cs.backgroundImage || '').indexOf('conic-gradient') < 0) return;
+      e.dataset.capConic = '1';
+      var S = e.getBoundingClientRect().width;
+      if (!S) return;
+      var inset = parseFloat(getComputedStyle(e, '::before').top) || Math.round(S * 0.135);
+      /* inset 은 ::before 흰 원의 크기다 — 부채꼴을 쓰므로 구멍은 그 원이 낸다. */
+      var v = parseFloat((cs.getPropertyValue('--v') || '').replace('%', ''));
+      if (!isFinite(v)) { var d = (cs.backgroundImage.match(/(-?[0-9.]+)deg/g) || []); v = d.length > 1 ? parseFloat(d[1]) / 3.6 : 0; }
+      var cols = cs.backgroundImage.match(/rgba?[(][^)]*[)]|#[0-9a-fA-F]{3,8}/g) || [];
+      var on = cols[0] || '#344198';
+      var others = cols.filter(function (c) { return c !== on; });
+      var off = others.length ? others[others.length - 1] : '#e6ecf7';
+      var ns = 'http://www.w3.org/2000/svg';
+      var cx = S / 2, cy = S / 2, RO = S / 2;
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('viewBox', '0 0 ' + S + ' ' + S);
+      svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
+      svg.style.cssText = 'position:absolute;inset:0;display:block';
+      var bgc = document.createElementNS(ns, 'circle');
+      bgc.setAttribute('cx', cx); bgc.setAttribute('cy', cy); bgc.setAttribute('r', RO);
+      bgc.setAttribute('fill', off);
+      svg.appendChild(bgc);
+      var a = Math.max(0, Math.min(100, v)) / 100 * 360;
+      if (a >= 359.9) {
+        var full = document.createElementNS(ns, 'circle');
+        full.setAttribute('cx', cx); full.setAttribute('cy', cy); full.setAttribute('r', RO);
+        full.setAttribute('fill', on);
+        svg.appendChild(full);
+      } else if (a > 0.1) {
+        var rad = a * Math.PI / 180;
+        var x2 = cx + RO * Math.sin(rad), y2 = cy - RO * Math.cos(rad);
+        var wedge = document.createElementNS(ns, 'path');
+        wedge.setAttribute('d', 'M ' + cx + ' ' + cy + ' L ' + cx + ' ' + (cy - RO) +
+          ' A ' + RO + ' ' + RO + ' 0 ' + (a > 180 ? 1 : 0) + ' 1 ' + x2 + ' ' + y2 + ' Z');
+        wedge.setAttribute('fill', on);
+        svg.appendChild(wedge);
+      }
+      var bs = getComputedStyle(e, '::before');
+      var holeC = bs.backgroundColor;
+      var RI = RO - (parseFloat(bs.top) || Math.round(S * 0.135));
+      if (holeC && holeC !== 'rgba(0, 0, 0, 0)' && RI > 0) {
+        var hole = document.createElementNS(ns, 'circle');
+        hole.setAttribute('cx', cx); hole.setAttribute('cy', cy); hole.setAttribute('r', RI);
+        hole.setAttribute('fill', holeC);
+        svg.appendChild(hole);
+      }
+      e.style.background = 'none';
+      e.insertBefore(svg, e.firstChild);
+    });
+
     /* 지연 이미지를 즉시 받게 한다 — 안 하면 빈 칸으로 잡힌다 */
     [].slice.call(document.querySelectorAll('img[loading="lazy"]')).forEach(function (i) { i.loading = 'eager'; });
     /* ⚠⚠ 영상은 **포스터 이미지로 바꾼다**(§8.2). 소스를 주입하면 안 된다 —
