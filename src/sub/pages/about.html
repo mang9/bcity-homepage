@@ -120,9 +120,14 @@
             <!-- ⚠ 문의하기는 `#contact` 다 — `contact.js` 가 클릭을 가로채 **이 페이지에서**
                  모달을 연다(2026-08-26 지시). `index.html#contact` 로 두면 메인으로 넘어간다.
                ⚠ 셋 중 문의하기만 면을 채운다 — 이 페이지의 유일한 주행동이다. -->
+            <!-- ⚠ 길찾기는 **도착지가 입력된 채로** 열린다(2026-08-31 지시).
+                 카카오맵 링크 스킴 `link/to/{이름},{위도},{경도}` 를 쓴다 — 좌표만 주는
+                 `?urlX=…` 형태는 지도를 그 자리로 옮길 뿐 도착지 칸이 비어 있다.
+                 실측: 이 주소는 `rt=,,518865,1120488` · `rt2=바이오테크 이노밸리`(도착) ·
+                 `rt1=`(출발 비움) 으로 리다이렉트된다. 이름은 우리가 붙이는 라벨이다. -->
             <p class="ab-acts rv">
               <a class="ab-act" href="tel:07041300423">전화 연결</a>
-              <a class="ab-act" href="https://map.kakao.com/?urlX=518865&amp;urlY=1120488&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창)</span></a>
+              <a class="ab-act" href="https://map.kakao.com/link/to/바이오테크%20이노밸리,37.5332250,127.0853762" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창 · 도착지 입력됨)</span></a>
               <a class="ab-act ab-act--go" href="#contact">문의하기</a>
             </p>
           </div>
@@ -140,16 +145,25 @@
                  `IW/IH` 만 키우면 **더 넓은 지역**이 나온다(같은 화면의 2배 해상도가 아니다).
                  실측으로 `SCALE=3.0 · 1000x616` 이 이 자리에 맞는 조합이었다
                  (`0.5` 는 지형지물이 없어 위치를 못 알아본다).
-               ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고 그것이 유일한 표기다. -->
+               ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고 그것이 유일한 표기다.
+               ⚠⚠ 링크의 위경도(WGS84)와 이미지의 `MX/MY`(WCONGNAMUL)는 **같은 지점**이다.
+                 정적 지도는 WCONGNAMUL, 링크 스킴은 WGS84 만 받아서 두 벌로 적는다.
+                 한쪽만 고치면 지도와 링크가 다른 곳을 가리킨다 — 반드시 함께 고칠 것.
+                 환산법(2026-08-31): 정적 지도가 `COORDSTM=WGS84` 도 받으므로, 같은 화면을
+                 두 좌표계로 각각 렌더해 템플릿 매칭으로 어긋난 픽셀을 재고 되먹이면 된다.
+                 그렇게 SAD 0(픽셀 완전 일치)까지 맞춘 값이다. `link/to` 의 리다이렉트가
+                 `518865,1120488` 을 되돌려 주는 것으로 교차 확인했다. -->
           <figure class="ab-map rv">
-            <a class="ab-map-a" href="https://map.kakao.com/?urlX=518865&amp;urlY=1120488&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">
+            <!-- 지도 클릭 → 카카오맵에서 **이름이 붙은 핀**으로 열린다(`?name=` 으로 리다이렉트).
+                 좌표만 주는 `?urlX=…` 형태는 이름 없이 그 자리로 이동할 뿐이다. -->
+            <a class="ab-map-a" href="https://map.kakao.com/link/map/바이오테크%20이노밸리,37.5332250,127.0853762" target="_blank" rel="noopener">
               <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=3.0&amp;MX=518865&amp;MY=1120488&amp;S=0&amp;IW=1000&amp;IH=616&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo"
                    width="1000" height="616" loading="lazy" decoding="async"
                    alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
               <!-- 건물 표시 — 정적 지도는 `MX`/`MY` 를 **중심**으로 그리므로 가운데에 얹는다.
                    ⚠ 마커 파라미터는 이 엔드포인트에서 무시된다(§11.65). -->
               <span class="ab-pin" aria-hidden="true"></span>
-              <span class="sr">카카오맵에서 크게 보기 (새 창)</span>
+              <span class="sr">카카오맵에서 바이오테크 이노밸리 위치 보기 (새 창)</span>
             </a>
           </figure>
         </div>

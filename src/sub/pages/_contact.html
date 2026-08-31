@@ -66,7 +66,10 @@
             </div>
           </dl>
           <p class="ci-acts">
-            <a class="ci-act" href="https://map.kakao.com/?urlX=518865&amp;urlY=1120488&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창)</span></a>
+            <!-- ⚠ 길찾기는 **도착지가 입력된 채로** 열린다(2026-08-31). 링크 스킴 `link/to/{이름},{위도},{경도}`.
+                 좌표만 주는 `?urlX=…` 형태는 지도만 옮기고 도착지 칸이 빈다. 위경도(WGS84)는
+                 아래 이미지의 `MX/MY`(WCONGNAMUL)와 **같은 지점**이다 — 함께 고칠 것. -->
+            <a class="ci-act" href="https://map.kakao.com/link/to/바이오테크%20이노밸리,37.5332250,127.0853762" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창)</span></a>
             <a class="ci-act" href="tel:07041300423">전화 연결</a>
             <a class="ci-act ci-act--go" href="index.html#contact">문의하기</a>
           </p>
@@ -85,7 +88,7 @@
                ⚠ 정적 이미지라 키가 필요 없다. 네이버 지도는 정적·동적 모두 키가 필요하고
                  iframe 도 막혀 있다(2026-08-25 실측 · §11.73). -->
           <figure class="ci-map">
-            <a class="ci-map-a" href="https://map.kakao.com/?urlX=518865&amp;urlY=1120488&amp;urlLevel=3&amp;map_type=TYPE_MAP&amp;map_hybrid=false" target="_blank" rel="noopener">
+            <a class="ci-map-a" href="https://map.kakao.com/link/map/바이오테크%20이노밸리,37.5332250,127.0853762" target="_blank" rel="noopener">
               <!-- ⚠ 좁은 화면에는 **가로가 넓은 원본**을 준다. 정사각은 쌓인 화면에서
                    너무 높고, 잘라서 줄이면 왼쪽 아래 카카오 로고가 사라진다.
                    CSS 의 `aspect-ratio` 두 값이 이 두 원본과 짝이다 — 한쪽만 고치면 눌린다. -->
@@ -97,7 +100,7 @@
                      (`MARKERS=` 를 붙여도 응답 이미지가 기준과 동일했다 — md5 일치).
                      그래서 이미지 위에 얹는다. -->
               <span class="ci-pin" aria-hidden="true"></span>
-              <span class="sr">카카오맵에서 크게 보기 (새 창)</span>
+              <span class="sr">카카오맵에서 바이오테크 이노밸리 위치 보기 (새 창)</span>
             </a>
           </figure>
         </div>
