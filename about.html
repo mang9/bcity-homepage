@@ -1168,19 +1168,25 @@
             <!-- ⚠ 길찾기는 **도착지가 입력된 채로** 열린다(2026-08-31 지시).
                  카카오맵 링크 스킴 `link/to/{이름},{위도},{경도}` 를 쓴다 — 좌표만 주는
                  `?urlX=…` 형태는 지도를 그 자리로 옮길 뿐 도착지 칸이 비어 있다.
-                 실측: 이 주소는 `rt=,,518865,1120488` · `rt2=바이오테크 이노밸리`(도착) ·
-                 `rt1=`(출발 비움) 으로 리다이렉트된다. 이름은 우리가 붙이는 라벨이다. -->
+               ⚠ 이름·좌표는 **카카오에 등록된 장소**(`1104377075` 바이오테크 이노밸리자산관리 ·
+                 서울 광진구 자양로 58)의 것이다. 지어낸 라벨이 아니라 검색으로 확인되는 값이다.
+               ⚠ 장소 ID 로 `link/to/1104377075` 를 쓰면 **도착지 이름이 '바이오테크' 로 잘린다**
+                 (실측). 이름+좌표 형태라야 전체 이름이 나온다 — 그래서 ID 는 지도 쪽에만 쓴다.
+               ⚠ 모바일에서는 이 주소가 앱 설치 벽으로 튄다 — `common.js` 가 `data-k*` 를 읽어
+                 모바일 길찾기 주소로 바꾼다. **세 값을 함께 고칠 것.** -->
             <p class="ab-acts rv">
               <a class="ab-act" href="tel:07041300423">전화 연결</a>
-              <a class="ab-act" data-kakao-route data-kname="바이오테크 이노밸리" data-kx="518865" data-ky="1120488"
-                 href="https://map.kakao.com/link/to/바이오테크%20이노밸리,37.5332250,127.0853762" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창 · 도착지 입력됨)</span></a>
+              <a class="ab-act" data-kakao-route data-kname="바이오테크 이노밸리자산관리" data-kx="518882" data-ky="1120501"
+                 href="https://map.kakao.com/link/to/바이오테크%20이노밸리자산관리,37.5332705,127.0854540" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창 · 도착지 입력됨)</span></a>
               <a class="ab-act ab-act--go" href="#contact">문의하기</a>
             </p>
           </div>
 
           <!-- 카카오 정적 지도(2026-08-26 지시). ⚠ 정적 이미지라 **키가 필요 없다** —
                네이버는 정적·동적 모두 키가 필요하고 iframe 도 막혀 있다(§11.73).
-               ⚠⚠ 중심 좌표는 **스크린샷과 대조해 실측으로 잡은 값**이다. 두 번 틀렸다 —
+               ⚠ 중심은 **카카오 등록 장소의 좌표**다(`1104377075`). 링크와 같은 지점이라야
+                 지도의 핀과 길찾기 도착지가 어긋나지 않는다.
+               ⚠⚠ 그 전까지는 스크린샷과 대조해 손으로 잡았고 두 번 틀렸다 —
                  ① `MX 518908 / MY 1119990` : 자양로 서쪽 약 500m(§11.74)
                  ② `MX 518795 / MY 1120863` : 사용자가 준 퍼가기 값. 자양로 동쪽은 맞지만
                     **약 400 단위(≈160px @SCALE 2.5) 북쪽**이라 동서울터미널 부지를 가리켰다.
@@ -1200,10 +1206,14 @@
                  그렇게 SAD 0(픽셀 완전 일치)까지 맞춘 값이다. `link/to` 의 리다이렉트가
                  `518865,1120488` 을 되돌려 주는 것으로 교차 확인했다. -->
           <figure class="ab-map rv">
-            <!-- 지도 클릭 → 카카오맵에서 **이름이 붙은 핀**으로 열린다(`?name=` 으로 리다이렉트).
-                 좌표만 주는 `?urlX=…` 형태는 이름 없이 그 자리로 이동할 뿐이다. -->
-            <a class="ab-map-a" href="https://map.kakao.com/link/map/바이오테크%20이노밸리,37.5332250,127.0853762" target="_blank" rel="noopener">
-              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=3.0&amp;MX=518865&amp;MY=1120488&amp;S=0&amp;IW=1000&amp;IH=616&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo"
+            <!-- 지도 클릭 → **등록된 장소 페이지**로 열린다(장소 ID `1104377075`).
+                 이름 말풍선 + 주소 + 길찾기 버튼이 함께 뜬다. 모바일에서는
+                 `m.map.kakao.com/actions/detailInfoView` 로 정상 리다이렉트된다(실측).
+               ⚠ 길찾기와 지도가 **주소 형태가 다르다.** 경로 화면은 장소 말풍선을 렌더하지
+                 않아서(조합 5종 실측) 한 화면에 둘 다는 못 담는다 — 그래서 역할을 나눴다:
+                 지도 클릭 = 말풍선 · 길찾기 버튼 = 도착지 입력. -->
+            <a class="ab-map-a" href="https://map.kakao.com/link/map/1104377075" target="_blank" rel="noopener">
+              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=3.0&amp;MX=518882&amp;MY=1120501&amp;S=0&amp;IW=1000&amp;IH=616&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo"
                    width="1000" height="616" loading="lazy" decoding="async"
                    alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
               <!-- 건물 표시 — 정적 지도는 `MX`/`MY` 를 **중심**으로 그리므로 가운데에 얹는다.
