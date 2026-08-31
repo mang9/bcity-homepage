@@ -54,6 +54,16 @@ const OVERRIDE = `
   /* 스크롤 등장(.rv) — 최종 상태로 */
   .rv, .rv-x, .rv-rise, .cp-el, .anim { opacity: 1 !important; transform: none !important; }
 
+  /* ⚠⚠ 메인(index.html)은 등장 클래스 이름이 **서브페이지와 다르다**(.rv 가 아니다).
+     이걸 빼면 8대 권역 카드(.az-card)와 홍보 카드(.reveal)가 통째로 투명해져
+     캡처에 **빈 띠**로 남는다 — 2026-08-31 실측으로 투명 노드 59개가 잡혔고,
+     화면에서는 #zones 가 어두운 빈 띠, #pr 이 백지로 나왔다.
+     ⚠ 여기에 '.cine-page' 를 넣지 말 것. 스크럽 카피 페이지 2~3장이 절대배치로 겹쳐 있어
+       전부 켜면 글자가 서로 위에 쌓인다 — 활성 장만 '.on' 으로 보이는 것이 맞다.
+     ⚠ '.az-map-hl'(호버 하이라이트) · '.dz-fade'(영상 크로스페이드)도 빼 둔다.
+       그 둘은 '지금 숨은 것이 정상'인 상태다. */
+  .reveal, .az-card, .ov-stat { opacity: 1 !important; transform: none !important; }
+
   /* 정주환경 · 구역소개 도입부 — 스크롤 진행률로 그리는 화면을 끝 상태로 못 박는다.
      JS 가 인라인 style 로 넣는 값보다 !important 가 이긴다. */
   .lv-stage, .lv-ed, .lv-intro, .lv-split { --p: 1 !important; --pw: 1 !important; --pin: 1 !important; --pinl: 1 !important; }
@@ -93,6 +103,8 @@ const OVERRIDE = `
       [].slice.call(document.querySelectorAll(sel)).forEach(function (e) { e.classList.add(cls); });
     };
     on('.rv, .cn-dia, .cx-dia, .bc-panel', 'in');
+    /* 메인 전용 — '.in' 을 붙여야 켜지는 것들. 서브페이지에는 없어 무해하다. */
+    on('.reveal, .ov, .az-card, .lr', 'in');
     [].slice.call(document.querySelectorAll('.dz-intro')).forEach(function (e) {
       e.classList.remove('is-armed'); e.classList.add('is-playing');
     });
