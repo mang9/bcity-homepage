@@ -22,11 +22,18 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const clean = process.argv.includes('--clean');
 
-/* 루트의 서브페이지(상세 · 생성 사본 제외) + 메인 */
+/* 루트의 서브페이지(상세 · 생성 사본 제외) + 메인
+   ⚠ 홍보센터 **상세 페이지**(`notice-*` · `press-*`)는 기본에서 뺀다 — 템플릿 2벌에서
+     나온 샘플 16개라 전부 뜨면 피그마가 거의 같은 프레임으로 뒤덮인다.
+     디자인을 옮길 때는 대표 한두 개만 인수로 지정한다:
+       node tools/cap-prep.mjs notice-2026-integrated-review.html press-01.html */
 const SKIP = /^(_cap-|capture\.html$|notice-|press-)/;
+const extra = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const pages = readdirSync(ROOT)
   .filter((f) => f.endsWith('.html') && !SKIP.test(f))
+  .concat(extra.filter((f) => existsSync(join(ROOT, f))))
   .sort();
+for (const f of extra) if (!existsSync(join(ROOT, f))) console.log(`  ? 없는 파일: ${f}`);
 const admin = existsSync(join(ROOT, 'admin'))
   /* ⚠ 루트의 SKIP 을 그대로 쓰면 안 된다 — `notice-` · `press-` 규칙이 관리자의
      `notice-form.html` · `press-form.html` 까지 거른다. 여기서는 사본만 뺀다. */
