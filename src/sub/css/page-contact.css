@@ -106,6 +106,14 @@
 /* 안쪽 점 — 핀이 단색 물방울로만 보이지 않게 한다 */
 .ci-pin::after { content: ""; position: absolute; inset: 0; margin: auto;
   width: 7px; height: 7px; border-radius: 50%; background: #ffffff; }
+/* 핀 이름표 — 회사소개(`.ab-pin-l`)와 같은 어법이다.
+   ⚠ 두 페이지에 같은 모양이 두 벌 있다. 이 페이지를 되살릴 때 공용으로 합칠 것(§11.83). */
+.ci-pin-l { position: absolute; left: 50%; bottom: 50%; transform: translateX(-50%);
+  margin-bottom: 46px; padding: 5px 11px; border-radius: 999px;
+  background: rgb(255 255 255 / .95); border: 1px solid var(--color-line);
+  box-shadow: 0 3px 10px -3px rgb(var(--navy-rgb) / .35);
+  font-family: var(--font-display); font-size: 12.5px; font-weight: 700;
+  letter-spacing: -.01em; color: var(--color-primary); white-space: nowrap; }
 .ci-map-a picture { display: block; }
 .ci-map-a img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 820; }
 

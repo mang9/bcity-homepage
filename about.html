@@ -876,6 +876,18 @@
       box-shadow: 0 3px 10px -2px rgb(var(--navy-rgb) / .45); }
     .ab-pin::after { content: ""; position: absolute; inset: 0; margin: auto;
       width: 7px; height: 7px; border-radius: 50%; background: #ffffff; }
+    /* 핀 이름표 — ⚠ 핀 **위**에 둔다. 옆에 두면 가리키는 지점을 이름표가 덮는다.
+       ⚠ 아래 여백은 회전한 핀의 실제 높이보다 커야 한다(핀 상자 26px 이지만 45° 회전으로
+         37px 를 차지한다 · §11.65). 46px 은 그 위에 6px 을 남긴 값이다.
+       ⚠ `white-space: nowrap` 이라 좁은 화면에서 지도(`overflow: hidden`)에 잘릴 수 있다 —
+         390px 에서 지도 폭 350px · 이름표 약 150px 로 여유가 있는 것을 실측했다.
+         상호가 길어지면 다시 잴 것. */
+    .ab-pin-l { position: absolute; left: 50%; bottom: 50%; transform: translateX(-50%);
+      margin-bottom: 46px; padding: 5px 11px; border-radius: 999px;
+      background: rgb(255 255 255 / .95); border: 1px solid var(--color-line);
+      box-shadow: 0 3px 10px -3px rgb(var(--navy-rgb) / .35);
+      font-family: var(--font-display); font-size: 12.5px; font-weight: 700;
+      letter-spacing: -.01em; color: var(--color-primary); white-space: nowrap; }
 
     @media (max-width: 1023px) {
       /* 두 칸을 나란히 두면 주소가 6~7자마다 끊기고 지도도 작아진다 → 쌓는다 */
@@ -1194,7 +1206,11 @@
                    width="1000" height="616" loading="lazy" decoding="async"
                    alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
               <!-- 건물 표시 — 정적 지도는 `MX`/`MY` 를 **중심**으로 그리므로 가운데에 얹는다.
-                   ⚠ 마커 파라미터는 이 엔드포인트에서 무시된다(§11.65). -->
+                   ⚠ 마커 파라미터는 이 엔드포인트에서 무시된다(§11.65). 이름표도 같은 이유로
+                     우리가 얹는다 — 지도 이미지에는 굽지 못한다.
+                   ⚠ 이름표는 `aria-hidden` 이다. 이 링크의 이름은 아래 `.sr` 가 이미 말하고
+                     있어서, 함께 읽히면 상호가 두 번 나온다. -->
+              <span class="ab-pin-l" aria-hidden="true">바이오테크 이노밸리</span>
               <span class="ab-pin" aria-hidden="true"></span>
               <span class="sr">카카오맵에서 바이오테크 이노밸리 위치 보기 (새 창)</span>
             </a>
