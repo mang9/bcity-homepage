@@ -818,11 +818,14 @@
        ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
     /* 연락처 + 지도 2단(2026-08-26 지시). ⚠ `align-items: start` — 지도는 비율이 고정이라
        왼쪽이 길어져도 늘어나지 않는다. `stretch` 로 두면 이미지 아래에 빈 상자만 늘어난다. */
-    /* ⚠ 서브 카피 아래 간격을 따로 준다(2026-08-26 지시: "내용이 너무 붙어있어").
-         `.sub-d` 는 공용이라 그쪽을 벌리면 다른 페이지까지 함께 벌어진다. */
-    .ab-contact { margin-top: clamp(26px, 3vw, 48px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+    /* ⚠ 제목·서브카피가 이 격자의 **왼쪽 칸 안**에 있다. 그래야 지도가 제목 줄에서
+         시작한다(2026-08-31 지시). 그래서 여기에는 위 마진을 두지 않는다 —
+         두면 섹션 첫머리가 그만큼 내려간다. */
+    .ab-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
       gap: clamp(24px, 3vw, 52px); align-items: start; }
-    .ab-info { margin: 0; }
+    /* ⚠ 서브 카피 아래 간격을 여기서 준다(2026-08-26 지시: "내용이 너무 붙어있어").
+         `.sub-d` 는 공용이라 그쪽을 벌리면 다른 페이지까지 함께 벌어진다. */
+    .ab-info { margin: clamp(26px, 3vw, 48px) 0 0; }
     .ab-info > div { display: grid; grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
       gap: clamp(14px, 1.6vw, 28px); align-items: baseline;
       padding: clamp(14px, 1.5vw, 21px) 0; border-bottom: 1px solid var(--color-line); }
@@ -1114,16 +1117,19 @@
          (2026-08-26 실측: position static · 폼 필드 0 · 예외 2건). -->
     <section class="sec" id="contact-info">
       <div class="wrap">
-        <div class="sub-h"><h2 class="sub-t">CONTACT</h2></div>
-        <p class="sub-d">함께 미래를 만들어갈 파트너를 기다립니다</p>
-
         <!-- ⚠ 문의 폼을 여기에 두지 않는다. 실제 접수 폼은 메인 `#contact` 한 곳뿐이고
              (백엔드 미연결 시 메일로 넘기는 분기까지 그쪽에 있다), 지도는 투자·입주의
              문의하기 페이지가 갖는다. 여기서는 기획서대로 연락처만 적는다. -->
         <div class="ab-contact">
-          <!-- ⚠ 정보 목록과 버튼을 **한 칸으로 묶는다.** 형제로 두면 버튼이 2번째 칸을
+          <!-- ⚠ 제목·서브카피도 이 칸 **안**에 둔다(2026-08-31 지시). 밖에 두면 격자가
+               그 아래에서 시작해 지도만 119px 늦게 떨어진다 — 오른쪽 위가 통째로 빈다.
+               안에 넣으면 격자 첫 행이 곧 제목 윗변이라 매직 넘버 없이 맞는다.
+             ⚠ 정보 목록과 버튼도 **같은 칸**이다. 형제로 두면 버튼이 2번째 칸을
                차지해 지도가 다음 줄로 밀린다(2026-08-26 실측). -->
           <div class="ab-col">
+            <div class="sub-h"><h2 class="sub-t">CONTACT</h2></div>
+            <p class="sub-d">함께 미래를 만들어갈 파트너를 기다립니다</p>
+
           <dl class="ab-info rv">
             <div>
               <dt>주소</dt>
