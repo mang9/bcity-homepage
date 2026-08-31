@@ -12,6 +12,11 @@ colors:
   text: "#111111"
   text-muted: "#5B6B82"
   line: "#D8E3F2"
+  # 브랜드 정본 2색 — UI 토큰과 **다른 값**이다(§11.21).
+  #   logo(Indigo) ≠ primary  ·  brand-azure ≠ azure(아이브로우용)
+  #   코드에서는 --color-logo · --brand-azure 다(src/sub/css/00-tokens.css).
+  logo: "#2C3E91"
+  brand-azure: "#0095D9"
   district-ai: "#344198"
   district-bio: "#288074"
   district-food: "#A1662B"
