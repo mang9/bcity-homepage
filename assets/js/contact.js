@@ -187,19 +187,24 @@
           }, 1800);
         })
         .catch(() => {
-          status.textContent = '전송에 실패했습니다. juyoung@biotech-iv.com 로 직접 보내주세요.';
+          status.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
           status.className = 'ct-status on ng';
         })
         .finally(() => { btn.disabled = false; });
       return;
     }
 
-    // 백엔드 미연결: 메일 본문으로 넘긴다
+    /* 백엔드 미연결: 메일 본문으로 넘긴다.
+       ⚠⚠ 수신 주소를 **화면에 띄우지 않는다**(2026-09-01 지시: '개인 메일 노출은 숨기고').
+         담당자 연락처 카드도 같은 이유로 걷어냈다. 여기 남은 주소는 mailto 대상일 뿐
+         어떤 문구에도 찍히지 않는다 — 문구에 다시 넣지 말 것.
+       ⚠ 이 폴백을 지우지 말 것. CT_ENDPOINT 가 붙기 전까지 문의를 받는 유일한 경로다.
+         엔드포인트가 붙으면 서버가 담당자 여러 명에게 자동 발송하고, 이 분기는 안 탄다. */
     const body = Object.entries(data).map(([k, v]) => k + ' : ' + v).join('\n');
     const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
     location.href = 'mailto:juyoung@biotech-iv.com?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
-    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 juyoung@biotech-iv.com 로 보내주세요.';
+    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 다시 시도해 주세요.';
     status.className = 'ct-status on ok';
   });
 

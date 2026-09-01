@@ -751,65 +751,6 @@
     /* ── 확보율 게이지 (토지확보 현황 02) ──────────────────────────────
        막대 길이는 인라인 `--v`, 법적 요건 눈금은 `--legal` 이 정한다.
        ⚠ 값이 바뀌면 마크업의 숫자(data-count 포함)와 이 두 변수를 **함께** 고친다. */
-    /* ── 토지확보 현황 — [제목 + 값 셋 | 파이 그래프] 2단 (2026-08-24 지시) ────────
-       ⚠ 제목까지 왼쪽 칸에 넣어야 그래프가 **제목 영역까지** 올라온다. 제목을 그리드 밖에
-         두면 오른쪽 제목 옆이 통째로 빈다(문의하기 지도에서 같은 함정을 밟았다 · §11.66).
-       ⚠ 그래프는 비율이 고정이라 늘어나지 않는다 → `align-self: start` 로 제목 줄에 맞춘다. */
-    /* ⚠ 그래프는 `center` 다(2026-08-24 지시) — 제목 줄에 맞춰 위로 붙이면 아래가 비어
-         떠 보였다. 왼쪽 칸(제목 + 값 셋) 전체 높이의 가운데에 놓는다. */
-    .iv-head { display: grid; grid-template-columns: minmax(0, 1fr) auto;
-      gap: clamp(28px, 3.4vw, 68px); align-items: center; }
-    .iv-head-l { min-width: 0; }
-    /* ⚠ `.eyebrow` 는 `<p>` 이고 이 프로젝트에 `p { margin: 0 }` 리셋이 없다 → 브라우저
-         기본 `margin: 1em 0`(12.5px)이 붙어 왼쪽 칸이 오른쪽보다 12px 내려간다(실측).
-         두 칸의 시작을 맞추려면 이 마진을 지운다. `.sec` 의 위 여백이 이미 충분해
-         다른 섹션과 달라 보이지 않는다. */
-    .iv-head-l > .eyebrow { margin-top: 0; }
-
-    /* 파이 그래프 — 자기 칸을 온전히 쓰므로 이전(216px)보다 크게 잡는다 */
-    .iv-donut { margin: 0; display: grid; justify-items: center;
-      gap: clamp(16px, 1.6vw, 24px); }
-    .iv-donut-g { position: relative; display: grid; place-content: center; gap: 3px;
-      width: clamp(200px, 20vw, 296px); aspect-ratio: 1; border-radius: 50%;
-      background: conic-gradient(var(--color-primary) 0 var(--v, 0%),
-                                 var(--color-bg) var(--v, 0%) 100%); }
-    /* 가운데를 파내는 흰 원. `mask` 를 쓰지 않는다 — 안쪽에 글자를 얹으므로 실제 면이 필요하다. */
-    .iv-donut-g::before { content: ""; position: absolute; inset: clamp(26px, 2.6vw, 40px);
-      border-radius: 50%; background: var(--color-surface); }
-    .iv-donut-v, .iv-donut-l { position: relative; text-align: center; }
-    .iv-donut-v { font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(30px, 3vw, 44px); letter-spacing: -.03em; color: var(--color-primary); }
-    .iv-donut-l { font-size: 12.5px; font-weight: 700; color: var(--color-text-muted); }
-    .iv-donut-lg { display: grid; justify-items: center; gap: 7px; }
-    .iv-donut-k { position: relative; padding-left: 15px; font-size: 12.5px;
-      color: var(--color-text-muted); }
-    .iv-donut-k::before { content: ""; position: absolute; left: 0; top: .42em;
-      width: 9px; height: 9px; border-radius: 2px; background: var(--color-bg);
-      border: 1px solid var(--color-line); }
-    .iv-donut-k--on::before { background: var(--color-primary); border-color: var(--color-primary); }
-    /* 확보율의 산정 기준 — 그래프 바로 아래. 숫자의 뜻을 밝히는 문구라 빠뜨리면 안 된다. */
-    .iv-donut-n { margin-top: 4px; font-size: 11.5px; color: var(--color-text-muted); }
-
-    /* 값 셋 — 왼쪽. 상자 없이 세로 괘선으로만 나눈다.
-       ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
-    .iv-figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; }
-    .iv-figs > div { padding: 0 clamp(14px, 1.6vw, 26px); }
-    .iv-figs > div + div { border-left: 1px solid var(--color-line); }
-    .iv-figs > div:first-child { padding-left: 0; }
-    .iv-figs > div:last-child { padding-right: 0; }
-    .iv-figs dt { font-size: 13px; font-weight: 700; color: var(--color-text);
-      word-break: keep-all; }
-    .iv-figs dt span { display: block; margin-top: 3px; font-size: 11.5px; font-weight: 400;
-      color: var(--color-text-muted); }
-    .iv-figs dd { margin: clamp(12px, 1.2vw, 18px) 0 0; font-family: var(--font-display);
-      font-weight: 800; letter-spacing: -.03em; line-height: 1;
-      font-size: clamp(22px, 2.2vw, 32px); color: var(--color-text-muted); }
-    /* 강조는 두 칸만 — 세 값이 다 색을 가지면 어느 쪽이 우리 값인지 읽히지 않는다 */
-    .iv-figs .is-on dd { color: var(--color-primary); font-size: clamp(24px, 2.5vw, 36px); }
-    .iv-figs .is-over dd { color: var(--color-mint); }
-    .iv-figs dd span { font-size: .58em; margin-left: 1px; }
-
     /* ── 법적 요건 비교 — 마주 보는 두 카드 (2026-08-24 지시) ────────────────────
        값은 **왼끝 정렬**이고 행 사이에 선을 두지 않는다. 라벨은 카드 안에서 값 위에 온다.
        ⚠ 카드 두 장을 그냥 나란히 두면 **행이 가로로 어긋난다** — 값 길이가 다르고 오른쪽
@@ -1014,8 +955,6 @@
     /* ── 반응형 ───────────────────────────────────────────────────────── */
     @media (max-width: 1023px) {
       /* 제목 옆에 그래프를 두면 왼쪽이 좁아져 값 셋이 접힌다 → 그래프를 아래로 내린다 */
-      .iv-head { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-      .iv-head-l { width: 100%; }
       /* 카드 두 장을 나란히 두면 각 220px 로 좁아진다 → 위아래로 쌓고 VS 를 사이에 둔다.
          ⚠ subgrid 지정을 함께 풀어야 한다. 안 풀면 카드가 부모의 5행을 그대로 물려받아
            한 장이 화면 높이를 통째로 먹는다. */
@@ -1033,9 +972,6 @@
     @media (max-width: 767px) {
       .iv-sum { grid-template-columns: minmax(0, 1fr); }
       /* 세 값을 한 줄에 두면 각 90px 로 좁아진다 → 한 열로. 괘선도 세로에서 가로로 바꾼다. */
-      .iv-figs { grid-template-columns: minmax(0, 1fr); }
-      .iv-figs > div { padding: clamp(14px, 1.5vw, 20px) 0; }
-      .iv-figs > div + div { border-left: 0; border-top: 1px solid var(--color-line); }
     }
 
     /* ── page-city.css ─────────────────────────────────────────── */
@@ -2990,11 +2926,6 @@
         <!-- 안내 -->
         <aside class="ct-side">
           <div class="ct-card">
-            <p class="ct-card-h">담당자 연락처</p>
-            <a class="ct-card-a" href="mailto:juyoung@biotech-iv.com">juyoung@biotech-iv.com</a>
-            <p class="ct-card-p">평일 09:00 – 18:00 (주말 · 공휴일 제외)</p>
-          </div>
-          <div class="ct-card">
             <p class="ct-card-h">사업 주관</p>
             <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
           </div>
@@ -3601,19 +3532,24 @@
           }, 1800);
         })
         .catch(() => {
-          status.textContent = '전송에 실패했습니다. juyoung@biotech-iv.com 로 직접 보내주세요.';
+          status.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
           status.className = 'ct-status on ng';
         })
         .finally(() => { btn.disabled = false; });
       return;
     }
 
-    // 백엔드 미연결: 메일 본문으로 넘긴다
+    /* 백엔드 미연결: 메일 본문으로 넘긴다.
+       ⚠⚠ 수신 주소를 **화면에 띄우지 않는다**(2026-09-01 지시: '개인 메일 노출은 숨기고').
+         담당자 연락처 카드도 같은 이유로 걷어냈다. 여기 남은 주소는 mailto 대상일 뿐
+         어떤 문구에도 찍히지 않는다 — 문구에 다시 넣지 말 것.
+       ⚠ 이 폴백을 지우지 말 것. CT_ENDPOINT 가 붙기 전까지 문의를 받는 유일한 경로다.
+         엔드포인트가 붙으면 서버가 담당자 여러 명에게 자동 발송하고, 이 분기는 안 탄다. */
     const body = Object.entries(data).map(([k, v]) => k + ' : ' + v).join('\n');
     const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
     location.href = 'mailto:juyoung@biotech-iv.com?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
-    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 juyoung@biotech-iv.com 로 보내주세요.';
+    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 다시 시도해 주세요.';
     status.className = 'ct-status on ok';
   });
 

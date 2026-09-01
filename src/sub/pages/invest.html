@@ -9,7 +9,7 @@
   "heroLede": "리스크는 줄이고, 속도는 높이는 투자 환경<br />토지확보 현황부터 특구별 · 이전기업 혜택까지 한 번에",
   "crumb": "투자 · 입주",
   "css": ["page-shared", "page-invest"],
-  "js": ["countup", "anchornav"]
+  "js": ["anchornav"]
 }
 -->
     <!-- ===== 투자·입주 (원페이지 통합) — 기획 p.88~93 =====
@@ -22,54 +22,16 @@
          ⚠ 상단 카피는 **히어로 안**에 있다(front-matter 의 `heroLede`) — 2026-08-24 지시로
            사업소개처럼 상단 이미지 영역에 넣었다. 여기에 또 두면 같은 문장이 두 번 나온다. -->
     <!-- ===== 01 토지확보 현황 ===== -->
+    <!-- ===== 02 특구별 혜택 ===== -->
     <section class="sec iv-sec" id="land">
       <div class="wrap">
-        <!-- 제목까지 왼쪽 칸에 넣는다 — 그래야 파이 그래프가 **제목 영역까지** 올라온다
-             (2026-08-24 지시). 제목을 그리드 밖에 두면 오른쪽 제목 옆이 통째로 빈다. -->
-        <div class="iv-head rv">
-          <div class="iv-head-l">
-            <p class="eyebrow"><i aria-hidden="true"></i><b>LAND SECURED</b><span>토지확보 현황</span></p>
-            <h2 class="h2">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
-            <p class="lede">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
-
-            <div class="sub-h"><h3 class="sub-t">B-CITY 토지확보 현황</h3></div>
-            <p class="sub-d">B-CITY는 법적 최소 요건(50%)을 크게 상회하는 76.52%의 토지를 이미 확보하여,
-              토지 미수용으로 인한 사업 지연 리스크를 원천적으로 해소했습니다.</p>
-
-            <!-- 값 셋은 왼쪽(2026-08-24 지시). 상자 없이 세로 괘선으로만 나눈다. -->
-            <dl class="iv-figs">
-              <div>
-                <dt>법적 최소 요건<span>기업도시개발 특별법 기준</span></dt>
-                <dd>50%</dd>
-              </div>
-              <div class="is-on">
-                <dt>B-CITY 확보율<span>2026.05 기준</span></dt>
-                <dd>76.52%</dd>
-              </div>
-              <div class="is-over">
-                <dt>요건 초과 확보분<span>최소 요건 대비</span></dt>
-                <dd>+26.52<span>%p</span></dd>
-              </div>
-            </dl>
-          </div>
-
-          <!-- 파이 그래프는 오른쪽 한 칸을 온전히 쓴다.
-               ⚠ `conic-gradient` 다. 값 하나(`--v`)가 각도를 정하므로 SVG 각도 계산이 없고
-                 마크업의 숫자와 어긋날 여지가 없다. 값이 바뀌면 `--v` 와 숫자를 함께 고친다
-                 — 초과분은 76.52 − 50 이라 셋이 같이 움직인다. -->
-          <figure class="iv-donut" style="--v: 76.52%">
-            <div class="iv-donut-g" role="img"
-                 aria-label="B-CITY 토지 확보율 76.52퍼센트, 미확보 23.48퍼센트">
-              <b class="iv-donut-v"><span data-count="76.52" data-dec="2">76.52</span>%</b>
-              <span class="iv-donut-l">확보율</span>
-            </div>
-            <figcaption class="iv-donut-lg">
-              <span class="iv-donut-k iv-donut-k--on">확보 76.52%</span>
-              <span class="iv-donut-k">미확보 23.48%</span>
-              <span class="iv-donut-n">※ 국공유지 포함 · 2026.05 기준</span>
-            </figcaption>
-          </figure>
-        </div>
+        <!-- ⚠ 2026-09-01 지시로 "B-CITY 토지확보 현황" 지표 3개와 파이 그래프를 뺐다.
+             오른쪽 칸을 채우던 것이 그래프였으므로 2단 껍데기도 함께 걷어 다른 섹션과
+             같은 한 단 형태로 둔다 — 남겨 두면 글이 절반 폭에 갇힌다.
+             되살릴 일이 생기면 CSS 는 src/sub/_backup/removed-components.css 에 있다. -->
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>LAND SECURED</b><span>토지확보 현황</span></p>
+        <h2 class="h2 rv">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
+        <p class="lede rv">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
 
         <div class="tr-block rv">
           <div class="sub-h"><h3 class="sub-t">법적 요건 비교</h3></div>
@@ -134,7 +96,6 @@
       </div>
     </section>
 
-    <!-- ===== 02 특구별 혜택 ===== -->
     <section class="sec iv-sec" id="zone">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>SPECIAL ZONES</b><span>특구별 혜택</span></p>
@@ -257,97 +218,6 @@
             <ul class="iv-sum-k"><li>소득세</li><li>법인세</li><li>취득세</li><li>재산세</li></ul>
           </li>
         </ul>
-
-        <div class="tr-block rv">
-          <div class="sub-h"><h3 class="sub-t">기업 유형별 지원 내용</h3></div>
-
-          <!-- ⚠ 좁은 화면에서는 표를 접지 않고 **가로 스크롤**한다.
-               셀 하나하나가 금액·기간 조건이라 카드로 쪼개면 어느 열의 값인지 알 수 없다.
-               대신 첫 열(구분)을 sticky 로 붙여 스크롤 중에도 행 이름이 남는다. -->
-          <div class="iv-scroll" tabindex="0" role="region" aria-label="기업 유형별 지원 내용 표">
-            <table class="iv-tbl">
-              <caption class="sr-only">지방 이전 및 투자기업 주요 혜택 — 기업 유형별 보조금과 세제 혜택</caption>
-              <thead>
-                <tr>
-                  <th scope="col" colspan="3">구분</th>
-                  <th scope="col">수도권(대도시) 기업 이전</th>
-                  <th scope="col">수도권(대도시) 외 시 · 도 기업 이전</th>
-                  <th scope="col">관내 기업 및 지방 신 · 증설 기업</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row" rowspan="3" colspan="2" class="iv-tbl-g">보조금</th>
-                  <th scope="row">토지매입비</th>
-                  <td colspan="2">15% ~ 40% 이내 (최대 3 ~ 60억원)
-                    <i>* 상시고용인원 및 투자금액에 따라 차등 적용<br />
-                      (제조업 · 정보통신산업 · 지식서비스산업 · 첨단업종)</i></td>
-                  <td class="iv-na">-</td>
-                </tr>
-                <tr>
-                  <th scope="row">설비투자금</th>
-                  <td colspan="2">10% ~ 30% 이내 (최대 30억)
-                    <i>* 기업규모(중소 · 중견 · 대)에 따라 차등 적용</i></td>
-                  <td>이전 · 신설 · 증설 : 40% ~ 50% (최대 80억 ~ 300억)<br />창업 : 20% 이내
-                    <i>* 상시고용인원 및 투자금액 차등 적용<br />
-                      * 적용 업종 : 제조업 · 정보통신산업 · 지식서비스산업 · 첨단업종 ·
-                      국가전략자원 개발사업 · 물류사업 · 소부장</i></td>
-                </tr>
-                <tr>
-                  <th scope="row">이전보조금<i>본사</i></th>
-                  <td colspan="2">10인 초과 시 1인당 200만원 (최대 10억원)</td>
-                  <td class="iv-na">-</td>
-                </tr>
-                <tr>
-                  <th scope="row" rowspan="6" class="iv-tbl-g">세제<br />혜택</th>
-                  <th scope="row" rowspan="2" class="iv-tbl-g">국세</th>
-                  <th scope="row">소득세</th>
-                  <td>공장 이전 : 5년 100% + 2년 50% 감면</td>
-                  <td class="iv-na">-</td>
-                  <td>3년 100% + 2년 50% 감면<br />(기회발전특구 지정 시) 5년 100% + 2년 50% 감면</td>
-                </tr>
-                <tr>
-                  <th scope="row">법인세</th>
-                  <td>본사 / 공장 이전 : 5년 100% + 2년 50% 감면</td>
-                  <td class="iv-na">-</td>
-                  <!-- ⚠ `5년 50%` → `2년 50%` (2026-08-28 지시). 같은 표의 소득세 행 · 위 요약
-                       카드와도 이제 값이 맞는다 — 하나만 달랐다. -->
-                  <td>3년 100% + 2년 50% 감면<br />(기회발전특구 지정 시) 5년 100% + 2년 50% 감면</td>
-                </tr>
-                <tr>
-                  <th scope="row" rowspan="4" class="iv-tbl-g">지방세</th>
-                  <th scope="row" rowspan="2">취득세</th>
-                  <td rowspan="2">본사 이전 : 100% 면제</td>
-                  <td class="iv-na">-</td>
-                  <td>50% 감면</td>
-                </tr>
-                <tr>
-                  <td colspan="2">(연구개발특구 지정 시, 특구 내 연구소기업<sup><a href="#fn1" id="fnref1">1)</a></sup> ·
-                    첨단기술기업<sup><a href="#fn2" id="fnref2">2)</a></sup>) 100% 면제</td>
-                </tr>
-                <tr>
-                  <th scope="row" rowspan="2">재산세</th>
-                  <td>본사 이전 : 5년 100% + 3년 50% 감면</td>
-                  <td class="iv-na">-</td>
-                  <td>50% 감면</td>
-                </tr>
-                <tr>
-                  <td colspan="3">(기회발전특구 지정 시) 5년 100% + 2년 50% 감면<br />
-                    (연구개발특구 지정 시, 특구 내 연구소기업 · 첨단기술기업) 7년 100% + 3년 50% 감면</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <ol class="iv-fn">
-          <li id="fn1"><b>1)</b> 공공연구기관의 기술을 직접 사업화하기 위해 연구개발특구 안에 설립하는 기업으로,
-            국가 연구기관의 기술력과 기업의 자본 및 경영 노하우를 결합시킨 새로운 형태의 창업 · 벤처기업 모델이자
-            기술사업화 모델 (연구개발특구법 제9조의3) <a href="#fnref1" class="iv-fnb" aria-label="본문으로 돌아가기">↩</a></li>
-          <li id="fn2"><b>2)</b> 특구에 입주한 기업 가운데 정보통신기술 · 생명공학기술 · 나노기술 등
-            기술집약도가 높고 기술혁신속도가 빠른 기술분야의 제품을 생산 · 판매하는 기업 (연구개발특구법 제9조)
-            <a href="#fnref2" class="iv-fnb" aria-label="본문으로 돌아가기">↩</a></li>
-        </ol>
 
         <p class="note">※ 정책 · 법령 개정 및 지자체 예산에 따라 지원 요건 · 규모가 변동될 수 있습니다.
           혜택은 기업 여건(업종 · 투자규모 · 고용 등)에 따라 다르며, 지자체와 투자협약(MOU 등) 체결 이후

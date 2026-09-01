@@ -15,64 +15,175 @@
     "       도시소개만 해당한다 — 투자·입주는 2026-08-24 지시로 다시 히어로를 쓴다.",
     "       그 카테고리 페이지들은 front-matter 에 heroImg 를 두지 않는다 — 쓰이지 않는다."
   ],
-
   "gnb": [
-    { "key": "business", "label": "사업소개", "href": "overview.html" },
-    { "key": "city",     "label": "도시소개", "href": "brand.html" },
-    { "key": "invest",   "label": "투자·입주", "href": "invest.html" },
-    { "key": "pr",       "label": "홍보센터", "href": "notice.html" }
+    {
+      "key": "business",
+      "label": "사업소개",
+      "href": "overview.html"
+    },
+    {
+      "key": "city",
+      "label": "도시소개",
+      "href": "brand.html"
+    },
+    {
+      "key": "invest",
+      "label": "투자·입주",
+      "href": "invest.html"
+    },
+    {
+      "key": "pr",
+      "label": "홍보센터",
+      "href": "notice.html"
+    }
   ],
-
   "categories": [
     {
-      "key": "business", "no": "01", "label": "사업소개", "en": "BUSINESS",
+      "key": "business",
+      "no": "01",
+      "label": "사업소개",
+      "en": "BUSINESS",
       "items": [
-        { "key": "overview", "label": "사업개요", "href": "overview.html" },
-        { "key": "location", "label": "입지",     "href": "location.html" },
-        { "key": "effect",   "label": "기대효과", "href": "effect.html" },
-        { "key": "schedule", "label": "추진일정", "href": "schedule.html" },
-        { "key": "company",  "label": "사업주체", "href": "company.html" }
+        {
+          "key": "overview",
+          "label": "사업개요",
+          "href": "overview.html"
+        },
+        {
+          "key": "location",
+          "label": "입지",
+          "href": "location.html"
+        },
+        {
+          "key": "effect",
+          "label": "기대효과",
+          "href": "effect.html"
+        },
+        {
+          "key": "schedule",
+          "label": "추진일정",
+          "href": "schedule.html"
+        },
+        {
+          "key": "company",
+          "label": "사업주체",
+          "href": "company.html"
+        }
       ]
     },
     {
-      "key": "city", "hero": false, "no": "02", "label": "도시소개", "en": "CITY",
+      "key": "city",
+      "hero": false,
+      "no": "02",
+      "label": "도시소개",
+      "en": "CITY",
       "items": [
-        { "key": "brand",     "label": "브랜드",    "href": "brand.html" },
-        { "key": "concept",   "label": "컨셉",      "href": "concept.html" },
-        { "key": "districts", "label": "구역 소개", "href": "districts.html" },
-        { "key": "living",    "label": "정주환경",  "href": "living.html" }
+        {
+          "key": "brand",
+          "label": "브랜드",
+          "href": "brand.html"
+        },
+        {
+          "key": "concept",
+          "label": "컨셉",
+          "href": "concept.html"
+        },
+        {
+          "key": "districts",
+          "label": "구역 소개",
+          "href": "districts.html"
+        },
+        {
+          "key": "living",
+          "label": "정주환경",
+          "href": "living.html"
+        }
       ]
     },
     {
-      "key": "invest", "no": "03", "label": "투자·입주", "en": "INVEST",
+      "key": "invest",
+      "no": "03",
+      "label": "투자·입주",
+      "en": "INVEST",
       "items": [
-        { "key": "land",         "label": "토지확보 현황", "href": "invest.html#land" },
-        { "key": "zone-benefit", "label": "특구별 혜택",   "href": "invest.html#zone" },
-        { "key": "benefit",      "label": "주요 혜택",     "href": "invest.html#benefit" },
-        { "key": "contact",      "label": "문의하기",      "href": "#contact" }
+        {
+          "key": "land",
+          "label": "토지확보 현황",
+          "href": "invest.html#land"
+        },
+        {
+          "key": "zone-benefit",
+          "label": "특구별 혜택",
+          "href": "invest.html#zone"
+        },
+        {
+          "key": "benefit",
+          "label": "주요 혜택",
+          "href": "invest.html#benefit"
+        },
+        {
+          "key": "contact",
+          "label": "문의하기",
+          "href": "#contact"
+        }
       ]
     },
     {
-      "key": "pr", "no": "04", "label": "홍보센터", "en": "PR CENTER",
+      "key": "pr",
+      "no": "04",
+      "label": "홍보센터",
+      "en": "PR CENTER",
       "items": [
-        { "key": "notice",      "label": "공지사항", "href": "notice.html" },
-        { "key": "press",       "label": "언론보도", "href": "press.html" },
-        { "key": "video",       "label": "홍보영상", "href": "video.html" },
-        { "key": "gallery",     "label": "갤러리",   "href": "gallery.html" },
-        { "key": "publication", "label": "발행물",   "href": "publication.html" }
+        {
+          "key": "notice",
+          "label": "공지사항",
+          "href": "notice.html"
+        },
+        {
+          "key": "press",
+          "label": "언론보도",
+          "href": "press.html"
+        },
+        {
+          "key": "video",
+          "label": "홍보영상",
+          "href": "video.html"
+        },
+        {
+          "key": "gallery",
+          "label": "갤러리",
+          "href": "gallery.html"
+        },
+        {
+          "key": "publication",
+          "label": "발행물",
+          "href": "publication.html"
+        }
       ]
     },
     {
-      "key": "about", "label": "회사소개", "en": "COMPANY",
-      "menu": false, "lnb": false,
+      "key": "about",
+      "label": "회사소개",
+      "en": "COMPANY",
+      "menu": false,
+      "lnb": false,
       "items": [
-        { "key": "about", "label": "회사소개", "href": "about.html" }
+        {
+          "key": "about",
+          "label": "회사소개",
+          "href": "about.html"
+        }
       ]
     }
   ],
-
   "footer": [
-    { "label": "회사소개",         "href": "about.html" },
-    { "label": "개인정보처리방침", "href": "#privacy" }
+    {
+      "label": "회사소개",
+      "href": "about.html"
+    },
+    {
+      "label": "개인정보처리방침",
+      "href": "#privacy"
+    }
   ]
 }
