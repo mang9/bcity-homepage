@@ -2,11 +2,11 @@
 {
   "slug": "invest",
   "title": "투자 · 입주 · B-CITY 춘천기업혁신파크",
-  "description": "리스크는 줄이고 속도는 높이는 투자 환경. 토지확보 현황, 특구별 혜택, 이전기업 주요 혜택을 한 페이지에 모았습니다.",
+  "description": "리스크는 줄이고 속도는 높이는 투자 환경. 토지확보 요건과 특구별 · 이전기업 투자 혜택을 한 페이지에 모았습니다.",
   "nav": "land",
   "heroImg": "assets/img/districts-aerial.avif",
   "h1": "투자 · 입주",
-  "heroLede": "리스크는 줄이고, 속도는 높이는 투자 환경<br />토지확보 현황부터 특구별 · 이전기업 혜택까지 한 번에",
+  "heroLede": "리스크는 줄이고, 속도는 높이는 투자 환경<br />토지확보 요건부터 특구별 · 이전기업 혜택까지 한 번에",
   "crumb": "투자 · 입주",
   "css": ["page-shared", "page-invest"],
   "js": ["anchornav"]
@@ -15,21 +15,24 @@
     <!-- ===== 투자·입주 (원페이지 통합) — 기획 p.88~93 =====
          세 페이지(토지확보 현황 · 특구별 혜택 · 주요 혜택)를 한 페이지로 합쳤다(2026-08-24 지시).
          내용이 각각 한 화면 남짓이라 페이지를 나누면 오히려 찾기 어려웠다.
-         ⚠ 상단 LNB 가 그대로 **앵커 내비게이션**이다 — nav.json 의 세 항목이 이 페이지의
-           `#land` · `#zone` · `#benefit` 를 가리키고, js/anchornav.js 가 현재 위치를 따라간다.
+         ⚠ 2026-09-01 에 다시 줄였다 — 토지확보 현황의 지표·그래프가 빠져 이름을
+           `토지확보 요건` 으로 바꾸고, 성격이 같은 특구별·이전기업 혜택을 `투자 혜택`
+           한 섹션으로 합쳤다. 섹션은 둘, LNB 는 그 둘 + 문의하기 로 세 항목이다.
+         ⚠ 상단 LNB 가 그대로 **앵커 내비게이션**이다 — nav.json 의 항목이 `#land` ·
+           `#zone` 을 가리키고, js/anchornav.js 가 현재 위치를 따라간다.
+           `#benefit` 은 LNB 에 없지만 **이전기업 블록에 남겨 둔다** — 이미 공개된 링크다.
          ⚠ 각 섹션에 `scroll-margin-top` 이 필요하다. GNB(fixed) + LNB(sticky) 가 화면 위를
            두 겹으로 덮으므로 그대로 뛰면 제목이 바 뒤로 들어간다.
          ⚠ 상단 카피는 **히어로 안**에 있다(front-matter 의 `heroLede`) — 2026-08-24 지시로
            사업소개처럼 상단 이미지 영역에 넣었다. 여기에 또 두면 같은 문장이 두 번 나온다. -->
-    <!-- ===== 01 토지확보 현황 ===== -->
-    <!-- ===== 02 특구별 혜택 ===== -->
+    <!-- ===== 01 토지확보 요건 ===== -->
     <section class="sec iv-sec" id="land">
       <div class="wrap">
         <!-- ⚠ 2026-09-01 지시로 "B-CITY 토지확보 현황" 지표 3개와 파이 그래프를 뺐다.
              오른쪽 칸을 채우던 것이 그래프였으므로 2단 껍데기도 함께 걷어 다른 섹션과
              같은 한 단 형태로 둔다 — 남겨 두면 글이 절반 폭에 갇힌다.
              되살릴 일이 생기면 CSS 는 src/sub/_backup/removed-components.css 에 있다. -->
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>LAND SECURED</b><span>토지확보 현황</span></p>
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>LAND REQUIREMENT</b><span>토지확보 요건</span></p>
         <h2 class="h2 rv">기업도시개발특별법 적용,<br /><em>토지확보 요건 50%로 완화</em></h2>
         <p class="lede rv">토지 미수용 리스크 해소로 안정적 사업추진 기반 완비</p>
 
@@ -96,11 +99,22 @@
       </div>
     </section>
 
+    <!-- ===== 02 투자 혜택 — 특구별 + 이전기업 (2026-09-01 통합) =====
+         두 섹션 다 "무엇을 받는가" 라 한 섹션의 두 블록으로 내렸다. 카피는 그대로고
+         옛 lede 는 각 블록의 `.sub-d` 가 됐다.
+         ⚠ 이전기업 블록의 앵커 id(benefit)를 지우지 말 것 — 이미 공개된
+           `invest.html#benefit` 링크가 그 자리로 스크롤한다. 섹션 id 는 zone 을 그대로
+           써서 옛 앵커 둘 다 살아 있다.
+         ⚠ ※ 문구는 통합본(투자협약 조항이 있는 쪽) 하나만 남긴다 — 둘을 다 두면
+           같은 말이 한 화면에 두 번 나온다. -->
     <section class="sec iv-sec" id="zone">
       <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>SPECIAL ZONES</b><span>특구별 혜택</span></p>
+        <p class="eyebrow rv"><i aria-hidden="true"></i><b>INVESTMENT BENEFITS</b><span>투자 혜택</span></p>
         <h2 class="h2 rv">인허가 패스트트랙부터 <em>최대규모 세제 혜택</em>까지</h2>
-        <p class="lede rv">성공적인 비즈니스를 위한 전방위적 특구 지원</p>
+        <p class="lede rv">특구 지정과 이전기업 지원을 아우르는 전방위 혜택</p>
+
+        <div class="sub-h rv"><h3 class="sub-t">특구별 혜택</h3></div>
+        <p class="sub-d rv">성공적인 비즈니스를 위한 전방위적 특구 지원</p>
 
         <ul class="iv-szs">
           <li class="iv-sz rv">
@@ -177,17 +191,8 @@
           </li>
         </ul>
 
-        <p class="note">※ 정책 · 법령 개정 및 지자체 예산에 따라 지원 요건 · 규모가 변동될 수 있습니다.
-          혜택은 기업 여건(업종 · 투자규모 · 고용 등)에 따라 다르므로, 투자 전 반드시 관할 부처 · 지자체에 확인하시기 바랍니다.</p>
-      </div>
-    </section>
-
-    <!-- ===== 03 주요 혜택 ===== -->
-    <section class="sec iv-sec" id="benefit">
-      <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>KEY BENEFITS</b><span>주요 혜택</span></p>
-        <h2 class="h2 rv">법률 및 지자체의 이전 기업 전폭 지원으로<br /><em>압도적 비즈니스 환경</em> 구축</h2>
-        <p class="lede rv">지방 이전 및 투자기업 주요 혜택</p>
+        <div class="sub-h rv" id="benefit"><h3 class="sub-t">이전기업 주요 혜택</h3></div>
+        <p class="sub-d rv">지방 이전 및 투자기업 주요 혜택</p>
 
         <!-- 기획서 배치(#p-invest "03 주요 혜택") — 카드마다 아이콘 · 번호·영문 라벨 ·
              제목 · **핵심 값 한 줄** · 해당 항목. 값을 빼면 표를 열기 전까지 규모를 알 수 없다. -->

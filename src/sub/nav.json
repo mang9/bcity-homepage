@@ -108,18 +108,13 @@
       "items": [
         {
           "key": "land",
-          "label": "토지확보 현황",
+          "label": "토지확보 요건",
           "href": "invest.html#land"
         },
         {
-          "key": "zone-benefit",
-          "label": "특구별 혜택",
-          "href": "invest.html#zone"
-        },
-        {
           "key": "benefit",
-          "label": "주요 혜택",
-          "href": "invest.html#benefit"
+          "label": "투자 혜택",
+          "href": "invest.html#zone"
         },
         {
           "key": "contact",

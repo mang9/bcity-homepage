@@ -211,6 +211,10 @@
    ⚠ 세 섹션 사이에 위아래 여백이 두 번 겹치지 않게 한다 — `.sec` 이 양쪽에 여백을 주므로
      이어지는 섹션은 위쪽만 남긴다. */
 .iv-sec { scroll-margin-top: calc(var(--gnb-h) + var(--lnb-h)); }
+/* ⚠ **섹션 안쪽 앵커**에도 같은 여백이 필요하다. `.iv-sec` 에만 주면 그 블록으로 뛸 때
+     제목이 GNB+LNB 뒤로 들어간다 — 실측 1440 에서 윗변 92px, 390 에서 -22px 로
+     밑변 123px 인 바에 가렸다. 지금은 이전기업 블록(#benefit)이 여기 해당한다. */
+.iv-sec .sub-h[id] { scroll-margin-top: calc(var(--gnb-h) + var(--lnb-h) + 16px); }
 .iv-sec + .iv-sec { padding-top: 0; }
 /* 이어지는 섹션 사이에 `.sec` 의 아래 여백(최대 112px)과 구분선 여백이 겹쳐 270px 가
    비었다(실측). 뒤에 섹션이 더 있으면 아래 여백을 줄인다. */
