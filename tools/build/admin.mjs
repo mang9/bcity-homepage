@@ -181,24 +181,18 @@ const SCRIPTS = `  <script>
       t.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
 
-    /* 기본 세팅값 — 고른 묶음으로 그 등급의 표를 한 번에 채운다.
+    /* 처음 값으로 되돌리기 — 체크를 만졌다가 원래대로 돌아가는 길.
        클라이언트만으로 되는 부분이라 실제로 동작시킨다(저장은 하지 않는다).
-       ⚠ 선택지 이름을 화면과 스크립트가 **같은 문자열**로 쓴다. 따로 코드를 두면
-         한쪽만 고칠 때 조용히 어긋난다. */
-    document.addEventListener('change', function (e) {
-      var s = e.target.closest('[data-preset]');
-      if (!s) return;
-      var tbl = document.querySelector('[data-perm="' + s.getAttribute('data-preset') + '"]');
+       ⚠ 처음 값을 따로 저장하지 않는다. defaultChecked 가 HTML 의 checked 속성,
+         곧 **화면이 처음 그려졌을 때의 값**이라 그대로 쓰면 된다.
+         변수에 담아 두면 화면과 갈라질 자리가 하나 늘어난다. */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-reset]');
+      if (!b) return;
+      var tbl = document.querySelector('[data-perm="' + b.getAttribute('data-reset') + '"]');
       if (!tbl) return;
-      var v = s.value;
-      var on = { read: v !== '권한 없음',
-                 edit: v === '전체 권한' || v === '등록 · 수정까지',
-                 del:  v === '전체 권한' };
       var boxes = tbl.querySelectorAll('input[type="checkbox"]');
-      for (var i = 0; i < boxes.length; i++) {
-        if (boxes[i].disabled) continue;
-        boxes[i].checked = on[boxes[i].getAttribute('data-col')];
-      }
+      for (var i = 0; i < boxes.length; i++) boxes[i].checked = boxes[i].defaultChecked;
     });
 
     /* 비밀번호 규칙·일치 검사 — 클라이언트만으로 되는 부분이라 실제로 동작시킨다.
@@ -920,19 +914,6 @@ const roleMenus = (role) => MENUS
   .map((m, i) => ({ m, i }))
   .filter(({ m }) => m !== '계정 관리' || role === '최고관리자');
 
-/* 기본 세팅값 — 매트릭스를 한 번에 채우는 묶음. 메뉴가 7개라 하나씩 21번 누르는 대신
-   먼저 큰 틀을 고르고 필요한 것만 손보게 한다.
-   ⚠ 값(키)은 화면에 보이는 이름 그대로 쓴다. 따로 코드를 두면 화면과 스크립트가
-     갈라질 때 조용히 어긋난다. */
-const PRESETS = ['전체 권한', '등록 · 수정까지', '열람만', '권한 없음'];
-const presetOf = (role) => {
-  const lv = ROLE_DEFAULT[role];
-  const used = roleMenus(role).map(({ i }) => lv[i]);
-  if (used.every((x) => x === 'edit')) return '전체 권한';
-  if (used.every((x) => x === 'read')) return '열람만';
-  if (used.every((x) => x === 'none')) return '권한 없음';
-  return '등록 · 수정까지';
-};
 
 /* 삭제 권한은 등록 · 수정과 별개로 본다 — 잘못 지우면 되돌릴 수 없기 때문이다.
    ⚠ `계정 관리` 의 삭제만 **최고관리자로 제한**한다. 편집자가 계정을 지울 수 있으면
@@ -950,11 +931,11 @@ const permMatrix = (role, opts = {}) => `<div class="ad-scroll">
 ${roleMenus(role).map(({ m, i }) => {
   const lv = ROLE_DEFAULT[role][i];
   const dis = opts.locked ? ' disabled' : '';
-  const ck = (on, col) => `<input type="checkbox" data-col="${col}"${on ? ' checked' : ''}${dis} />`;
+  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''}${dis} />`;
   return `                    <tr><td>${esc(m)}</td>`
-    + `<td class="is-ctr">${ck(lv !== 'none', 'read')}</td>`
-    + `<td class="is-ctr">${ck(lv === 'edit', 'edit')}</td>`
-    + `<td class="is-ctr">${ck(canDelete(role, m, lv), 'del')}</td></tr>`;
+    + `<td class="is-ctr">${ck(lv !== 'none')}</td>`
+    + `<td class="is-ctr">${ck(lv === 'edit')}</td>`
+    + `<td class="is-ctr">${ck(canDelete(role, m, lv))}</td></tr>`;
 }).join('\n')}
                   </tbody>
                 </table>
@@ -1043,20 +1024,19 @@ pages['role-form.html'] = shell({
           <div class="ad-form">
 ${ROLES.map((r) => {
   const locked = r === '최고관리자';
-  const preset = `<select class="ad-sel" data-preset="${esc(r)}"${locked ? ' disabled' : ''}>`
-    + PRESETS.map((p) => `<option${p === presetOf(r) ? ' selected' : ''}>${esc(p)}</option>`).join('')
-    + '</select>';
+  /* ⚠ 되돌리기는 **잠기지 않은 등급에만** 둔다. 최고관리자는 체크를 바꿀 수 없어
+       되돌릴 것도 없다 — 눌리지 않는 버튼을 두면 왜 안 되는지 묻게 된다. */
+  const reset = locked ? '' : `<div class="ad-perm-top">
+                  <button type="button" class="ad-btn ad-btn--sm" data-reset="${esc(r)}">처음 값으로 되돌리기</button>
+                </div>
+                `;
   return `            <div class="ad-row">
               <p class="ad-lb">${esc(r)}</p>
               <div class="ad-fd">
-                <div class="ad-preset">
-                  <span>기본 세팅값</span>${preset}
-                  <em>고른 값으로 아래 표가 한 번에 채워집니다. 이후 하나씩 바꿀 수 있습니다.</em>
-                </div>
-                ${permMatrix(r, { locked, tag: true })}
+                ${reset}${permMatrix(r, { locked, tag: !locked })}
                 <p class="ad-hint">${locked
                   ? '최고관리자는 모든 권한을 가지며 수정할 수 없습니다.'
-                  : '‘열람’을 끄면 이 등급으로 로그인한 사람에게는 그 메뉴가 왼쪽 목록에 나타나지 않습니다.'}</p>
+                  : '‘열람’을 끄면 이 등급으로 로그인한 사람에게는 해당 메뉴가 왼쪽 목록에 나타나지 않습니다.'}</p>
               </div>
             </div>`;
 }).join('\n')}
