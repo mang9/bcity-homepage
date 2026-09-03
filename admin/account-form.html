@@ -229,6 +229,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
   border-radius: var(--radius-sm); background: var(--color-surface); }
 .ad-in::placeholder { color: var(--ad-mute); }
 .ad-hint { margin: 6px 0 0; font-size: 12px; color: var(--color-text-muted); }
+/* 기본 세팅값 줄 — 표 위에서 큰 틀을 먼저 고르는 자리.
+   ⚠ 표(.ad-scroll)보다 **위**에 둔다. 아래에 두면 표를 다 채운 뒤에야 눈에 들어와
+     "한 번에 채우는" 목적이 사라진다.
+   ⚠ 안내(em)는 좁은 화면에서 줄로 내려간다 — flex-wrap 이 그 역할을 한다. */
+.ad-preset { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  margin-bottom: 12px; }
+.ad-preset > span { font-size: 13px; font-weight: 700; }
+.ad-preset > em { font-style: normal; font-size: 12px; color: var(--color-text-muted); }
 /* .ad-type(회색 필드 타입 배지)는 2026-08-18 지시로 제거했다.
    타입 정보는 화면이 아니라 admin/README.md 의 필드 명세표가 갖는다 —
    `field()` 가 빌드할 때 그 표를 자동으로 갱신하므로 명세가 사라지지 않는다. */
@@ -533,17 +541,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
                 <table class="ad-tbl ad-perm">
                   <thead><tr><th>메뉴</th><th class="is-ctr">열람</th><th class="is-ctr">등록 · 수정</th><th class="is-ctr">삭제</th></tr></thead>
                   <tbody>
-                    <tr><td>공지사항</td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td></tr>
-                    <tr><td>언론보도</td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td></tr>
-                    <tr><td>홍보영상</td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td></tr>
-                    <tr><td>갤러리</td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td></tr>
-                    <tr><td>발행물</td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td></tr>
-                    <tr><td>파트너사</td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td><td class="is-ctr"><input type="checkbox" checked /></td></tr>
-                    <tr><td>계정 관리</td><td class="is-ctr"><input type="checkbox" /></td><td class="is-ctr"><input type="checkbox" /></td><td class="is-ctr"><input type="checkbox" /></td></tr>
+                    <tr><td>공지사항</td><td class="is-ctr"><input type="checkbox" data-col="read" checked /></td><td class="is-ctr"><input type="checkbox" data-col="edit" checked /></td><td class="is-ctr"><input type="checkbox" data-col="del" checked /></td></tr>
+                    <tr><td>언론보도</td><td class="is-ctr"><input type="checkbox" data-col="read" checked /></td><td class="is-ctr"><input type="checkbox" data-col="edit" checked /></td><td class="is-ctr"><input type="checkbox" data-col="del" checked /></td></tr>
+                    <tr><td>홍보영상</td><td class="is-ctr"><input type="checkbox" data-col="read" checked /></td><td class="is-ctr"><input type="checkbox" data-col="edit" checked /></td><td class="is-ctr"><input type="checkbox" data-col="del" checked /></td></tr>
+                    <tr><td>갤러리</td><td class="is-ctr"><input type="checkbox" data-col="read" checked /></td><td class="is-ctr"><input type="checkbox" data-col="edit" checked /></td><td class="is-ctr"><input type="checkbox" data-col="del" checked /></td></tr>
+                    <tr><td>발행물</td><td class="is-ctr"><input type="checkbox" data-col="read" checked /></td><td class="is-ctr"><input type="checkbox" data-col="edit" checked /></td><td class="is-ctr"><input type="checkbox" data-col="del" checked /></td></tr>
+                    <tr><td>파트너사</td><td class="is-ctr"><input type="checkbox" data-col="read" checked /></td><td class="is-ctr"><input type="checkbox" data-col="edit" checked /></td><td class="is-ctr"><input type="checkbox" data-col="del" checked /></td></tr>
                   </tbody>
                 </table>
               </div>
-              <p class="ad-hint">등급 기본값에서 하나씩 바꿀 수 있습니다. 계정 삭제 권한은 최고관리자만 가집니다.</p>
+              <p class="ad-hint">등급 기본값에서 하나씩 바꿀 수 있습니다. 계정 관리는 최고관리자만 다룰 수 있어 다른 등급에는 나타나지 않습니다.</p>
             </div>
           </div>
           <div class="ad-row">
@@ -596,6 +603,26 @@ button, input, select, textarea { font: inherit; color: inherit; }
       if (!t) return;
       var on = t.classList.toggle('is-on');
       t.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+
+    /* 기본 세팅값 — 고른 묶음으로 그 등급의 표를 한 번에 채운다.
+       클라이언트만으로 되는 부분이라 실제로 동작시킨다(저장은 하지 않는다).
+       ⚠ 선택지 이름을 화면과 스크립트가 **같은 문자열**로 쓴다. 따로 코드를 두면
+         한쪽만 고칠 때 조용히 어긋난다. */
+    document.addEventListener('change', function (e) {
+      var s = e.target.closest('[data-preset]');
+      if (!s) return;
+      var tbl = document.querySelector('[data-perm="' + s.getAttribute('data-preset') + '"]');
+      if (!tbl) return;
+      var v = s.value;
+      var on = { read: v !== '권한 없음',
+                 edit: v === '전체 권한' || v === '등록 · 수정까지',
+                 del:  v === '전체 권한' };
+      var boxes = tbl.querySelectorAll('input[type="checkbox"]');
+      for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].disabled) continue;
+        boxes[i].checked = on[boxes[i].getAttribute('data-col')];
+      }
     });
 
     /* 비밀번호 규칙·일치 검사 — 클라이언트만으로 되는 부분이라 실제로 동작시킨다.
