@@ -1,0 +1,19 @@
+    <!-- ===== 히어로 (하위 메뉴 없음) =====
+         대메뉴에 속하지 않는 단일 페이지용이다 — 지금은 회사소개 하나뿐이며 푸터에서만 닿는다
+         (2026-08-25 지시: "위에 메뉴로 올리지 말고 … 앵커메뉴 필요없이 원페이지로").
+         ⚠ `hero.html` 과의 차이는 **두 가지뿐**이다:
+           ① 아래 LNB 를 두지 않는다 ② 브레드크럼이 두 단계다(카테고리 = 페이지라 반복하지 않는다).
+         ⚠ 아이브로우에 카테고리 번호(`{{catNo}}`)를 쓰지 않는다 — 01~04 처럼 번호가 붙은
+           대메뉴가 아니다. 번호를 붙이면 없는 다섯 번째 카테고리가 있는 것처럼 읽힌다. -->
+    <section class="hero">
+      <img class="hero-bg" src="{{heroImg}}"{{heroPos}} alt="" />
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="wrap">
+        <nav class="crumb" aria-label="현재 위치">
+          <a href="index.html">HOME</a><span aria-hidden="true">›</span><b>{{navLabel}}</b>
+        </nav>
+        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>{{catEn}}</b><span>{{catLabel}}</span></p>
+        <h1>{{h1}}</h1>
+{{heroLede}}
+      </div>
+    </section>

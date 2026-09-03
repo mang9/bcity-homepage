@@ -28,11 +28,11 @@
        ⚠ DESIGN.md 가 바뀌면 여기와 src/css/app.css 를 **둘 다** 고친다.
           서브페이지는 Tailwind 를 쓰지 않으므로 @theme 트리셰이킹(§1.3)은 해당 없다. */
     :root {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
+      --color-primary: #2C3E91;
+      --color-primary-hover: #253479;
       --color-navy: #002742;
       --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
+      --color-label-blue: #4e7ac7;
       --color-light-blue: #bbccf0;
       --color-bg: #f4f8fe;
       --color-surface: #ffffff;
@@ -43,7 +43,7 @@
       /* 8대 권역 식별색 — DESIGN.md 에 있는 토큰인데 서브페이지 사본에는 빠져 있었다.
          구역소개 페이지가 쓰기 시작하면서 채워 넣는다. 흰색 대비 전부 4.62 이상(DESIGN.md §색).
          ⚠ index.html 은 이 값을 @theme 과 :root 양쪽에 갖는다(§1.3 트리셰이킹). */
-      --color-district-ai: #344198;
+      --color-district-ai: #2C3E91;
       --color-district-bio: #288074;
       --color-district-food: #a1662b;
       --color-district-mice: #337aa3;
@@ -54,11 +54,11 @@
 
       /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
          여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
-      --color-logo: #2c3e91;
+      --color-logo: var(--color-primary);   /* 통일(2026-08-31) — 별칭이라 갈라질 수 없다 */
       /* 브랜드 정본 3색(스토리보드 slide51 — Pantone 까지 지정돼 있다). 사이트 UI 토큰과 **다르다**:
-           Indigo #2C3E91 = --color-logo (UI 의 --color-primary #344198 과 다름)
+           Indigo #2C3E91 = --color-logo = --color-primary (2026-08-31 통일 · 별칭)
            Mint   #3DBFA8 = --color-mint (일치)
-           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-azure #4E7AC7 은 아이브로우용 다른 색)
+           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-label-blue #4E7AC7 은 아이브로우용 다른 색)
          brand.html 만 쓴다. UI 색을 이걸로 바꾸지 말 것 — 대비·톤이 전부 다시 계산돼야 한다. */
       --brand-azure: #0095d9;
       --scrim-rgb: 0 17 34;
@@ -100,23 +100,72 @@
     /* ===== GNB ===== */
     .gnb {
       position: fixed; inset: 0 0 auto; z-index: 50; height: var(--gnb-h);
+      /* ⚠ 펼치면 `.is-open` 이 height 를 auto 로 푼다(위 규칙) */
       color: #fff; border-bottom: 1px solid transparent;
       transition: background .3s ease, color .3s ease, border-color .3s ease;
     }
-    .gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
-    .gnb.is-solid { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+    /* ⚠ 정렬은 **항상 `flex-start`** 다. 펼칠 때만 바꾸면 로고와 우측(KO/EN · SNS)이
+         그 순간 위로 튄다(실측 −22px). 대신 로고 · 우측이 각자 한 줄 높이(`--gnb-h`)를 갖고
+         그 안에서 세로 가운데에 놓이므로 닫힌 모습은 그대로다 — 메인과 같은 방식이다. */
+    .gnb .wrap { display: flex; min-height: 100%; align-items: flex-start;
+      justify-content: space-between; gap: 20px; }
+    .gnb .wrap > a { display: flex; align-items: center; height: var(--gnb-h); }
+    /* ⚠ `.no-hero` 를 함께 넣는다(§11.61). 히어로가 없는 페이지는 맨 위에서도 밝은 배경
+         위에 놓이므로 흰 글자로 두면 로고와 메뉴가 보이지 않는다. 값을 복사하지 않고
+         선택자만 더해 한 곳에서 관리한다. */
+    .gnb.is-solid,
+    .no-hero .gnb { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
       color: var(--color-text); border-bottom-color: var(--color-line); }
     .logo { width: 118px; height: auto; color: currentColor; }
-    .gnb.is-solid .logo { color: var(--color-logo); }
-    .gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
-    .gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
-    .gnb-menu a:hover { opacity: 1; }
-    .gnb-menu a.is-on { opacity: 1; }
-    .gnb-menu a.is-on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
-      height: 2px; background: currentColor; }
-    .gnb-side { display: flex; align-items: center; gap: 14px; }
+    .gnb.is-solid .logo,
+    .no-hero .gnb .logo { color: var(--color-logo); }
+    /* ⚠ 대메뉴는 **전체 폭 드롭**이다(§9-1 확정 사양 · 개별 드롭다운으로 바꿨다가 되돌린 이력).
+         `.gnb` 가 `height: var(--gnb-h)` 로 고정돼 있으면 펼친 패널이 잘리므로,
+         펼칠 때는 높이를 풀고(`min-height`) 바가 바탕째 내려온다. */
+    .gnb-menu { display: none; align-items: flex-start;
+      gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
+    .gnb-item { display: flex; flex-direction: column; }
+    /* ⚠ `align-self: flex-start` 가 없으면 링크가 **하위 패널 폭까지 늘어난다** —
+         `.gnb-item` 이 세로 flex 라 기본 `stretch` 가 걸리고, 칸 폭은 가장 넓은 하위 항목이
+         정한다. 그러면 `.is-on::after`(left:0; right:0) 밑줄이 글자보다 길어진다.
+         실측(2026-09-01): 투자·입주는 글자 60px 인데 칸이 77px 이라 밑줄이 **오른쪽으로 14px**
+         삐져나왔다. 하위가 짧은 사업소개는 2px 라 눈에 안 띄었을 뿐 같은 결함이다.
+       ⚠ 칸 폭 자체는 건드리지 않는다 — 메가메뉴 열 위치가 대메뉴 아래에 맞춰져 있다. */
+    .gnb-link { align-self: flex-start; position: relative; display: flex; align-items: center; height: var(--gnb-h);
+      padding: 0 2px; opacity: .82; transition: opacity .2s; }
+    .gnb-link:hover { opacity: 1; }
+    .gnb-link.is-on { opacity: 1; }
+    .gnb-link.is-on::after { content: ""; position: absolute; left: 0; right: 0;
+      bottom: calc(50% - .8em - 8px); height: 2px; background: currentColor; }
+    /* 하위 패널 — 닫힌 상태는 높이 0 이라 자리를 차지하지 않는다 */
+    /* ⚠ 글자 값은 메인 `#gnb .gnb-sub a` 와 **같아야 한다**(실측으로 맞췄다):
+         14px · weight 400 · `--color-text-muted` · 위아래 6px 패딩.
+         전에는 500 + 상속색이라 서브페이지만 굵고 진했다. */
+    .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+      font-size: 14px; font-weight: 400;
+      transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
+    .gnb-sub a { display: block; padding: 6px 0; white-space: nowrap;
+      color: var(--color-text-muted); transition: color .15s; }
+    .gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
+    .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
+    /* 대메뉴와 하위 사이 구분선 — 메인 `#gnb .gnb-divider` 와 같은 어법이다.
+       ⚠ 요소를 새로 만들지 않고 `::after` 로 그린다. 바 전체 폭에 걸쳐야 하므로
+         `.gnb` 기준 absolute 이며, 위치는 **한 줄 높이(`--gnb-h`)** 바로 아래다. */
+    .gnb::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; top: var(--gnb-h);
+      height: 1px; background: var(--color-line); opacity: 0;
+      transition: opacity .28s ease; pointer-events: none; }
+    .gnb.is-open::after { opacity: 1; }
+    /* ⚠ 펼친 바는 **항상 흰 면**이다. 히어로 위 투명 상태로 두면 하위 글자가 사진에 묻힌다. */
+    .gnb.is-open { height: auto; min-height: var(--gnb-h);
+      background: rgba(255,255,255,.97); backdrop-filter: blur(10px);
+      color: var(--color-text); border-bottom-color: var(--color-line); }
+    .gnb.is-open .logo { color: var(--color-logo); }
+    .gnb-side { display: flex; align-items: center; gap: 14px; height: var(--gnb-h); }
     .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-    .gnb-lang span:last-child { opacity: .6; font-weight: 600; }
+    /* EN 안내 · 말풍선 — 규칙은 여기 없다. `src/shared/gnb-en.css` 한 벌을
+       메인과 **함께 쓴다**(CSS_COMMON 의 `gnb-en`). 고칠 일이 있으면 그 파일을 고친다.
+       ⚠ 트리거는 `.gnb-en` 클래스다 — `partials/gnb.html` 의 EN 스팬이 갖고 있다.
+         `span:last-child` 로 잡던 옛 방식은 말풍선 자신까지 매칭해 위치가 깨졌다. */
     .gnb-sns { display: flex; gap: 8px; }
     .gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
     .gnb-sns a { opacity: .85; transition: opacity .2s; }
@@ -144,6 +193,54 @@
       font-size: 15px; color: var(--color-text); }
     .mnav a.is-on { color: var(--color-primary); font-weight: 700; }
 
+    /* ── gnb-en.css ─────────────────────────────────────────── */
+    /* ===== GNB 영문(EN) 안내 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+       영문 페이지가 아직 없어 EN 은 링크가 아니라 안내다. 호버·포커스에 아래로 말풍선을 띄운다.
+
+       2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙이 `src/css/app.css`(`#gnb .gnb-en`)와
+       `src/sub/css/20-gnb.css`(`.gnb-lang > span:last-child`)에 나뉘어 있었고, 실제로 갈라졌다 —
+       **서브만 흰 바탕에 흰 글자**가 되어 EN 이 보이지 않았다(사용자 지적).
+
+       싣는 경로가 둘이다 — 파일은 하나다:
+         메인   `src/css/app.css` 의 `@import ... layer(utilities)`
+         서브   `pages.mjs` 의 CSS_COMMON 에 `gnb-en` 이 들어 있다
+       말풍선을 **넣는 쪽은 JS 다**(메인 `index.html` · 서브 `common.js`) — 마크업에 글자를 박으면
+       CSS 가 늦거나 실패할 때 "준비중입니다" 가 그대로 드러난다(2026-08-27 지시).
+
+       ⚠⚠ **`color-mix()` 안에 `currentColor` 를 넣지 않는다.** `color` 가 자기를 참조하는 꼴이라
+         크롬이 상속색 변화를 따라오지 못해 바가 흰 면으로 바뀌어도 글자가 흰색에 머문다.
+         실측값이 `color(srgb 1 1 1 / .6)` 로 굳어 있었다 — 두 상태의 색을 **각각** 적는다.
+       ⚠ `opacity` 도 쓰지 않는다. 0~1 사이면 쌓임 문맥이 생겨 안쪽 말풍선의 `z-index` 가
+         그 안에 갇히고, 결국 GNB 구분선이 말풍선 위로 그려진다(실측: 선이 말풍선을 가로지름).
+       ⚠ 바의 상태 클래스 이름이 메인 · 서브가 다르다(`open`/`solid` ↔ `is-open`/`is-solid`).
+         한 규칙에 둘 다 적는다 — 한쪽만 적으면 그 화면에서 색이 안 바뀐다. */
+
+    /* 흰 글자(히어로 사진 위)가 기본이다 */
+    .gnb-en { position: relative; display: inline-block; cursor: default;
+      color: rgba(255,255,255,.7); font-weight: 600; transition: color .3s ease; }
+    /* 바가 흰 면일 때 — 스크롤(solid) · 메가메뉴 펼침(open) · 히어로 없는 페이지(no-hero) */
+    #gnb.solid .gnb-en, #gnb.open .gnb-en,
+    .gnb.is-solid .gnb-en, .gnb.is-open .gnb-en, .no-hero .gnb .gnb-en { color: var(--color-text-muted); }
+    .gnb-en:hover { color: #fff; }
+    #gnb.solid .gnb-en:hover, #gnb.open .gnb-en:hover,
+    .gnb.is-solid .gnb-en:hover, .gnb.is-open .gnb-en:hover,
+    .no-hero .gnb .gnb-en:hover { color: var(--color-text); }
+
+    /* 말풍선 — JS 가 `.gnb-en` 안에 넣는다
+       ⚠ `.gnb-lang` 에 `overflow` 가 있으면 잘려서 보이지 않는다.
+       ⚠ `z-index` 가 필요하다. GNB 구분선도 absolute 인데 **트리에서 뒤에** 오므로
+         둘 다 `auto` 면 구분선이 위에 그려져 말풍선을 가른다(2026-08-27 지적). */
+    .gnb-tip { position: absolute; z-index: 3; top: calc(100% + 9px); left: 50%;
+      transform: translate(-50%, -4px); padding: 6px 11px; border-radius: var(--radius-sm, 8px);
+      white-space: nowrap; background: var(--color-navy); color: #fff;
+      font-size: 11.5px; font-weight: 600; letter-spacing: 0; opacity: 0;
+      pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+    /* 꼬리 */
+    .gnb-tip::before { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -4px;
+      border: 4px solid transparent; border-bottom-color: var(--color-navy); }
+    .gnb-en:hover .gnb-tip,
+    .gnb-en:focus-visible .gnb-tip { opacity: 1; transform: translate(-50%, 0); }
+
     /* ── 30-hero-lnb.css ─────────────────────────────────────────── */
     /* ===== 히어로 ===== */
     .hero { position: relative; min-height: clamp(340px, 48vh, 520px); display: flex;
@@ -163,9 +260,27 @@
     .hero-eyebrow b { color: #fff; font-weight: 700; }
     .hero h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(34px, 4.2vw, 62px); line-height: 1.14; letter-spacing: -.025em; }
+    /* 제목 아래 한 줄 — front-matter 의 `heroLede` 가 있을 때만 나온다.
+       ⚠ 히어로 스크림 위이므로 `--color-text-muted` 를 쓰지 않는다. 흰 계열로 낮춘다. */
+    .hero-lede { margin: clamp(12px, 1.4vw, 20px) 0 0; max-width: 46ch;
+      font-size: clamp(15px, 1.15vw, 19px); line-height: 1.7;
+      color: rgba(255, 255, 255, .84); word-break: keep-all; }
+
+    /* ===== 히어로 없는 카테고리 — GNB 바로 아래에 LNB 만 =====
+       도시소개 · 투자·입주 가 이 형태다(nav.json 의 `hero: false`).
+       ⚠ GNB 가 `position: fixed` 라 흐름에서 빠져 있다. 본문을 그만큼 내려야 LNB 가
+         GNB 뒤에 숨지 않는다. `body` 에 패딩을 줘도 GNB 는 영향받지 않는다.
+       ⚠ GNB 를 **처음부터 흰 배경**으로 둔다. 기본 상태는 히어로 사진 위를 전제로 흰 글자라,
+         밝은 페이지 배경 위에서는 글자가 보이지 않는다. `common.js` 는 스크롤 40px 부터
+         `.is-solid` 를 붙이므로 맨 위에서는 붙지 않는다 → CSS 로 같은 값을 함께 준다. */
+    .no-hero { padding-top: var(--gnb-h); }
 
     /* ===== LNB ===== */
-    .lnb { position: sticky; top: 0; z-index: 40; background: var(--color-surface);
+    /* ⚠ `top: 0` 이면 안 된다. GNB 가 `position: fixed` 로 위 64px 를 불투명하게 덮으므로
+         LNB 가 스크롤 직후 **그 뒤로 완전히 숨는다**(2026-08-24 실측: 겹침 59px — 히어로가
+         있는 모든 페이지가 그랬다. 하위 메뉴가 스크롤하자마자 사라지고 있었다).
+         GNB 높이만큼 내려야 두 바가 나란히 남는다. */
+    .lnb { position: sticky; top: var(--gnb-h); z-index: 40; background: var(--color-surface);
       border-bottom: 1px solid var(--color-line); }
     .lnb .wrap { display: flex; gap: clamp(18px, 2.2vw, 40px); overflow-x: auto;
       scrollbar-width: none; height: var(--lnb-h); align-items: stretch; }
@@ -215,12 +330,264 @@
     .rv { opacity: 0; transform: translateY(22px);
       transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
     .rv.in { opacity: 1; transform: none; }
+    /* 가로로 들어오는 변종 — 레퍼런스의 `.complex_content { translateX(5rem) → 0 }` 와 같은 어법.
+       ⚠ `.rv` 와 함께 쓴다(`class="rv rv-x"`). 관찰자는 `.rv` 만 찾으므로 그래야 걸린다.
+         지연은 common.js 가 인라인으로 넣는다(`(i % 4) * .07s`) — CSS 로 주면 인라인에 밀린다. */
+    .rv.rv-x { transform: translateX(clamp(28px, 3.4vw, 56px)); }
+    .rv.rv-x.in { transform: none; }
+    /* 더 크게 떠오르는 변종 — 화면 하나를 채우는 장 시작 화면에서 기본 22px 는 눈에 안 띈다.
+       ⚠ `.rv-x` 와 같이 `.rv` 와 함께 쓴다(`class="rv rv-rise"`). */
+    .rv.rv-rise { transform: translateY(clamp(26px, 4vh, 54px)); }
+    .rv.rv-rise.in { transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .rv { opacity: 1; transform: none; transition: none; }
       .hero-bg { transform: none; }
     }
+
+    /* ── contact.css ─────────────────────────────────────────── */
+    /* ===== 문의 · 약관 모달 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+       2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙 49개가 `src/css/app.css` 와
+       `src/sub/css/70-contact.css` 에 나뉘어 있었고, 한쪽만 고쳐져 실제로 갈라졌다
+       (닫기 버튼 회색 라인이 서브에만 있었다).
+
+       싣는 경로가 둘이다 — 파일은 하나다:
+         메인   `src/css/app.css` 의 `@import "../shared/contact.css" layer(utilities)`
+         서브   front-matter `"css": ["contact"]` → `pages.mjs` 가 인라인
+       ⚠ 순수 CSS 로만 쓴다(`@apply` · Tailwind 지시어 금지) — 서브 번들은 Tailwind 를 거치지 않는다.
+       ⚠ `.sr-only` 는 여기 두지 않는다. 모달 전용이 아니라 일반 유틸리티이며
+         메인은 `app.css`, 서브는 `page-shared.css` 가 각각 갖고 있다.
+       ⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — 아래 `:where()` 버튼 리셋이 그 자리를 메운다.
+         `:where()` 라 명시도 0 이므로 `.ct-reset` 의 테두리를 덮지 않는다(§11.87). */
+
+    /* ═══ 요소 기본값을 여기서 못 박는다 — 두 화면의 **바탕이 다르기 때문**이다 ═══
+       같은 파일을 쓰는데도 렌더가 갈리는 이유는 이 한 가지다:
+         메인   Tailwind **preflight** 가 깔린다 — `p` 마진 0 · `line-height: 1.5` · 폼 요소 정규화
+         서브   `10-base.css` + **브라우저 기본값** — `line-height: 1.6` · `p` 는 `margin: 1em 0`
+       그래서 이 파일이 **명시하지 않은 속성**은 두 화면에서 서로 다른 값을 상속한다.
+       같은 함정에 세 번 걸렸다(2026-08-27):
+         ① `<button>` 베벨 테두리   ② 체크박스가 사라짐   ③ 관심분야 라벨이 10px 밀림
+       ③ 이 이 리셋이 없어서 생긴 마지막 사례다 — `.ct-label` 이 `<p>` 라 서브에서만
+         `margin-top: 14px` 를 물려받았고, `.ct-row--inline .ct-label` 은 **아래 마진만** 지웠다.
+       ⚠ `:where()` 로 감싸 **특이도 0** 으로 둔다 — 리셋은 바닥만 깔고 이겨서는 안 된다.
+       ⚠ `10-base.css` 에 전역 `p { margin: 0 }` 을 넣는 방식은 쓰지 않는다.
+         서브페이지 30개의 본문 여백이 전부 함께 바뀐다 — 모달 안으로만 한정한다.
+       ⚠ `line-height` 는 **메인 preflight 값(1.5)** 에 맞춘다. 디자인을 그 위에서 잡았다. */
+    .pv { line-height: 1.5; }
+    .pv :where(p, h2, h3, h4, ol, ul, li, dl, dt, dd, table, figure, blockquote) { margin: 0; }
+    .pv :where(ol, ul) { padding: 0; list-style: none; }
+
+    .pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
+    .pv[hidden] { display: none; }
+    .pv-back { position: absolute; inset: 0; background: rgba(0,39,66,.55); backdrop-filter: blur(4px);
+      opacity: 0; transition: opacity .3s ease; }
+    .pv.on .pv-back { opacity: 1; }
+    .pv--wide .pv-panel { max-width: 1040px; }
+    .pv-panel { position: relative; display: flex; flex-direction: column; overflow: hidden;
+      width: 100%; max-width: 720px; max-height: min(86vh, 860px);
+      max-height: min(86dvh, 860px);          /* 모바일 주소창 높이 변화 대응 */
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-lg, 16px); box-shadow: 0 30px 80px rgba(0,10,30,.3);
+      opacity: 0; transform: translateY(18px) scale(.98);
+      transition: opacity .32s ease, transform .42s cubic-bezier(.22,1,.36,1); }
+    .pv.on .pv-panel { opacity: 1; transform: none; }
+    .pv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 26px 28px 20px; border-bottom: 1px solid var(--color-line); }
+    /* ⚠⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — `<button>` 이 브라우저 기본
+       `appearance` 와 테두리를 그대로 쓴다. 그래서 닫기 · 등록하기 · 다시쓰기에
+       **대각선으로 반반 나뉜 베벨 테두리**가 보였다(2026-08-27 지적).
+       메인은 프리플라이트가 지워 주므로 같은 마크업이 거기서는 멀쩡하다.
+       ⚠ 이 리셋을 지우면 그대로 재발한다(§11.29 의 `.doc-view` 와 같은 원인). */
+    /* ⚠ `:where()` 로 감싸 **특이도를 0 으로** 만든다. 그냥 `.pv button` 으로 두면 (0,1,1) 이라
+       뒤에 오는 `.ct-reset`(0,1,0)의 `border: 1px solid` 를 이겨 다시쓰기 버튼의 테두리가
+       사라진다(실측). 리셋은 이겨서는 안 되고 바닥만 깔아야 한다. */
+    /* ⚠⚠ **체크박스 · 라디오는 빼야 한다.** `appearance: none` 이 브라우저가 그려 주는
+       네모·체크 표시를 통째로 지워, 19x19 빈 칸만 남고 **체크박스가 사라진다**
+       (2026-08-27 지적). `.ct-check input` 은 크기와 `accent-color` 만 정하므로
+       기본 렌더링에 의존한다 — 대신 그릴 스타일이 없다.
+       ⚠ `.ct-chip input` 은 일부러 숨기는 체크박스인데(`opacity: 0; width: 0`)
+         그건 appearance 와 무관하게 동작하므로 여기서 빼도 안전하다. */
+    .pv :where(button, input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+      appearance: none; -webkit-appearance: none;
+      font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    .pv :where(input:not([type="checkbox"]):not([type="radio"]), textarea, select) { cursor: auto; }
+    /* 체크박스 · 라디오는 `appearance` 만 건드리지 않는다. 나머지 상속값은 맞춰 둔다 —
+       렌더에는 영향이 없지만(크기가 고정이고 표시는 `accent-color` 가 그린다) 두 화면의
+       계산값이 완전히 같아야 "같은 파일인데 왜 다르냐" 를 다시 쫓지 않는다. */
+    .pv :where(input[type="checkbox"], input[type="radio"]) { font: inherit; color: inherit; }
+
+    /* ⚠ 테두리는 여기서 **명시**한다(2026-08-27 지시). 위 리셋이 `border: 0` 을 깔아 두므로
+         안 적으면 테두리가 없다 — 등록하기 · 다시쓰기와 같은 어법으로 회색 선을 준다. */
+    .pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
+      border: 1px solid var(--color-line); border-radius: 999px; color: var(--color-text-muted);
+      transition: background .22s, color .22s, border-color .22s; }
+    .pv-x:hover { border-color: var(--color-primary); }
+    .pv-x svg { width: 20px; height: 20px; }
+    .pv-x:hover { background: var(--color-bg); color: var(--color-text); }
+    /* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
+       overflow-y:auto가 동작하지 않고 패널 밖으로 내용이 넘쳐 잘린다. */
+    .pv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+      padding: 24px 28px 0; -webkit-overflow-scrolling: touch; }
+    .pv-sec { margin-top: 26px; }
+    .pv-sec--last { padding-bottom: 8px; }
+    .pv-h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 11px;
+      font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-text); }
+    .pv-tag { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+    .pv-tag--req { background: var(--color-primary); color: #fff; }
+    .pv-tag--opt { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .pv-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6;
+      border-top: 1px solid var(--color-line); }
+    .pv-tbl th, .pv-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--color-line);
+      text-align: left; vertical-align: top; }
+    .pv-tbl th { width: 34%; background: var(--color-bg); font-weight: 700; color: var(--color-text); white-space: nowrap; }
+    .pv-tbl td { color: var(--color-text-muted); }
+    .pv-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .pv-list { margin: 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
+    .pv-list li { position: relative; padding-left: 14px; }
+    .pv-list li + li { margin-top: 7px; }
+    .pv-list li::before { content: ''; position: absolute; left: 0; top: .62em;
+      width: 4px; height: 4px; border-radius: 999px; background: var(--color-mint); }
+    .pv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 18px 28px 22px; border-top: 1px solid var(--color-line); }
+    .pv-ok { padding: 12px 30px; border-radius: 999px; background: var(--color-primary); color: #fff;
+      font-size: 14px; font-weight: 700; transition: background .25s, transform .3s; }
+    .pv-ok:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+    @media (max-width: 640px) {
+      .pv { padding: 14px; }
+      .pv-head { padding: 20px 18px 16px; }
+      .pv-body { padding: 18px 18px 4px; }
+      .pv-foot { padding: 14px 18px 18px; }
+      .pv-tbl { font-size: 12.5px; }
+      .pv-tbl th, .pv-tbl td { padding: 9px 10px; }
+      .pv-tbl th { width: 38%; white-space: normal; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pv-back, .pv-panel { transition: none; }
+    }
+
+    /* ===== 문의하기 폼 ===== */
+    .ct-form { display: flex; flex-direction: column; gap: 22px; padding-bottom: 32px; }
+    .ct-row { display: block; }
+    .ct-label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; color: var(--color-text); }
+    /* 관심분야: 라벨 옆에 선택 버튼을 한 줄로 → 세로 공간 절약
+       (.ct-row 와 명시도가 같으므로 반드시 뒤에 와야 display:flex 가 적용된다) */
+    .ct-row--inline { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
+    .ct-row--inline .ct-label { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; }
+    .ct-row--inline .ct-chips { flex: 1 1 auto; }
+    .ct-row--inline .ct-err { flex: 1 1 100%; margin-top: 0; }
+    .ct-req { color: var(--color-mint); }
+    .ct-input { width: 100%; padding: 14px 16px; font-size: 15px; color: var(--color-text);
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
+    .ct-input::placeholder { color: #9aa8bb; }
+    .ct-input:focus { outline: none; border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); }
+    .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
+    /* 관심분야 칩 */
+    .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ct-chip { position: relative; cursor: pointer; }
+    .ct-chip input { position: absolute; margin: 0; opacity: 0; width: 0; height: 0; }
+    .ct-chip span { display: inline-flex; align-items: center; padding: 10px 18px;
+      font-size: 14px; font-weight: 600; color: var(--color-text-muted);
+      background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 999px;
+      transition: background .22s, color .22s, border-color .22s; }
+    .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
+    /* 동의 */
+    .ct-agree { display: flex; flex-direction: column; gap: 10px;
+      padding: 18px 22px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer;
+      font-size: 14px; line-height: 1.55; color: var(--color-text); }
+    /* ⚠ 마진을 **네 방향 모두** 적는다. 체크박스는 위 리셋에서 빼 두었으므로(글리프가 사라진다)
+         서브에서는 브라우저 기본 `margin: 3px 3px 3px 4px` 가 그대로 남아 4px 밀린다. */
+    .ct-check input { flex-shrink: 0; width: 19px; height: 19px; margin: 1px 0 0;
+      accent-color: var(--color-primary); cursor: pointer; }
+    .ct-tag { margin-right: 6px; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; vertical-align: 1.5px; }
+    .ct-tag--req { background: var(--color-primary); color: #fff; }
+    .ct-tag--opt { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-view { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+      text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+    .ct-view:hover { color: var(--color-primary); text-decoration-color: currentColor; }
+    /* 에러 */
+    .ct-err { display: none; margin-top: 8px; font-size: 13px; font-weight: 600; color: #d8564f; }
+    .ct-err.on { display: block; }
+    .ct-input.bad { border-color: #d8564f; box-shadow: 0 0 0 3px rgba(216,86,79,.12); }
+    /* 버튼 — 우측 안내 컬럼 하단.
+       컬럼이 그리드 행 높이만큼 늘어나므로 sticky로 스크롤 내내 붙어 있는다. */
+    .ct-actions { position: sticky; bottom: 0; margin-top: auto;
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 32px;   /* 좌측 폼과 동일한 32px */
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0, var(--color-surface) 14px); }
+    .ct-actions .ct-submit, .ct-actions .ct-reset { flex: 1 1 0; min-width: 116px;
+      padding: 15px 18px; }
+    .ct-actions .ct-status { flex: 1 1 100%; margin: 0; }
+    .ct-submit, .ct-reset { padding: 16px 40px; border-radius: 999px;
+      font-size: 15px; font-weight: 700; transition: background .25s, color .25s, border-color .25s, transform .3s; }
+    .ct-submit { background: var(--color-primary); color: #fff; }
+    .ct-submit:hover { background: var(--color-primary-hover); transform: translateY(-2px); }
+    .ct-submit[disabled] { opacity: .6; pointer-events: none; }
+    .ct-reset { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-reset:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-status { display: none; font-size: 14px; font-weight: 600; }
+    .ct-status.on { display: block; }
+    .ct-status.ok { color: #1a8f74; }
+    .ct-status.ng { color: #d8564f; }
+    /* 우측 안내 */
+    .ct-side { display: flex; flex-direction: column; gap: 14px; }  /* 그리드 기본 stretch로 행 전체 높이 */
+    .ct-card { padding: 22px 24px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-label-blue); }
+    /* ⚠ 이메일 주소는 **한 줄이어야 한다**(2026-08-27 지시). 주소가 길어지면 조용히 두 줄로
+         접혀 `juyoung@biotech-` / `iv.com` 처럼 도메인이 잘려 읽힌다(실측: 19px 에서 필요 254px
+         vs 카드 안쪽 250px — **4px 모자랐다**).
+         세 가지를 함께 해야 다시 안 깨진다:
+           ① 오른쪽 칸을 300 → 320px (카드 안쪽 250 → 270px)
+           ② 글자 19 → 18px  ③ `nowrap` 으로 접힘 자체를 막는다
+         지금 여유는 약 29px 다 — 폰트 폴백 차이(Paperlogy 가 Pretendard 보다 1.5% 넓다)를
+         흡수할 만큼이다. **주소를 더 긴 것으로 바꾸면 이 세 값을 다시 재라.** */
+    .ct-card-a { display: block; white-space: nowrap;
+      font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-primary); }
+    .ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
+    .ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
+      font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .ct-steps li { counter-increment: s; position: relative; padding-left: 26px; }
+    .ct-steps li + li { margin-top: 9px; }
+    .ct-steps li::before { content: counter(s); position: absolute; left: 0; top: 0;
+      display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
+      background: var(--color-primary); color: #fff; font-size: 10.5px; font-weight: 700; }
+    .ct-card-note { padding: 0 4px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+    /* 모바일: 1단으로 스택되면 컬럼 높이가 콘텐츠에 딱 맞아 sticky가 의미 없다 */
+    @media (max-width: 1023px) {
+      .ct-actions { position: static; margin-top: 8px; padding-bottom: 0; background: none; }
+    }
+
+    /* ── 메인의 Tailwind 유틸리티를 대신하는 평문 규칙 6개 ────────────────
+       메인 마크업은 헤더·격자를 유틸리티로 짜는데 서브페이지에는 그 클래스가 없다.
+       ⚠ 값은 메인의 유틸리티를 그대로 푼 것이다(`text-xs`=12px · `tracking-[0.18em]` 등).
+         메인 쪽 유틸리티를 바꾸면 여기도 맞춰야 한다. */
+    .ct-eyebrow { margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .18em; color: var(--color-label-blue); }
+    .ct-title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px;
+      font-weight: 700; color: var(--color-text); }
+    .ct-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+    .ct-grid { display: grid; gap: 40px; }
+    .ct-two { display: grid; gap: 24px; }
+    .ct-strong { font-weight: 600; color: var(--color-text); }
+    /* 약관 모달에서 Tailwind 유틸리티를 대신하는 세 개 — 값은 옛 유틸리티와 같다
+       (`text-sm leading-relaxed text-text-muted` · `text-primary underline …` · `text-xs text-text-muted`) */
+    .pv-p { font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+    .pv-link { color: var(--color-primary); text-decoration: underline;
+      text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+    .pv-link:hover { text-decoration-color: var(--color-primary); }
+    .pv-foot-note { font-size: 12px; color: var(--color-text-muted); }
+    @media (min-width: 640px)  { .ct-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 768px)  { .ct-title { font-size: 30px; } }
+    @media (min-width: 1024px) { .ct-grid { grid-template-columns: minmax(0, 1fr) 320px; } }
 
     /* ── page-shared.css ─────────────────────────────────────────── */
     /* ===== 신규 서브페이지 4종(입지·기대효과·추진일정·사업주체) 공용 부품 =====
@@ -235,8 +602,9 @@
     .sub-h { margin: clamp(40px, 4vw, 68px) 0 0; display: flex; align-items: baseline;
       gap: 12px; flex-wrap: wrap; }
     .sub-h:first-child { margin-top: 0; }
-    .sub-no { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
-      font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+    /* ⚠ 제목(`.sub-t`, 최대 27px) 대비 비율을 확인해 올렸다(2026-08-24 지시).
+         19px 는 제목의 73% 로 "라벨" 처럼 작게 읽혔다 — 88% 로 맞춰 한 쌍으로 읽히게 한다.
+         ⚠ 이 클래스는 공용이다(company · invest 등 `.sub-h` 를 쓰는 모든 블록). */
     .sub-t { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 700; line-height: 1.34; letter-spacing: -.018em; }
     .sub-d { margin: 10px 0 0; font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted);
@@ -328,6 +696,44 @@
     .lb-close svg { width: 22px; height: 22px; }
     @media (max-width: 640px) { .lb-close { top: auto; bottom: -46px; right: 50%;
       transform: translateX(50%); } }
+
+    /* ===== 사양 표 `.spec` =====
+       사업개요와 회사소개가 **같은 표**를 쓴다(2026-08-26 지시: "동일한 구성은 스타일을
+       여러개로 분산시키지마"). 예전에는 회사소개가 `.ab-spec` 으로 같은 모양을 다시
+       정의하고 있었다 — 한쪽만 고치면 두 페이지의 같은 표가 갈라진다.
+       ⚠ 여기로 올리면서 `overview.html` 의 css 배열에 `page-shared` 를 추가했다.
+         그 페이지만 공용 번들을 안 싣고 있었다(19개 중 유일). */
+    .spec { width: 100%; margin-top: clamp(34px, 3.4vw, 54px); border-top: 2px solid var(--color-primary);
+      font-size: clamp(14.5px, 1vw, 16px); }
+    .spec th, .spec td { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.4vw, 24px);
+      text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+    .spec thead th { padding-block: 13px; background: rgb(var(--primary-rgb) / .08); font-size: 13.5px;
+      font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
+    .spec tbody th { width: clamp(104px, 13vw, 188px); font-weight: 600; color: var(--color-text-muted);
+      background: rgba(255,255,255,.6); }
+    .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
+    .spec td { background: var(--color-surface); }
+    .spec .k { display: block; font-weight: 600; color: var(--color-primary); font-size: .92em;
+      letter-spacing: .02em; }
+    .spec .sub { display: block; margin-top: 3px; color: var(--color-text-muted); }
+    .spec b { font-weight: 700; }
+    .spec .num { font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 767px) {
+      /* 표를 행 단위 블록으로 접는다 — 좁은 화면에서 라벨 열이 본문을 압박한다 */
+      .spec thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: auto; }
+      .spec tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
+      .spec tbody th { width: auto; padding: 13px 16px 0; background: none;
+        border: 0; font-size: 12.5px; letter-spacing: .04em; color: var(--color-primary); }
+      .spec td { padding: 5px 16px 15px; border: 0; }
+      .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 0; }
+      .spec tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
+    }
+
+    /* ⚠ 하이픈이 든 이름(B-CITY)은 하이픈에서 줄이 넘어가 `B-` / `CITY` 로 쪼개진다.
+         `word-break: keep-all` 로는 막히지 않는다 — 이 유틸로 감싼다. */
+    .nowrap { white-space: nowrap; }
 
     /* ── page-company.css ─────────────────────────────────────────── */
     /* ===== 사업주체 — 사업추진 체계 구조도 · 강점 · 공식문서 · 파트너 ===== */
@@ -489,14 +895,6 @@
     .bs-cap b { font-family: var(--font-display); font-weight: 700; color: var(--color-primary); }
 
     /* CI 도급 관계 문구 */
-    .orgc-side { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
-      gap: 4px 12px; margin: clamp(14px, 1.4vw, 22px) 0 0;
-      padding: clamp(10px, 1vw, 14px) clamp(14px, 1.4vw, 20px);
-      border: 1px dashed var(--color-line);
-      font-size: 12.5px; color: var(--color-text-muted); }
-    .orgc-side span { font-size: 12.5px; }
-    .orgc-side b { font-family: var(--font-display); font-weight: 700; font-size: 13px;
-      color: var(--color-text); }
 
     /* ── 반응형 ───────────────────────────────────────────────────────── */
     @media (max-width: 1023px) {
@@ -529,7 +927,6 @@
       .bs-holder-s { grid-template-columns: minmax(0, 1fr); }
       .bs-fund { width: 100%; }
     }
-
 
     /* ── 다섯 가지 강점 ────────────────────────────────────────────────────
        카드(테두리 박스)에서 **번호 + 상단 룰의 편집형**으로 바꿨다(2026-08-10 지시).
@@ -694,13 +1091,46 @@
 <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
-        <a href="overview.html" class="is-on" aria-current="page">사업소개</a>
-        <a href="index.html#concept">도시소개</a>
-        <a href="index.html#zones">투자·입주</a>
-        <a href="index.html#pr">홍보센터</a>
+        <div class="gnb-item">
+          <a class="gnb-link is-on" href="overview.html" aria-current="page">사업소개</a>
+          <div class="gnb-sub">
+            <a href="overview.html">사업개요</a>
+            <a href="location.html">입지</a>
+            <a href="effect.html">기대효과</a>
+            <a href="schedule.html">추진일정</a>
+            <a href="company.html" class="is-on">사업주체</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="brand.html">도시소개</a>
+          <div class="gnb-sub">
+            <a href="brand.html">브랜드</a>
+            <a href="concept.html">컨셉</a>
+            <a href="districts.html">구역 소개</a>
+            <a href="living.html">정주환경</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="invest.html">투자·입주</a>
+          <div class="gnb-sub">
+            <a href="invest.html#land">토지확보 요건</a>
+            <a href="invest.html#zone">투자 혜택</a>
+            <a href="#contact">문의하기</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="notice.html">홍보센터</a>
+          <div class="gnb-sub">
+            <a href="notice.html">공지사항</a>
+            <a href="press.html">언론보도</a>
+            <a href="video.html">홍보영상</a>
+            <a href="gallery.html">갤러리</a>
+            <a href="publication.html">발행물</a>
+          </div>
+        </div>
       </nav>
       <div class="gnb-side">
-        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
+        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span class="gnb-en">EN</span></div>
         <div class="gnb-sns">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
@@ -734,10 +1164,9 @@
       <a href="districts.html">구역 소개</a>
       <a href="living.html">정주환경</a>
       <h2>03 투자·입주</h2>
-      <a href="land.html">토지확보 현황</a>
-      <a href="zone-benefit.html">특구별 혜택</a>
-      <a href="benefit.html">주요 혜택</a>
-      <a href="index.html#contact">문의하기</a>
+      <a href="invest.html#land">토지확보 요건</a>
+      <a href="invest.html#zone">투자 혜택</a>
+      <a href="#contact">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
@@ -748,9 +1177,19 @@
   </div>
 
   <main id="main">
+  <!-- 상단 블록 — 카테고리에 따라 [히어로 + LNB] 또는 [LNB 만] 이다.
+       어느 쪽인지는 nav.json 의 `hero` 가 정하고, 빌드(heroBlock)가 골라 미리 펼쳐 넣는다.
+       파티셜 이름을 여기에 박으면 카테고리별로 바꿀 수 없어 값으로 받는다.
+       ⚠ 이 주석에 파티셜 호출 문법을 **글자로도 쓰지 말 것.** render() 는 HTML 주석을
+         구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
     <!-- ===== 히어로 ===== -->
     <section class="hero">
-      <img class="hero-bg" src="assets/img-street.jpg" alt="" />
+      <!-- ⚠ `heroPos` 는 front-matter 의 선택 키다. 값이 없으면 속성 자체가 나오지 않고
+           공용 `object-position: center`(기본)이 쓰인다. **이미지를 다시 굽지 않고**
+           구도만 다시 잡을 때 쓴다(§11.15 의 광역 인프라 사진과 같은 어법).
+           `center 72%` 처럼 두 번째 값이 클수록 **보이는 창이 아래로** 내려가므로
+           화면에서는 그림이 위로 올라간다. -->
+      <img class="hero-bg" src="assets/slide-night.jpg" alt="" />
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap">
         <nav class="crumb" aria-label="현재 위치">
@@ -759,6 +1198,10 @@
         </nav>
         <p class="hero-eyebrow"><i aria-hidden="true"></i><b>01</b><span>BUSINESS · 사업소개</span></p>
         <h1>사업주체</h1>
+        <!-- 페이지가 front-matter 에 `heroLede` 를 두면 제목 아래 한 줄이 붙는다.
+             원페이지로 합친 투자·입주가 상단 카피를 여기 담기 위해 생겼다(2026-08-24 지시).
+             ⚠ 값이 없으면 **문단 자체가 나오지 않는다** — 빈 `<p>` 를 남기면 여백만 생긴다. -->
+
       </div>
     </section>
 
@@ -900,10 +1343,6 @@
               <span><b>AMC</b> (바이오테크이노밸리자산관리㈜) — 자산관리 업무 전문 수탁자</span>
             </figcaption>
           </figure>
-
-          <!-- CI 는 출자자이면서 동시에 PFV 와 도급 관계를 맺는다 -->
-          <p class="orgc-side"><b>공사도급계약 및 책임준공</b><span>CI(시공)는 출자자이면서 동시에 PFV 와 도급 관계를 맺습니다</span></p>
-
         </div>
 
         <div class="tr-block rv">
@@ -1058,7 +1497,6 @@
           <p class="ptn-tbd">시공파트너(CI) · 전략적 투자자(SI)는 지속 확대 예정입니다.</p>
         </div>
 
-        <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
       </div>
     </section>
   </main>
@@ -1093,13 +1531,428 @@
       <div class="foot-bot">
         <span>&copy; 2026 B-CITY. All rights reserved.</span>
         <nav class="foot-nav" aria-label="푸터 메뉴">
-          <a href="company.html">회사소개</a>
+          <a href="about.html">회사소개</a>
           <i aria-hidden="true"></i>
-          <a href="index.html#privacy">개인정보이용약관</a>
+          <a href="#privacy">개인정보처리방침</a>
         </nav>
       </div>
     </div>
   </footer>
+
+  <!-- 문의 · 약관 모달 — **전 페이지에 넣는다**(2026-08-27 지시:
+       "폼 자체를 같은거 하나로 써야해" · "서브메뉴쪽 문의하기도 같은 현상").
+       ⚠ 전에는 front-matter `contactModal: true` 인 두 페이지에만 넣었는데,
+         `nav.json` 의 문의하기(`#contact`)가 **모든 페이지의 GNB 하위 메뉴**에 나오므로
+         나머지 30개에서는 가리킬 모달이 없어 아무 일도 일어나지 않았다.
+         같은 이유로 푸터의 개인정보이용약관도 `index.html#privacy` 로 페이지를 떠났다.
+       ⚠ 값이 아니라 파티셜 호출이다 — 조건이 없으니 분기가 필요 없다.
+         대가는 페이지당 마크업 약 14KB 다(CSS · JS 는 공통 번들이 이미 갖는다). -->
+<!-- ===== 문의 모달 =====
+     메인 `index.html` 의 `#contact` 폼을 서브페이지로 옮긴 것이다(2026-08-26 지시:
+     "해당 페이지에서 모달창으로"). 전에는 `index.html#contact` 로 보내 페이지가 넘어갔다.
+     ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
+       합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
+       옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
+     ⚠ `처리방침 보기` 는 **그 자리에서 모달**로 연다 — 처리방침도 공용이라 세 화면 모두에 있다
+       (2026-08-27 이전에는 서브만 `index.html#privacy` 새 창이었다). -->
+  <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <h2 id="ctTitle" class="ct-title">문의하기</h2>
+          <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+      <div class="pv-body">
+        <div class="ct-grid">
+        <form id="contactForm" class="ct-form" novalidate>
+          <!-- 관심분야 -->
+          <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
+            <p class="ct-label" id="ctInterestLabel">관심분야 <span class="ct-req" aria-hidden="true">*</span></p>
+            <div class="ct-chips">
+              <label class="ct-chip"><input type="checkbox" name="interest" value="기업입주문의" /><span>기업입주문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="투자문의" /><span>투자문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="사업문의" /><span>사업문의</span></label>
+            </div>
+            <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
+          </div>
+
+          <div class="ct-two">
+            <div class="ct-row">
+              <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
+              <p class="ct-err" data-err="name">회사명 또는 이름을 입력해 주세요.</p>
+            </div>
+            <div class="ct-row">
+              <label class="ct-label" for="ctTel">휴대전화 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctTel" name="tel" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" />
+              <p class="ct-err" data-err="tel">휴대전화번호를 정확히 입력해 주세요.</p>
+            </div>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctEmail">이메일 <span class="ct-req" aria-hidden="true">*</span></label>
+            <input class="ct-input" id="ctEmail" name="email" type="email" autocomplete="email" placeholder="name@company.com" />
+            <p class="ct-err" data-err="email">이메일 주소를 정확히 입력해 주세요.</p>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctMsg">문의 내용 <span class="ct-req" aria-hidden="true">*</span></label>
+            <textarea class="ct-input ct-area" id="ctMsg" name="message" rows="4" placeholder="문의하실 내용을 입력해 주세요."></textarea>
+            <p class="ct-err" data-err="message">문의 내용을 입력해 주세요.</p>
+          </div>
+
+          <!-- 동의 -->
+          <div class="ct-agree">
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeReq" name="agreeRequired" />
+              <span>
+                <b class="ct-tag ct-tag--req">필수</b>
+                개인정보 수집 · 이용에 모두 동의합니다
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
+              </span>
+            </label>
+            <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeOpt" name="agreeMarketing" />
+              <span>
+                <b class="ct-tag ct-tag--opt">선택</b>
+                마케팅 활용 동의에 동의합니다
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
+              </span>
+            </label>
+          </div>
+
+        </form>
+
+        <!-- 안내 -->
+        <aside class="ct-side">
+          <div class="ct-card">
+            <p class="ct-card-h">사업 주관</p>
+            <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">처리 절차</p>
+            <ol class="ct-steps">
+              <li>문의 접수</li>
+              <li>담당자 배정 · 내용 검토</li>
+              <li>유선 또는 이메일 회신</li>
+            </ol>
+          </div>
+          <!-- ⚠⚠ **여기에 구체적인 보유 기간(숫자)을 적지 않는다**(2026-08-27 지시).
+               기간을 두 곳에 적으면 한쪽만 고쳐져 갈린다 — 실제로 갈렸다(처리방침만 3년으로
+               고치고 여기는 `입주/이주 완료 후 자동 파기` 로 남아 있었다).
+               숫자는 **처리방침 제3조 한 곳**에만 두고 여기서는 원칙만 밝힌다.
+               ⚠ 이 문구는 사용자가 직접 준 것이다 — 임의로 다듬지 말 것.
+               ⚠ 링크를 따로 붙이지 않았다. 바로 위 동의 항목 두 개에 이미
+                 `처리방침 보기` 가 있어 같은 화면에서 세 번 반복된다. -->
+          <p class="ct-card-note">
+            수집한 개인정보는 &lsquo;개인정보 보호법&rsquo; 등 관련 법령에 따라 안전하게 관리되며,
+            문의 처리 목적이 달성된 후 관련 법령 및 내부 방침에 따른 보유 기간 동안 보관된 뒤
+            지체 없이 파기됩니다.
+          </p>
+          <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
+          <div class="ct-actions">
+            <button type="submit" form="contactForm" class="ct-submit">등록하기</button>
+            <button type="reset" form="contactForm" class="ct-reset">다시쓰기</button>
+            <p id="ctStatus" class="ct-status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+      </div>
+    </div>
+  </div>
+<!-- ===== 개인정보처리방침 =====
+     메인과 서브페이지가 **함께 쓰는 한 벌**이다. 싣는 경로는 두 개다:
+       메인   `index.html` 의 `@shared:privacy-modal` 마커 구간(빌드가 채운다)
+       서브   `layout.html` 의 파티셜 호출
+     ⚠ **주석에도 파티셜 호출 문법을 글자로 쓰지 않는다.** `render()` 는 주석을 구분하지
+       않으므로 자기 이름을 적으면 무한 재귀가 되어 빌드가 죽는다(§11.61 · 2026-08-27 재발).
+
+     ── 2026-08-27: `개인정보 수집·이용약관` → `개인정보처리방침` 으로 다시 썼다 ──
+     전에는 **문의 폼 동의서**(개인정보보호법 제15조)였는데 푸터 메뉴명이 `개인정보이용약관`
+     이었다. 셋이 서로 다른 문서를 가리키고 있었다:
+       · 이용약관        서비스 이용 조건 · 회원 의무 — **이 사이트에는 없는 문서다**
+       · 수집·이용 동의서 폼을 보낼 때 받는 동의 (제15조)
+       · 처리방침        상시 공개 의무 문서 (제30조) ← 실서비스에 필요한 것
+     법 제30조 제1항의 **9개 필수 기재사항**을 순서대로 담았다.
+
+     ⚠ 폼의 `약관 보기` 도 이 문서를 연다. 동의 항목(필수/선택)은 §2 에 그대로 남겨 두었다 —
+       동의받는 내용과 공개하는 내용이 갈리면 안 된다.
+     ✅ 개인정보 보호책임자 — **류지은 · postmaster@biotech-iv.com**(2026-08-27 지시로 확정).
+       ⚠ 문의 폼의 담당자 연락처(`juyoung@`)와 **다른 주소다.** 역할이 달라 일부러 나눠 둔 것이니
+         한쪽을 고칠 때 다른 쪽을 함께 바꾸지 말 것.
+     ✅ 처리 위탁 — **주식회사 더존비즈온 / 아마란스**(2026-08-27 사용자 확인).
+       위탁에 해당하는 근거는 도메인의 MX 레코드다 — `biotech-iv.com` 의 메일이
+       `mail.bizboxa.com` 으로 가고 SPF 도 `_spfblocka.bizboxa.com` 이다. 즉 문의 메일이
+       외부 서비스에 **저장**되므로 법 제26조의 위탁이며, '회사 메일이니 위탁 아니다' 가
+       성립하지 않는다.
+       ⚠⚠ **제품명을 MX 호스트에서 유추하지 말 것.** 호스트가 `bizboxa.com` 이라 처음에
+         `BizBox Alpha` 로 적었는데, 실제 계약 제품은 **아마란스**다(사용자 정정).
+         더존의 메일 인프라를 여러 제품이 함께 쓰는 것으로 보인다 — DNS 는 **위탁 여부**의
+         근거일 뿐이고 **제품명의 근거가 아니다.**
+       ⚠ 법이 요구하는 것은 수탁자와 **위탁 업무의 내용**이다(제품명은 부가 설명이다).
+         제품이 바뀌면 괄호만 고치면 되고, 메일 서비스 자체가 바뀌면 표를 다시 쓴다.
+         위탁 여부 확인법: `dig MX biotech-iv.com`
+       ⚠ 남은 확인 사항: 서버 소재지. 국외면 법 제28조의8(국외 이전) 항목을 따로 넣어야 한다 —
+         국내 서비스로 보이지만 계약서로 확인할 것.
+       ⚠ 홈페이지 호스팅(GitHub Pages)은 위탁에 넣지 않았다. 이 사이트에는 백엔드가 없고
+         폼이 `mailto:` 로 동작해 **개인정보가 서버를 거치지 않는다**(§11 문의 폼 참조).
+         나중에 폼 전송 API(`CT_ENDPOINT`)를 붙이면 그 사업자도 수탁자가 된다.
+     ✅ 보유기간 — **3년**(2026-08-27 결정). 근거와 대안은 아래.
+       · 10년은 쓰지 않았다. 문의 회신 목적에 10년을 정당화하기 어렵고(법 제3조 제2항
+         최소보유 원칙), 유출 시 피해 범위와 제재 위험만 커진다.
+       · '준공(2033) 시까지' 처럼 사업 일정에 매는 표현도 쓰지 않았다. 일정이 밀리면
+         기간이 계속 늘어나 **기간을 정한 것이 아니게 된다.**
+       · 3년은 분양·입주 상담 문의에서 가장 널리 쓰이는 값이다. 더 길게 가야 하면
+         **5년**까지가 방어 가능한 상한이고, 그 이상은 재동의로 해결한다(§3 각주).
+       ⚠ 값을 바꾸면 폼의 동의 문구(제2조)와 어긋나지 않는지 함께 본다.
+     ⚠ 쿠키 · 접속기록 자동수집은 **없다**고 적었다 — 2026-08-27 실측으로 확인했다
+       (`localStorage` · `document.cookie` · 분석 스크립트 0건). 나중에 GA 등을 붙이면
+       §9 를 고치고 시행일을 올려야 한다.
+     ⚠ 시행일을 바꿀 때는 §12 의 이력 줄도 함께 남긴다. -->
+  <div id="privacy" class="pv" role="dialog" aria-modal="true" aria-labelledby="pvTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <p class="ct-eyebrow">Privacy</p>
+          <h2 id="pvTitle" class="ct-title">개인정보처리방침</h2>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="pv-body">
+        <p class="pv-p">
+          바이오테크이노밸리피에프브이㈜(이하 &lsquo;회사&rsquo;)는 &lsquo;개인정보 보호법&rsquo; 제30조에 따라
+          정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하게 처리할 수 있도록
+          다음과 같이 개인정보처리방침을 수립·공개합니다.
+        </p>
+
+        <!-- 1. 처리 목적 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제1조 (개인정보의 처리 목적)</h3>
+          <p class="pv-p">
+            회사는 춘천기업혁신파크 B-CITY 사업에 관한 문의 접수와 회신을 위해 개인정보를 처리합니다.
+            처리하는 개인정보는 다음 목적 이외의 용도로는 이용하지 않으며, 목적이 변경되는 경우에는
+            법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">문의 접수 및 회신</span> — 기업입주 · 투자 · 사업 문의의 내용 확인, 담당자 배정, 유선 또는 이메일 회신</li>
+            <li><span class="ct-strong">사업 안내</span>(선택 동의 시) — 춘천기업혁신파크 관련 홍보 및 모집 정보 제공</li>
+          </ul>
+        </section>
+
+        <!-- 2. 처리 항목 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제2조 (처리하는 개인정보의 항목)</h3>
+          <p class="pv-p">
+            회사는 홈페이지의 문의하기 양식을 통해 정보주체가 직접 입력한 정보만을 수집합니다.
+            정보주체가 입력하지 않은 정보는 어떠한 방법으로도 수집하지 않습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">처리하는 개인정보 항목과 보유 기간</caption>
+            <tbody>
+              <tr>
+                <th scope="row">필수 항목 <span class="pv-tag pv-tag--req">필수</span></th>
+                <td>회사명/이름, 휴대전화번호, 이메일, 관심분야, 문의 내용</td>
+              </tr>
+              <tr>
+                <th scope="row">선택 항목 <span class="pv-tag pv-tag--opt">선택</span></th>
+                <td>마케팅 활용 동의 여부<br /><span class="pv-note">동의하지 않아도 문의 접수와 회신은 정상적으로 이루어집니다.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">수집 방법</th>
+                <td>홈페이지 문의하기 양식(정보주체의 직접 입력)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pv-note">
+            정보주체는 필수 항목의 수집·이용에 동의하지 않을 권리가 있습니다.
+            다만 이 경우 문의 접수 및 회신이 제한됩니다.
+          </p>
+        </section>
+
+        <!-- 3. 보유 기간 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제3조 (개인정보의 처리 및 보유 기간)</h3>
+          <p class="pv-p">
+            회사는 법령에 따른 개인정보 보유·이용 기간 또는 정보주체로부터 개인정보를 수집할 때
+            동의받은 기간 내에서 개인정보를 처리·보유합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">문의 접수 및 회신</span> — 수집일로부터 <span class="ct-strong">3년</span></li>
+            <li><span class="ct-strong">마케팅 활용</span>(선택 동의) — 동의 철회 시까지, 최대 수집일로부터 <span class="ct-strong">3년</span></li>
+            <li>보유 기간이 경과하기 전에 처리 목적이 달성된 경우에는 그 시점에 지체 없이 파기합니다.</li>
+            <li>관계 법령에 보존 의무가 규정된 경우에는 해당 기간 동안 별도로 분리 보관한 후 파기합니다.</li>
+          </ul>
+          <p class="pv-note">
+            보유 기간이 지난 후에도 사업 안내가 필요한 경우에는 정보주체에게 다시 동의를 받습니다.
+          </p>
+        </section>
+
+        <!-- 4. 제3자 제공 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제4조 (개인정보의 제3자 제공)</h3>
+          <p class="pv-p">
+            회사는 정보주체의 개인정보를 제1조에 명시한 목적 범위 내에서만 처리하며,
+            <span class="ct-strong">정보주체의 별도 동의 없이 제3자에게 제공하지 않습니다.</span>
+            다만 법 제17조 및 제18조에 해당하는 경우(법령에 근거한 수사기관 · 감독기관의
+            적법한 요청 등)에는 예외로 합니다.
+          </p>
+        </section>
+
+        <!-- 5. 처리 위탁 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제5조 (개인정보 처리의 위탁)</h3>
+          <p class="pv-p">
+            회사는 원활한 개인정보 업무 처리를 위하여 아래와 같이 개인정보 처리 업무를 위탁하고 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">개인정보 처리 위탁 현황</caption>
+            <tbody>
+              <tr>
+                <th scope="row">주식회사 더존비즈온</th>
+                <td>그룹웨어 · 전자우편 시스템(아마란스) 운영 및 문의 메일 보관</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pv-p">
+            회사는 위탁계약 체결 시 법 제26조에 따라 위탁 업무 수행 목적 외 개인정보 처리 금지,
+            기술적 · 관리적 보호조치, 재위탁 제한, 수탁자에 대한 관리 · 감독,
+            손해배상 등 책임에 관한 사항을 계약서 등 문서에 명시하고,
+            수탁자가 개인정보를 안전하게 처리하는지를 감독하고 있습니다.
+          </p>
+          <p class="pv-note">
+            위탁 업무의 내용이나 수탁자가 변경될 경우에는 지체 없이 이 개인정보처리방침을 통하여 공개합니다.
+          </p>
+        </section>
+
+        <!-- 6. 정보주체의 권리 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제6조 (정보주체와 법정대리인의 권리 · 의무 및 행사 방법)</h3>
+          <p class="pv-p">정보주체는 회사에 대해 언제든지 다음 각 호의 권리를 행사할 수 있습니다.</p>
+          <ul class="pv-list">
+            <li>개인정보 열람 요구</li>
+            <li>오류가 있는 경우 정정 요구</li>
+            <li>삭제 요구</li>
+            <li>처리정지 요구 및 동의 철회</li>
+          </ul>
+          <p class="pv-p">
+            권리 행사는 제10조의 연락처로 서면 또는 전자우편을 통해 하실 수 있으며,
+            회사는 지체 없이 조치하겠습니다. 정보주체가 개인정보의 오류에 대한 정정 또는 삭제를
+            요구한 경우, 회사는 정정 또는 삭제를 완료할 때까지 해당 개인정보를 이용하거나
+            제공하지 않습니다. 법정대리인이나 위임을 받은 자 등 대리인을 통하여 권리를 행사할 수도 있으며,
+            이 경우 &lsquo;개인정보 처리 방법에 관한 고시&rsquo; 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.
+          </p>
+        </section>
+
+        <!-- 7. 파기 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제7조 (개인정보의 파기 절차 및 방법)</h3>
+          <p class="pv-p">
+            회사는 개인정보 보유 기간의 경과, 처리 목적 달성 등 개인정보가 불필요하게 되었을 때에는
+            지체 없이 해당 개인정보를 파기합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">파기 절차</span> — 파기 사유가 발생한 개인정보를 선정하고, 개인정보 보호책임자의 승인을 받아 파기합니다.</li>
+            <li><span class="ct-strong">파기 방법</span> — 전자적 파일 형태는 복구 및 재생이 불가능한 방법으로 영구 삭제하며, 종이 문서는 분쇄하거나 소각합니다.</li>
+          </ul>
+        </section>
+
+        <!-- 8. 안전성 확보조치 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제8조 (개인정보의 안전성 확보조치)</h3>
+          <p class="pv-p">회사는 법 제29조에 따라 다음과 같은 안전성 확보조치를 하고 있습니다.</p>
+          <ul class="pv-list">
+            <li>개인정보 취급 담당자의 최소화 및 담당자에 대한 교육</li>
+            <li>개인정보에 대한 접근 권한의 차등 부여 및 접근 통제</li>
+            <li>개인정보의 암호화 및 전송 구간 암호화(HTTPS) 적용</li>
+            <li>개인정보를 보관하는 시스템에 대한 물리적 접근 통제</li>
+          </ul>
+        </section>
+
+        <!-- 9. 자동 수집 장치 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제9조 (개인정보 자동 수집 장치의 설치 · 운영 및 거부)</h3>
+          <p class="pv-p">
+            이 홈페이지는 <span class="ct-strong">쿠키(cookie)를 사용하지 않으며,</span>
+            접속 기록 · 행태 정보를 수집하는 분석 도구나 광고 식별자를 설치·운영하지 않습니다.
+            따라서 정보주체가 별도로 거부 설정을 하실 필요가 없습니다.
+          </p>
+          <p class="pv-note">
+            홈페이지에 포함된 외부 서비스 링크(YouTube, LinkedIn)를 통해 이동하시는 경우,
+            해당 사이트에서의 개인정보 처리는 각 사업자의 개인정보처리방침을 따릅니다.
+          </p>
+        </section>
+
+        <!-- 10. 보호책임자 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제10조 (개인정보 보호책임자 및 열람 청구 접수 부서)</h3>
+          <p class="pv-p">
+            회사는 개인정보 처리에 관한 업무를 총괄하여 책임지고, 개인정보 처리와 관련한
+            정보주체의 문의 · 불만 처리 및 피해 구제 등을 위하여 아래와 같이 개인정보 보호책임자를
+            지정하고 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">개인정보 보호책임자 연락처</caption>
+            <tbody>
+              <tr><th scope="row">처리 주체</th><td>바이오테크이노밸리피에프브이㈜</td></tr>
+              <tr><th scope="row">주소</th><td>서울특별시 광진구 자양로58 태림빌딩 3층</td></tr>
+              <tr><th scope="row">개인정보 보호책임자</th><td>류지은</td></tr>
+              <tr><th scope="row">이메일</th><td><a class="pv-link" href="mailto:postmaster@biotech-iv.com">postmaster@biotech-iv.com</a></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 11. 권익침해 구제 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제11조 (권익침해 구제 방법)</h3>
+          <p class="pv-p">
+            정보주체는 개인정보 침해로 인한 구제를 받기 위하여 아래 기관에 분쟁 해결이나 상담 등을
+            신청할 수 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">권익침해 구제 기관 연락처</caption>
+            <tbody>
+              <tr><th scope="row">개인정보 분쟁조정위원회</th><td>1833-6972 (www.kopico.go.kr)</td></tr>
+              <tr><th scope="row">개인정보침해 신고센터</th><td>118 (privacy.kisa.or.kr)</td></tr>
+              <tr><th scope="row">대검찰청 사이버수사과</th><td>1301 (www.spo.go.kr)</td></tr>
+              <tr><th scope="row">경찰청 사이버수사국</th><td>182 (ecrm.police.go.kr)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 12. 변경 -->
+        <section class="pv-sec pv-sec--last">
+          <h3 class="pv-h3">제12조 (개인정보처리방침의 변경)</h3>
+          <p class="pv-p">
+            이 개인정보처리방침은 시행일부터 적용되며, 법령 및 방침에 따른 변경 내용의 추가 · 삭제 및
+            정정이 있는 경우에는 변경 사항의 시행 7일 전부터 홈페이지를 통하여 공지합니다.
+          </p>
+          <ul class="pv-list">
+            <li>2026년 7월 30일 — 제정 (개인정보 수집 · 이용 동의)</li>
+            <li>2026년 8월 27일 — 개인정보처리방침으로 전부 개정</li>
+          </ul>
+        </section>
+      </div>
+
+      <footer class="pv-foot">
+        <p class="pv-foot-note">시행일 : 2026년 8월 27일</p>
+        <button type="button" class="pv-ok" data-pv-close>확인</button>
+      </footer>
+    </div>
+  </div>
 
   <script>
     /* GNB: 히어로 위에서는 투명, 스크롤하면 흰 배경 */
@@ -1108,6 +1961,42 @@
       var onScroll = function () { gnb.classList.toggle('is-solid', window.scrollY > 40); };
       onScroll();
       addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    /* 대메뉴 호버 — 하위 메뉴 펼치기(2026-08-27 지시).
+       ⚠ 바(`#gnb`) 전체에 걸어야 한다. 항목마다 걸면 항목 사이 빈틈에서 닫혔다 열리며 깜빡인다.
+       ⚠ 포커스로도 열어야 키보드로 하위 메뉴에 닿는다 — 그래서 focusin/focusout 을 함께 쓴다.
+       ⚠ 좁은 화면(대메뉴가 숨는 구간)에서는 아무것도 하지 않는다. `.gnb-menu` 가
+         `display: none` 이라 열어 봐야 보이지 않고, 바 높이만 늘어난다. */
+    (function () {
+      var gnb = document.getElementById('gnb');
+      if (!gnb || !gnb.querySelector('.gnb-sub')) return;
+      var wide = function () { return matchMedia('(min-width: 1024px)').matches; };
+      var set = function (on) { gnb.classList.toggle('is-open', on && wide()); };
+      gnb.addEventListener('mouseenter', function () { set(true); });
+      gnb.addEventListener('mouseleave', function () { set(false); });
+      gnb.addEventListener('focusin', function () { set(true); });
+      gnb.addEventListener('focusout', function (e) {
+        if (!gnb.contains(e.relatedTarget)) set(false);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+      addEventListener('resize', function () { if (!wide()) set(false); });
+    })();
+
+    /* KO / EN — 영문은 아직 없다. 호버·포커스에 안내를 띄운다(2026-08-27 지시).
+       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다. */
+    (function () {
+      var lang = document.querySelector('.gnb-lang');
+      if (!lang) return;
+      var en = lang.querySelector('.gnb-en');
+      if (!en || en.textContent.trim() !== 'EN') return;
+      en.setAttribute('tabindex', '0');
+      en.setAttribute('role', 'button');
+      en.setAttribute('aria-disabled', 'true');
+      var tip = document.createElement('span');
+      tip.className = 'gnb-tip';
+      tip.textContent = '준비중입니다';
+      en.appendChild(tip);
     })();
 
     /* 모바일 메뉴 */
@@ -1142,6 +2031,242 @@
         io.observe(el);
       });
     })();
+
+    /* 카카오맵 길찾기 — 휴대폰에서는 주소를 갈아끼운다.
+       ⚠⚠ 카카오는 **길찾기 주소만** 모바일에서 `applink.map.kakao.com/route`(앱 설치 벽)로
+         강제로 보낸다(2026-08-31 실측). 그 화면에는 도착지가 표시되지 않아 어디로 가는
+         길찾기인지 알 수 없다. `link/map`(지도 보기)은 정상적으로 모바일 뷰로 간다 —
+         즉 PC 주소를 그대로 두면 길찾기만 쓸 수 없게 된다.
+       ⚠ `href` 의 기본값은 **PC 주소**다. 여기서 못 바꿔도 데스크톱은 정상이어야 하기
+         때문이다. 반대로 두면 데스크톱에서 지도 없는 모바일 화면이 늘어나 보인다(실측).
+       ⚠ 좌표는 WCONGNAMUL 이다(`data-kx`/`data-ky`). href 안의 위경도(WGS84)와 같은
+         지점이며 **함께 고쳐야 한다** — 환산법은 about 페이지 소스 주석에 있다. */
+    (function () {
+      var as = [].slice.call(document.querySelectorAll('a[data-kakao-route]'));
+      if (!as.length || !window.matchMedia) return;
+      if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+      as.forEach(function (a) {
+        var d = a.dataset;
+        if (!d.kx || !d.ky || !d.kname) return;
+        a.href = 'https://m.map.kakao.com/actions/routeView?startLoc=&startX=&startY=' +
+          '&endLoc=' + encodeURIComponent(d.kname) + '&endX=' + d.kx + '&endY=' + d.ky;
+      });
+    })();
+
+/* ===== 문의 · 약관 모달 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+   2026-08-27 에 두 벌을 합쳤다. 전에는 같은 검증 로직 90여 줄이 `index.html` 인라인과
+   `src/sub/js/contact.js` 에 나뉘어 있었고, 모달 엔진은 아예 기능이 달랐다
+   (메인만 스택·해시 진입을 지원했다).
+
+   싣는 경로가 둘이다 — 파일은 하나다:
+     메인   `index.html` 의 `<script src="assets/js/contact.js" defer>`
+     서브   front-matter `"js": ["contact"]` → `pages.mjs` 가 인라인
+   `tools/build/pages.mjs` 가 빌드 때마다 이 파일을 `assets/js/contact.js` 로 복사한다.
+
+   ⚠ 이 파일은 **두 화면에서 모두 돌아간다.** 한쪽에만 있는 요소를 전제하지 말 것 —
+     서브페이지에는 `#privacy` 약관 모달이 없고, 메인에는 서브 LNB 가 없다.
+     선택자는 항상 `.pv` · `.ct-*` 처럼 **양쪽에 같은 이름으로 있는 것**만 쓴다.
+   ⚠ 모듈이 아니다(번들러 없음). 전역을 더럽히지 않도록 IIFE 로 감싼다. */
+
+/* ── 모달 엔진 — 페이지의 `.pv` 전부를 맡는다 ───────────────────────── */
+(function () {
+  const stack = [];
+  const modals = [...document.querySelectorAll('.pv')];
+  if (!modals.length) return;
+
+  const lock = () => { document.body.style.overflow = 'hidden'; };
+  const unlock = () => { if (!stack.length) document.body.style.overflow = ''; };
+
+  function open(el, trigger) {
+    if (!el || stack.includes(el)) return;
+    el.__return = trigger || document.activeElement;
+    el.style.zIndex = 120 + stack.length * 10;   // 위에 열리는 모달이 항상 앞
+    el.hidden = false;
+    lock();
+    void el.offsetWidth;                          // 리플로우 강제 → rAF 없이 전환 시작
+    el.classList.add('on');
+    stack.push(el);
+    (el.querySelector('.pv-x') || el.querySelector('.pv-panel')).focus({ preventScroll: true });
+  }
+
+  function close(el) {
+    const i = stack.indexOf(el);
+    if (i === -1) return;
+    stack.splice(i, 1);
+    el.classList.remove('on');
+    const panel = el.querySelector('.pv-panel');
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; el.hidden = true; unlock(); };
+    // 트랜지션이 없거나 끝나지 않는 환경에서도 확실히 닫히도록
+    panel.addEventListener('transitionend', done, { once: true });
+    setTimeout(done, 420);
+    if (el.__return && el.__return.focus) el.__return.focus({ preventScroll: true });
+  }
+
+  modals.forEach((el) => {
+    el.querySelector('.pv-panel').setAttribute('tabindex', '-1');
+    el.querySelectorAll('[data-pv-close]').forEach((b) => b.addEventListener('click', () => close(el)));
+    el.addEventListener('keydown', (e) => {                     // 패널 안 포커스 순환
+      if (e.key !== 'Tab') return;
+      const f = [...el.querySelectorAll('.pv-panel a[href],.pv-panel button,.pv-panel input,.pv-panel textarea,.pv-panel [tabindex]:not([tabindex="-1"])')]
+        .filter((n) => n.offsetParent !== null && !n.disabled);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  });
+
+  /* 같은 페이지 안에서 그 id 를 가리키는 링크가 모달을 연다.
+     ⚠ 서브페이지의 `문의하기` 는 `index.html#contact` 처럼 **파일명이 붙은** 형태일 수 있다.
+       그 페이지에 같은 id 의 모달이 있으면 이동하지 않고 그 자리에서 연다. */
+  document.querySelectorAll('a[href*="#"]').forEach((a) => {
+    const href = a.getAttribute('href');
+    if (/^https?:/.test(href)) return;
+    const el = document.getElementById(href.slice(href.indexOf('#') + 1));
+    if (!el || !el.classList.contains('pv')) return;
+    a.addEventListener('click', (e) => { e.preventDefault(); open(el, a); });
+  });
+
+  /* 다른 페이지에서 `index.html#contact` 로 들어온 경우 — 해시가 가리키는 모달을 연다.
+     ⚠ 위 바인딩은 **같은 페이지 안의 클릭**만 잡는다. 이게 없으면 메인에 도착만 하고
+       폼이 열리지 않는다(2026-08-26 이전까지 실제로 그랬다).
+     ⚠ `open` 의 두 번째 인수는 닫은 뒤 포커스를 돌려줄 요소다 — 해시 진입에는 없으므로
+       `null` 을 준다(그러면 `document.activeElement` 로 떨어진다). */
+  const openFromHash = () => {
+    const id = location.hash.slice(1);
+    const el = id && document.getElementById(id);
+    if (el && el.classList.contains('pv')) open(el, null);
+  };
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
+
+  // ESC → 가장 위 모달만 닫기
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && stack.length) close(stack[stack.length - 1]);
+  });
+
+  window.bcityCloseModal = close;   // 폼 전송 완료 후 닫기용
+})();
+
+/* ── 문의 폼 ────────────────────────────────────────────────────────
+   서버가 없으므로 기본 동작은 메일 클라이언트로 내용을 넘기는 방식이다.
+   백엔드가 준비되면 CT_ENDPOINT 에 URL 을 넣으면 fetch POST 로 전송된다. */
+(function () {
+  const CT_ENDPOINT = '';   // 예: 'https://api.b-city.kr/inquiry'
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  const status = document.getElementById('ctStatus');
+  const showErr = (key, on) => {
+    const el = form.querySelector('[data-err="' + key + '"]');
+    if (el) el.classList.toggle('on', on);
+  };
+  const setBad = (el, on) => el && el.classList.toggle('bad', on);
+
+  // 휴대전화 자동 하이픈
+  const tel = form.elements.tel;
+  tel.addEventListener('input', () => {
+    const d = tel.value.replace(/\D/g, '').slice(0, 11);
+    tel.value = d.length < 4 ? d
+      : d.length < 8 ? d.slice(0, 3) + '-' + d.slice(3)
+        : d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
+  });
+
+  const checks = {
+    interest: () => [...form.querySelectorAll('input[name="interest"]')].some((c) => c.checked),
+    name: () => form.elements.name.value.trim().length > 0,
+    tel: () => /^01[016789]-?\d{3,4}-?\d{4}$/.test(form.elements.tel.value.replace(/\s/g, '')),
+    email: () => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.elements.email.value.trim()),
+    message: () => form.elements.message.value.trim().length > 0,
+    agreeRequired: () => form.elements.agreeRequired.checked,
+  };
+
+  // 입력 중 에러 해제
+  ['name', 'tel', 'email', 'message'].forEach((k) => {
+    form.elements[k].addEventListener('input', () => {
+      if (checks[k]()) { showErr(k, false); setBad(form.elements[k], false); }
+    });
+  });
+  form.querySelectorAll('input[name="interest"]').forEach((c) =>
+    c.addEventListener('change', () => { if (checks.interest()) showErr('interest', false); }));
+  form.elements.agreeRequired.addEventListener('change', () => {
+    if (checks.agreeRequired()) showErr('agreeRequired', false);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    status.className = 'ct-status';
+    let firstBad = null;
+    for (const key of Object.keys(checks)) {
+      const ok = checks[key]();
+      showErr(key, !ok);
+      // name 이 여러 개인 필드(interest)는 RadioNodeList 가 오므로 focus 가능한 요소로 바꾼다
+      let field = form.elements[key];
+      if (!field || typeof field.focus !== 'function') field = form.querySelector('[name="' + key + '"]');
+      if (field && field.classList.contains('ct-input')) setBad(field, !ok);
+      if (!ok && !firstBad) firstBad = field;
+    }
+    if (firstBad) {
+      firstBad.focus({ preventScroll: false });
+      status.textContent = '입력하지 않은 필수 항목이 있습니다.';
+      status.className = 'ct-status on ng';
+      return;
+    }
+
+    const data = {
+      관심분야: [...form.querySelectorAll('input[name="interest"]:checked')].map((c) => c.value).join(', '),
+      '회사명/이름': form.elements.name.value.trim(),
+      휴대전화: form.elements.tel.value.trim(),
+      이메일: form.elements.email.value.trim(),
+      문의내용: form.elements.message.value.trim(),
+      마케팅활용동의: form.elements.agreeMarketing.checked ? '동의' : '미동의',
+    };
+
+    if (CT_ENDPOINT) {
+      const btn = document.querySelector('#contact .ct-submit');
+      btn.disabled = true;
+      status.textContent = '전송 중입니다…';
+      status.className = 'ct-status on';
+      fetch(CT_ENDPOINT, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error(r.status); form.reset();
+          status.textContent = '문의가 정상적으로 접수되었습니다. 담당자가 확인 후 연락드립니다.';
+          status.className = 'ct-status on ok';
+          setTimeout(() => {
+            if (window.bcityCloseModal) window.bcityCloseModal(document.getElementById('contact'));
+          }, 1800);
+        })
+        .catch(() => {
+          status.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+          status.className = 'ct-status on ng';
+        })
+        .finally(() => { btn.disabled = false; });
+      return;
+    }
+
+    /* 백엔드 미연결: 메일 본문으로 넘긴다.
+       ⚠⚠ 수신 주소를 **화면에 띄우지 않는다**(2026-09-01 지시: '개인 메일 노출은 숨기고').
+         담당자 연락처 카드도 같은 이유로 걷어냈다. 여기 남은 주소는 mailto 대상일 뿐
+         어떤 문구에도 찍히지 않는다 — 문구에 다시 넣지 말 것.
+       ⚠ 이 폴백을 지우지 말 것. CT_ENDPOINT 가 붙기 전까지 문의를 받는 유일한 경로다.
+         엔드포인트가 붙으면 서버가 담당자 여러 명에게 자동 발송하고, 이 분기는 안 탄다. */
+    const body = Object.entries(data).map(([k, v]) => k + ' : ' + v).join('\n');
+    const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
+    location.href = 'mailto:juyoung@biotech-iv.com?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 다시 시도해 주세요.';
+    status.className = 'ct-status on ok';
+  });
+
+  form.addEventListener('reset', () => {
+    form.querySelectorAll('.ct-err.on').forEach((el) => el.classList.remove('on'));
+    form.querySelectorAll('.ct-input.bad').forEach((el) => el.classList.remove('bad'));
+    status.className = 'ct-status';
+  });
+})();
 
     /* 화면 내 확대보기 — 갤러리 이미지 · 홍보영상 재생을 한 컴포넌트로 처리한다.
        새 창으로 내보내지 않고 같은 화면에서 연다.

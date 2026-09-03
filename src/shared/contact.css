@@ -1,0 +1,241 @@
+/* ===== 문의 · 약관 모달 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+   2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙 49개가 `src/css/app.css` 와
+   `src/sub/css/70-contact.css` 에 나뉘어 있었고, 한쪽만 고쳐져 실제로 갈라졌다
+   (닫기 버튼 회색 라인이 서브에만 있었다).
+
+   싣는 경로가 둘이다 — 파일은 하나다:
+     메인   `src/css/app.css` 의 `@import "../shared/contact.css" layer(utilities)`
+     서브   front-matter `"css": ["contact"]` → `pages.mjs` 가 인라인
+   ⚠ 순수 CSS 로만 쓴다(`@apply` · Tailwind 지시어 금지) — 서브 번들은 Tailwind 를 거치지 않는다.
+   ⚠ `.sr-only` 는 여기 두지 않는다. 모달 전용이 아니라 일반 유틸리티이며
+     메인은 `app.css`, 서브는 `page-shared.css` 가 각각 갖고 있다.
+   ⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — 아래 `:where()` 버튼 리셋이 그 자리를 메운다.
+     `:where()` 라 명시도 0 이므로 `.ct-reset` 의 테두리를 덮지 않는다(§11.87). */
+
+/* ═══ 요소 기본값을 여기서 못 박는다 — 두 화면의 **바탕이 다르기 때문**이다 ═══
+   같은 파일을 쓰는데도 렌더가 갈리는 이유는 이 한 가지다:
+     메인   Tailwind **preflight** 가 깔린다 — `p` 마진 0 · `line-height: 1.5` · 폼 요소 정규화
+     서브   `10-base.css` + **브라우저 기본값** — `line-height: 1.6` · `p` 는 `margin: 1em 0`
+   그래서 이 파일이 **명시하지 않은 속성**은 두 화면에서 서로 다른 값을 상속한다.
+   같은 함정에 세 번 걸렸다(2026-08-27):
+     ① `<button>` 베벨 테두리   ② 체크박스가 사라짐   ③ 관심분야 라벨이 10px 밀림
+   ③ 이 이 리셋이 없어서 생긴 마지막 사례다 — `.ct-label` 이 `<p>` 라 서브에서만
+     `margin-top: 14px` 를 물려받았고, `.ct-row--inline .ct-label` 은 **아래 마진만** 지웠다.
+   ⚠ `:where()` 로 감싸 **특이도 0** 으로 둔다 — 리셋은 바닥만 깔고 이겨서는 안 된다.
+   ⚠ `10-base.css` 에 전역 `p { margin: 0 }` 을 넣는 방식은 쓰지 않는다.
+     서브페이지 30개의 본문 여백이 전부 함께 바뀐다 — 모달 안으로만 한정한다.
+   ⚠ `line-height` 는 **메인 preflight 값(1.5)** 에 맞춘다. 디자인을 그 위에서 잡았다. */
+.pv { line-height: 1.5; }
+.pv :where(p, h2, h3, h4, ol, ul, li, dl, dt, dd, table, figure, blockquote) { margin: 0; }
+.pv :where(ol, ul) { padding: 0; list-style: none; }
+
+.pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
+.pv[hidden] { display: none; }
+.pv-back { position: absolute; inset: 0; background: rgba(0,39,66,.55); backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .3s ease; }
+.pv.on .pv-back { opacity: 1; }
+.pv--wide .pv-panel { max-width: 1040px; }
+.pv-panel { position: relative; display: flex; flex-direction: column; overflow: hidden;
+  width: 100%; max-width: 720px; max-height: min(86vh, 860px);
+  max-height: min(86dvh, 860px);          /* 모바일 주소창 높이 변화 대응 */
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg, 16px); box-shadow: 0 30px 80px rgba(0,10,30,.3);
+  opacity: 0; transform: translateY(18px) scale(.98);
+  transition: opacity .32s ease, transform .42s cubic-bezier(.22,1,.36,1); }
+.pv.on .pv-panel { opacity: 1; transform: none; }
+.pv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  padding: 26px 28px 20px; border-bottom: 1px solid var(--color-line); }
+/* ⚠⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — `<button>` 이 브라우저 기본
+   `appearance` 와 테두리를 그대로 쓴다. 그래서 닫기 · 등록하기 · 다시쓰기에
+   **대각선으로 반반 나뉜 베벨 테두리**가 보였다(2026-08-27 지적).
+   메인은 프리플라이트가 지워 주므로 같은 마크업이 거기서는 멀쩡하다.
+   ⚠ 이 리셋을 지우면 그대로 재발한다(§11.29 의 `.doc-view` 와 같은 원인). */
+/* ⚠ `:where()` 로 감싸 **특이도를 0 으로** 만든다. 그냥 `.pv button` 으로 두면 (0,1,1) 이라
+   뒤에 오는 `.ct-reset`(0,1,0)의 `border: 1px solid` 를 이겨 다시쓰기 버튼의 테두리가
+   사라진다(실측). 리셋은 이겨서는 안 되고 바닥만 깔아야 한다. */
+/* ⚠⚠ **체크박스 · 라디오는 빼야 한다.** `appearance: none` 이 브라우저가 그려 주는
+   네모·체크 표시를 통째로 지워, 19x19 빈 칸만 남고 **체크박스가 사라진다**
+   (2026-08-27 지적). `.ct-check input` 은 크기와 `accent-color` 만 정하므로
+   기본 렌더링에 의존한다 — 대신 그릴 스타일이 없다.
+   ⚠ `.ct-chip input` 은 일부러 숨기는 체크박스인데(`opacity: 0; width: 0`)
+     그건 appearance 와 무관하게 동작하므로 여기서 빼도 안전하다. */
+.pv :where(button, input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+  appearance: none; -webkit-appearance: none;
+  font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.pv :where(input:not([type="checkbox"]):not([type="radio"]), textarea, select) { cursor: auto; }
+/* 체크박스 · 라디오는 `appearance` 만 건드리지 않는다. 나머지 상속값은 맞춰 둔다 —
+   렌더에는 영향이 없지만(크기가 고정이고 표시는 `accent-color` 가 그린다) 두 화면의
+   계산값이 완전히 같아야 "같은 파일인데 왜 다르냐" 를 다시 쫓지 않는다. */
+.pv :where(input[type="checkbox"], input[type="radio"]) { font: inherit; color: inherit; }
+
+/* ⚠ 테두리는 여기서 **명시**한다(2026-08-27 지시). 위 리셋이 `border: 0` 을 깔아 두므로
+     안 적으면 테두리가 없다 — 등록하기 · 다시쓰기와 같은 어법으로 회색 선을 준다. */
+.pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
+  border: 1px solid var(--color-line); border-radius: 999px; color: var(--color-text-muted);
+  transition: background .22s, color .22s, border-color .22s; }
+.pv-x:hover { border-color: var(--color-primary); }
+.pv-x svg { width: 20px; height: 20px; }
+.pv-x:hover { background: var(--color-bg); color: var(--color-text); }
+/* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
+   overflow-y:auto가 동작하지 않고 패널 밖으로 내용이 넘쳐 잘린다. */
+.pv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+  padding: 24px 28px 0; -webkit-overflow-scrolling: touch; }
+.pv-sec { margin-top: 26px; }
+.pv-sec--last { padding-bottom: 8px; }
+.pv-h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 11px;
+  font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-text); }
+.pv-tag { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+.pv-tag--req { background: var(--color-primary); color: #fff; }
+.pv-tag--opt { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+.pv-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6;
+  border-top: 1px solid var(--color-line); }
+.pv-tbl th, .pv-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--color-line);
+  text-align: left; vertical-align: top; }
+.pv-tbl th { width: 34%; background: var(--color-bg); font-weight: 700; color: var(--color-text); white-space: nowrap; }
+.pv-tbl td { color: var(--color-text-muted); }
+.pv-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+.pv-list { margin: 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
+.pv-list li { position: relative; padding-left: 14px; }
+.pv-list li + li { margin-top: 7px; }
+.pv-list li::before { content: ''; position: absolute; left: 0; top: .62em;
+  width: 4px; height: 4px; border-radius: 999px; background: var(--color-mint); }
+.pv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px 28px 22px; border-top: 1px solid var(--color-line); }
+.pv-ok { padding: 12px 30px; border-radius: 999px; background: var(--color-primary); color: #fff;
+  font-size: 14px; font-weight: 700; transition: background .25s, transform .3s; }
+.pv-ok:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+@media (max-width: 640px) {
+  .pv { padding: 14px; }
+  .pv-head { padding: 20px 18px 16px; }
+  .pv-body { padding: 18px 18px 4px; }
+  .pv-foot { padding: 14px 18px 18px; }
+  .pv-tbl { font-size: 12.5px; }
+  .pv-tbl th, .pv-tbl td { padding: 9px 10px; }
+  .pv-tbl th { width: 38%; white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pv-back, .pv-panel { transition: none; }
+}
+
+/* ===== 문의하기 폼 ===== */
+.ct-form { display: flex; flex-direction: column; gap: 22px; padding-bottom: 32px; }
+.ct-row { display: block; }
+.ct-label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; color: var(--color-text); }
+/* 관심분야: 라벨 옆에 선택 버튼을 한 줄로 → 세로 공간 절약
+   (.ct-row 와 명시도가 같으므로 반드시 뒤에 와야 display:flex 가 적용된다) */
+.ct-row--inline { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
+.ct-row--inline .ct-label { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; }
+.ct-row--inline .ct-chips { flex: 1 1 auto; }
+.ct-row--inline .ct-err { flex: 1 1 100%; margin-top: 0; }
+.ct-req { color: var(--color-mint); }
+.ct-input { width: 100%; padding: 14px 16px; font-size: 15px; color: var(--color-text);
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
+.ct-input::placeholder { color: #9aa8bb; }
+.ct-input:focus { outline: none; border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); }
+.ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
+/* 관심분야 칩 */
+.ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.ct-chip { position: relative; cursor: pointer; }
+.ct-chip input { position: absolute; margin: 0; opacity: 0; width: 0; height: 0; }
+.ct-chip span { display: inline-flex; align-items: center; padding: 10px 18px;
+  font-size: 14px; font-weight: 600; color: var(--color-text-muted);
+  background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 999px;
+  transition: background .22s, color .22s, border-color .22s; }
+.ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
+.ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
+/* 동의 */
+.ct-agree { display: flex; flex-direction: column; gap: 10px;
+  padding: 18px 22px; background: var(--color-bg);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+.ct-check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer;
+  font-size: 14px; line-height: 1.55; color: var(--color-text); }
+/* ⚠ 마진을 **네 방향 모두** 적는다. 체크박스는 위 리셋에서 빼 두었으므로(글리프가 사라진다)
+     서브에서는 브라우저 기본 `margin: 3px 3px 3px 4px` 가 그대로 남아 4px 밀린다. */
+.ct-check input { flex-shrink: 0; width: 19px; height: 19px; margin: 1px 0 0;
+  accent-color: var(--color-primary); cursor: pointer; }
+.ct-tag { margin-right: 6px; padding: 2px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; vertical-align: 1.5px; }
+.ct-tag--req { background: var(--color-primary); color: #fff; }
+.ct-tag--opt { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+.ct-view { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+  text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+.ct-view:hover { color: var(--color-primary); text-decoration-color: currentColor; }
+/* 에러 */
+.ct-err { display: none; margin-top: 8px; font-size: 13px; font-weight: 600; color: #d8564f; }
+.ct-err.on { display: block; }
+.ct-input.bad { border-color: #d8564f; box-shadow: 0 0 0 3px rgba(216,86,79,.12); }
+/* 버튼 — 우측 안내 컬럼 하단.
+   컬럼이 그리드 행 높이만큼 늘어나므로 sticky로 스크롤 내내 붙어 있는다. */
+.ct-actions { position: sticky; bottom: 0; margin-top: auto;
+  display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 32px;   /* 좌측 폼과 동일한 32px */
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0, var(--color-surface) 14px); }
+.ct-actions .ct-submit, .ct-actions .ct-reset { flex: 1 1 0; min-width: 116px;
+  padding: 15px 18px; }
+.ct-actions .ct-status { flex: 1 1 100%; margin: 0; }
+.ct-submit, .ct-reset { padding: 16px 40px; border-radius: 999px;
+  font-size: 15px; font-weight: 700; transition: background .25s, color .25s, border-color .25s, transform .3s; }
+.ct-submit { background: var(--color-primary); color: #fff; }
+.ct-submit:hover { background: var(--color-primary-hover); transform: translateY(-2px); }
+.ct-submit[disabled] { opacity: .6; pointer-events: none; }
+.ct-reset { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+.ct-reset:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.ct-status { display: none; font-size: 14px; font-weight: 600; }
+.ct-status.on { display: block; }
+.ct-status.ok { color: #1a8f74; }
+.ct-status.ng { color: #d8564f; }
+/* 우측 안내 */
+.ct-side { display: flex; flex-direction: column; gap: 14px; }  /* 그리드 기본 stretch로 행 전체 높이 */
+.ct-card { padding: 22px 24px; background: var(--color-bg);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+.ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--color-label-blue); }
+/* ⚠ 이메일 주소는 **한 줄이어야 한다**(2026-08-27 지시). 주소가 길어지면 조용히 두 줄로
+     접혀 `juyoung@biotech-` / `iv.com` 처럼 도메인이 잘려 읽힌다(실측: 19px 에서 필요 254px
+     vs 카드 안쪽 250px — **4px 모자랐다**).
+     세 가지를 함께 해야 다시 안 깨진다:
+       ① 오른쪽 칸을 300 → 320px (카드 안쪽 250 → 270px)
+       ② 글자 19 → 18px  ③ `nowrap` 으로 접힘 자체를 막는다
+     지금 여유는 약 29px 다 — 폰트 폴백 차이(Paperlogy 가 Pretendard 보다 1.5% 넓다)를
+     흡수할 만큼이다. **주소를 더 긴 것으로 바꾸면 이 세 값을 다시 재라.** */
+.ct-card-a { display: block; white-space: nowrap;
+  font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-primary); }
+.ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
+.ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
+  font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
+.ct-steps li { counter-increment: s; position: relative; padding-left: 26px; }
+.ct-steps li + li { margin-top: 9px; }
+.ct-steps li::before { content: counter(s); position: absolute; left: 0; top: 0;
+  display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
+  background: var(--color-primary); color: #fff; font-size: 10.5px; font-weight: 700; }
+.ct-card-note { padding: 0 4px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+/* 모바일: 1단으로 스택되면 컬럼 높이가 콘텐츠에 딱 맞아 sticky가 의미 없다 */
+@media (max-width: 1023px) {
+  .ct-actions { position: static; margin-top: 8px; padding-bottom: 0; background: none; }
+}
+
+/* ── 메인의 Tailwind 유틸리티를 대신하는 평문 규칙 6개 ────────────────
+   메인 마크업은 헤더·격자를 유틸리티로 짜는데 서브페이지에는 그 클래스가 없다.
+   ⚠ 값은 메인의 유틸리티를 그대로 푼 것이다(`text-xs`=12px · `tracking-[0.18em]` 등).
+     메인 쪽 유틸리티를 바꾸면 여기도 맞춰야 한다. */
+.ct-eyebrow { margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .18em; color: var(--color-label-blue); }
+.ct-title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px;
+  font-weight: 700; color: var(--color-text); }
+.ct-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+.ct-grid { display: grid; gap: 40px; }
+.ct-two { display: grid; gap: 24px; }
+.ct-strong { font-weight: 600; color: var(--color-text); }
+/* 약관 모달에서 Tailwind 유틸리티를 대신하는 세 개 — 값은 옛 유틸리티와 같다
+   (`text-sm leading-relaxed text-text-muted` · `text-primary underline …` · `text-xs text-text-muted`) */
+.pv-p { font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+.pv-link { color: var(--color-primary); text-decoration: underline;
+  text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+.pv-link:hover { text-decoration-color: var(--color-primary); }
+.pv-foot-note { font-size: 12px; color: var(--color-text-muted); }
+@media (min-width: 640px)  { .ct-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 768px)  { .ct-title { font-size: 30px; } }
+@media (min-width: 1024px) { .ct-grid { grid-template-columns: minmax(0, 1fr) 320px; } }

@@ -17,16 +17,26 @@
  *
  * 한계 — 정적 검사다. JS 가 만들어 붙이는 클래스는 IGNORE 에 등록해야 한다.
  */
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SUB = join(ROOT, 'src', 'sub');
+/** 메인과 함께 쓰는 소스. `pages.mjs` 의 `pick()` 과 **같은 순서**로 찾아야 한다 —
+ *  어긋나면 린터가 빌드와 다른 파일을 읽고 유령 오류를 낸다. */
+const SHARED = join(ROOT, 'src', 'shared');
+const pickFile = (kind, name, ext) => {
+  for (const base of [SHARED, join(SUB, kind)]) {
+    const f = join(base, name + ext);
+    if (existsSync(f)) return f;
+  }
+  throw new Error(`${kind}/${name}${ext} 를 src/shared · src/sub 어디에서도 못 찾았다`);
+};
 const SHOW_DEAD = process.argv.includes('--dead');
 
 // pages.mjs 의 CSS_COMMON 과 같아야 한다. 바뀌면 여기도 고칠 것.
-const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', '30-hero-lnb', '40-section', '80-footer', '90-motion'];
+const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion', 'contact'];
 
 /** JS 가 classList 로 붙였다 떼는 상태 클래스. 마크업·JS 문자열 어디에도 안 보여서
  *  자동 수집이 안 되므로 여기 적는다. */
@@ -41,14 +51,23 @@ const KEEP_UNUSED = new Map([
 const read = (...p) => readFileSync(join(...p), 'utf8');
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
 
+/** 선언 블록 안(속성값)만 비운다 — `content: ".foo"` 같은 문자열 오탐을 막는 게 목적이다.
+ *  ⚠ `{[^}]*}` 한 방으로 지우면 안 된다. `@media (…) { .foo { … } }` 에서 여는 중괄호가
+ *    미디어 쪽이라 **첫 규칙의 선택자까지 함께 삼킨다.** 지금까지 안 드러난 건 미디어
+ *    블록의 첫 규칙들이 전부 최상위에도 정의돼 있었기 때문이고, 미디어 안에만 있는
+ *    `.lv-facts--3` 에서 처음 걸렸다(2026-08-21). 안쪽부터 한 겹씩 비워 중첩을 지킨다. */
+const stripBlocks = (s) => {
+  let prev;
+  do { prev = s; s = s.replace(/\{[^{}]*\}/g, '{}'); } while (s !== prev);
+  return s;
+};
+
 /** CSS 파일들에서 클래스 선택자를 모은다 */
 function definedIn(files) {
   const out = new Set();
   for (const f of files) {
-    const css = stripComments(read(SUB, 'css', f + '.css'));
-    // 선언 블록 안(속성값)은 보지 않는다 — content:".foo" 같은 문자열 오탐 방지
-    const selectors = css.replace(/\{[^}]*\}/g, '{}');
-    for (const m of selectors.matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
+    const css = stripComments(readFileSync(pickFile('css', f, '.css'), 'utf8'));
+    for (const m of stripBlocks(css).matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
   }
   return out;
 }
@@ -74,6 +93,8 @@ const jsClasses = (() => {
   for (const f of readdirSync(join(SUB, 'js')).filter((f) => f.endsWith('.js'))) {
     harvest(read(SUB, 'js', f), out);
   }
+  // 공용 JS · 공용 파티셜도 '사용' 으로 친다 — 빠지면 .pv*/.ct* 가 죽은 CSS 로 오인된다
+  for (const f of readdirSync(SHARED)) harvest(readFileSync(join(SHARED, f), 'utf8'), out);
   harvest(readFileSync(join(ROOT, 'tools', 'build', 'pages.mjs'), 'utf8'), out);
   return out;
 })();
@@ -90,7 +111,7 @@ function svgLocalClasses(slug) {
   const out = new Set();
   for (const svg of html.matchAll(/<svg[\s\S]*?<\/svg>/g)) {
     for (const st of svg[0].matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) {
-      const selectors = stripComments(st[1]).replace(/\{[^}]*\}/g, '{}');
+      const selectors = stripBlocks(stripComments(st[1]));
       for (const m of selectors.matchAll(/\.(-?[A-Za-z_][\w-]*)/g)) out.add(m[1]);
     }
   }
@@ -125,7 +146,12 @@ function bundleOf(file) {
 let problems = 0;
 const deadPerFile = new Map();
 
-for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.html')).sort()) {
+/* ⚠ 빌더와 **같은 규칙**으로 거른다(pages.mjs 679행). `_` 로 시작하는 파일 중
+     `_detail-` 만 템플릿이고, 나머지(`_contact.html` 처럼 숨긴 페이지)는 산출물이
+     없으므로 검사 대상이 아니다 — 안 거르면 루트에 없는 HTML 을 읽다 ENOENT 로 죽는다. */
+for (const file of readdirSync(join(SUB, 'pages'))
+  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || f.startsWith('_detail-')))
+  .sort()) {
   const { slugs, files } = bundleOf(file);
   const def = definedIn(files);
   for (const slug of slugs) {
@@ -147,7 +173,8 @@ for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.ht
 
 // 전역 사용 집합 = 마크업 + JS 가 만들어 내는 것
 const allUsed = new Set(jsClasses.keys());
-for (const file of readdirSync(join(SUB, 'pages')).filter((f) => f.endsWith('.html'))) {
+for (const file of readdirSync(join(SUB, 'pages'))
+  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || f.startsWith('_detail-')))) {
   for (const slug of bundleOf(file).slugs) {
     for (const c of usedIn(slug).keys()) allUsed.add(c);
   }

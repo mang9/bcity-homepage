@@ -1,44 +1,66 @@
 /* ===== 브랜드 (도시소개) =====
-   내용은 스토리보드 v2 slide49~51(도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
+   내용 구성은 클로드 디자인 기획(와이어프레임 p.48~50 · 도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
    자산 출처는 assets/brand/README 대신 이 주석 — symbol.svg 는 assets/logo/bcity-logo.svg 에서
-   민트·애저 패스만 뽑은 것이고, 워드마크는 partials/brand-defs.svg 의 <symbol id="wm"> 한 벌을
-   <use> 로 돌려 쓴다(로고 변형 6종이 같은 도형을 색만 바꿔 쓰기 때문). */
+   민트·애저 패스만 뽑은 것이다. 워드마크는 assets/logo/bcity-logo.svg 를 그대로 싣는다.
+   ⚠ 로고 변형 6종(시그니처 조합)과 그것만 쓰던 partials/brand-defs.svg 의 <symbol id="wm">,
+     `.br-vars`/`.br-var*`/`.br-wmk` 규칙은 2026-08-21 지시로 함께 걷어냈다. */
 
 /* ---------- 1. 브랜드 네임 ---------- */
 
-/* 워드마크는 크게 보여 주는 것이 목적이라 흰 면 위에 넉넉한 여백을 준다.
-   ⚠ 폭을 100% 로 두면 2518x421 원본이 화면 폭까지 늘어나 글자가 얇아 보인다 — 상한을 둔다. */
-.br-hero { margin: clamp(34px, 4vw, 64px) 0 0; padding: clamp(34px, 4.4vw, 76px) clamp(20px, 4vw, 64px);
-  background: var(--color-surface); border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg); text-align: center; }
-.br-hero img { display: block; width: 100%; max-width: 720px; height: auto; margin-inline: auto; }
-.br-hero figcaption { margin-top: clamp(16px, 1.6vw, 26px); font-size: 12.5px;
-  letter-spacing: .2em; color: var(--color-text-muted); }
+/* 상단 — **박스를 쓰지 않는다**(2026-08-20 지시). 로고를 놓고 바로 아래에 두 줄 카피를 둔다.
+   ⚠ 로고 폭을 100% 로 두면 2518x421 원본이 화면 폭까지 늘어나 글자가 얇아 보인다 — 상한을 둔다. */
+.br-name { margin: clamp(30px, 3.6vw, 58px) 0 0; text-align: center; }
+.br-name-logo { display: block; width: 100%; max-width: 620px; height: auto; margin-inline: auto; }
+/* 카피가 이 섹션의 제목이다 — 로고 아래에서 두 줄로 읽힌다.
+   ⚠ `word-break: keep-all` 은 body 에서 상속받는다. `<br>` 로 잡은 줄바꿈만 유지된다. */
+/* ⚠ 폭을 묶지 않는다 — `<br>` 이 잡은 두 줄이 곧 카피의 형태다.
+     `max-width: 30ch` 를 줬더니 둘째 줄이 한 번 더 접혀 세 줄이 됐다(첨부 이미지는 두 줄). */
+.br-name-copy { margin: clamp(22px, 2.4vw, 38px) auto 0;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(19px, 1.9vw, 30px); line-height: 1.45; letter-spacing: -.02em;
+  color: var(--color-logo); }
 
-.br-lead { max-width: 74ch; margin: clamp(30px, 3.2vw, 52px) 0 0;
+/* 서브 카피 — 메인 카피 아래에 **가운데로** 맞춘다(2026-08-20 지시). */
+.br-lead { max-width: 74ch; margin: clamp(26px, 2.8vw, 44px) auto 0; text-align: center;
   font-size: clamp(15px, 1.05vw, 18px); line-height: 1.75; color: var(--color-text-muted); }
 
 /* 심볼 해석 3카드. 모티프는 카드 바닥에 옅게 깔아 '해설 + 도형' 을 한 덩어리로 읽힌다 */
+/* 위 여백을 넉넉히 — 서브 카피(가운데 정렬)와 카드 줄이 붙어 보였다(2026-08-20 지시) */
 .br-sym { list-style: none; display: grid; gap: clamp(14px, 1.4vw, 22px);
-  grid-template-columns: repeat(3, 1fr); margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; }
+  grid-template-columns: repeat(3, 1fr); margin: clamp(44px, 5vw, 84px) 0 0; padding: 0; }
 .br-sym-card { display: flex; flex-direction: column; padding: clamp(22px, 2vw, 32px);
   background: var(--color-surface); border: 1px solid var(--color-line);
   border-top: 2px solid var(--color-primary); border-radius: var(--radius-md); }
-.br-sym-h { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; margin: 0; align-items: baseline; }
-.br-sym-h i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(26px, 2.2vw, 34px); line-height: 1; color: var(--color-light-blue); }
-.br-sym-h b { font-family: var(--font-display); font-weight: 700;
+/* 번호(01·02·03)는 넣지 않는다(2026-08-20 지시) — 세 장이 나란히 있어 순서가 이미 보인다.
+   번호가 빠지면서 2열 그리드가 필요 없어졌다: 이름 위, 부제 아래인 블록이다. */
+.br-sym-h { margin: 0; }
+.br-sym-h b { display: block; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(17.5px, 1.35vw, 22px); letter-spacing: -.015em; }
-.br-sym-h span { grid-column: 2; margin-top: 4px; font-size: 13px; font-weight: 700;
+.br-sym-h span { display: block; margin-top: 4px; font-size: 13px; font-weight: 700;
   color: var(--color-primary); }
 .br-sym-d { margin: 16px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
 
 /* 모티프 — 아래로 밀어 카드 높이가 달라도 도형 줄이 맞는다.
-   ⚠ 색은 회색 리터럴이 아니라 본문색의 낮은 불투명도다. 다크 배경으로 옮겨도 따라온다. */
-.br-motif { display: flex; align-items: flex-end; justify-content: center;
-  margin-top: auto; padding-top: clamp(24px, 2.6vw, 40px); color: var(--color-text-muted); opacity: .38; }
-.br-motif-svg { display: block; height: clamp(84px, 8vw, 118px); width: auto; }
-.br-motif img { display: block; height: clamp(84px, 8vw, 118px); width: auto; }
+   ⚠ 색은 회색 리터럴이 아니라 본문색의 낮은 불투명도다. 다크 배경으로 옮겨도 따라온다.
+   ⚠ 세 도형의 비율이 전혀 다르다(01 은 96x44 로 납작, 03 은 109x150 으로 길다).
+     전에는 **높이만** 맞춰서 01 이 03 보다 3배 넓어 보였다(2026-08-20 지적).
+     그래서 **같은 정사각 상자**에 넣고 각자 안에서 contain 으로 맞춘다. */
+/* 위치 — **타이틀과 설명 사이**다(2026-08-20 지시). 전에는 `margin-top: auto` 로
+   카드 바닥에 붙여 뒀다. 이제 흐름 중간이므로 위아래 여백을 스스로 갖는다. */
+.br-motif { display: flex; align-items: center; justify-content: center;
+  margin: clamp(18px, 1.8vw, 26px) 0; color: var(--color-text-muted); opacity: .38; }
+.br-motif > * { display: block; inline-size: clamp(84px, 8vw, 118px);
+  block-size: clamp(84px, 8vw, 118px); }
+/* ⚠ 안쪽 SVG 에 따로 `width: 100%; height: 100%` 를 주지 말 것.
+     `inline-size` 와 `width` 는 같은 속성이라 뒤에 온 쪽이 이겨 위의 정사각 상자가 풀린다
+     (실측에서 115x115 가 아니라 335x154 로 나왔다). 상자는 `.br-motif > *` 하나로 정하고,
+     viewBox 의 기본 preserveAspectRatio(xMidYMid meet)가 그 안에서 contain 을 해 준다. */
+/* ⚠ 02 만 **파일**이다. path 가 10KB 라 페이지에 인라인하지 않고 SVG 로 두고,
+     **마스크**로 currentColor 를 입힌다 — 이러면 01 · 03 의 인라인 SVG 와 색이 같아진다.
+     img 태그로는 색을 맞출 수 없다. CSS 는 문서에 인라인되므로 url() 은 페이지(루트) 기준이다. */
+.br-motif-mask { background: currentColor;
+  -webkit-mask: url(assets/brand/motif-dna.svg) center / contain no-repeat;
+          mask: url(assets/brand/motif-dna.svg) center / contain no-repeat; }
 
 /* ---------- 2. 로고타입 ---------- */
 
@@ -47,12 +69,28 @@
   letter-spacing: -.015em; }
 .br-h3 span { margin-left: 12px; font-family: var(--font-body); font-weight: 700;
   font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
+/* 기본 로고타입 — [워드마크 비율 분석 | 심볼 마크] 2단(2026-08-20 지시).
+   워드마크 쪽이 넓어야 비율 점선이 읽히므로 1.2 : 1 로 기울인다.
+   **제목도 이 그리드 안에 있다** — 박스 밖 첫 줄이고, 각자 자기 칸에 정렬된다.
+   ⚠ 자리를 `grid-area` 로 명시한다. DOM 은 [제목1][박스1][제목2][박스2] 순이라
+     좁은 화면에서 열 정의만 1열로 바꾸면 자동 흐름이 그대로 올바른 순서가 된다.
+     `order` 로 돌리는 방식은 쓰지 않는다 — 읽기 순서가 화면 순서와 달라진다. */
+.br-primary { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
+  column-gap: clamp(14px, 1.4vw, 22px); row-gap: clamp(16px, 1.6vw, 24px);
+  margin-top: clamp(44px, 4.6vw, 78px); align-items: stretch; }
+.br-primary > :nth-child(1) { grid-area: 1 / 1; }   /* 제목 · 기본 로고타입 */
+.br-primary > :nth-child(2) { grid-area: 2 / 1; }   /* 워드마크 박스 */
+.br-primary > :nth-child(3) { grid-area: 1 / 2; }   /* 제목 · 심볼 마크 */
+.br-primary > :nth-child(4) { grid-area: 2 / 2; }   /* 심볼 박스 */
+/* 그리드 안 제목은 자기 여백을 갖지 않는다 — 줄 간격은 `row-gap` 이 만든다 */
+.br-primary .br-h3 { margin: 0; align-self: end; }
 
 /* 워드마크 비율 분석 — 위아래 점선이 캡 하이트를 표시한다.
-   ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다. */
-.br-wm { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, 1fr);
-  gap: clamp(24px, 2.6vw, 48px); align-items: center;
-  margin-top: clamp(24px, 2.6vw, 40px); padding: clamp(26px, 3vw, 52px);
+   ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다.
+   ⚠ 2단 안으로 들어왔으므로 안쪽은 **한 열**이다 — 스테이지 아래에 사양을 쌓는다. */
+/* 안쪽 여백을 넉넉히(2026-08-20 지시) — 스테이지 ↔ 사양, 그리고 박스 자체 패딩 */
+.br-wm { display: flex; flex-direction: column; justify-content: center;
+  gap: clamp(30px, 3.2vw, 54px); padding: clamp(28px, 3vw, 48px);
   background: var(--color-bg); border-radius: var(--radius-lg); }
 .br-wm-stage { position: relative; padding-block: 18px; }
 .br-wm-stage::before, .br-wm-stage::after { content: ""; position: absolute; left: 0; right: 0;
@@ -60,120 +98,122 @@
 .br-wm-stage::before { top: 18px; }
 .br-wm-stage::after { bottom: 18px; }
 .br-wm-stage img { display: block; width: 100%; height: auto; }
-.br-wm-spec { margin: 0; display: grid; gap: 14px; }
-.br-wm-spec div { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: baseline; }
+.br-wm-spec { margin: 0; display: grid; gap: 15px; }
+.br-wm-spec div { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px;
+  align-items: baseline; }
 .br-wm-spec dt { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--color-primary); }
 .br-wm-spec dd { margin: 0; font-size: 14px; line-height: 1.6; color: var(--color-text); }
 
-.br-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 1.4vw, 22px); margin-top: clamp(14px, 1.4vw, 22px); }
-.br-two > * { padding: clamp(22px, 2vw, 32px); background: var(--color-bg); border-radius: var(--radius-lg); }
-.br-two .sub-t { margin: 0 0 clamp(14px, 1.4vw, 20px); }
-.br-two .sub-t span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
+/* 블록 하나가 한 줄을 차지한다 — 기획의 [기본 로고타입] · [시그니처 조합] · [사용 규정 · 여백]
+   세 덩어리를 나란히 두지 않고 위아래로 쌓기 때문이다(전에는 2단 `.br-two` 였다). */
+.br-panel { padding: clamp(22px, 2vw, 32px); background: var(--color-bg);
+  border-radius: var(--radius-lg); }
+.br-panel .sub-t { margin: 0 0 clamp(14px, 1.4vw, 20px);
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.25vw, 19px);
+  letter-spacing: -.015em; }
+.br-panel .sub-t span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
   font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
-.br-rules dl { margin: 0; display: grid; gap: 12px; }
-.br-rules dl div { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: baseline;
+/* 사용 규정 — 한 줄을 쓰므로 2열로 벌린다. 1열이면 오른쪽이 통째로 빈다. */
+.br-rules dl { margin: 0; display: grid; gap: 12px clamp(20px, 2.4vw, 40px);
+  grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.br-rules dl div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: baseline;
   padding-bottom: 12px; border-bottom: 1px solid var(--color-line); }
-.br-rules dl div:last-child { padding-bottom: 0; border-bottom: 0; }
+/* ⚠ 2열이라 '마지막 줄' 은 마지막 두 칸이다 — `:last-child` 만 쓰면 왼쪽 칸에 선이 남는다 */
+.br-rules dl div:nth-last-child(-n + 2) { padding-bottom: 0; border-bottom: 0; }
 .br-rules dt { font-size: 13px; font-weight: 700; color: var(--color-primary); }
 .br-rules dd { margin: 0; font-size: 14px; line-height: 1.6; }
-/* 두 칸의 높이를 맞춘다 — 규칙 쪽이 3줄이라 심볼 칸만 짧으면 아래가 들쭉날쭉하다 */
-.br-symmark { display: flex; flex-direction: column; }
-.br-symmark-in { flex: 1; display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 1.8vw, 28px);
-  align-items: center; }
-.br-symmark-in img { display: block; width: clamp(64px, 6vw, 92px); height: auto; }
-.br-symmark-in p { margin: 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
+/* 2단의 오른쪽 칸 — 높이를 왼쪽(워드마크)과 함께 쓰므로 내용을 가운데로 모은다 */
+.br-primary .br-panel { display: flex; flex-direction: column; justify-content: center;
+  gap: clamp(24px, 2.6vw, 40px); padding: clamp(28px, 3vw, 48px); }
+.br-symmark-in { display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(24px, 2.6vw, 42px); align-items: center; }
+/* 심볼을 더 크게(2026-08-20 지시) — 2단 왼쪽의 워드마크와 무게가 맞아야 한다 */
+.br-symmark-in img { display: block; width: clamp(96px, 9.5vw, 148px); height: auto; }
 
-/* 레터 애너토미 5열 — 좁아지면 3열 → 2열로 접는다(글자 카드라 1열까지 가면 허전하다) */
-.br-anat { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr);
-  gap: clamp(12px, 1.2vw, 18px); margin: 0; padding: 0; }
-.br-anat-i { padding: clamp(18px, 1.8vw, 26px); background: var(--color-surface);
-  border: 1px solid var(--color-line); border-radius: var(--radius-md); }
-.br-anat-g { display: flex; align-items: center; justify-content: center;
-  height: clamp(64px, 6vw, 92px); color: var(--color-logo); }
-.br-glyph { display: block; height: clamp(34px, 3.2vw, 48px); width: auto; }
-.br-anat-t { display: block; margin-top: clamp(14px, 1.4vw, 20px);
-  font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
-.br-anat-t span { display: block; margin-top: 2px; font-size: 12px; font-weight: 400;
+/* 심볼 풀이 — 화살표로 도형의 각 부분을 짚는다(2026-08-20 지시).
+   문장으로 흘려 두면 어느 부분이 무엇인지 짝이 지어지지 않는다.
+   ⚠ 색 이름 항목은 원색이 아니라 **텍스트용 변종**(`--a`)을 마크업에서 받는다.
+     원색은 이 면 위에서 Mint 2.14 · Azure 3.13 이라 본문 크기 대비를 못 맞춘다.
+   ⚠ 그리고 컬러 카드의 `--ct`(#298272 · #007CB4)를 그대로 가져오면 안 된다 —
+     그 값은 **흰 면** 기준(4.64 · 4.62)이고 이 패널은 `--color-bg` 라 4.35 · 4.34 로
+     떨어진다(실측). 이 면에 맞춰 #287E6F · #0077AE 로 다시 잡았다(4.58 · 4.64). */
+.br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 15px; }
+.br-anno li { display: grid; grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 8px; align-items: baseline; }
+.br-anno li::before { content: "\2192"; grid-row: span 2; font-weight: 700;
+  color: var(--a, var(--color-text-muted)); }
+.br-anno b { grid-column: 2; font-size: 13.5px; letter-spacing: -.01em;
+  color: var(--a, var(--color-text)); }
+.br-anno span { grid-column: 2; margin-top: 2px; font-size: 12.5px; line-height: 1.6;
   color: var(--color-text-muted); }
-.br-anat-d { margin: 12px 0 0; font-size: 13px; line-height: 1.65; color: var(--color-text-muted); }
+.br-symmark-d { margin: 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
 /* 로고 변형 6종 — 변형마다 배경이 다르므로 그림 영역과 설명을 분리한다 */
-.br-vars { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: clamp(14px, 1.4vw, 22px); margin: 0; padding: 0; }
-.br-var { border: 1px solid var(--color-line); border-radius: var(--radius-md); overflow: hidden; }
-.br-var-fig { display: flex; align-items: center; justify-content: center;
-  height: clamp(108px, 10vw, 156px); padding-inline: clamp(20px, 2.4vw, 40px);
-  background: var(--color-surface); }
-.br-var-fig img, .br-wmk { display: block; width: 100%; max-width: 240px; height: auto; }
 /* 기본(3색)은 원본 SVG 를 그대로 쓰고, 나머지 4종은 <use href="#wm"> + currentColor 다 */
-.br-var--main .br-var-fig { background: var(--color-surface); }
 /* 심볼 단독만 가로가 아니라 세로 기준으로 맞춘다 — 정사각에 가까워 폭을 맞추면 너무 커진다 */
-.br-var--sym .br-var-fig img { width: auto; height: clamp(52px, 5vw, 74px); max-width: none; }
-.br-var-cap { display: grid; grid-template-columns: auto 1fr; column-gap: 12px;
-  padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 22px);
-  border-top: 1px solid var(--color-line); }
-.br-var-cap i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-  font-size: 20px; line-height: 1.1; color: var(--color-light-blue); }
-.br-var-cap b { font-size: 14px; letter-spacing: -.01em; }
-.br-var-cap > span { grid-column: 2; margin-top: 3px; font-size: 12px; color: var(--color-text-muted); }
 
-.br-var--navy .br-wmk { color: var(--color-logo); }
-.br-var--black .br-wmk { color: #111111; }
-.br-var--rev .br-var-fig { background: var(--color-navy); }
-.br-var--rev .br-wmk { color: #ffffff; }
-.br-var--blue .br-var-fig { background: var(--brand-azure); }
-.br-var--blue .br-wmk { color: #ffffff; }
 
 /* ---------- 3. 브랜드 컬러 ---------- */
 
-/* 색마다 [스와치 | 사양 | 설명] 3단. 한 색이 한 줄을 차지해야 스와치가 충분히 커진다 —
-   3열로 나누면 칩이 작아져 색을 비교하기 어렵다. */
+/* 색 세 장을 **가로 3단**으로 둔다(2026-08-20 지시). 한 장은 [색 박스 → 설명] 위아래다. */
 .br-colors { list-style: none; display: grid; gap: clamp(14px, 1.4vw, 22px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: clamp(30px, 3.2vw, 52px) 0 0; padding: 0; }
-.br-color { display: grid; grid-template-columns: minmax(180px, .8fr) minmax(190px, .7fr) minmax(0, 1.6fr);
-  gap: clamp(20px, 2.2vw, 36px); align-items: center;
+.br-color { display: flex; flex-direction: column;
   padding: clamp(20px, 2vw, 30px); background: var(--color-surface);
   border: 1px solid var(--color-line); border-radius: var(--radius-lg); }
-/* ⚠ 스와치 글자색을 흰색으로 고정하지 않는다 — 실측 대비가 색마다 전혀 다르다.
-     흰 글자 기준 Indigo 9.52 / Mint **2.28** / Azure **3.33** 로 두 색은 AA(4.5) 미달이다.
-     그래서 `--on` 을 마크업에서 색마다 지정한다(Mint·Azure 는 어두운 글자 → 8.29 / 5.67). */
-.br-swatch { display: flex; flex-direction: column; justify-content: flex-end;
-  min-height: clamp(96px, 9vw, 132px); padding: clamp(16px, 1.6vw, 22px);
-  background: var(--c); border-radius: var(--radius-md); color: var(--on); }
-.br-swatch b { font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(20px, 1.7vw, 26px); letter-spacing: -.015em; }
-.br-swatch span { margin-top: 2px; font-size: 13px; opacity: .88; }
-.br-spec { margin: 0; display: grid; gap: 9px; }
-.br-spec div { display: grid; grid-template-columns: 46px 1fr; gap: 10px; align-items: baseline; }
-.br-spec dt { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--color-text-muted); }
-.br-spec dd { margin: 0; font-size: 13px; line-height: 1.5; }
+/* 스와치 글자 — **흰색으로 통일**하고 약한 드롭섀도우로 읽힘을 받친다(2026-08-20 지시).
+   ⚠ 솔직히 적어 둔다: 그림자는 WCAG 대비 계산에 들어가지 않는다.
+     흰 글자의 실측 대비는 Indigo 9.52 / Mint **2.28** / Azure **3.33** 이고,
+     Mint · Azure 는 AA(4.5) 미달이다. 그림자는 경계를 만들어 **눈에 보이는** 읽힘을
+     올려 주지만 수치를 올리지는 못한다. 브랜드 색을 어둡게 바꿀 수 없어(정본 값이다)
+     지시대로 흰 글자 + 그림자를 택한 것이며, 색을 바꾸지 않는 한 수치는 그대로다.
+     전에는 `--on` 으로 색마다 글자색을 달리 줘 8.29 / 5.67 을 확보하고 있었다.
+   ⚠ 컬러 코드도 이 안에 들어온다 — 라벨은 회색 리터럴이 아니라 `currentColor` 를 옅게 쓴다. */
+.br-swatch { display: flex; flex-direction: column; gap: clamp(16px, 1.8vw, 26px);
+  padding: clamp(18px, 1.8vw, 24px);
+  background: var(--c); border-radius: var(--radius-md); color: #ffffff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / .3), 0 0 1px rgb(0 0 0 / .25); }
+.br-swatch-h { margin: 0; }
+.br-swatch b { display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(19px, 1.6vw, 25px); letter-spacing: -.015em; }
+.br-swatch span { display: block; margin-top: 2px; font-size: 13px; opacity: .88; }
+.br-spec { margin: 0; display: grid; gap: 8px; }
+.br-spec div { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 10px;
+  align-items: baseline; }
+/* ⚠ 라벨의 불투명도를 내리지 않는다. 흰 글자로 통일한 뒤로는 Mint 위 대비가 이미 2.28 인데
+     `.85` 를 걸면 **2.02** 까지 떨어졌다(실측). 라벨과 값의 구분은 크기 · 굵기 · 자간이 한다. */
+.br-spec dt { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; }
+.br-spec dd { margin: 0; font-size: 12.5px; line-height: 1.5; font-variant-numeric: tabular-nums; }
 /* ⚠ 키워드는 원색(`--c`)이 아니라 **텍스트용 변종**(`--ct`)을 쓴다.
      흰 면 위에서 Mint 2.28 · Azure 3.33 로 원색은 본문 크기 대비를 못 맞춘다.
      밝기만 낮춘 같은 계열색(#298272 · #007CB4)으로 4.64 를 확보했다 — 색 연상은 유지된다. */
-.br-kw { display: block; font-size: clamp(15px, 1.15vw, 18px); color: var(--ct); letter-spacing: -.01em; }
-.br-cd { margin: 10px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
+.br-color-tx { margin-top: clamp(16px, 1.8vw, 24px); }
+.br-kw { display: block; font-size: clamp(14.5px, 1.1vw, 17px); color: var(--ct); letter-spacing: -.01em; }
+.br-cd { margin: 10px 0 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
 /* SVG 정의 전용 — 화면에서 자리를 차지하면 섹션 사이에 빈 줄이 생긴다 */
-.br-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
 /* ---------- 반응형 ---------- */
 
 @media (max-width: 1200px) {
-  .br-anat { grid-template-columns: repeat(3, 1fr); }
-  .br-vars { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 1023px) {
   .br-sym { grid-template-columns: 1fr; }
-  .br-wm { grid-template-columns: 1fr; }
-  .br-two { grid-template-columns: 1fr; }
-  /* 색 카드는 [스와치+사양] 한 줄 / 설명 한 줄로 접는다 */
-  .br-color { grid-template-columns: minmax(150px, .9fr) minmax(180px, 1fr); }
-  .br-color-tx { grid-column: 1 / -1; }
+  /* 1단 — 열 정의를 1열로 돌리고 `grid-area` 를 풀면 DOM 순서
+     [제목1][박스1][제목2][박스2] 가 그대로 화면 순서가 된다. */
+  .br-primary { grid-template-columns: minmax(0, 1fr); row-gap: clamp(14px, 1.4vw, 20px); }
+  .br-primary > :nth-child(1), .br-primary > :nth-child(2),
+  .br-primary > :nth-child(3), .br-primary > :nth-child(4) { grid-area: auto; }
+  /* 박스 뒤에 오는 제목은 위 여백을 더 갖는다 — 앞 박스와 붙어 보인다 */
+  .br-primary > :nth-child(3) { margin-top: clamp(18px, 1.8vw, 26px); }
+  .br-rules dl { grid-template-columns: 1fr; }
+  /* 1열로 접히면 '마지막 줄' 은 마지막 하나뿐이다 */
+  .br-rules dl div:nth-last-child(2) { padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-line); }
+  /* 가로 3단이 좁아지면 색 이름과 코드가 붙는다 — 1단으로 내린다 */
+  .br-colors { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 767px) {
-  .br-anat { grid-template-columns: repeat(2, 1fr); }
-  .br-vars { grid-template-columns: 1fr; }
-  .br-color { grid-template-columns: 1fr; }
   .br-symmark-in { grid-template-columns: 1fr; }
 }

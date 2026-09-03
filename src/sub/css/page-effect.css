@@ -33,9 +33,6 @@
 /* 기대효과 블록 — 좌우 교차 2단(.zz)의 본문 쪽 */
 .eff-cat { margin: 0 0 9px; display: flex; align-items: baseline; gap: 10px;
   font-size: 12.5px; font-weight: 600; letter-spacing: .16em; color: var(--color-text-muted); }
-.eff-cat b { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
-  font-weight: 700; letter-spacing: 0; color: var(--color-primary);
-  font-variant-numeric: tabular-nums; }
 .eff-t { margin: 0; font-family: var(--font-display); font-weight: 700;
   font-size: clamp(20px, 1.9vw, 31px); line-height: 1.32; letter-spacing: -.022em; }
 .eff-list { margin: clamp(16px, 1.7vw, 26px) 0 0; padding: 0; list-style: none;

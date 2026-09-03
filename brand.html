@@ -28,11 +28,11 @@
        ⚠ DESIGN.md 가 바뀌면 여기와 src/css/app.css 를 **둘 다** 고친다.
           서브페이지는 Tailwind 를 쓰지 않으므로 @theme 트리셰이킹(§1.3)은 해당 없다. */
     :root {
-      --color-primary: #344198;
-      --color-primary-hover: #2a3680;
+      --color-primary: #2C3E91;
+      --color-primary-hover: #253479;
       --color-navy: #002742;
       --color-mint: #3dbfa8;
-      --color-azure: #4e7ac7;
+      --color-label-blue: #4e7ac7;
       --color-light-blue: #bbccf0;
       --color-bg: #f4f8fe;
       --color-surface: #ffffff;
@@ -43,7 +43,7 @@
       /* 8대 권역 식별색 — DESIGN.md 에 있는 토큰인데 서브페이지 사본에는 빠져 있었다.
          구역소개 페이지가 쓰기 시작하면서 채워 넣는다. 흰색 대비 전부 4.62 이상(DESIGN.md §색).
          ⚠ index.html 은 이 값을 @theme 과 :root 양쪽에 갖는다(§1.3 트리셰이킹). */
-      --color-district-ai: #344198;
+      --color-district-ai: #2C3E91;
       --color-district-bio: #288074;
       --color-district-food: #a1662b;
       --color-district-mice: #337aa3;
@@ -54,11 +54,11 @@
 
       /* DESIGN.md 에는 없지만 index.html 이 이미 쓰는 두 값 — 리터럴을 흩뿌리지 않고
          여기 한 곳에 모아 둔다. 로고 전용 네이비와 스크림 베이스(#001122). */
-      --color-logo: #2c3e91;
+      --color-logo: var(--color-primary);   /* 통일(2026-08-31) — 별칭이라 갈라질 수 없다 */
       /* 브랜드 정본 3색(스토리보드 slide51 — Pantone 까지 지정돼 있다). 사이트 UI 토큰과 **다르다**:
-           Indigo #2C3E91 = --color-logo (UI 의 --color-primary #344198 과 다름)
+           Indigo #2C3E91 = --color-logo = --color-primary (2026-08-31 통일 · 별칭)
            Mint   #3DBFA8 = --color-mint (일치)
-           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-azure #4E7AC7 은 아이브로우용 다른 색)
+           Azure  #0095D9 = 아래 --brand-azure (UI 의 --color-label-blue #4E7AC7 은 아이브로우용 다른 색)
          brand.html 만 쓴다. UI 색을 이걸로 바꾸지 말 것 — 대비·톤이 전부 다시 계산돼야 한다. */
       --brand-azure: #0095d9;
       --scrim-rgb: 0 17 34;
@@ -100,23 +100,72 @@
     /* ===== GNB ===== */
     .gnb {
       position: fixed; inset: 0 0 auto; z-index: 50; height: var(--gnb-h);
+      /* ⚠ 펼치면 `.is-open` 이 height 를 auto 로 푼다(위 규칙) */
       color: #fff; border-bottom: 1px solid transparent;
       transition: background .3s ease, color .3s ease, border-color .3s ease;
     }
-    .gnb .wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 20px; }
-    .gnb.is-solid { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
+    /* ⚠ 정렬은 **항상 `flex-start`** 다. 펼칠 때만 바꾸면 로고와 우측(KO/EN · SNS)이
+         그 순간 위로 튄다(실측 −22px). 대신 로고 · 우측이 각자 한 줄 높이(`--gnb-h`)를 갖고
+         그 안에서 세로 가운데에 놓이므로 닫힌 모습은 그대로다 — 메인과 같은 방식이다. */
+    .gnb .wrap { display: flex; min-height: 100%; align-items: flex-start;
+      justify-content: space-between; gap: 20px; }
+    .gnb .wrap > a { display: flex; align-items: center; height: var(--gnb-h); }
+    /* ⚠ `.no-hero` 를 함께 넣는다(§11.61). 히어로가 없는 페이지는 맨 위에서도 밝은 배경
+         위에 놓이므로 흰 글자로 두면 로고와 메뉴가 보이지 않는다. 값을 복사하지 않고
+         선택자만 더해 한 곳에서 관리한다. */
+    .gnb.is-solid,
+    .no-hero .gnb { background: rgba(255,255,255,.94); backdrop-filter: blur(10px);
       color: var(--color-text); border-bottom-color: var(--color-line); }
     .logo { width: 118px; height: auto; color: currentColor; }
-    .gnb.is-solid .logo { color: var(--color-logo); }
-    .gnb-menu { display: none; gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
-    .gnb-menu a { position: relative; padding: 6px 2px; opacity: .82; transition: opacity .2s; }
-    .gnb-menu a:hover { opacity: 1; }
-    .gnb-menu a.is-on { opacity: 1; }
-    .gnb-menu a.is-on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
-      height: 2px; background: currentColor; }
-    .gnb-side { display: flex; align-items: center; gap: 14px; }
+    .gnb.is-solid .logo,
+    .no-hero .gnb .logo { color: var(--color-logo); }
+    /* ⚠ 대메뉴는 **전체 폭 드롭**이다(§9-1 확정 사양 · 개별 드롭다운으로 바꿨다가 되돌린 이력).
+         `.gnb` 가 `height: var(--gnb-h)` 로 고정돼 있으면 펼친 패널이 잘리므로,
+         펼칠 때는 높이를 풀고(`min-height`) 바가 바탕째 내려온다. */
+    .gnb-menu { display: none; align-items: flex-start;
+      gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
+    .gnb-item { display: flex; flex-direction: column; }
+    /* ⚠ `align-self: flex-start` 가 없으면 링크가 **하위 패널 폭까지 늘어난다** —
+         `.gnb-item` 이 세로 flex 라 기본 `stretch` 가 걸리고, 칸 폭은 가장 넓은 하위 항목이
+         정한다. 그러면 `.is-on::after`(left:0; right:0) 밑줄이 글자보다 길어진다.
+         실측(2026-09-01): 투자·입주는 글자 60px 인데 칸이 77px 이라 밑줄이 **오른쪽으로 14px**
+         삐져나왔다. 하위가 짧은 사업소개는 2px 라 눈에 안 띄었을 뿐 같은 결함이다.
+       ⚠ 칸 폭 자체는 건드리지 않는다 — 메가메뉴 열 위치가 대메뉴 아래에 맞춰져 있다. */
+    .gnb-link { align-self: flex-start; position: relative; display: flex; align-items: center; height: var(--gnb-h);
+      padding: 0 2px; opacity: .82; transition: opacity .2s; }
+    .gnb-link:hover { opacity: 1; }
+    .gnb-link.is-on { opacity: 1; }
+    .gnb-link.is-on::after { content: ""; position: absolute; left: 0; right: 0;
+      bottom: calc(50% - .8em - 8px); height: 2px; background: currentColor; }
+    /* 하위 패널 — 닫힌 상태는 높이 0 이라 자리를 차지하지 않는다 */
+    /* ⚠ 글자 값은 메인 `#gnb .gnb-sub a` 와 **같아야 한다**(실측으로 맞췄다):
+         14px · weight 400 · `--color-text-muted` · 위아래 6px 패딩.
+         전에는 500 + 상속색이라 서브페이지만 굵고 진했다. */
+    .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+      font-size: 14px; font-weight: 400;
+      transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
+    .gnb-sub a { display: block; padding: 6px 0; white-space: nowrap;
+      color: var(--color-text-muted); transition: color .15s; }
+    .gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
+    .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
+    /* 대메뉴와 하위 사이 구분선 — 메인 `#gnb .gnb-divider` 와 같은 어법이다.
+       ⚠ 요소를 새로 만들지 않고 `::after` 로 그린다. 바 전체 폭에 걸쳐야 하므로
+         `.gnb` 기준 absolute 이며, 위치는 **한 줄 높이(`--gnb-h`)** 바로 아래다. */
+    .gnb::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; top: var(--gnb-h);
+      height: 1px; background: var(--color-line); opacity: 0;
+      transition: opacity .28s ease; pointer-events: none; }
+    .gnb.is-open::after { opacity: 1; }
+    /* ⚠ 펼친 바는 **항상 흰 면**이다. 히어로 위 투명 상태로 두면 하위 글자가 사진에 묻힌다. */
+    .gnb.is-open { height: auto; min-height: var(--gnb-h);
+      background: rgba(255,255,255,.97); backdrop-filter: blur(10px);
+      color: var(--color-text); border-bottom-color: var(--color-line); }
+    .gnb.is-open .logo { color: var(--color-logo); }
+    .gnb-side { display: flex; align-items: center; gap: 14px; height: var(--gnb-h); }
     .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-    .gnb-lang span:last-child { opacity: .6; font-weight: 600; }
+    /* EN 안내 · 말풍선 — 규칙은 여기 없다. `src/shared/gnb-en.css` 한 벌을
+       메인과 **함께 쓴다**(CSS_COMMON 의 `gnb-en`). 고칠 일이 있으면 그 파일을 고친다.
+       ⚠ 트리거는 `.gnb-en` 클래스다 — `partials/gnb.html` 의 EN 스팬이 갖고 있다.
+         `span:last-child` 로 잡던 옛 방식은 말풍선 자신까지 매칭해 위치가 깨졌다. */
     .gnb-sns { display: flex; gap: 8px; }
     .gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
     .gnb-sns a { opacity: .85; transition: opacity .2s; }
@@ -144,6 +193,54 @@
       font-size: 15px; color: var(--color-text); }
     .mnav a.is-on { color: var(--color-primary); font-weight: 700; }
 
+    /* ── gnb-en.css ─────────────────────────────────────────── */
+    /* ===== GNB 영문(EN) 안내 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+       영문 페이지가 아직 없어 EN 은 링크가 아니라 안내다. 호버·포커스에 아래로 말풍선을 띄운다.
+
+       2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙이 `src/css/app.css`(`#gnb .gnb-en`)와
+       `src/sub/css/20-gnb.css`(`.gnb-lang > span:last-child`)에 나뉘어 있었고, 실제로 갈라졌다 —
+       **서브만 흰 바탕에 흰 글자**가 되어 EN 이 보이지 않았다(사용자 지적).
+
+       싣는 경로가 둘이다 — 파일은 하나다:
+         메인   `src/css/app.css` 의 `@import ... layer(utilities)`
+         서브   `pages.mjs` 의 CSS_COMMON 에 `gnb-en` 이 들어 있다
+       말풍선을 **넣는 쪽은 JS 다**(메인 `index.html` · 서브 `common.js`) — 마크업에 글자를 박으면
+       CSS 가 늦거나 실패할 때 "준비중입니다" 가 그대로 드러난다(2026-08-27 지시).
+
+       ⚠⚠ **`color-mix()` 안에 `currentColor` 를 넣지 않는다.** `color` 가 자기를 참조하는 꼴이라
+         크롬이 상속색 변화를 따라오지 못해 바가 흰 면으로 바뀌어도 글자가 흰색에 머문다.
+         실측값이 `color(srgb 1 1 1 / .6)` 로 굳어 있었다 — 두 상태의 색을 **각각** 적는다.
+       ⚠ `opacity` 도 쓰지 않는다. 0~1 사이면 쌓임 문맥이 생겨 안쪽 말풍선의 `z-index` 가
+         그 안에 갇히고, 결국 GNB 구분선이 말풍선 위로 그려진다(실측: 선이 말풍선을 가로지름).
+       ⚠ 바의 상태 클래스 이름이 메인 · 서브가 다르다(`open`/`solid` ↔ `is-open`/`is-solid`).
+         한 규칙에 둘 다 적는다 — 한쪽만 적으면 그 화면에서 색이 안 바뀐다. */
+
+    /* 흰 글자(히어로 사진 위)가 기본이다 */
+    .gnb-en { position: relative; display: inline-block; cursor: default;
+      color: rgba(255,255,255,.7); font-weight: 600; transition: color .3s ease; }
+    /* 바가 흰 면일 때 — 스크롤(solid) · 메가메뉴 펼침(open) · 히어로 없는 페이지(no-hero) */
+    #gnb.solid .gnb-en, #gnb.open .gnb-en,
+    .gnb.is-solid .gnb-en, .gnb.is-open .gnb-en, .no-hero .gnb .gnb-en { color: var(--color-text-muted); }
+    .gnb-en:hover { color: #fff; }
+    #gnb.solid .gnb-en:hover, #gnb.open .gnb-en:hover,
+    .gnb.is-solid .gnb-en:hover, .gnb.is-open .gnb-en:hover,
+    .no-hero .gnb .gnb-en:hover { color: var(--color-text); }
+
+    /* 말풍선 — JS 가 `.gnb-en` 안에 넣는다
+       ⚠ `.gnb-lang` 에 `overflow` 가 있으면 잘려서 보이지 않는다.
+       ⚠ `z-index` 가 필요하다. GNB 구분선도 absolute 인데 **트리에서 뒤에** 오므로
+         둘 다 `auto` 면 구분선이 위에 그려져 말풍선을 가른다(2026-08-27 지적). */
+    .gnb-tip { position: absolute; z-index: 3; top: calc(100% + 9px); left: 50%;
+      transform: translate(-50%, -4px); padding: 6px 11px; border-radius: var(--radius-sm, 8px);
+      white-space: nowrap; background: var(--color-navy); color: #fff;
+      font-size: 11.5px; font-weight: 600; letter-spacing: 0; opacity: 0;
+      pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+    /* 꼬리 */
+    .gnb-tip::before { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -4px;
+      border: 4px solid transparent; border-bottom-color: var(--color-navy); }
+    .gnb-en:hover .gnb-tip,
+    .gnb-en:focus-visible .gnb-tip { opacity: 1; transform: translate(-50%, 0); }
+
     /* ── 30-hero-lnb.css ─────────────────────────────────────────── */
     /* ===== 히어로 ===== */
     .hero { position: relative; min-height: clamp(340px, 48vh, 520px); display: flex;
@@ -163,9 +260,27 @@
     .hero-eyebrow b { color: #fff; font-weight: 700; }
     .hero h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(34px, 4.2vw, 62px); line-height: 1.14; letter-spacing: -.025em; }
+    /* 제목 아래 한 줄 — front-matter 의 `heroLede` 가 있을 때만 나온다.
+       ⚠ 히어로 스크림 위이므로 `--color-text-muted` 를 쓰지 않는다. 흰 계열로 낮춘다. */
+    .hero-lede { margin: clamp(12px, 1.4vw, 20px) 0 0; max-width: 46ch;
+      font-size: clamp(15px, 1.15vw, 19px); line-height: 1.7;
+      color: rgba(255, 255, 255, .84); word-break: keep-all; }
+
+    /* ===== 히어로 없는 카테고리 — GNB 바로 아래에 LNB 만 =====
+       도시소개 · 투자·입주 가 이 형태다(nav.json 의 `hero: false`).
+       ⚠ GNB 가 `position: fixed` 라 흐름에서 빠져 있다. 본문을 그만큼 내려야 LNB 가
+         GNB 뒤에 숨지 않는다. `body` 에 패딩을 줘도 GNB 는 영향받지 않는다.
+       ⚠ GNB 를 **처음부터 흰 배경**으로 둔다. 기본 상태는 히어로 사진 위를 전제로 흰 글자라,
+         밝은 페이지 배경 위에서는 글자가 보이지 않는다. `common.js` 는 스크롤 40px 부터
+         `.is-solid` 를 붙이므로 맨 위에서는 붙지 않는다 → CSS 로 같은 값을 함께 준다. */
+    .no-hero { padding-top: var(--gnb-h); }
 
     /* ===== LNB ===== */
-    .lnb { position: sticky; top: 0; z-index: 40; background: var(--color-surface);
+    /* ⚠ `top: 0` 이면 안 된다. GNB 가 `position: fixed` 로 위 64px 를 불투명하게 덮으므로
+         LNB 가 스크롤 직후 **그 뒤로 완전히 숨는다**(2026-08-24 실측: 겹침 59px — 히어로가
+         있는 모든 페이지가 그랬다. 하위 메뉴가 스크롤하자마자 사라지고 있었다).
+         GNB 높이만큼 내려야 두 바가 나란히 남는다. */
+    .lnb { position: sticky; top: var(--gnb-h); z-index: 40; background: var(--color-surface);
       border-bottom: 1px solid var(--color-line); }
     .lnb .wrap { display: flex; gap: clamp(18px, 2.2vw, 40px); overflow-x: auto;
       scrollbar-width: none; height: var(--lnb-h); align-items: stretch; }
@@ -215,12 +330,264 @@
     .rv { opacity: 0; transform: translateY(22px);
       transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
     .rv.in { opacity: 1; transform: none; }
+    /* 가로로 들어오는 변종 — 레퍼런스의 `.complex_content { translateX(5rem) → 0 }` 와 같은 어법.
+       ⚠ `.rv` 와 함께 쓴다(`class="rv rv-x"`). 관찰자는 `.rv` 만 찾으므로 그래야 걸린다.
+         지연은 common.js 가 인라인으로 넣는다(`(i % 4) * .07s`) — CSS 로 주면 인라인에 밀린다. */
+    .rv.rv-x { transform: translateX(clamp(28px, 3.4vw, 56px)); }
+    .rv.rv-x.in { transform: none; }
+    /* 더 크게 떠오르는 변종 — 화면 하나를 채우는 장 시작 화면에서 기본 22px 는 눈에 안 띈다.
+       ⚠ `.rv-x` 와 같이 `.rv` 와 함께 쓴다(`class="rv rv-rise"`). */
+    .rv.rv-rise { transform: translateY(clamp(26px, 4vh, 54px)); }
+    .rv.rv-rise.in { transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .rv { opacity: 1; transform: none; transition: none; }
       .hero-bg { transform: none; }
     }
+
+    /* ── contact.css ─────────────────────────────────────────── */
+    /* ===== 문의 · 약관 모달 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+       2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙 49개가 `src/css/app.css` 와
+       `src/sub/css/70-contact.css` 에 나뉘어 있었고, 한쪽만 고쳐져 실제로 갈라졌다
+       (닫기 버튼 회색 라인이 서브에만 있었다).
+
+       싣는 경로가 둘이다 — 파일은 하나다:
+         메인   `src/css/app.css` 의 `@import "../shared/contact.css" layer(utilities)`
+         서브   front-matter `"css": ["contact"]` → `pages.mjs` 가 인라인
+       ⚠ 순수 CSS 로만 쓴다(`@apply` · Tailwind 지시어 금지) — 서브 번들은 Tailwind 를 거치지 않는다.
+       ⚠ `.sr-only` 는 여기 두지 않는다. 모달 전용이 아니라 일반 유틸리티이며
+         메인은 `app.css`, 서브는 `page-shared.css` 가 각각 갖고 있다.
+       ⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — 아래 `:where()` 버튼 리셋이 그 자리를 메운다.
+         `:where()` 라 명시도 0 이므로 `.ct-reset` 의 테두리를 덮지 않는다(§11.87). */
+
+    /* ═══ 요소 기본값을 여기서 못 박는다 — 두 화면의 **바탕이 다르기 때문**이다 ═══
+       같은 파일을 쓰는데도 렌더가 갈리는 이유는 이 한 가지다:
+         메인   Tailwind **preflight** 가 깔린다 — `p` 마진 0 · `line-height: 1.5` · 폼 요소 정규화
+         서브   `10-base.css` + **브라우저 기본값** — `line-height: 1.6` · `p` 는 `margin: 1em 0`
+       그래서 이 파일이 **명시하지 않은 속성**은 두 화면에서 서로 다른 값을 상속한다.
+       같은 함정에 세 번 걸렸다(2026-08-27):
+         ① `<button>` 베벨 테두리   ② 체크박스가 사라짐   ③ 관심분야 라벨이 10px 밀림
+       ③ 이 이 리셋이 없어서 생긴 마지막 사례다 — `.ct-label` 이 `<p>` 라 서브에서만
+         `margin-top: 14px` 를 물려받았고, `.ct-row--inline .ct-label` 은 **아래 마진만** 지웠다.
+       ⚠ `:where()` 로 감싸 **특이도 0** 으로 둔다 — 리셋은 바닥만 깔고 이겨서는 안 된다.
+       ⚠ `10-base.css` 에 전역 `p { margin: 0 }` 을 넣는 방식은 쓰지 않는다.
+         서브페이지 30개의 본문 여백이 전부 함께 바뀐다 — 모달 안으로만 한정한다.
+       ⚠ `line-height` 는 **메인 preflight 값(1.5)** 에 맞춘다. 디자인을 그 위에서 잡았다. */
+    .pv { line-height: 1.5; }
+    .pv :where(p, h2, h3, h4, ol, ul, li, dl, dt, dd, table, figure, blockquote) { margin: 0; }
+    .pv :where(ol, ul) { padding: 0; list-style: none; }
+
+    .pv { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 24px; }
+    .pv[hidden] { display: none; }
+    .pv-back { position: absolute; inset: 0; background: rgba(0,39,66,.55); backdrop-filter: blur(4px);
+      opacity: 0; transition: opacity .3s ease; }
+    .pv.on .pv-back { opacity: 1; }
+    .pv--wide .pv-panel { max-width: 1040px; }
+    .pv-panel { position: relative; display: flex; flex-direction: column; overflow: hidden;
+      width: 100%; max-width: 720px; max-height: min(86vh, 860px);
+      max-height: min(86dvh, 860px);          /* 모바일 주소창 높이 변화 대응 */
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-lg, 16px); box-shadow: 0 30px 80px rgba(0,10,30,.3);
+      opacity: 0; transform: translateY(18px) scale(.98);
+      transition: opacity .32s ease, transform .42s cubic-bezier(.22,1,.36,1); }
+    .pv.on .pv-panel { opacity: 1; transform: none; }
+    .pv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 26px 28px 20px; border-bottom: 1px solid var(--color-line); }
+    /* ⚠⚠ 서브페이지에는 Tailwind 프리플라이트가 없다 — `<button>` 이 브라우저 기본
+       `appearance` 와 테두리를 그대로 쓴다. 그래서 닫기 · 등록하기 · 다시쓰기에
+       **대각선으로 반반 나뉜 베벨 테두리**가 보였다(2026-08-27 지적).
+       메인은 프리플라이트가 지워 주므로 같은 마크업이 거기서는 멀쩡하다.
+       ⚠ 이 리셋을 지우면 그대로 재발한다(§11.29 의 `.doc-view` 와 같은 원인). */
+    /* ⚠ `:where()` 로 감싸 **특이도를 0 으로** 만든다. 그냥 `.pv button` 으로 두면 (0,1,1) 이라
+       뒤에 오는 `.ct-reset`(0,1,0)의 `border: 1px solid` 를 이겨 다시쓰기 버튼의 테두리가
+       사라진다(실측). 리셋은 이겨서는 안 되고 바닥만 깔아야 한다. */
+    /* ⚠⚠ **체크박스 · 라디오는 빼야 한다.** `appearance: none` 이 브라우저가 그려 주는
+       네모·체크 표시를 통째로 지워, 19x19 빈 칸만 남고 **체크박스가 사라진다**
+       (2026-08-27 지적). `.ct-check input` 은 크기와 `accent-color` 만 정하므로
+       기본 렌더링에 의존한다 — 대신 그릴 스타일이 없다.
+       ⚠ `.ct-chip input` 은 일부러 숨기는 체크박스인데(`opacity: 0; width: 0`)
+         그건 appearance 와 무관하게 동작하므로 여기서 빼도 안전하다. */
+    .pv :where(button, input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+      appearance: none; -webkit-appearance: none;
+      font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    .pv :where(input:not([type="checkbox"]):not([type="radio"]), textarea, select) { cursor: auto; }
+    /* 체크박스 · 라디오는 `appearance` 만 건드리지 않는다. 나머지 상속값은 맞춰 둔다 —
+       렌더에는 영향이 없지만(크기가 고정이고 표시는 `accent-color` 가 그린다) 두 화면의
+       계산값이 완전히 같아야 "같은 파일인데 왜 다르냐" 를 다시 쫓지 않는다. */
+    .pv :where(input[type="checkbox"], input[type="radio"]) { font: inherit; color: inherit; }
+
+    /* ⚠ 테두리는 여기서 **명시**한다(2026-08-27 지시). 위 리셋이 `border: 0` 을 깔아 두므로
+         안 적으면 테두리가 없다 — 등록하기 · 다시쓰기와 같은 어법으로 회색 선을 준다. */
+    .pv-x { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px;
+      border: 1px solid var(--color-line); border-radius: 999px; color: var(--color-text-muted);
+      transition: background .22s, color .22s, border-color .22s; }
+    .pv-x:hover { border-color: var(--color-primary); }
+    .pv-x svg { width: 20px; height: 20px; }
+    .pv-x:hover { background: var(--color-bg); color: var(--color-text); }
+    /* min-height:0 이 없으면 플렉스 항목이 콘텐츠보다 작아지지 못해
+       overflow-y:auto가 동작하지 않고 패널 밖으로 내용이 넘쳐 잘린다. */
+    .pv-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+      padding: 24px 28px 0; -webkit-overflow-scrolling: touch; }
+    .pv-sec { margin-top: 26px; }
+    .pv-sec--last { padding-bottom: 8px; }
+    .pv-h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 11px;
+      font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-text); }
+    .pv-tag { padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+    .pv-tag--req { background: var(--color-primary); color: #fff; }
+    .pv-tag--opt { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .pv-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.6;
+      border-top: 1px solid var(--color-line); }
+    .pv-tbl th, .pv-tbl td { padding: 11px 14px; border-bottom: 1px solid var(--color-line);
+      text-align: left; vertical-align: top; }
+    .pv-tbl th { width: 34%; background: var(--color-bg); font-weight: 700; color: var(--color-text); white-space: nowrap; }
+    .pv-tbl td { color: var(--color-text-muted); }
+    .pv-note { margin-top: 10px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .pv-list { margin: 0; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
+    .pv-list li { position: relative; padding-left: 14px; }
+    .pv-list li + li { margin-top: 7px; }
+    .pv-list li::before { content: ''; position: absolute; left: 0; top: .62em;
+      width: 4px; height: 4px; border-radius: 999px; background: var(--color-mint); }
+    .pv-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 18px 28px 22px; border-top: 1px solid var(--color-line); }
+    .pv-ok { padding: 12px 30px; border-radius: 999px; background: var(--color-primary); color: #fff;
+      font-size: 14px; font-weight: 700; transition: background .25s, transform .3s; }
+    .pv-ok:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+    @media (max-width: 640px) {
+      .pv { padding: 14px; }
+      .pv-head { padding: 20px 18px 16px; }
+      .pv-body { padding: 18px 18px 4px; }
+      .pv-foot { padding: 14px 18px 18px; }
+      .pv-tbl { font-size: 12.5px; }
+      .pv-tbl th, .pv-tbl td { padding: 9px 10px; }
+      .pv-tbl th { width: 38%; white-space: normal; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pv-back, .pv-panel { transition: none; }
+    }
+
+    /* ===== 문의하기 폼 ===== */
+    .ct-form { display: flex; flex-direction: column; gap: 22px; padding-bottom: 32px; }
+    .ct-row { display: block; }
+    .ct-label { display: block; margin-bottom: 9px; font-size: 14px; font-weight: 700; color: var(--color-text); }
+    /* 관심분야: 라벨 옆에 선택 버튼을 한 줄로 → 세로 공간 절약
+       (.ct-row 와 명시도가 같으므로 반드시 뒤에 와야 display:flex 가 적용된다) */
+    .ct-row--inline { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; }
+    .ct-row--inline .ct-label { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; }
+    .ct-row--inline .ct-chips { flex: 1 1 auto; }
+    .ct-row--inline .ct-err { flex: 1 1 100%; margin-top: 0; }
+    .ct-req { color: var(--color-mint); }
+    .ct-input { width: 100%; padding: 14px 16px; font-size: 15px; color: var(--color-text);
+      background: var(--color-surface); border: 1px solid var(--color-line);
+      border-radius: var(--radius-sm, 8px); transition: border-color .2s, box-shadow .2s; }
+    .ct-input::placeholder { color: #9aa8bb; }
+    .ct-input:focus { outline: none; border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent); }
+    .ct-area { resize: vertical; min-height: 112px; line-height: 1.6; }
+    /* 관심분야 칩 */
+    .ct-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ct-chip { position: relative; cursor: pointer; }
+    .ct-chip input { position: absolute; margin: 0; opacity: 0; width: 0; height: 0; }
+    .ct-chip span { display: inline-flex; align-items: center; padding: 10px 18px;
+      font-size: 14px; font-weight: 600; color: var(--color-text-muted);
+      background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 999px;
+      transition: background .22s, color .22s, border-color .22s; }
+    .ct-chip:hover span { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-chip input:checked + span { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .ct-chip input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
+    /* 동의 */
+    .ct-agree { display: flex; flex-direction: column; gap: 10px;
+      padding: 18px 22px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer;
+      font-size: 14px; line-height: 1.55; color: var(--color-text); }
+    /* ⚠ 마진을 **네 방향 모두** 적는다. 체크박스는 위 리셋에서 빼 두었으므로(글리프가 사라진다)
+         서브에서는 브라우저 기본 `margin: 3px 3px 3px 4px` 가 그대로 남아 4px 밀린다. */
+    .ct-check input { flex-shrink: 0; width: 19px; height: 19px; margin: 1px 0 0;
+      accent-color: var(--color-primary); cursor: pointer; }
+    .ct-tag { margin-right: 6px; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; vertical-align: 1.5px; }
+    .ct-tag--req { background: var(--color-primary); color: #fff; }
+    .ct-tag--opt { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-view { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+      text-decoration: underline; text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+    .ct-view:hover { color: var(--color-primary); text-decoration-color: currentColor; }
+    /* 에러 */
+    .ct-err { display: none; margin-top: 8px; font-size: 13px; font-weight: 600; color: #d8564f; }
+    .ct-err.on { display: block; }
+    .ct-input.bad { border-color: #d8564f; box-shadow: 0 0 0 3px rgba(216,86,79,.12); }
+    /* 버튼 — 우측 안내 컬럼 하단.
+       컬럼이 그리드 행 높이만큼 늘어나므로 sticky로 스크롤 내내 붙어 있는다. */
+    .ct-actions { position: sticky; bottom: 0; margin-top: auto;
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 32px;   /* 좌측 폼과 동일한 32px */
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0, var(--color-surface) 14px); }
+    .ct-actions .ct-submit, .ct-actions .ct-reset { flex: 1 1 0; min-width: 116px;
+      padding: 15px 18px; }
+    .ct-actions .ct-status { flex: 1 1 100%; margin: 0; }
+    .ct-submit, .ct-reset { padding: 16px 40px; border-radius: 999px;
+      font-size: 15px; font-weight: 700; transition: background .25s, color .25s, border-color .25s, transform .3s; }
+    .ct-submit { background: var(--color-primary); color: #fff; }
+    .ct-submit:hover { background: var(--color-primary-hover); transform: translateY(-2px); }
+    .ct-submit[disabled] { opacity: .6; pointer-events: none; }
+    .ct-reset { background: var(--color-surface); color: var(--color-text-muted); border: 1px solid var(--color-line); }
+    .ct-reset:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .ct-status { display: none; font-size: 14px; font-weight: 600; }
+    .ct-status.on { display: block; }
+    .ct-status.ok { color: #1a8f74; }
+    .ct-status.ng { color: #d8564f; }
+    /* 우측 안내 */
+    .ct-side { display: flex; flex-direction: column; gap: 14px; }  /* 그리드 기본 stretch로 행 전체 높이 */
+    .ct-card { padding: 22px 24px; background: var(--color-bg);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md, 12px); }
+    .ct-card-h { margin-bottom: 8px; font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-label-blue); }
+    /* ⚠ 이메일 주소는 **한 줄이어야 한다**(2026-08-27 지시). 주소가 길어지면 조용히 두 줄로
+         접혀 `juyoung@biotech-` / `iv.com` 처럼 도메인이 잘려 읽힌다(실측: 19px 에서 필요 254px
+         vs 카드 안쪽 250px — **4px 모자랐다**).
+         세 가지를 함께 해야 다시 안 깨진다:
+           ① 오른쪽 칸을 300 → 320px (카드 안쪽 250 → 270px)
+           ② 글자 19 → 18px  ③ `nowrap` 으로 접힘 자체를 막는다
+         지금 여유는 약 29px 다 — 폰트 폴백 차이(Paperlogy 가 Pretendard 보다 1.5% 넓다)를
+         흡수할 만큼이다. **주소를 더 긴 것으로 바꾸면 이 세 값을 다시 재라.** */
+    .ct-card-a { display: block; white-space: nowrap;
+      font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-primary); }
+    .ct-card-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .ct-card-p { margin-top: 6px; font-size: 13.5px; line-height: 1.65; color: var(--color-text-muted); }
+    .ct-steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
+      font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
+    .ct-steps li { counter-increment: s; position: relative; padding-left: 26px; }
+    .ct-steps li + li { margin-top: 9px; }
+    .ct-steps li::before { content: counter(s); position: absolute; left: 0; top: 0;
+      display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
+      background: var(--color-primary); color: #fff; font-size: 10.5px; font-weight: 700; }
+    .ct-card-note { padding: 0 4px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
+    /* 모바일: 1단으로 스택되면 컬럼 높이가 콘텐츠에 딱 맞아 sticky가 의미 없다 */
+    @media (max-width: 1023px) {
+      .ct-actions { position: static; margin-top: 8px; padding-bottom: 0; background: none; }
+    }
+
+    /* ── 메인의 Tailwind 유틸리티를 대신하는 평문 규칙 6개 ────────────────
+       메인 마크업은 헤더·격자를 유틸리티로 짜는데 서브페이지에는 그 클래스가 없다.
+       ⚠ 값은 메인의 유틸리티를 그대로 푼 것이다(`text-xs`=12px · `tracking-[0.18em]` 등).
+         메인 쪽 유틸리티를 바꾸면 여기도 맞춰야 한다. */
+    .ct-eyebrow { margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .18em; color: var(--color-label-blue); }
+    .ct-title { margin: 6px 0 0; font-family: var(--font-display); font-size: 24px;
+      font-weight: 700; color: var(--color-text); }
+    .ct-sub { margin: 8px 0 0; font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+    .ct-grid { display: grid; gap: 40px; }
+    .ct-two { display: grid; gap: 24px; }
+    .ct-strong { font-weight: 600; color: var(--color-text); }
+    /* 약관 모달에서 Tailwind 유틸리티를 대신하는 세 개 — 값은 옛 유틸리티와 같다
+       (`text-sm leading-relaxed text-text-muted` · `text-primary underline …` · `text-xs text-text-muted`) */
+    .pv-p { font-size: 14px; line-height: 1.625; color: var(--color-text-muted); }
+    .pv-link { color: var(--color-primary); text-decoration: underline;
+      text-decoration-color: var(--color-line); text-underline-offset: 2px; }
+    .pv-link:hover { text-decoration-color: var(--color-primary); }
+    .pv-foot-note { font-size: 12px; color: var(--color-text-muted); }
+    @media (min-width: 640px)  { .ct-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 768px)  { .ct-title { font-size: 30px; } }
+    @media (min-width: 1024px) { .ct-grid { grid-template-columns: minmax(0, 1fr) 320px; } }
 
     /* ── page-shared.css ─────────────────────────────────────────── */
     /* ===== 신규 서브페이지 4종(입지·기대효과·추진일정·사업주체) 공용 부품 =====
@@ -235,8 +602,9 @@
     .sub-h { margin: clamp(40px, 4vw, 68px) 0 0; display: flex; align-items: baseline;
       gap: 12px; flex-wrap: wrap; }
     .sub-h:first-child { margin-top: 0; }
-    .sub-no { font-family: var(--font-display); font-size: clamp(15px, 1.2vw, 19px);
-      font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+    /* ⚠ 제목(`.sub-t`, 최대 27px) 대비 비율을 확인해 올렸다(2026-08-24 지시).
+         19px 는 제목의 73% 로 "라벨" 처럼 작게 읽혔다 — 88% 로 맞춰 한 쌍으로 읽히게 한다.
+         ⚠ 이 클래스는 공용이다(company · invest 등 `.sub-h` 를 쓰는 모든 블록). */
     .sub-t { margin: 0; font-family: var(--font-display); font-size: clamp(19px, 1.65vw, 27px);
       font-weight: 700; line-height: 1.34; letter-spacing: -.018em; }
     .sub-d { margin: 10px 0 0; font-size: clamp(14px, 1vw, 16px); color: var(--color-text-muted);
@@ -329,48 +697,108 @@
     @media (max-width: 640px) { .lb-close { top: auto; bottom: -46px; right: 50%;
       transform: translateX(50%); } }
 
+    /* ===== 사양 표 `.spec` =====
+       사업개요와 회사소개가 **같은 표**를 쓴다(2026-08-26 지시: "동일한 구성은 스타일을
+       여러개로 분산시키지마"). 예전에는 회사소개가 `.ab-spec` 으로 같은 모양을 다시
+       정의하고 있었다 — 한쪽만 고치면 두 페이지의 같은 표가 갈라진다.
+       ⚠ 여기로 올리면서 `overview.html` 의 css 배열에 `page-shared` 를 추가했다.
+         그 페이지만 공용 번들을 안 싣고 있었다(19개 중 유일). */
+    .spec { width: 100%; margin-top: clamp(34px, 3.4vw, 54px); border-top: 2px solid var(--color-primary);
+      font-size: clamp(14.5px, 1vw, 16px); }
+    .spec th, .spec td { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.4vw, 24px);
+      text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+    .spec thead th { padding-block: 13px; background: rgb(var(--primary-rgb) / .08); font-size: 13.5px;
+      font-weight: 700; letter-spacing: .04em; color: var(--color-primary); }
+    .spec tbody th { width: clamp(104px, 13vw, 188px); font-weight: 600; color: var(--color-text-muted);
+      background: rgba(255,255,255,.6); }
+    .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 2px solid var(--color-line); }
+    .spec td { background: var(--color-surface); }
+    .spec .k { display: block; font-weight: 600; color: var(--color-primary); font-size: .92em;
+      letter-spacing: .02em; }
+    .spec .sub { display: block; margin-top: 3px; color: var(--color-text-muted); }
+    .spec b { font-weight: 700; }
+    .spec .num { font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 767px) {
+      /* 표를 행 단위 블록으로 접는다 — 좁은 화면에서 라벨 열이 본문을 압박한다 */
+      .spec thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      .spec, .spec tbody, .spec tr, .spec th, .spec td { display: block; width: auto; }
+      .spec tr { border-bottom: 1px solid var(--color-line); background: var(--color-surface); }
+      .spec tbody th { width: auto; padding: 13px 16px 0; background: none;
+        border: 0; font-size: 12.5px; letter-spacing: .04em; color: var(--color-primary); }
+      .spec td { padding: 5px 16px 15px; border: 0; }
+      .spec tbody tr:last-child th, .spec tbody tr:last-child td { border-bottom: 0; }
+      .spec tbody tr:last-child { border-bottom: 2px solid var(--color-line); }
+    }
+
+    /* ⚠ 하이픈이 든 이름(B-CITY)은 하이픈에서 줄이 넘어가 `B-` / `CITY` 로 쪼개진다.
+         `word-break: keep-all` 로는 막히지 않는다 — 이 유틸로 감싼다. */
+    .nowrap { white-space: nowrap; }
+
     /* ── page-brand.css ─────────────────────────────────────────── */
     /* ===== 브랜드 (도시소개) =====
-       내용은 스토리보드 v2 slide49~51(도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
+       내용 구성은 클로드 디자인 기획(와이어프레임 p.48~50 · 도시소개_브랜드), 도형은 Figma 로고 제안 파일에서 가져왔다.
        자산 출처는 assets/brand/README 대신 이 주석 — symbol.svg 는 assets/logo/bcity-logo.svg 에서
-       민트·애저 패스만 뽑은 것이고, 워드마크는 partials/brand-defs.svg 의 <symbol id="wm"> 한 벌을
-       <use> 로 돌려 쓴다(로고 변형 6종이 같은 도형을 색만 바꿔 쓰기 때문). */
+       민트·애저 패스만 뽑은 것이다. 워드마크는 assets/logo/bcity-logo.svg 를 그대로 싣는다.
+       ⚠ 로고 변형 6종(시그니처 조합)과 그것만 쓰던 partials/brand-defs.svg 의 <symbol id="wm">,
+         `.br-vars`/`.br-var*`/`.br-wmk` 규칙은 2026-08-21 지시로 함께 걷어냈다. */
 
     /* ---------- 1. 브랜드 네임 ---------- */
 
-    /* 워드마크는 크게 보여 주는 것이 목적이라 흰 면 위에 넉넉한 여백을 준다.
-       ⚠ 폭을 100% 로 두면 2518x421 원본이 화면 폭까지 늘어나 글자가 얇아 보인다 — 상한을 둔다. */
-    .br-hero { margin: clamp(34px, 4vw, 64px) 0 0; padding: clamp(34px, 4.4vw, 76px) clamp(20px, 4vw, 64px);
-      background: var(--color-surface); border: 1px solid var(--color-line);
-      border-radius: var(--radius-lg); text-align: center; }
-    .br-hero img { display: block; width: 100%; max-width: 720px; height: auto; margin-inline: auto; }
-    .br-hero figcaption { margin-top: clamp(16px, 1.6vw, 26px); font-size: 12.5px;
-      letter-spacing: .2em; color: var(--color-text-muted); }
+    /* 상단 — **박스를 쓰지 않는다**(2026-08-20 지시). 로고를 놓고 바로 아래에 두 줄 카피를 둔다.
+       ⚠ 로고 폭을 100% 로 두면 2518x421 원본이 화면 폭까지 늘어나 글자가 얇아 보인다 — 상한을 둔다. */
+    .br-name { margin: clamp(30px, 3.6vw, 58px) 0 0; text-align: center; }
+    .br-name-logo { display: block; width: 100%; max-width: 620px; height: auto; margin-inline: auto; }
+    /* 카피가 이 섹션의 제목이다 — 로고 아래에서 두 줄로 읽힌다.
+       ⚠ `word-break: keep-all` 은 body 에서 상속받는다. `<br>` 로 잡은 줄바꿈만 유지된다. */
+    /* ⚠ 폭을 묶지 않는다 — `<br>` 이 잡은 두 줄이 곧 카피의 형태다.
+         `max-width: 30ch` 를 줬더니 둘째 줄이 한 번 더 접혀 세 줄이 됐다(첨부 이미지는 두 줄). */
+    .br-name-copy { margin: clamp(22px, 2.4vw, 38px) auto 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(19px, 1.9vw, 30px); line-height: 1.45; letter-spacing: -.02em;
+      color: var(--color-logo); }
 
-    .br-lead { max-width: 74ch; margin: clamp(30px, 3.2vw, 52px) 0 0;
+    /* 서브 카피 — 메인 카피 아래에 **가운데로** 맞춘다(2026-08-20 지시). */
+    .br-lead { max-width: 74ch; margin: clamp(26px, 2.8vw, 44px) auto 0; text-align: center;
       font-size: clamp(15px, 1.05vw, 18px); line-height: 1.75; color: var(--color-text-muted); }
 
     /* 심볼 해석 3카드. 모티프는 카드 바닥에 옅게 깔아 '해설 + 도형' 을 한 덩어리로 읽힌다 */
+    /* 위 여백을 넉넉히 — 서브 카피(가운데 정렬)와 카드 줄이 붙어 보였다(2026-08-20 지시) */
     .br-sym { list-style: none; display: grid; gap: clamp(14px, 1.4vw, 22px);
-      grid-template-columns: repeat(3, 1fr); margin: clamp(24px, 2.6vw, 40px) 0 0; padding: 0; }
+      grid-template-columns: repeat(3, 1fr); margin: clamp(44px, 5vw, 84px) 0 0; padding: 0; }
     .br-sym-card { display: flex; flex-direction: column; padding: clamp(22px, 2vw, 32px);
       background: var(--color-surface); border: 1px solid var(--color-line);
       border-top: 2px solid var(--color-primary); border-radius: var(--radius-md); }
-    .br-sym-h { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; margin: 0; align-items: baseline; }
-    .br-sym-h i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(26px, 2.2vw, 34px); line-height: 1; color: var(--color-light-blue); }
-    .br-sym-h b { font-family: var(--font-display); font-weight: 700;
+    /* 번호(01·02·03)는 넣지 않는다(2026-08-20 지시) — 세 장이 나란히 있어 순서가 이미 보인다.
+       번호가 빠지면서 2열 그리드가 필요 없어졌다: 이름 위, 부제 아래인 블록이다. */
+    .br-sym-h { margin: 0; }
+    .br-sym-h b { display: block; font-family: var(--font-display); font-weight: 700;
       font-size: clamp(17.5px, 1.35vw, 22px); letter-spacing: -.015em; }
-    .br-sym-h span { grid-column: 2; margin-top: 4px; font-size: 13px; font-weight: 700;
+    .br-sym-h span { display: block; margin-top: 4px; font-size: 13px; font-weight: 700;
       color: var(--color-primary); }
     .br-sym-d { margin: 16px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
 
     /* 모티프 — 아래로 밀어 카드 높이가 달라도 도형 줄이 맞는다.
-       ⚠ 색은 회색 리터럴이 아니라 본문색의 낮은 불투명도다. 다크 배경으로 옮겨도 따라온다. */
-    .br-motif { display: flex; align-items: flex-end; justify-content: center;
-      margin-top: auto; padding-top: clamp(24px, 2.6vw, 40px); color: var(--color-text-muted); opacity: .38; }
-    .br-motif-svg { display: block; height: clamp(84px, 8vw, 118px); width: auto; }
-    .br-motif img { display: block; height: clamp(84px, 8vw, 118px); width: auto; }
+       ⚠ 색은 회색 리터럴이 아니라 본문색의 낮은 불투명도다. 다크 배경으로 옮겨도 따라온다.
+       ⚠ 세 도형의 비율이 전혀 다르다(01 은 96x44 로 납작, 03 은 109x150 으로 길다).
+         전에는 **높이만** 맞춰서 01 이 03 보다 3배 넓어 보였다(2026-08-20 지적).
+         그래서 **같은 정사각 상자**에 넣고 각자 안에서 contain 으로 맞춘다. */
+    /* 위치 — **타이틀과 설명 사이**다(2026-08-20 지시). 전에는 `margin-top: auto` 로
+       카드 바닥에 붙여 뒀다. 이제 흐름 중간이므로 위아래 여백을 스스로 갖는다. */
+    .br-motif { display: flex; align-items: center; justify-content: center;
+      margin: clamp(18px, 1.8vw, 26px) 0; color: var(--color-text-muted); opacity: .38; }
+    .br-motif > * { display: block; inline-size: clamp(84px, 8vw, 118px);
+      block-size: clamp(84px, 8vw, 118px); }
+    /* ⚠ 안쪽 SVG 에 따로 `width: 100%; height: 100%` 를 주지 말 것.
+         `inline-size` 와 `width` 는 같은 속성이라 뒤에 온 쪽이 이겨 위의 정사각 상자가 풀린다
+         (실측에서 115x115 가 아니라 335x154 로 나왔다). 상자는 `.br-motif > *` 하나로 정하고,
+         viewBox 의 기본 preserveAspectRatio(xMidYMid meet)가 그 안에서 contain 을 해 준다. */
+    /* ⚠ 02 만 **파일**이다. path 가 10KB 라 페이지에 인라인하지 않고 SVG 로 두고,
+         **마스크**로 currentColor 를 입힌다 — 이러면 01 · 03 의 인라인 SVG 와 색이 같아진다.
+         img 태그로는 색을 맞출 수 없다. CSS 는 문서에 인라인되므로 url() 은 페이지(루트) 기준이다. */
+    .br-motif-mask { background: currentColor;
+      -webkit-mask: url(assets/brand/motif-dna.svg) center / contain no-repeat;
+              mask: url(assets/brand/motif-dna.svg) center / contain no-repeat; }
 
     /* ---------- 2. 로고타입 ---------- */
 
@@ -379,12 +807,28 @@
       letter-spacing: -.015em; }
     .br-h3 span { margin-left: 12px; font-family: var(--font-body); font-weight: 700;
       font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
+    /* 기본 로고타입 — [워드마크 비율 분석 | 심볼 마크] 2단(2026-08-20 지시).
+       워드마크 쪽이 넓어야 비율 점선이 읽히므로 1.2 : 1 로 기울인다.
+       **제목도 이 그리드 안에 있다** — 박스 밖 첫 줄이고, 각자 자기 칸에 정렬된다.
+       ⚠ 자리를 `grid-area` 로 명시한다. DOM 은 [제목1][박스1][제목2][박스2] 순이라
+         좁은 화면에서 열 정의만 1열로 바꾸면 자동 흐름이 그대로 올바른 순서가 된다.
+         `order` 로 돌리는 방식은 쓰지 않는다 — 읽기 순서가 화면 순서와 달라진다. */
+    .br-primary { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
+      column-gap: clamp(14px, 1.4vw, 22px); row-gap: clamp(16px, 1.6vw, 24px);
+      margin-top: clamp(44px, 4.6vw, 78px); align-items: stretch; }
+    .br-primary > :nth-child(1) { grid-area: 1 / 1; }   /* 제목 · 기본 로고타입 */
+    .br-primary > :nth-child(2) { grid-area: 2 / 1; }   /* 워드마크 박스 */
+    .br-primary > :nth-child(3) { grid-area: 1 / 2; }   /* 제목 · 심볼 마크 */
+    .br-primary > :nth-child(4) { grid-area: 2 / 2; }   /* 심볼 박스 */
+    /* 그리드 안 제목은 자기 여백을 갖지 않는다 — 줄 간격은 `row-gap` 이 만든다 */
+    .br-primary .br-h3 { margin: 0; align-self: end; }
 
     /* 워드마크 비율 분석 — 위아래 점선이 캡 하이트를 표시한다.
-       ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다. */
-    .br-wm { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, 1fr);
-      gap: clamp(24px, 2.6vw, 48px); align-items: center;
-      margin-top: clamp(24px, 2.6vw, 40px); padding: clamp(26px, 3vw, 52px);
+       ⚠ 점선을 이미지에 굽지 않는다. 로고를 갈아끼우면 선만 어긋난 채 남는다.
+       ⚠ 2단 안으로 들어왔으므로 안쪽은 **한 열**이다 — 스테이지 아래에 사양을 쌓는다. */
+    /* 안쪽 여백을 넉넉히(2026-08-20 지시) — 스테이지 ↔ 사양, 그리고 박스 자체 패딩 */
+    .br-wm { display: flex; flex-direction: column; justify-content: center;
+      gap: clamp(30px, 3.2vw, 54px); padding: clamp(28px, 3vw, 48px);
       background: var(--color-bg); border-radius: var(--radius-lg); }
     .br-wm-stage { position: relative; padding-block: 18px; }
     .br-wm-stage::before, .br-wm-stage::after { content: ""; position: absolute; left: 0; right: 0;
@@ -392,127 +836,129 @@
     .br-wm-stage::before { top: 18px; }
     .br-wm-stage::after { bottom: 18px; }
     .br-wm-stage img { display: block; width: 100%; height: auto; }
-    .br-wm-spec { margin: 0; display: grid; gap: 14px; }
-    .br-wm-spec div { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: baseline; }
+    .br-wm-spec { margin: 0; display: grid; gap: 15px; }
+    .br-wm-spec div { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px;
+      align-items: baseline; }
     .br-wm-spec dt { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--color-primary); }
     .br-wm-spec dd { margin: 0; font-size: 14px; line-height: 1.6; color: var(--color-text); }
 
-    .br-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(14px, 1.4vw, 22px); margin-top: clamp(14px, 1.4vw, 22px); }
-    .br-two > * { padding: clamp(22px, 2vw, 32px); background: var(--color-bg); border-radius: var(--radius-lg); }
-    .br-two .sub-t { margin: 0 0 clamp(14px, 1.4vw, 20px); }
-    .br-two .sub-t span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
+    /* 블록 하나가 한 줄을 차지한다 — 기획의 [기본 로고타입] · [시그니처 조합] · [사용 규정 · 여백]
+       세 덩어리를 나란히 두지 않고 위아래로 쌓기 때문이다(전에는 2단 `.br-two` 였다). */
+    .br-panel { padding: clamp(22px, 2vw, 32px); background: var(--color-bg);
+      border-radius: var(--radius-lg); }
+    .br-panel .sub-t { margin: 0 0 clamp(14px, 1.4vw, 20px);
+      font-family: var(--font-display); font-weight: 700; font-size: clamp(16px, 1.25vw, 19px);
+      letter-spacing: -.015em; }
+    .br-panel .sub-t span { margin-left: 10px; font-family: var(--font-body); font-weight: 700;
       font-size: 12px; letter-spacing: .18em; color: var(--color-text-muted); }
-    .br-rules dl { margin: 0; display: grid; gap: 12px; }
-    .br-rules dl div { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: baseline;
+    /* 사용 규정 — 한 줄을 쓰므로 2열로 벌린다. 1열이면 오른쪽이 통째로 빈다. */
+    .br-rules dl { margin: 0; display: grid; gap: 12px clamp(20px, 2.4vw, 40px);
+      grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .br-rules dl div { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: baseline;
       padding-bottom: 12px; border-bottom: 1px solid var(--color-line); }
-    .br-rules dl div:last-child { padding-bottom: 0; border-bottom: 0; }
+    /* ⚠ 2열이라 '마지막 줄' 은 마지막 두 칸이다 — `:last-child` 만 쓰면 왼쪽 칸에 선이 남는다 */
+    .br-rules dl div:nth-last-child(-n + 2) { padding-bottom: 0; border-bottom: 0; }
     .br-rules dt { font-size: 13px; font-weight: 700; color: var(--color-primary); }
     .br-rules dd { margin: 0; font-size: 14px; line-height: 1.6; }
-    /* 두 칸의 높이를 맞춘다 — 규칙 쪽이 3줄이라 심볼 칸만 짧으면 아래가 들쭉날쭉하다 */
-    .br-symmark { display: flex; flex-direction: column; }
-    .br-symmark-in { flex: 1; display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 1.8vw, 28px);
-      align-items: center; }
-    .br-symmark-in img { display: block; width: clamp(64px, 6vw, 92px); height: auto; }
-    .br-symmark-in p { margin: 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
+    /* 2단의 오른쪽 칸 — 높이를 왼쪽(워드마크)과 함께 쓰므로 내용을 가운데로 모은다 */
+    .br-primary .br-panel { display: flex; flex-direction: column; justify-content: center;
+      gap: clamp(24px, 2.6vw, 40px); padding: clamp(28px, 3vw, 48px); }
+    .br-symmark-in { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      gap: clamp(24px, 2.6vw, 42px); align-items: center; }
+    /* 심볼을 더 크게(2026-08-20 지시) — 2단 왼쪽의 워드마크와 무게가 맞아야 한다 */
+    .br-symmark-in img { display: block; width: clamp(96px, 9.5vw, 148px); height: auto; }
 
-    /* 레터 애너토미 5열 — 좁아지면 3열 → 2열로 접는다(글자 카드라 1열까지 가면 허전하다) */
-    .br-anat { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr);
-      gap: clamp(12px, 1.2vw, 18px); margin: 0; padding: 0; }
-    .br-anat-i { padding: clamp(18px, 1.8vw, 26px); background: var(--color-surface);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md); }
-    .br-anat-g { display: flex; align-items: center; justify-content: center;
-      height: clamp(64px, 6vw, 92px); color: var(--color-logo); }
-    .br-glyph { display: block; height: clamp(34px, 3.2vw, 48px); width: auto; }
-    .br-anat-t { display: block; margin-top: clamp(14px, 1.4vw, 20px);
-      font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
-    .br-anat-t span { display: block; margin-top: 2px; font-size: 12px; font-weight: 400;
+    /* 심볼 풀이 — 화살표로 도형의 각 부분을 짚는다(2026-08-20 지시).
+       문장으로 흘려 두면 어느 부분이 무엇인지 짝이 지어지지 않는다.
+       ⚠ 색 이름 항목은 원색이 아니라 **텍스트용 변종**(`--a`)을 마크업에서 받는다.
+         원색은 이 면 위에서 Mint 2.14 · Azure 3.13 이라 본문 크기 대비를 못 맞춘다.
+       ⚠ 그리고 컬러 카드의 `--ct`(#298272 · #007CB4)를 그대로 가져오면 안 된다 —
+         그 값은 **흰 면** 기준(4.64 · 4.62)이고 이 패널은 `--color-bg` 라 4.35 · 4.34 로
+         떨어진다(실측). 이 면에 맞춰 #287E6F · #0077AE 로 다시 잡았다(4.58 · 4.64). */
+    .br-anno { list-style: none; margin: 0; padding: 0; display: grid; gap: 15px; }
+    .br-anno li { display: grid; grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 8px; align-items: baseline; }
+    .br-anno li::before { content: "\2192"; grid-row: span 2; font-weight: 700;
+      color: var(--a, var(--color-text-muted)); }
+    .br-anno b { grid-column: 2; font-size: 13.5px; letter-spacing: -.01em;
+      color: var(--a, var(--color-text)); }
+    .br-anno span { grid-column: 2; margin-top: 2px; font-size: 12.5px; line-height: 1.6;
       color: var(--color-text-muted); }
-    .br-anat-d { margin: 12px 0 0; font-size: 13px; line-height: 1.65; color: var(--color-text-muted); }
+    .br-symmark-d { margin: 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
     /* 로고 변형 6종 — 변형마다 배경이 다르므로 그림 영역과 설명을 분리한다 */
-    .br-vars { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: clamp(14px, 1.4vw, 22px); margin: 0; padding: 0; }
-    .br-var { border: 1px solid var(--color-line); border-radius: var(--radius-md); overflow: hidden; }
-    .br-var-fig { display: flex; align-items: center; justify-content: center;
-      height: clamp(108px, 10vw, 156px); padding-inline: clamp(20px, 2.4vw, 40px);
-      background: var(--color-surface); }
-    .br-var-fig img, .br-wmk { display: block; width: 100%; max-width: 240px; height: auto; }
     /* 기본(3색)은 원본 SVG 를 그대로 쓰고, 나머지 4종은 <use href="#wm"> + currentColor 다 */
-    .br-var--main .br-var-fig { background: var(--color-surface); }
     /* 심볼 단독만 가로가 아니라 세로 기준으로 맞춘다 — 정사각에 가까워 폭을 맞추면 너무 커진다 */
-    .br-var--sym .br-var-fig img { width: auto; height: clamp(52px, 5vw, 74px); max-width: none; }
-    .br-var-cap { display: grid; grid-template-columns: auto 1fr; column-gap: 12px;
-      padding: clamp(14px, 1.4vw, 20px) clamp(16px, 1.6vw, 22px);
-      border-top: 1px solid var(--color-line); }
-    .br-var-cap i { grid-row: span 2; font-style: normal; font-family: var(--font-display); font-weight: 700;
-      font-size: 20px; line-height: 1.1; color: var(--color-light-blue); }
-    .br-var-cap b { font-size: 14px; letter-spacing: -.01em; }
-    .br-var-cap > span { grid-column: 2; margin-top: 3px; font-size: 12px; color: var(--color-text-muted); }
 
-    .br-var--navy .br-wmk { color: var(--color-logo); }
-    .br-var--black .br-wmk { color: #111111; }
-    .br-var--rev .br-var-fig { background: var(--color-navy); }
-    .br-var--rev .br-wmk { color: #ffffff; }
-    .br-var--blue .br-var-fig { background: var(--brand-azure); }
-    .br-var--blue .br-wmk { color: #ffffff; }
 
     /* ---------- 3. 브랜드 컬러 ---------- */
 
-    /* 색마다 [스와치 | 사양 | 설명] 3단. 한 색이 한 줄을 차지해야 스와치가 충분히 커진다 —
-       3열로 나누면 칩이 작아져 색을 비교하기 어렵다. */
+    /* 색 세 장을 **가로 3단**으로 둔다(2026-08-20 지시). 한 장은 [색 박스 → 설명] 위아래다. */
     .br-colors { list-style: none; display: grid; gap: clamp(14px, 1.4vw, 22px);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       margin: clamp(30px, 3.2vw, 52px) 0 0; padding: 0; }
-    .br-color { display: grid; grid-template-columns: minmax(180px, .8fr) minmax(190px, .7fr) minmax(0, 1.6fr);
-      gap: clamp(20px, 2.2vw, 36px); align-items: center;
+    .br-color { display: flex; flex-direction: column;
       padding: clamp(20px, 2vw, 30px); background: var(--color-surface);
       border: 1px solid var(--color-line); border-radius: var(--radius-lg); }
-    /* ⚠ 스와치 글자색을 흰색으로 고정하지 않는다 — 실측 대비가 색마다 전혀 다르다.
-         흰 글자 기준 Indigo 9.52 / Mint **2.28** / Azure **3.33** 로 두 색은 AA(4.5) 미달이다.
-         그래서 `--on` 을 마크업에서 색마다 지정한다(Mint·Azure 는 어두운 글자 → 8.29 / 5.67). */
-    .br-swatch { display: flex; flex-direction: column; justify-content: flex-end;
-      min-height: clamp(96px, 9vw, 132px); padding: clamp(16px, 1.6vw, 22px);
-      background: var(--c); border-radius: var(--radius-md); color: var(--on); }
-    .br-swatch b { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(20px, 1.7vw, 26px); letter-spacing: -.015em; }
-    .br-swatch span { margin-top: 2px; font-size: 13px; opacity: .88; }
-    .br-spec { margin: 0; display: grid; gap: 9px; }
-    .br-spec div { display: grid; grid-template-columns: 46px 1fr; gap: 10px; align-items: baseline; }
-    .br-spec dt { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--color-text-muted); }
-    .br-spec dd { margin: 0; font-size: 13px; line-height: 1.5; }
+    /* 스와치 글자 — **흰색으로 통일**하고 약한 드롭섀도우로 읽힘을 받친다(2026-08-20 지시).
+       ⚠ 솔직히 적어 둔다: 그림자는 WCAG 대비 계산에 들어가지 않는다.
+         흰 글자의 실측 대비는 Indigo 9.52 / Mint **2.28** / Azure **3.33** 이고,
+         Mint · Azure 는 AA(4.5) 미달이다. 그림자는 경계를 만들어 **눈에 보이는** 읽힘을
+         올려 주지만 수치를 올리지는 못한다. 브랜드 색을 어둡게 바꿀 수 없어(정본 값이다)
+         지시대로 흰 글자 + 그림자를 택한 것이며, 색을 바꾸지 않는 한 수치는 그대로다.
+         전에는 `--on` 으로 색마다 글자색을 달리 줘 8.29 / 5.67 을 확보하고 있었다.
+       ⚠ 컬러 코드도 이 안에 들어온다 — 라벨은 회색 리터럴이 아니라 `currentColor` 를 옅게 쓴다. */
+    .br-swatch { display: flex; flex-direction: column; gap: clamp(16px, 1.8vw, 26px);
+      padding: clamp(18px, 1.8vw, 24px);
+      background: var(--c); border-radius: var(--radius-md); color: #ffffff;
+      text-shadow: 0 1px 2px rgb(0 0 0 / .3), 0 0 1px rgb(0 0 0 / .25); }
+    .br-swatch-h { margin: 0; }
+    .br-swatch b { display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(19px, 1.6vw, 25px); letter-spacing: -.015em; }
+    .br-swatch span { display: block; margin-top: 2px; font-size: 13px; opacity: .88; }
+    .br-spec { margin: 0; display: grid; gap: 8px; }
+    .br-spec div { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 10px;
+      align-items: baseline; }
+    /* ⚠ 라벨의 불투명도를 내리지 않는다. 흰 글자로 통일한 뒤로는 Mint 위 대비가 이미 2.28 인데
+         `.85` 를 걸면 **2.02** 까지 떨어졌다(실측). 라벨과 값의 구분은 크기 · 굵기 · 자간이 한다. */
+    .br-spec dt { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; }
+    .br-spec dd { margin: 0; font-size: 12.5px; line-height: 1.5; font-variant-numeric: tabular-nums; }
     /* ⚠ 키워드는 원색(`--c`)이 아니라 **텍스트용 변종**(`--ct`)을 쓴다.
          흰 면 위에서 Mint 2.28 · Azure 3.33 로 원색은 본문 크기 대비를 못 맞춘다.
          밝기만 낮춘 같은 계열색(#298272 · #007CB4)으로 4.64 를 확보했다 — 색 연상은 유지된다. */
-    .br-kw { display: block; font-size: clamp(15px, 1.15vw, 18px); color: var(--ct); letter-spacing: -.01em; }
-    .br-cd { margin: 10px 0 0; font-size: 14px; line-height: 1.75; color: var(--color-text-muted); }
+    .br-color-tx { margin-top: clamp(16px, 1.8vw, 24px); }
+    .br-kw { display: block; font-size: clamp(14.5px, 1.1vw, 17px); color: var(--ct); letter-spacing: -.01em; }
+    .br-cd { margin: 10px 0 0; font-size: 13.5px; line-height: 1.75; color: var(--color-text-muted); }
 
     /* SVG 정의 전용 — 화면에서 자리를 차지하면 섹션 사이에 빈 줄이 생긴다 */
-    .br-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
     /* ---------- 반응형 ---------- */
 
     @media (max-width: 1200px) {
-      .br-anat { grid-template-columns: repeat(3, 1fr); }
-      .br-vars { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 1023px) {
       .br-sym { grid-template-columns: 1fr; }
-      .br-wm { grid-template-columns: 1fr; }
-      .br-two { grid-template-columns: 1fr; }
-      /* 색 카드는 [스와치+사양] 한 줄 / 설명 한 줄로 접는다 */
-      .br-color { grid-template-columns: minmax(150px, .9fr) minmax(180px, 1fr); }
-      .br-color-tx { grid-column: 1 / -1; }
+      /* 1단 — 열 정의를 1열로 돌리고 `grid-area` 를 풀면 DOM 순서
+         [제목1][박스1][제목2][박스2] 가 그대로 화면 순서가 된다. */
+      .br-primary { grid-template-columns: minmax(0, 1fr); row-gap: clamp(14px, 1.4vw, 20px); }
+      .br-primary > :nth-child(1), .br-primary > :nth-child(2),
+      .br-primary > :nth-child(3), .br-primary > :nth-child(4) { grid-area: auto; }
+      /* 박스 뒤에 오는 제목은 위 여백을 더 갖는다 — 앞 박스와 붙어 보인다 */
+      .br-primary > :nth-child(3) { margin-top: clamp(18px, 1.8vw, 26px); }
+      .br-rules dl { grid-template-columns: 1fr; }
+      /* 1열로 접히면 '마지막 줄' 은 마지막 하나뿐이다 */
+      .br-rules dl div:nth-last-child(2) { padding-bottom: 12px;
+        border-bottom: 1px solid var(--color-line); }
+      /* 가로 3단이 좁아지면 색 이름과 코드가 붙는다 — 1단으로 내린다 */
+      .br-colors { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 767px) {
-      .br-anat { grid-template-columns: repeat(2, 1fr); }
-      .br-vars { grid-template-columns: 1fr; }
-      .br-color { grid-template-columns: 1fr; }
       .br-symmark-in { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
-<body>
+<body class="no-hero">
   <a href="#main" class="sr">본문으로 건너뛰기</a>
 
   <!-- ===== GNB ===== -->
@@ -530,13 +976,46 @@
 <path fill="#0095D9" d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
 </svg></a>
       <nav class="gnb-menu" aria-label="주 메뉴">
-        <a href="overview.html">사업소개</a>
-        <a href="index.html#concept" class="is-on" aria-current="page">도시소개</a>
-        <a href="index.html#zones">투자·입주</a>
-        <a href="index.html#pr">홍보센터</a>
+        <div class="gnb-item">
+          <a class="gnb-link" href="overview.html">사업소개</a>
+          <div class="gnb-sub">
+            <a href="overview.html">사업개요</a>
+            <a href="location.html">입지</a>
+            <a href="effect.html">기대효과</a>
+            <a href="schedule.html">추진일정</a>
+            <a href="company.html">사업주체</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link is-on" href="brand.html" aria-current="page">도시소개</a>
+          <div class="gnb-sub">
+            <a href="brand.html" class="is-on">브랜드</a>
+            <a href="concept.html">컨셉</a>
+            <a href="districts.html">구역 소개</a>
+            <a href="living.html">정주환경</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="invest.html">투자·입주</a>
+          <div class="gnb-sub">
+            <a href="invest.html#land">토지확보 요건</a>
+            <a href="invest.html#zone">투자 혜택</a>
+            <a href="#contact">문의하기</a>
+          </div>
+        </div>
+        <div class="gnb-item">
+          <a class="gnb-link" href="notice.html">홍보센터</a>
+          <div class="gnb-sub">
+            <a href="notice.html">공지사항</a>
+            <a href="press.html">언론보도</a>
+            <a href="video.html">홍보영상</a>
+            <a href="gallery.html">갤러리</a>
+            <a href="publication.html">발행물</a>
+          </div>
+        </div>
       </nav>
       <div class="gnb-side">
-        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span>EN</span></div>
+        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span class="gnb-en">EN</span></div>
         <div class="gnb-sns">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
@@ -570,10 +1049,9 @@
       <a href="districts.html">구역 소개</a>
       <a href="living.html">정주환경</a>
       <h2>03 투자·입주</h2>
-      <a href="land.html">토지확보 현황</a>
-      <a href="zone-benefit.html">특구별 혜택</a>
-      <a href="benefit.html">주요 혜택</a>
-      <a href="index.html#contact">문의하기</a>
+      <a href="invest.html#land">토지확보 요건</a>
+      <a href="invest.html#zone">투자 혜택</a>
+      <a href="#contact">문의하기</a>
       <h2>04 홍보센터</h2>
       <a href="notice.html">공지사항</a>
       <a href="press.html">언론보도</a>
@@ -584,19 +1062,20 @@
   </div>
 
   <main id="main">
-    <!-- ===== 히어로 ===== -->
-    <section class="hero">
-      <img class="hero-bg" src="assets/slide-night.jpg" alt="" />
-      <div class="hero-scrim" aria-hidden="true"></div>
-      <div class="wrap">
-        <nav class="crumb" aria-label="현재 위치">
-          <a href="index.html">HOME</a><span aria-hidden="true">›</span>
-          <span>도시소개</span><span aria-hidden="true">›</span><b>브랜드</b>
-        </nav>
-        <p class="hero-eyebrow"><i aria-hidden="true"></i><b>02</b><span>CITY · 도시소개</span></p>
-        <h1>브랜드</h1>
-      </div>
-    </section>
+  <!-- 상단 블록 — 카테고리에 따라 [히어로 + LNB] 또는 [LNB 만] 이다.
+       어느 쪽인지는 nav.json 의 `hero` 가 정하고, 빌드(heroBlock)가 골라 미리 펼쳐 넣는다.
+       파티셜 이름을 여기에 박으면 카테고리별로 바꿀 수 없어 값으로 받는다.
+       ⚠ 이 주석에 파티셜 호출 문법을 **글자로도 쓰지 말 것.** render() 는 HTML 주석을
+         구분하지 않아 주석 안의 호출까지 전개한다 — 히어로가 두 번 들어간다(실측). -->
+    <!-- ===== 서브 상단 — 히어로 없이 LNB 만 =====
+         도시소개 · 투자·입주 는 상단 이미지 영역 없이 GNB 바로 아래에 하위 메뉴만 온다
+         (2026-08-21 지시). 어느 카테고리가 이 형태인지는 `nav.json` 의 `hero: false` 가 정한다.
+
+         ⚠ `h1` 을 없애지 않고 **화면에서만 감춘다.** 이 페이지들의 본문 제목은 모두 `.h2` 라
+           h1 을 빼면 문서에 h1 이 하나도 없게 된다 — 검색 노출과 스크린리더 목차가 함께 죽는다.
+         ⚠ 브레드크럼은 뺀다. 보여 줄 자리가 없고, 같은 정보를 LNB 의 현재 항목
+           (`aria-current="page"`)이 이미 전달한다. -->
+    <h1 class="sr">도시소개 · 브랜드</h1>
 
     <!-- ===== LNB ===== -->
     <nav class="lnb" aria-label="도시소개 하위 메뉴">
@@ -608,41 +1087,19 @@
       </div>
     </nav>
 
-<!-- 브랜드 페이지 전용 SVG 정의 — 워드마크를 한 번만 싣고 <use> 로 재사용한다.
-     로고 변형 6종(Main·Mono Navy·Mono Black·Reverse White·On Vibrant Blue·Symbol Only)은
-     같은 도형을 색만 달리해 보여 주므로, 파일을 6번 받는 대신 여기 한 벌만 둔다.
-
-     ⚠ **7개 패스를 전부 담는다** — 글자 5개 + 심볼 2개.
-       src/sub/partials/logo.svg 는 글자만 currentColor 이고 심볼은 민트·애저가 박혀 있어
-       그대로 가져오면 단색 변형에서 **심볼이 통째로 빠진다**(2026-08-13 실측으로 확인).
-       단색 변형에서는 심볼도 글자와 같은 한 색으로 합쳐지는 것이 기획서 slide50 의 구성이다.
-     ⚠ 도형 원본은 assets/logo/bcity-logo.svg 다. 로고가 바뀌면 이 파일을 다시 만든다. -->
-<svg class="br-defs" aria-hidden="true" focusable="false" width="0" height="0">
-<symbol id="wm" viewBox="0 0 2518 421" fill="currentColor">
-  <path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z"/>
-  <path d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z"/>
-  <path d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z"/>
-  <path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z"/>
-  <path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z"/>
-  <path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z"/>
-  <path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z"/>
-</symbol>
-</svg>
-
-    <!-- ===== 1. 브랜드 네임 · 심볼 (스토리보드 v2 slide49) ===== -->
+<!-- ===== 1. Brand name — 기획 p.48 ===== -->
     <section class="sec" id="name">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND NAME</b><span>브랜드 네임</span></p>
-        <h2 class="h2 rv">도시와 바이오가 <em>하나가 되는 곳</em></h2>
-        <p class="lede rv">바이오와 도시 인프라가 만나 새로운 가치를 만듭니다</p>
 
-        <!-- 워드마크는 원본 SVG 를 그대로 쓴다. 색이 브랜드 정본(인디고·민트·애저)이라
+        <!-- 상단 — **박스 없이** 로고를 두고 바로 아래에 두 줄 카피를 놓는다(2026-08-20 지시 · 첨부 이미지).
+             워드마크는 원본 SVG 를 그대로 쓴다. 색이 브랜드 정본(인디고·민트·애저)이라
              currentColor 로 바꾸면 오히려 정보가 줄어든다. -->
-        <figure class="br-hero rv">
-          <img src="assets/logo/bcity-logo.svg" width="2518" height="421"
+        <div class="br-name rv">
+          <img class="br-name-logo" src="assets/logo/bcity-logo.svg" width="2518" height="421"
                alt="B·CITY 로고 — 인디고 워드마크 가운데에 민트와 애저가 교차하는 심볼" />
-          <figcaption>B · CITY — Bio City, By Design</figcaption>
-        </figure>
+          <h2 class="br-name-copy">도시와 바이오가 하나가 되는 곳,<br />바이오와 도시 인프라가 만나 새로운 가치를 만듭니다</h2>
+        </div>
 
         <p class="br-lead rv">B-CITY의 심볼은 두 개의 알파벳 “B” 구조를 기반으로 설계되었습니다.
           좌우의 형태는 서로 독립된 산업과 기능을 의미하며, 중앙의 유기적인 연결 구조를 통해
@@ -650,132 +1107,90 @@
 
         <ul class="br-sym">
           <li class="br-sym-card rv">
-            <p class="br-sym-h"><i>01</i><b>Double B</b><span>Bio + Big Data 구조</span></p>
+            <p class="br-sym-h"><b>Double B</b><span>Bio + Big Data 구조</span></p>
+            <span class="br-motif" aria-hidden="true"><svg viewBox="0 0 112.801 83" fill="currentColor" aria-hidden="true"><path d="M22.5732 0.231445C27.3649 0.231445 31.5202 1.12988 35.0391 2.92676C38.5954 4.6862 41.3281 7.13867 43.2373 10.2832C45.1838 13.4277 46.1572 17.0399 46.1572 21.1201C46.1572 24.1897 45.6149 27.0723 44.5293 29.7676C43.4437 32.4629 42.002 34.7839 40.2051 36.7305C39.2699 37.7436 38.2827 38.6026 37.2461 39.3115C39.5768 40.1757 41.6682 41.3179 43.5186 42.7393C46.1013 44.7232 48.1039 47.1942 49.5264 50.1514C50.9488 53.0712 51.6602 56.4214 51.6602 60.2021C51.6602 64.6569 50.6312 68.6068 48.5723 72.0508C46.5509 75.4572 43.7055 78.1335 40.0371 80.0801C36.4059 82.0267 32.1566 83 27.29 83H0V0.231445H22.5732ZM112.801 0V82.7686H90.2275C85.4359 82.7686 81.2806 81.8701 77.7617 80.0732C74.2055 78.3139 71.4726 75.8621 69.5635 72.7178C67.6169 69.5732 66.6436 65.9603 66.6436 61.8799C66.6436 58.8102 67.1868 55.9277 68.2725 53.2324C69.3581 50.5372 70.7989 48.2161 72.5957 46.2695C73.5308 45.2565 74.5172 44.3964 75.5537 43.6875C73.2237 42.8234 71.1332 41.6826 69.2832 40.2617C66.7003 38.2778 64.6969 35.8068 63.2744 32.8496C61.8519 29.9297 61.1406 26.5788 61.1406 22.7979C61.1406 18.3432 62.1706 14.3942 64.2295 10.9502C66.251 7.54362 69.096 4.86654 72.7646 2.91992C76.3957 0.973443 80.6444 0 85.5107 0H112.801ZM9.88281 73.791H27.4023C31.6698 73.791 35.114 72.5373 37.7344 70.0293C40.3548 67.5212 41.665 64.0205 41.665 59.5283C41.665 55.0361 40.2799 51.5547 37.5098 49.084C34.7396 46.6133 31.071 45.3779 26.5039 45.3779H9.88281V73.791ZM89.3291 46.6064C86.8211 46.6064 84.594 47.2055 82.6475 48.4033C80.7008 49.6012 79.1842 51.2484 78.0986 53.3447C76.9756 55.4411 76.4141 57.8369 76.4141 60.5322C76.4141 64.7998 77.6686 68.0384 80.1768 70.2471C82.6474 72.4554 85.8854 73.5596 89.8906 73.5596H102.918V46.6064H89.3291ZM85.3984 9.20898C81.1309 9.20898 77.6868 10.4635 75.0664 12.9717C72.4461 15.4798 71.1357 18.9796 71.1357 23.4717C71.1357 27.9639 72.5208 31.4453 75.291 33.916C78.0612 36.3867 81.7298 37.6221 86.2969 37.6221H102.918V9.20898H85.3984ZM9.88281 36.3936H23.4717C25.9798 36.3936 28.2077 35.7946 30.1543 34.5967C32.1007 33.3988 33.6166 31.7515 34.7021 29.6553C35.8252 27.5589 36.3867 25.1631 36.3867 22.4678C36.3867 18.2005 35.1328 14.9626 32.625 12.7539C30.1543 10.5452 26.9157 9.44043 22.9102 9.44043H9.88281V36.3936Z"/></svg></span>
             <p class="br-sym-d">두 개의 B 구조는 Bio와 Big Data처럼 서로 다른 산업과 기능이 연결되는
               미래 도시 시스템을 상징합니다. 각 구조는 독립적으로 존재하지만 중앙 흐름을 통해
               하나의 생태계로 연결됩니다.</p>
-            <span class="br-motif" aria-hidden="true"><svg class="br-motif-svg" viewBox="0 0 96.1798 44.2085" fill="currentColor" aria-hidden="true"><path d="M36.9854 0.5C41.8029 0.500048 45.263 1.52137 47.4668 3.4668L47.4736 3.47266C49.705 5.37003 50.8613 8.25978 50.8613 12.2422C50.8613 16.2033 49.5572 19.0187 47.0195 20.7988L46.3623 21.2598L47.0654 21.6455C48.7904 22.5925 50.0467 23.8443 50.8564 25.3965L50.8584 25.4004C51.6672 26.9122 52.0898 28.9048 52.0898 31.4092C52.0898 35.4755 50.9332 38.4991 48.6885 40.5635C46.4851 42.5866 43.0275 43.6465 38.2139 43.6465H38.2129L0.5 43.708V0.62207L36.9854 0.5ZM9.33008 36.7324H37.0469C38.9811 36.7324 40.5248 36.2729 41.584 35.2656C42.6479 34.2537 43.1367 32.7712 43.1367 30.915C43.1367 29.097 42.6463 27.6439 41.5801 26.6533C40.5207 25.6692 38.9785 25.2217 37.0469 25.2217H9.33008V36.7324ZM9.33008 18.3066H35.8174C37.7465 18.3066 39.2872 17.8709 40.3467 16.9102C41.4154 15.941 41.9081 14.5175 41.9082 12.7373C41.9082 11.0318 41.4103 9.66713 40.3369 8.74121C39.2777 7.82762 37.7412 7.41406 35.8174 7.41406H9.33008V18.3066Z"/><path d="M36.9854 0.5C41.8029 0.500048 45.263 1.52137 47.4668 3.4668L47.4736 3.47266C49.705 5.37003 50.8613 8.25978 50.8613 12.2422C50.8613 16.2033 49.5572 19.0187 47.0195 20.7988L46.3623 21.2598L47.0654 21.6455C48.7904 22.5925 50.0467 23.8443 50.8564 25.3965L50.8584 25.4004C51.6672 26.9122 52.0898 28.9048 52.0898 31.4092C52.0898 35.4755 50.9332 38.4991 48.6885 40.5635C46.4851 42.5866 43.0275 43.6465 38.2139 43.6465H38.2129L0.5 43.708V0.62207L36.9854 0.5ZM9.33008 36.7324H37.0469C38.9811 36.7324 40.5248 36.2729 41.584 35.2656C42.6479 34.2537 43.1367 32.7712 43.1367 30.915C43.1367 29.097 42.6463 27.6439 41.5801 26.6533C40.5207 25.6692 38.9785 25.2217 37.0469 25.2217H9.33008V36.7324ZM9.33008 18.3066H35.8174C37.7465 18.3066 39.2872 17.8709 40.3467 16.9102C41.4154 15.941 41.9081 14.5175 41.9082 12.7373C41.9082 11.0318 41.4103 9.66713 40.3369 8.74121C39.2777 7.82762 37.7412 7.41406 35.8174 7.41406H9.33008V18.3066Z" transform="translate(96.1798,0) scale(-1,1)"/></svg></span>
           </li>
           <li class="br-sym-card rv">
-            <p class="br-sym-h"><i>02</i><b>DNA Helix</b><span>생명과 데이터 흐름의 상징</span></p>
+            <p class="br-sym-h"><b>DNA Helix</b><span>생명과 데이터 흐름의 상징</span></p>
+            <span class="br-motif" aria-hidden="true"><span class="br-motif-mask"></span></span>
             <p class="br-sym-d">중앙의 연결 구조는 DNA Double Helix의 흐름을 추상화한 네거티브 공간입니다.
               이는 바이오 기술과 데이터 기반 산업이 끊임없이 연결되고 순환하는 도시 구조를 의미합니다.
               직접적인 DNA 표현이 아닌 브랜드 심볼 내부에 녹아든 “Bio Flow” 개념으로 구현되었습니다.</p>
-            <span class="br-motif" aria-hidden="true"><img src="assets/brand/motif-dna.avif"
-              alt="" width="800" height="800" loading="lazy" decoding="async" /></span>
           </li>
           <li class="br-sym-card rv">
-            <p class="br-sym-h"><i>03</i><b>Connected Core</b><span>도시 인프라의 연결 허브</span></p>
+            <p class="br-sym-h"><b>Connected Core</b><span>도시 인프라의 연결 허브</span></p>
+            <span class="br-motif" aria-hidden="true"><svg viewBox="0 0 108.794 150.328" fill="currentColor" aria-hidden="true"><path d="M97.0753 7.49596C76.6552 29.3294 55.1517 32.875 27.2347 32.875C49.7801 74.646 39.8236 111.173 14.5475 138.198C53.8839 107.743 86.8766 119.164 86.8766 119.164C39.3836 78.9543 73.3391 32.875 97.0753 7.49596Z"/><line x1="45.0641" y1="60.2253" x2="103.875" y2="1.41421" stroke="currentColor" stroke-width="4"/><line x1="1.41421" y1="148.914" x2="60.2253" y2="90.1031" stroke="currentColor" stroke-width="4"/></svg></span>
             <p class="br-sym-d">심볼의 곡선 흐름은 춘천의 자연 환경과 미래 산업 구조가 연결되는
               도시 비전을 상징합니다. 유기적인 흐름은 B-CITY의 핵심 철학인
               “Connected Innovation City”를 시각화합니다.</p>
-            <span class="br-motif" aria-hidden="true"><svg class="br-motif-svg" viewBox="0 0 108.794 150.328" fill="currentColor" aria-hidden="true"><path d="M97.0753 7.49596C76.6552 29.3294 55.1517 32.875 27.2347 32.875C49.7801 74.646 39.8236 111.173 14.5475 138.198C53.8839 107.743 86.8766 119.164 86.8766 119.164C39.3836 78.9543 73.3391 32.875 97.0753 7.49596Z"/><line x1="45.0641" y1="60.2253" x2="103.875" y2="1.41421" stroke="currentColor" stroke-width="4"/><line x1="1.41421" y1="148.914" x2="60.2253" y2="90.1031" stroke="currentColor" stroke-width="4"/></svg></span>
           </li>
         </ul>
       </div>
     </section>
 
-    <!-- ===== 2. 브랜드 로고타입 (스토리보드 v2 slide50) ===== -->
+    <!-- ===== 2. Brand Logotype — 기획 p.49 (기본 로고타입 · 사용 규정 · 여백)
+         ⚠ 기획 p.49 의 [시그니처 조합] 블록은 뺐다(2026-08-21 지시). ===== -->
     <section class="sec sec--surface" id="logotype">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND LOGOTYPE</b><span>브랜드 로고타입</span></p>
         <h2 class="h2 rv">전용 서체로 다시 그린 <em>B·CITY 워드마크</em></h2>
         <p class="lede rv">기존 서체를 가져다 쓰지 않고, 브랜드 전용으로 수정한 기하학적 산세리프입니다</p>
 
-        <!-- 워드마크 분석 — 가로세로 비율 가이드를 점선으로 얹는다.
-             ⚠ 점선은 CSS 의사요소다. 이미지에 구워 넣으면 로고를 갈아끼울 때 같이 어긋난다. -->
-        <div class="br-wm rv">
-          <div class="br-wm-stage">
-            <img src="assets/logo/bcity-logo.svg" width="2518" height="421"
-                 alt="B·CITY 워드마크 비율 분석 — 가로 대 세로 6 대 1" />
-          </div>
-          <dl class="br-wm-spec">
-            <div><dt>비율</dt><dd>W : H = 6.0 : 1</dd></div>
-            <div><dt>서체</dt><dd>Custom Geometric Sans · Modified exclusively for B·CITY</dd></div>
-            <div><dt>구성</dt><dd>B(Letter) + Symbol(Mint × Azure) + CITY</dd></div>
-          </dl>
-        </div>
-
-        <div class="br-two">
-          <div class="br-rules rv">
-            <h3 class="sub-t">사용 규칙 <span>USAGE RULES</span></h3>
-            <dl>
-              <div><dt>최소 크기</dt><dd>120px / 32mm 이상</dd></div>
-              <div><dt>여백</dt><dd>심볼 높이의 1배 여백 확보</dd></div>
-              <div><dt>색상</dt><dd>3색 컬러 / 단색 네이비 / 흰색 반전만 허용</dd></div>
+        <!-- [기본 로고타입 | 심볼 마크] 2단. **제목도 박스 밖 같은 줄**에 온다(2026-08-20 지시).
+             ⚠ 제목과 박스를 **한 그리드**에 넣고 CSS 의 `grid-area` 로 자리를 명시한다.
+               컨테이너를 둘로 나눠 열 정의를 두 번 쓰면 한쪽만 바뀔 때 어긋나고,
+               `order` 로 돌리면 좁은 화면에서 **읽기 순서**가 제목1·제목2·박스1·박스2 로 꼬인다.
+               DOM 순서는 [제목1][박스1][제목2][박스2] 라 어느 폭에서도 그대로 읽힌다.
+             ⚠ 워드마크 위아래 점선은 CSS 의사요소다. 이미지에 구워 넣으면 로고를
+               갈아끼울 때 선만 어긋난 채 남는다. -->
+        <div class="br-primary rv">
+          <h3 class="br-h3">기본 로고타입 <span>PRIMARY LOGOTYPE</span></h3>
+          <div class="br-wm">
+            <div class="br-wm-stage">
+              <img src="assets/logo/bcity-logo.svg" width="2518" height="421"
+                   alt="B·CITY 워드마크 비율 분석 — 가로 대 세로 6 대 1" />
+            </div>
+            <dl class="br-wm-spec">
+              <div><dt>비율</dt><dd>W : H = 6.0 : 1</dd></div>
+              <div><dt>서체</dt><dd>Custom Geometric Sans · Modified exclusively for B·CITY</dd></div>
+              <div><dt>구성</dt><dd>B(Letter) + Symbol(Mint × Azure) + CITY</dd></div>
             </dl>
           </div>
-          <div class="br-symmark rv">
-            <h3 class="sub-t">심볼 마크 <span>SYMBOL MARK</span></h3>
+          <h3 class="br-h3">심볼 마크 <span>SYMBOL MARK</span></h3>
+          <div class="br-panel">
+            <!-- 심볼을 화살표로 풀어 준다(2026-08-20 지시) — 도형의 어느 부분이 무엇인지
+                 문장으로 흘려 두는 대신 세 항목으로 세운다. 색 이름은 실제 브랜드 색으로 칠한다. -->
             <div class="br-symmark-in">
               <img src="assets/brand/symbol.svg" width="308" height="332"
                    alt="B·CITY 심볼 마크 — 민트와 애저 두 레이어가 교차한다" />
-              <p>두 개의 레이어가 교차하는 추상 심볼 — 민트(#3DBFA8)와 애저(#0095D9)의
-                교차점이 혁신과 연결을 상징합니다.</p>
+              <ul class="br-anno">
+                <li style="--a: #287E6F"><b>민트 레이어</b><span>바이오 · 생명의 흐름</span></li>
+                <li style="--a: #0077AE"><b>애저 레이어</b><span>AI · 데이터의 광채</span></li>
+                <li><b>두 레이어의 교차점</b><span>혁신과 연결</span></li>
+              </ul>
             </div>
+            <p class="br-symmark-d">두 개의 레이어가 교차하는 추상 심볼입니다.<br />
+              워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다.</p>
           </div>
         </div>
 
-        <h3 class="br-h3 rv">레터 애너토미 <span>LETTER ANATOMY</span></h3>
-        <ul class="br-anat rv">
-            <li class="br-anat-i">
-              <span class="br-anat-g"><svg class="br-glyph" viewBox="0 0 52.5899 44.2085" fill="currentColor" aria-hidden="true"><path d="M36.9854 0.5C41.8029 0.500048 45.263 1.52137 47.4668 3.4668L47.4736 3.47266C49.705 5.37003 50.8613 8.25978 50.8613 12.2422C50.8613 16.2033 49.5572 19.0187 47.0195 20.7988L46.3623 21.2598L47.0654 21.6455C48.7904 22.5925 50.0467 23.8443 50.8564 25.3965L50.8584 25.4004C51.6672 26.9122 52.0898 28.9048 52.0898 31.4092C52.0898 35.4755 50.9332 38.4991 48.6885 40.5635C46.4851 42.5866 43.0275 43.6465 38.2139 43.6465H38.2129L0.5 43.708V0.62207L36.9854 0.5ZM9.33008 36.7324H37.0469C38.9811 36.7324 40.5248 36.2729 41.584 35.2656C42.6479 34.2537 43.1367 32.7712 43.1367 30.915C43.1367 29.097 42.6463 27.6439 41.5801 26.6533C40.5207 25.6692 38.9785 25.2217 37.0469 25.2217H9.33008V36.7324ZM9.33008 18.3066H35.8174C37.7465 18.3066 39.2872 17.8709 40.3467 16.9102C41.4154 15.941 41.9081 14.5175 41.9082 12.7373C41.9082 11.0318 41.4103 9.66713 40.3369 8.74121C39.2777 7.82762 37.7412 7.41406 35.8174 7.41406H9.33008V18.3066Z"/></svg></span>
-              <b class="br-anat-t">듀얼 볼 구조<span>(Double Bowl)</span></b>
-              <p class="br-anat-d">상하 비율 차이로<br />역동성과 안정감 동시 표현</p>
-            </li>
-            <li class="br-anat-i">
-              <span class="br-anat-g"><svg class="br-glyph" viewBox="0 0 47.7979 44.828" fill="currentColor" aria-hidden="true"><path d="M25.0662 44.828C16.9565 44.828 10.7515 42.9524 6.45105 39.2013C2.15035 35.4092 0 29.8032 0 22.3834C0 15.0049 2.15035 9.41955 6.45105 5.62728C10.7515 1.83498 16.9565 -0.0405552 25.0662 0.00066483L47.1836 0.124325V8.03867H25.742C20.4176 8.03867 16.465 9.17225 13.8849 11.4394C11.3044 13.7065 10.0142 17.3545 10.0142 22.3834C10.0142 27.4123 11.3044 31.081 13.8849 33.3894C16.465 35.6566 20.4176 36.7899 25.742 36.7899H47.7979V44.828H25.0662Z"/></svg></span>
-              <b class="br-anat-t">오픈 카운터<span>(Open Counter)</span></b>
-              <p class="br-anat-d">넓은 개구부로<br />개방성 · 포용성 상징</p>
-            </li>
-            <li class="br-anat-i">
-              <span class="br-anat-g"><svg class="br-glyph" viewBox="0 0 9.82967 44.2085" fill="currentColor" aria-hidden="true"><path d="M0 44.2085V0H9.82967V44.2085H0Z"/></svg></span>
-              <b class="br-anat-t">스템 전용<span>(Stem Only)</span></b>
-              <p class="br-anat-d">세리프 없이<br />수직 강조, 도시의 기둥</p>
-            </li>
-            <li class="br-anat-i">
-              <span class="br-anat-g"><svg class="br-glyph" viewBox="0 0 54.0916 44.2085" fill="currentColor" aria-hidden="true"><path d="M0 0H54.0644L54.0916 8.0379H30.7185V44.2085H20.8886V8.0379H0V0Z"/></svg></span>
-              <b class="br-anat-t">수평 확장형<span>(Wide Crossbar)</span></b>
-              <p class="br-anat-d">수평 확장으로<br />도시 확장성 표현</p>
-            </li>
-            <li class="br-anat-i">
-              <span class="br-anat-g"><svg class="br-glyph" viewBox="0 0 56.3364 44.2085" fill="currentColor" aria-hidden="true"><path d="M23.2845 44.2085V28.4419L0 0H12.1646L28.1996 20.0329L44.1731 0H56.3364L33.1758 28.38V44.2085H23.2845Z"/></svg></span>
-              <b class="br-anat-t">대각 삼각 구조<span>(Diagonal Arms)</span></b>
-              <p class="br-anat-d">상부 수렴 구조로<br />통합과 연결성 표현</p>
-            </li>
-        </ul>
 
-        <h3 class="br-h3 rv">로고 변형 <span>LOGO VARIATIONS</span></h3>
-        <ul class="br-vars rv">
-            <li class="br-var br-var--main">
-              <span class="br-var-fig"><img src="assets/logo/bcity-logo.svg" alt="B·CITY 기본 로고 — 인디고 워드마크에 민트·애저 심볼" width="2518" height="421" /></span>
-              <span class="br-var-cap"><i>01</i><b>Main</b><span>기본 · 공식 매체</span></span>
-            </li>
-            <li class="br-var br-var--navy">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>02</i><b>Mono Navy</b><span>단색 인쇄 · 간결한 상황</span></span>
-            </li>
-            <li class="br-var br-var--black">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>03</i><b>Mono Black</b><span>팩스 · 문서 흑백 출력</span></span>
-            </li>
-            <li class="br-var br-var--rev">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>04</i><b>Reverse White</b><span>어두운 배경 · 야간 사이니지</span></span>
-            </li>
-            <li class="br-var br-var--blue">
-              <span class="br-var-fig"><svg class="br-wmk" viewBox="0 0 2518 421" role="img" aria-label="B·CITY"><use href="#wm"/></svg></span>
-              <span class="br-var-cap"><i>05</i><b>On Vibrant Blue</b><span>강조 컬러 배경</span></span>
-            </li>
-            <li class="br-var br-var--sym">
-              <span class="br-var-fig"><img src="assets/brand/symbol.svg" alt="B·CITY 심볼 마크" width="308" height="332" /></span>
-              <span class="br-var-cap"><i>06</i><b>Symbol Only</b><span>파비콘 · 작은 매체 · 패턴</span></span>
-            </li>
-        </ul>
+        <h3 class="br-h3 rv">사용 규정 · 여백 <span>USAGE &amp; CLEAR SPACE</span></h3>
+        <div class="br-panel br-rules rv">
+          <dl>
+            <div><dt>최소 크기</dt><dd>120px / 32mm 이상 — 이보다 작으면 심볼 단독형을 쓴다</dd></div>
+            <div><dt>여백</dt><dd>사방으로 심볼 높이의 1배 이상 — 다른 요소를 이 안에 두지 않는다</dd></div>
+            <div><dt>색상</dt><dd>3색 컬러 / 단색 네이비 / 단색 검정 / 흰색 반전만 허용</dd></div>
+            <div><dt>금지</dt><dd>비율 변경 · 회전 · 그림자 · 임의 색 · 배경과 대비가 부족한 배치</dd></div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <!-- ===== 3. 브랜드 컬러 (스토리보드 v2 slide51) ===== -->
+    <!-- ===== 3. Brand Color — 기획 p.50 ===== -->
     <section class="sec" id="color">
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BRAND COLOR</b><span>브랜드 컬러</span></p>
@@ -784,46 +1199,46 @@
           세 가지 색은 각자 다른 의미를 품으면서도 하나의 정체성으로 작동합니다</p>
 
         <ul class="br-colors">
-          <li class="br-color rv" style="--c: #2C3E91; --on: #ffffff; --ct: #2C3E91">
+          <li class="br-color rv" style="--c: #2C3E91; --ct: #2C3E91">
             <div class="br-swatch">
-              <b>Indigo</b><span>인디고</span>
-            </div>
-            <dl class="br-spec">
+              <p class="br-swatch-h"><b>Indigo</b><span>인디고</span></p>
+              <dl class="br-spec">
               <div><dt>HEX</dt><dd>#2C3E91</dd></div>
               <div><dt>RGB</dt><dd>44 · 62 · 145</dd></div>
               <div><dt>CMYK</dt><dd>100 · 85 · 0 · 15</dd></div>
               <div><dt>PMS</dt><dd>PANTONE 2735 C</dd></div>
-            </dl>
+              </dl>
+            </div>
             <div class="br-color-tx">
               <b class="br-kw">신뢰 · 안정 · 깊이 · 지속성</b>
               <p class="br-cd">깊고 단단한 인디고는 도시의 무게중심입니다. 흔들림 없는 사업 추진력, 신뢰할 수 있는 파트너십, 그리고 오래도록 이어질 미래 도시의 안정감을 상징합니다.</p>
             </div>
           </li>
-          <li class="br-color rv" style="--c: #3DBFA8; --on: var(--color-text); --ct: #298272">
+          <li class="br-color rv" style="--c: #3DBFA8; --ct: #298272">
             <div class="br-swatch">
-              <b>Mint</b><span>민트</span>
-            </div>
-            <dl class="br-spec">
+              <p class="br-swatch-h"><b>Mint</b><span>민트</span></p>
+              <dl class="br-spec">
               <div><dt>HEX</dt><dd>#3DBFA8</dd></div>
               <div><dt>RGB</dt><dd>61 · 191 · 168</dd></div>
               <div><dt>CMYK</dt><dd>70 · 0 · 40 · 0</dd></div>
               <div><dt>PMS</dt><dd>PANTONE 7472 C</dd></div>
-            </dl>
+              </dl>
+            </div>
             <div class="br-color-tx">
               <b class="br-kw">바이오 · 생명 · 성장 · 자연</b>
               <p class="br-cd">청량하고 생기 있는 민트는 생명의 흐름입니다. DNA의 이중나선처럼 끊임없이 이어지는 바이오의 맥박, 그리고 자연과 첨단이 어우러진 도시의 호흡을 담았습니다.</p>
             </div>
           </li>
-          <li class="br-color rv" style="--c: #0095D9; --on: var(--color-text); --ct: #007CB4">
+          <li class="br-color rv" style="--c: #0095D9; --ct: #007CB4">
             <div class="br-swatch">
-              <b>Azure</b><span>애저</span>
-            </div>
-            <dl class="br-spec">
+              <p class="br-swatch-h"><b>Azure</b><span>애저</span></p>
+              <dl class="br-spec">
               <div><dt>HEX</dt><dd>#0095D9</dd></div>
               <div><dt>RGB</dt><dd>0 · 149 · 217</dd></div>
               <div><dt>CMYK</dt><dd>85 · 30 · 0 · 0</dd></div>
               <div><dt>PMS</dt><dd>PANTONE 2925 C</dd></div>
-            </dl>
+              </dl>
+            </div>
             <div class="br-color-tx">
               <b class="br-kw">AI · 데이터 · 디지털 · 혁신</b>
               <p class="br-cd">맑고 선명한 애저는 데이터의 광채입니다. AI와 디지털이 만들어내는 빛의 흐름, 그리고 도시 곳곳에서 펼쳐지는 첨단 기술의 가능성을 상징합니다.</p>
@@ -869,13 +1284,428 @@
       <div class="foot-bot">
         <span>&copy; 2026 B-CITY. All rights reserved.</span>
         <nav class="foot-nav" aria-label="푸터 메뉴">
-          <a href="company.html">회사소개</a>
+          <a href="about.html">회사소개</a>
           <i aria-hidden="true"></i>
-          <a href="index.html#privacy">개인정보이용약관</a>
+          <a href="#privacy">개인정보처리방침</a>
         </nav>
       </div>
     </div>
   </footer>
+
+  <!-- 문의 · 약관 모달 — **전 페이지에 넣는다**(2026-08-27 지시:
+       "폼 자체를 같은거 하나로 써야해" · "서브메뉴쪽 문의하기도 같은 현상").
+       ⚠ 전에는 front-matter `contactModal: true` 인 두 페이지에만 넣었는데,
+         `nav.json` 의 문의하기(`#contact`)가 **모든 페이지의 GNB 하위 메뉴**에 나오므로
+         나머지 30개에서는 가리킬 모달이 없어 아무 일도 일어나지 않았다.
+         같은 이유로 푸터의 개인정보이용약관도 `index.html#privacy` 로 페이지를 떠났다.
+       ⚠ 값이 아니라 파티셜 호출이다 — 조건이 없으니 분기가 필요 없다.
+         대가는 페이지당 마크업 약 14KB 다(CSS · JS 는 공통 번들이 이미 갖는다). -->
+<!-- ===== 문의 모달 =====
+     메인 `index.html` 의 `#contact` 폼을 서브페이지로 옮긴 것이다(2026-08-26 지시:
+     "해당 페이지에서 모달창으로"). 전에는 `index.html#contact` 로 보내 페이지가 넘어갔다.
+     ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
+       합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
+       옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
+     ⚠ `처리방침 보기` 는 **그 자리에서 모달**로 연다 — 처리방침도 공용이라 세 화면 모두에 있다
+       (2026-08-27 이전에는 서브만 `index.html#privacy` 새 창이었다). -->
+  <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <h2 id="ctTitle" class="ct-title">문의하기</h2>
+          <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+      <div class="pv-body">
+        <div class="ct-grid">
+        <form id="contactForm" class="ct-form" novalidate>
+          <!-- 관심분야 -->
+          <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
+            <p class="ct-label" id="ctInterestLabel">관심분야 <span class="ct-req" aria-hidden="true">*</span></p>
+            <div class="ct-chips">
+              <label class="ct-chip"><input type="checkbox" name="interest" value="기업입주문의" /><span>기업입주문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="투자문의" /><span>투자문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="사업문의" /><span>사업문의</span></label>
+            </div>
+            <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
+          </div>
+
+          <div class="ct-two">
+            <div class="ct-row">
+              <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
+              <p class="ct-err" data-err="name">회사명 또는 이름을 입력해 주세요.</p>
+            </div>
+            <div class="ct-row">
+              <label class="ct-label" for="ctTel">휴대전화 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctTel" name="tel" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" />
+              <p class="ct-err" data-err="tel">휴대전화번호를 정확히 입력해 주세요.</p>
+            </div>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctEmail">이메일 <span class="ct-req" aria-hidden="true">*</span></label>
+            <input class="ct-input" id="ctEmail" name="email" type="email" autocomplete="email" placeholder="name@company.com" />
+            <p class="ct-err" data-err="email">이메일 주소를 정확히 입력해 주세요.</p>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctMsg">문의 내용 <span class="ct-req" aria-hidden="true">*</span></label>
+            <textarea class="ct-input ct-area" id="ctMsg" name="message" rows="4" placeholder="문의하실 내용을 입력해 주세요."></textarea>
+            <p class="ct-err" data-err="message">문의 내용을 입력해 주세요.</p>
+          </div>
+
+          <!-- 동의 -->
+          <div class="ct-agree">
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeReq" name="agreeRequired" />
+              <span>
+                <b class="ct-tag ct-tag--req">필수</b>
+                개인정보 수집 · 이용에 모두 동의합니다
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
+              </span>
+            </label>
+            <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeOpt" name="agreeMarketing" />
+              <span>
+                <b class="ct-tag ct-tag--opt">선택</b>
+                마케팅 활용 동의에 동의합니다
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
+              </span>
+            </label>
+          </div>
+
+        </form>
+
+        <!-- 안내 -->
+        <aside class="ct-side">
+          <div class="ct-card">
+            <p class="ct-card-h">사업 주관</p>
+            <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">처리 절차</p>
+            <ol class="ct-steps">
+              <li>문의 접수</li>
+              <li>담당자 배정 · 내용 검토</li>
+              <li>유선 또는 이메일 회신</li>
+            </ol>
+          </div>
+          <!-- ⚠⚠ **여기에 구체적인 보유 기간(숫자)을 적지 않는다**(2026-08-27 지시).
+               기간을 두 곳에 적으면 한쪽만 고쳐져 갈린다 — 실제로 갈렸다(처리방침만 3년으로
+               고치고 여기는 `입주/이주 완료 후 자동 파기` 로 남아 있었다).
+               숫자는 **처리방침 제3조 한 곳**에만 두고 여기서는 원칙만 밝힌다.
+               ⚠ 이 문구는 사용자가 직접 준 것이다 — 임의로 다듬지 말 것.
+               ⚠ 링크를 따로 붙이지 않았다. 바로 위 동의 항목 두 개에 이미
+                 `처리방침 보기` 가 있어 같은 화면에서 세 번 반복된다. -->
+          <p class="ct-card-note">
+            수집한 개인정보는 &lsquo;개인정보 보호법&rsquo; 등 관련 법령에 따라 안전하게 관리되며,
+            문의 처리 목적이 달성된 후 관련 법령 및 내부 방침에 따른 보유 기간 동안 보관된 뒤
+            지체 없이 파기됩니다.
+          </p>
+          <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
+          <div class="ct-actions">
+            <button type="submit" form="contactForm" class="ct-submit">등록하기</button>
+            <button type="reset" form="contactForm" class="ct-reset">다시쓰기</button>
+            <p id="ctStatus" class="ct-status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+      </div>
+    </div>
+  </div>
+<!-- ===== 개인정보처리방침 =====
+     메인과 서브페이지가 **함께 쓰는 한 벌**이다. 싣는 경로는 두 개다:
+       메인   `index.html` 의 `@shared:privacy-modal` 마커 구간(빌드가 채운다)
+       서브   `layout.html` 의 파티셜 호출
+     ⚠ **주석에도 파티셜 호출 문법을 글자로 쓰지 않는다.** `render()` 는 주석을 구분하지
+       않으므로 자기 이름을 적으면 무한 재귀가 되어 빌드가 죽는다(§11.61 · 2026-08-27 재발).
+
+     ── 2026-08-27: `개인정보 수집·이용약관` → `개인정보처리방침` 으로 다시 썼다 ──
+     전에는 **문의 폼 동의서**(개인정보보호법 제15조)였는데 푸터 메뉴명이 `개인정보이용약관`
+     이었다. 셋이 서로 다른 문서를 가리키고 있었다:
+       · 이용약관        서비스 이용 조건 · 회원 의무 — **이 사이트에는 없는 문서다**
+       · 수집·이용 동의서 폼을 보낼 때 받는 동의 (제15조)
+       · 처리방침        상시 공개 의무 문서 (제30조) ← 실서비스에 필요한 것
+     법 제30조 제1항의 **9개 필수 기재사항**을 순서대로 담았다.
+
+     ⚠ 폼의 `약관 보기` 도 이 문서를 연다. 동의 항목(필수/선택)은 §2 에 그대로 남겨 두었다 —
+       동의받는 내용과 공개하는 내용이 갈리면 안 된다.
+     ✅ 개인정보 보호책임자 — **류지은 · postmaster@biotech-iv.com**(2026-08-27 지시로 확정).
+       ⚠ 문의 폼의 담당자 연락처(`juyoung@`)와 **다른 주소다.** 역할이 달라 일부러 나눠 둔 것이니
+         한쪽을 고칠 때 다른 쪽을 함께 바꾸지 말 것.
+     ✅ 처리 위탁 — **주식회사 더존비즈온 / 아마란스**(2026-08-27 사용자 확인).
+       위탁에 해당하는 근거는 도메인의 MX 레코드다 — `biotech-iv.com` 의 메일이
+       `mail.bizboxa.com` 으로 가고 SPF 도 `_spfblocka.bizboxa.com` 이다. 즉 문의 메일이
+       외부 서비스에 **저장**되므로 법 제26조의 위탁이며, '회사 메일이니 위탁 아니다' 가
+       성립하지 않는다.
+       ⚠⚠ **제품명을 MX 호스트에서 유추하지 말 것.** 호스트가 `bizboxa.com` 이라 처음에
+         `BizBox Alpha` 로 적었는데, 실제 계약 제품은 **아마란스**다(사용자 정정).
+         더존의 메일 인프라를 여러 제품이 함께 쓰는 것으로 보인다 — DNS 는 **위탁 여부**의
+         근거일 뿐이고 **제품명의 근거가 아니다.**
+       ⚠ 법이 요구하는 것은 수탁자와 **위탁 업무의 내용**이다(제품명은 부가 설명이다).
+         제품이 바뀌면 괄호만 고치면 되고, 메일 서비스 자체가 바뀌면 표를 다시 쓴다.
+         위탁 여부 확인법: `dig MX biotech-iv.com`
+       ⚠ 남은 확인 사항: 서버 소재지. 국외면 법 제28조의8(국외 이전) 항목을 따로 넣어야 한다 —
+         국내 서비스로 보이지만 계약서로 확인할 것.
+       ⚠ 홈페이지 호스팅(GitHub Pages)은 위탁에 넣지 않았다. 이 사이트에는 백엔드가 없고
+         폼이 `mailto:` 로 동작해 **개인정보가 서버를 거치지 않는다**(§11 문의 폼 참조).
+         나중에 폼 전송 API(`CT_ENDPOINT`)를 붙이면 그 사업자도 수탁자가 된다.
+     ✅ 보유기간 — **3년**(2026-08-27 결정). 근거와 대안은 아래.
+       · 10년은 쓰지 않았다. 문의 회신 목적에 10년을 정당화하기 어렵고(법 제3조 제2항
+         최소보유 원칙), 유출 시 피해 범위와 제재 위험만 커진다.
+       · '준공(2033) 시까지' 처럼 사업 일정에 매는 표현도 쓰지 않았다. 일정이 밀리면
+         기간이 계속 늘어나 **기간을 정한 것이 아니게 된다.**
+       · 3년은 분양·입주 상담 문의에서 가장 널리 쓰이는 값이다. 더 길게 가야 하면
+         **5년**까지가 방어 가능한 상한이고, 그 이상은 재동의로 해결한다(§3 각주).
+       ⚠ 값을 바꾸면 폼의 동의 문구(제2조)와 어긋나지 않는지 함께 본다.
+     ⚠ 쿠키 · 접속기록 자동수집은 **없다**고 적었다 — 2026-08-27 실측으로 확인했다
+       (`localStorage` · `document.cookie` · 분석 스크립트 0건). 나중에 GA 등을 붙이면
+       §9 를 고치고 시행일을 올려야 한다.
+     ⚠ 시행일을 바꿀 때는 §12 의 이력 줄도 함께 남긴다. -->
+  <div id="privacy" class="pv" role="dialog" aria-modal="true" aria-labelledby="pvTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <p class="ct-eyebrow">Privacy</p>
+          <h2 id="pvTitle" class="ct-title">개인정보처리방침</h2>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="pv-body">
+        <p class="pv-p">
+          바이오테크이노밸리피에프브이㈜(이하 &lsquo;회사&rsquo;)는 &lsquo;개인정보 보호법&rsquo; 제30조에 따라
+          정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하게 처리할 수 있도록
+          다음과 같이 개인정보처리방침을 수립·공개합니다.
+        </p>
+
+        <!-- 1. 처리 목적 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제1조 (개인정보의 처리 목적)</h3>
+          <p class="pv-p">
+            회사는 춘천기업혁신파크 B-CITY 사업에 관한 문의 접수와 회신을 위해 개인정보를 처리합니다.
+            처리하는 개인정보는 다음 목적 이외의 용도로는 이용하지 않으며, 목적이 변경되는 경우에는
+            법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">문의 접수 및 회신</span> — 기업입주 · 투자 · 사업 문의의 내용 확인, 담당자 배정, 유선 또는 이메일 회신</li>
+            <li><span class="ct-strong">사업 안내</span>(선택 동의 시) — 춘천기업혁신파크 관련 홍보 및 모집 정보 제공</li>
+          </ul>
+        </section>
+
+        <!-- 2. 처리 항목 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제2조 (처리하는 개인정보의 항목)</h3>
+          <p class="pv-p">
+            회사는 홈페이지의 문의하기 양식을 통해 정보주체가 직접 입력한 정보만을 수집합니다.
+            정보주체가 입력하지 않은 정보는 어떠한 방법으로도 수집하지 않습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">처리하는 개인정보 항목과 보유 기간</caption>
+            <tbody>
+              <tr>
+                <th scope="row">필수 항목 <span class="pv-tag pv-tag--req">필수</span></th>
+                <td>회사명/이름, 휴대전화번호, 이메일, 관심분야, 문의 내용</td>
+              </tr>
+              <tr>
+                <th scope="row">선택 항목 <span class="pv-tag pv-tag--opt">선택</span></th>
+                <td>마케팅 활용 동의 여부<br /><span class="pv-note">동의하지 않아도 문의 접수와 회신은 정상적으로 이루어집니다.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">수집 방법</th>
+                <td>홈페이지 문의하기 양식(정보주체의 직접 입력)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pv-note">
+            정보주체는 필수 항목의 수집·이용에 동의하지 않을 권리가 있습니다.
+            다만 이 경우 문의 접수 및 회신이 제한됩니다.
+          </p>
+        </section>
+
+        <!-- 3. 보유 기간 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제3조 (개인정보의 처리 및 보유 기간)</h3>
+          <p class="pv-p">
+            회사는 법령에 따른 개인정보 보유·이용 기간 또는 정보주체로부터 개인정보를 수집할 때
+            동의받은 기간 내에서 개인정보를 처리·보유합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">문의 접수 및 회신</span> — 수집일로부터 <span class="ct-strong">3년</span></li>
+            <li><span class="ct-strong">마케팅 활용</span>(선택 동의) — 동의 철회 시까지, 최대 수집일로부터 <span class="ct-strong">3년</span></li>
+            <li>보유 기간이 경과하기 전에 처리 목적이 달성된 경우에는 그 시점에 지체 없이 파기합니다.</li>
+            <li>관계 법령에 보존 의무가 규정된 경우에는 해당 기간 동안 별도로 분리 보관한 후 파기합니다.</li>
+          </ul>
+          <p class="pv-note">
+            보유 기간이 지난 후에도 사업 안내가 필요한 경우에는 정보주체에게 다시 동의를 받습니다.
+          </p>
+        </section>
+
+        <!-- 4. 제3자 제공 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제4조 (개인정보의 제3자 제공)</h3>
+          <p class="pv-p">
+            회사는 정보주체의 개인정보를 제1조에 명시한 목적 범위 내에서만 처리하며,
+            <span class="ct-strong">정보주체의 별도 동의 없이 제3자에게 제공하지 않습니다.</span>
+            다만 법 제17조 및 제18조에 해당하는 경우(법령에 근거한 수사기관 · 감독기관의
+            적법한 요청 등)에는 예외로 합니다.
+          </p>
+        </section>
+
+        <!-- 5. 처리 위탁 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제5조 (개인정보 처리의 위탁)</h3>
+          <p class="pv-p">
+            회사는 원활한 개인정보 업무 처리를 위하여 아래와 같이 개인정보 처리 업무를 위탁하고 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">개인정보 처리 위탁 현황</caption>
+            <tbody>
+              <tr>
+                <th scope="row">주식회사 더존비즈온</th>
+                <td>그룹웨어 · 전자우편 시스템(아마란스) 운영 및 문의 메일 보관</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pv-p">
+            회사는 위탁계약 체결 시 법 제26조에 따라 위탁 업무 수행 목적 외 개인정보 처리 금지,
+            기술적 · 관리적 보호조치, 재위탁 제한, 수탁자에 대한 관리 · 감독,
+            손해배상 등 책임에 관한 사항을 계약서 등 문서에 명시하고,
+            수탁자가 개인정보를 안전하게 처리하는지를 감독하고 있습니다.
+          </p>
+          <p class="pv-note">
+            위탁 업무의 내용이나 수탁자가 변경될 경우에는 지체 없이 이 개인정보처리방침을 통하여 공개합니다.
+          </p>
+        </section>
+
+        <!-- 6. 정보주체의 권리 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제6조 (정보주체와 법정대리인의 권리 · 의무 및 행사 방법)</h3>
+          <p class="pv-p">정보주체는 회사에 대해 언제든지 다음 각 호의 권리를 행사할 수 있습니다.</p>
+          <ul class="pv-list">
+            <li>개인정보 열람 요구</li>
+            <li>오류가 있는 경우 정정 요구</li>
+            <li>삭제 요구</li>
+            <li>처리정지 요구 및 동의 철회</li>
+          </ul>
+          <p class="pv-p">
+            권리 행사는 제10조의 연락처로 서면 또는 전자우편을 통해 하실 수 있으며,
+            회사는 지체 없이 조치하겠습니다. 정보주체가 개인정보의 오류에 대한 정정 또는 삭제를
+            요구한 경우, 회사는 정정 또는 삭제를 완료할 때까지 해당 개인정보를 이용하거나
+            제공하지 않습니다. 법정대리인이나 위임을 받은 자 등 대리인을 통하여 권리를 행사할 수도 있으며,
+            이 경우 &lsquo;개인정보 처리 방법에 관한 고시&rsquo; 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.
+          </p>
+        </section>
+
+        <!-- 7. 파기 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제7조 (개인정보의 파기 절차 및 방법)</h3>
+          <p class="pv-p">
+            회사는 개인정보 보유 기간의 경과, 처리 목적 달성 등 개인정보가 불필요하게 되었을 때에는
+            지체 없이 해당 개인정보를 파기합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">파기 절차</span> — 파기 사유가 발생한 개인정보를 선정하고, 개인정보 보호책임자의 승인을 받아 파기합니다.</li>
+            <li><span class="ct-strong">파기 방법</span> — 전자적 파일 형태는 복구 및 재생이 불가능한 방법으로 영구 삭제하며, 종이 문서는 분쇄하거나 소각합니다.</li>
+          </ul>
+        </section>
+
+        <!-- 8. 안전성 확보조치 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제8조 (개인정보의 안전성 확보조치)</h3>
+          <p class="pv-p">회사는 법 제29조에 따라 다음과 같은 안전성 확보조치를 하고 있습니다.</p>
+          <ul class="pv-list">
+            <li>개인정보 취급 담당자의 최소화 및 담당자에 대한 교육</li>
+            <li>개인정보에 대한 접근 권한의 차등 부여 및 접근 통제</li>
+            <li>개인정보의 암호화 및 전송 구간 암호화(HTTPS) 적용</li>
+            <li>개인정보를 보관하는 시스템에 대한 물리적 접근 통제</li>
+          </ul>
+        </section>
+
+        <!-- 9. 자동 수집 장치 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제9조 (개인정보 자동 수집 장치의 설치 · 운영 및 거부)</h3>
+          <p class="pv-p">
+            이 홈페이지는 <span class="ct-strong">쿠키(cookie)를 사용하지 않으며,</span>
+            접속 기록 · 행태 정보를 수집하는 분석 도구나 광고 식별자를 설치·운영하지 않습니다.
+            따라서 정보주체가 별도로 거부 설정을 하실 필요가 없습니다.
+          </p>
+          <p class="pv-note">
+            홈페이지에 포함된 외부 서비스 링크(YouTube, LinkedIn)를 통해 이동하시는 경우,
+            해당 사이트에서의 개인정보 처리는 각 사업자의 개인정보처리방침을 따릅니다.
+          </p>
+        </section>
+
+        <!-- 10. 보호책임자 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제10조 (개인정보 보호책임자 및 열람 청구 접수 부서)</h3>
+          <p class="pv-p">
+            회사는 개인정보 처리에 관한 업무를 총괄하여 책임지고, 개인정보 처리와 관련한
+            정보주체의 문의 · 불만 처리 및 피해 구제 등을 위하여 아래와 같이 개인정보 보호책임자를
+            지정하고 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">개인정보 보호책임자 연락처</caption>
+            <tbody>
+              <tr><th scope="row">처리 주체</th><td>바이오테크이노밸리피에프브이㈜</td></tr>
+              <tr><th scope="row">주소</th><td>서울특별시 광진구 자양로58 태림빌딩 3층</td></tr>
+              <tr><th scope="row">개인정보 보호책임자</th><td>류지은</td></tr>
+              <tr><th scope="row">이메일</th><td><a class="pv-link" href="mailto:postmaster@biotech-iv.com">postmaster@biotech-iv.com</a></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 11. 권익침해 구제 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제11조 (권익침해 구제 방법)</h3>
+          <p class="pv-p">
+            정보주체는 개인정보 침해로 인한 구제를 받기 위하여 아래 기관에 분쟁 해결이나 상담 등을
+            신청할 수 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">권익침해 구제 기관 연락처</caption>
+            <tbody>
+              <tr><th scope="row">개인정보 분쟁조정위원회</th><td>1833-6972 (www.kopico.go.kr)</td></tr>
+              <tr><th scope="row">개인정보침해 신고센터</th><td>118 (privacy.kisa.or.kr)</td></tr>
+              <tr><th scope="row">대검찰청 사이버수사과</th><td>1301 (www.spo.go.kr)</td></tr>
+              <tr><th scope="row">경찰청 사이버수사국</th><td>182 (ecrm.police.go.kr)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 12. 변경 -->
+        <section class="pv-sec pv-sec--last">
+          <h3 class="pv-h3">제12조 (개인정보처리방침의 변경)</h3>
+          <p class="pv-p">
+            이 개인정보처리방침은 시행일부터 적용되며, 법령 및 방침에 따른 변경 내용의 추가 · 삭제 및
+            정정이 있는 경우에는 변경 사항의 시행 7일 전부터 홈페이지를 통하여 공지합니다.
+          </p>
+          <ul class="pv-list">
+            <li>2026년 7월 30일 — 제정 (개인정보 수집 · 이용 동의)</li>
+            <li>2026년 8월 27일 — 개인정보처리방침으로 전부 개정</li>
+          </ul>
+        </section>
+      </div>
+
+      <footer class="pv-foot">
+        <p class="pv-foot-note">시행일 : 2026년 8월 27일</p>
+        <button type="button" class="pv-ok" data-pv-close>확인</button>
+      </footer>
+    </div>
+  </div>
 
   <script>
     /* GNB: 히어로 위에서는 투명, 스크롤하면 흰 배경 */
@@ -884,6 +1714,42 @@
       var onScroll = function () { gnb.classList.toggle('is-solid', window.scrollY > 40); };
       onScroll();
       addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    /* 대메뉴 호버 — 하위 메뉴 펼치기(2026-08-27 지시).
+       ⚠ 바(`#gnb`) 전체에 걸어야 한다. 항목마다 걸면 항목 사이 빈틈에서 닫혔다 열리며 깜빡인다.
+       ⚠ 포커스로도 열어야 키보드로 하위 메뉴에 닿는다 — 그래서 focusin/focusout 을 함께 쓴다.
+       ⚠ 좁은 화면(대메뉴가 숨는 구간)에서는 아무것도 하지 않는다. `.gnb-menu` 가
+         `display: none` 이라 열어 봐야 보이지 않고, 바 높이만 늘어난다. */
+    (function () {
+      var gnb = document.getElementById('gnb');
+      if (!gnb || !gnb.querySelector('.gnb-sub')) return;
+      var wide = function () { return matchMedia('(min-width: 1024px)').matches; };
+      var set = function (on) { gnb.classList.toggle('is-open', on && wide()); };
+      gnb.addEventListener('mouseenter', function () { set(true); });
+      gnb.addEventListener('mouseleave', function () { set(false); });
+      gnb.addEventListener('focusin', function () { set(true); });
+      gnb.addEventListener('focusout', function (e) {
+        if (!gnb.contains(e.relatedTarget)) set(false);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+      addEventListener('resize', function () { if (!wide()) set(false); });
+    })();
+
+    /* KO / EN — 영문은 아직 없다. 호버·포커스에 안내를 띄운다(2026-08-27 지시).
+       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다. */
+    (function () {
+      var lang = document.querySelector('.gnb-lang');
+      if (!lang) return;
+      var en = lang.querySelector('.gnb-en');
+      if (!en || en.textContent.trim() !== 'EN') return;
+      en.setAttribute('tabindex', '0');
+      en.setAttribute('role', 'button');
+      en.setAttribute('aria-disabled', 'true');
+      var tip = document.createElement('span');
+      tip.className = 'gnb-tip';
+      tip.textContent = '준비중입니다';
+      en.appendChild(tip);
     })();
 
     /* 모바일 메뉴 */
@@ -918,6 +1784,242 @@
         io.observe(el);
       });
     })();
+
+    /* 카카오맵 길찾기 — 휴대폰에서는 주소를 갈아끼운다.
+       ⚠⚠ 카카오는 **길찾기 주소만** 모바일에서 `applink.map.kakao.com/route`(앱 설치 벽)로
+         강제로 보낸다(2026-08-31 실측). 그 화면에는 도착지가 표시되지 않아 어디로 가는
+         길찾기인지 알 수 없다. `link/map`(지도 보기)은 정상적으로 모바일 뷰로 간다 —
+         즉 PC 주소를 그대로 두면 길찾기만 쓸 수 없게 된다.
+       ⚠ `href` 의 기본값은 **PC 주소**다. 여기서 못 바꿔도 데스크톱은 정상이어야 하기
+         때문이다. 반대로 두면 데스크톱에서 지도 없는 모바일 화면이 늘어나 보인다(실측).
+       ⚠ 좌표는 WCONGNAMUL 이다(`data-kx`/`data-ky`). href 안의 위경도(WGS84)와 같은
+         지점이며 **함께 고쳐야 한다** — 환산법은 about 페이지 소스 주석에 있다. */
+    (function () {
+      var as = [].slice.call(document.querySelectorAll('a[data-kakao-route]'));
+      if (!as.length || !window.matchMedia) return;
+      if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+      as.forEach(function (a) {
+        var d = a.dataset;
+        if (!d.kx || !d.ky || !d.kname) return;
+        a.href = 'https://m.map.kakao.com/actions/routeView?startLoc=&startX=&startY=' +
+          '&endLoc=' + encodeURIComponent(d.kname) + '&endX=' + d.kx + '&endY=' + d.ky;
+      });
+    })();
+
+/* ===== 문의 · 약관 모달 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
+   2026-08-27 에 두 벌을 합쳤다. 전에는 같은 검증 로직 90여 줄이 `index.html` 인라인과
+   `src/sub/js/contact.js` 에 나뉘어 있었고, 모달 엔진은 아예 기능이 달랐다
+   (메인만 스택·해시 진입을 지원했다).
+
+   싣는 경로가 둘이다 — 파일은 하나다:
+     메인   `index.html` 의 `<script src="assets/js/contact.js" defer>`
+     서브   front-matter `"js": ["contact"]` → `pages.mjs` 가 인라인
+   `tools/build/pages.mjs` 가 빌드 때마다 이 파일을 `assets/js/contact.js` 로 복사한다.
+
+   ⚠ 이 파일은 **두 화면에서 모두 돌아간다.** 한쪽에만 있는 요소를 전제하지 말 것 —
+     서브페이지에는 `#privacy` 약관 모달이 없고, 메인에는 서브 LNB 가 없다.
+     선택자는 항상 `.pv` · `.ct-*` 처럼 **양쪽에 같은 이름으로 있는 것**만 쓴다.
+   ⚠ 모듈이 아니다(번들러 없음). 전역을 더럽히지 않도록 IIFE 로 감싼다. */
+
+/* ── 모달 엔진 — 페이지의 `.pv` 전부를 맡는다 ───────────────────────── */
+(function () {
+  const stack = [];
+  const modals = [...document.querySelectorAll('.pv')];
+  if (!modals.length) return;
+
+  const lock = () => { document.body.style.overflow = 'hidden'; };
+  const unlock = () => { if (!stack.length) document.body.style.overflow = ''; };
+
+  function open(el, trigger) {
+    if (!el || stack.includes(el)) return;
+    el.__return = trigger || document.activeElement;
+    el.style.zIndex = 120 + stack.length * 10;   // 위에 열리는 모달이 항상 앞
+    el.hidden = false;
+    lock();
+    void el.offsetWidth;                          // 리플로우 강제 → rAF 없이 전환 시작
+    el.classList.add('on');
+    stack.push(el);
+    (el.querySelector('.pv-x') || el.querySelector('.pv-panel')).focus({ preventScroll: true });
+  }
+
+  function close(el) {
+    const i = stack.indexOf(el);
+    if (i === -1) return;
+    stack.splice(i, 1);
+    el.classList.remove('on');
+    const panel = el.querySelector('.pv-panel');
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; el.hidden = true; unlock(); };
+    // 트랜지션이 없거나 끝나지 않는 환경에서도 확실히 닫히도록
+    panel.addEventListener('transitionend', done, { once: true });
+    setTimeout(done, 420);
+    if (el.__return && el.__return.focus) el.__return.focus({ preventScroll: true });
+  }
+
+  modals.forEach((el) => {
+    el.querySelector('.pv-panel').setAttribute('tabindex', '-1');
+    el.querySelectorAll('[data-pv-close]').forEach((b) => b.addEventListener('click', () => close(el)));
+    el.addEventListener('keydown', (e) => {                     // 패널 안 포커스 순환
+      if (e.key !== 'Tab') return;
+      const f = [...el.querySelectorAll('.pv-panel a[href],.pv-panel button,.pv-panel input,.pv-panel textarea,.pv-panel [tabindex]:not([tabindex="-1"])')]
+        .filter((n) => n.offsetParent !== null && !n.disabled);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  });
+
+  /* 같은 페이지 안에서 그 id 를 가리키는 링크가 모달을 연다.
+     ⚠ 서브페이지의 `문의하기` 는 `index.html#contact` 처럼 **파일명이 붙은** 형태일 수 있다.
+       그 페이지에 같은 id 의 모달이 있으면 이동하지 않고 그 자리에서 연다. */
+  document.querySelectorAll('a[href*="#"]').forEach((a) => {
+    const href = a.getAttribute('href');
+    if (/^https?:/.test(href)) return;
+    const el = document.getElementById(href.slice(href.indexOf('#') + 1));
+    if (!el || !el.classList.contains('pv')) return;
+    a.addEventListener('click', (e) => { e.preventDefault(); open(el, a); });
+  });
+
+  /* 다른 페이지에서 `index.html#contact` 로 들어온 경우 — 해시가 가리키는 모달을 연다.
+     ⚠ 위 바인딩은 **같은 페이지 안의 클릭**만 잡는다. 이게 없으면 메인에 도착만 하고
+       폼이 열리지 않는다(2026-08-26 이전까지 실제로 그랬다).
+     ⚠ `open` 의 두 번째 인수는 닫은 뒤 포커스를 돌려줄 요소다 — 해시 진입에는 없으므로
+       `null` 을 준다(그러면 `document.activeElement` 로 떨어진다). */
+  const openFromHash = () => {
+    const id = location.hash.slice(1);
+    const el = id && document.getElementById(id);
+    if (el && el.classList.contains('pv')) open(el, null);
+  };
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
+
+  // ESC → 가장 위 모달만 닫기
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && stack.length) close(stack[stack.length - 1]);
+  });
+
+  window.bcityCloseModal = close;   // 폼 전송 완료 후 닫기용
+})();
+
+/* ── 문의 폼 ────────────────────────────────────────────────────────
+   서버가 없으므로 기본 동작은 메일 클라이언트로 내용을 넘기는 방식이다.
+   백엔드가 준비되면 CT_ENDPOINT 에 URL 을 넣으면 fetch POST 로 전송된다. */
+(function () {
+  const CT_ENDPOINT = '';   // 예: 'https://api.b-city.kr/inquiry'
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  const status = document.getElementById('ctStatus');
+  const showErr = (key, on) => {
+    const el = form.querySelector('[data-err="' + key + '"]');
+    if (el) el.classList.toggle('on', on);
+  };
+  const setBad = (el, on) => el && el.classList.toggle('bad', on);
+
+  // 휴대전화 자동 하이픈
+  const tel = form.elements.tel;
+  tel.addEventListener('input', () => {
+    const d = tel.value.replace(/\D/g, '').slice(0, 11);
+    tel.value = d.length < 4 ? d
+      : d.length < 8 ? d.slice(0, 3) + '-' + d.slice(3)
+        : d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
+  });
+
+  const checks = {
+    interest: () => [...form.querySelectorAll('input[name="interest"]')].some((c) => c.checked),
+    name: () => form.elements.name.value.trim().length > 0,
+    tel: () => /^01[016789]-?\d{3,4}-?\d{4}$/.test(form.elements.tel.value.replace(/\s/g, '')),
+    email: () => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.elements.email.value.trim()),
+    message: () => form.elements.message.value.trim().length > 0,
+    agreeRequired: () => form.elements.agreeRequired.checked,
+  };
+
+  // 입력 중 에러 해제
+  ['name', 'tel', 'email', 'message'].forEach((k) => {
+    form.elements[k].addEventListener('input', () => {
+      if (checks[k]()) { showErr(k, false); setBad(form.elements[k], false); }
+    });
+  });
+  form.querySelectorAll('input[name="interest"]').forEach((c) =>
+    c.addEventListener('change', () => { if (checks.interest()) showErr('interest', false); }));
+  form.elements.agreeRequired.addEventListener('change', () => {
+    if (checks.agreeRequired()) showErr('agreeRequired', false);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    status.className = 'ct-status';
+    let firstBad = null;
+    for (const key of Object.keys(checks)) {
+      const ok = checks[key]();
+      showErr(key, !ok);
+      // name 이 여러 개인 필드(interest)는 RadioNodeList 가 오므로 focus 가능한 요소로 바꾼다
+      let field = form.elements[key];
+      if (!field || typeof field.focus !== 'function') field = form.querySelector('[name="' + key + '"]');
+      if (field && field.classList.contains('ct-input')) setBad(field, !ok);
+      if (!ok && !firstBad) firstBad = field;
+    }
+    if (firstBad) {
+      firstBad.focus({ preventScroll: false });
+      status.textContent = '입력하지 않은 필수 항목이 있습니다.';
+      status.className = 'ct-status on ng';
+      return;
+    }
+
+    const data = {
+      관심분야: [...form.querySelectorAll('input[name="interest"]:checked')].map((c) => c.value).join(', '),
+      '회사명/이름': form.elements.name.value.trim(),
+      휴대전화: form.elements.tel.value.trim(),
+      이메일: form.elements.email.value.trim(),
+      문의내용: form.elements.message.value.trim(),
+      마케팅활용동의: form.elements.agreeMarketing.checked ? '동의' : '미동의',
+    };
+
+    if (CT_ENDPOINT) {
+      const btn = document.querySelector('#contact .ct-submit');
+      btn.disabled = true;
+      status.textContent = '전송 중입니다…';
+      status.className = 'ct-status on';
+      fetch(CT_ENDPOINT, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error(r.status); form.reset();
+          status.textContent = '문의가 정상적으로 접수되었습니다. 담당자가 확인 후 연락드립니다.';
+          status.className = 'ct-status on ok';
+          setTimeout(() => {
+            if (window.bcityCloseModal) window.bcityCloseModal(document.getElementById('contact'));
+          }, 1800);
+        })
+        .catch(() => {
+          status.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+          status.className = 'ct-status on ng';
+        })
+        .finally(() => { btn.disabled = false; });
+      return;
+    }
+
+    /* 백엔드 미연결: 메일 본문으로 넘긴다.
+       ⚠⚠ 수신 주소를 **화면에 띄우지 않는다**(2026-09-01 지시: '개인 메일 노출은 숨기고').
+         담당자 연락처 카드도 같은 이유로 걷어냈다. 여기 남은 주소는 mailto 대상일 뿐
+         어떤 문구에도 찍히지 않는다 — 문구에 다시 넣지 말 것.
+       ⚠ 이 폴백을 지우지 말 것. CT_ENDPOINT 가 붙기 전까지 문의를 받는 유일한 경로다.
+         엔드포인트가 붙으면 서버가 담당자 여러 명에게 자동 발송하고, 이 분기는 안 탄다. */
+    const body = Object.entries(data).map(([k, v]) => k + ' : ' + v).join('\n');
+    const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
+    location.href = 'mailto:juyoung@biotech-iv.com?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+    status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 다시 시도해 주세요.';
+    status.className = 'ct-status on ok';
+  });
+
+  form.addEventListener('reset', () => {
+    form.querySelectorAll('.ct-err.on').forEach((el) => el.classList.remove('on'));
+    form.querySelectorAll('.ct-input.bad').forEach((el) => el.classList.remove('bad'));
+    status.className = 'ct-status';
+  });
+})();
   </script>
 </body>
 </html>

@@ -4,94 +4,351 @@
   "title": "컨셉 · B-CITY 춘천기업혁신파크",
   "description": "AI DATA · BIO INDUSTRY · PHYSICAL AI · FOOD CLUSTER. 4개의 축이 유기적으로 연결되어 완성되는 미래 산업 혁신 허브를 소개합니다.",
   "nav": "concept",
-  "heroImg": "assets/slide-datarush.jpg",
   "h1": "컨셉",
-  "css": ["page-shared", "page-city"]
+  "css": ["page-shared", "page-city"],
+  "js": ["lazyvid"]
 }
 -->
     <!-- ===== 도시 컨셉 (스토리보드 v2 slide53~56) ===== -->
-    <section class="sec" id="concept">
+    <section class="sec cx-sec" id="concept">
+      <!-- 배경 — 메인 `#concept` 과 **같은 두 겹**이다(2026-08-21 지시):
+             ① `concept-grid.png` 격자 패턴 (opacity .2)
+             ② `concept-city` 아이소메트릭 도시 일러스트
+           ⚠ 메인도 격자를 `object-fit: cover` 로 늘려 쓴다(타일 반복이 아니다) — 같게 맞춘다.
+           ⚠ AVIF 를 `<picture>` 로 감싸되 이 안에는 겹침 전제가 없어 안전하다(§11.5-4 는 계획도 얘기다). -->
+      <div class="cx-bg" aria-hidden="true">
+        <img class="cx-bg-grid" src="assets/img/concept-grid.png" alt=""
+             width="256" height="256" loading="lazy" decoding="async" />
+        <picture>
+          <source type="image/avif" media="(max-width: 767px)" srcset="assets/img/concept-city@m.avif" />
+          <source type="image/avif" srcset="assets/img/concept-city.avif" />
+          <img class="cx-bg-city" src="assets/img/concept-city.png" alt=""
+               width="1660" height="934" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+
+      <div class="wrap cx-top">
+        <div class="cx-lead">
+          <p class="eyebrow rv"><i aria-hidden="true"></i><b>CITY CONCEPT</b><span>도시 컨셉</span></p>
+          <!-- ⚠ 줄바꿈 위치 — `성장하는` 을 **둘째 줄**로 내린다(2026-08-21 지시).
+               첫 줄이 짧아지면서 카피 칸이 줄어들고, 남는 폭은 다이어그램이 받는다. -->
+          <h2 class="h2 rv">AI를 기반으로 BIO · 로보틱스 산업이<br />
+            성장하는 <em>AI Living Lab, B-CITY</em></h2>
+          <!-- ⚠ `4개의 축이` 앞에서 줄을 바꾼다(2026-08-21 지시) — 네 축 이름과 설명을
+               한 줄에 섞으면 무엇이 이름이고 무엇이 설명인지 경계가 흐려진다. -->
+          <p class="lede rv">AI DATA · BIO INDUSTRY · PHYSICAL AI · FOOD CLUSTER<br />
+            4개의 축이 유기적으로 연결되어 완성되는 미래 산업 혁신 허브</p>
+        </div>
+
+        <!-- 4축 허브 다이어그램 — 메인페이지 `#concept` 의 `.cn-dia` 를 **좁은 칸용으로 줄인 것**이다
+             (2026-08-21 지시 · 첨부 디자인). 색 · 그라디언트 · 아이콘 4개를 그대로 쓴다:
+               허브   #4A78F2 → #222F8E, 바깥 링 #A4D9FF / 흰 테두리
+               아이콘 linear-gradient(35deg, #4a78f2 14.1%, #27359e 85.9%)
+               오비트 #A9BEEC · 커넥터 #BBCCF0
+             ⚠ 좌표는 viewBox 1000x740 비율의 **퍼센트**다. px 로 박으면 칸 폭이 바뀔 때 어긋난다.
+             ⚠ 일렬 카드(`.cc-flow`)는 제거했다 — 같은 내용을 두 형태로 두지 않는다. -->
+        <div class="cx-dia rv">
+          <svg class="cx-orbit" viewBox="0 0 1000 740" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cxDotG" x1="0" y1="0" x2="0" y2="1">
+                <stop stop-color="#A6C1D4" /><stop offset=".48" stop-color="#80A6C2" /><stop offset="1" stop-color="#B2CADA" />
+              </linearGradient>
+            </defs>
+            <ellipse class="cx-ring" pathLength="1" cx="500" cy="370" rx="360" ry="280"
+                     stroke="#A9BEEC" stroke-opacity=".8" stroke-width="2.6" />
+            <path class="cx-conn" pathLength="1" d="M500 190V245" stroke="#BBCCF0" stroke-width="3" />
+            <path class="cx-conn" pathLength="1" d="M500 495V550" stroke="#BBCCF0" stroke-width="3" />
+            <path class="cx-conn" pathLength="1" d="M240 370H375" stroke="#BBCCF0" stroke-width="3" />
+            <path class="cx-conn" pathLength="1" d="M625 370H760" stroke="#BBCCF0" stroke-width="3" />
+            <circle class="cx-dot" cx="245" cy="172" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+            <circle class="cx-dot" cx="755" cy="172" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+            <circle class="cx-dot" cx="245" cy="568" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+            <circle class="cx-dot" cx="755" cy="568" r="11" stroke="url(#cxDotG)" stroke-width="6" />
+          </svg>
+
+          <div class="cx-hub">
+            <svg viewBox="0 0 222.75 222.75" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="cxHubG" x1="111.375" y1="210.375" x2="111.375" y2="12.375" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#4A78F2" /><stop offset="1" stop-color="#222F8E" />
+                </linearGradient>
+              </defs>
+              <rect x=".65" y=".65" width="221.45" height="221.45" rx="110.725" fill="#A4D9FF" stroke="#C7D6F5" stroke-width="1.3" />
+              <circle cx="111.375" cy="111.375" r="97.5" fill="url(#cxHubG)" stroke="#fff" stroke-width="3" />
+            </svg>
+            <span class="cx-hub-txt"><b>AI</b><i>Living Lab</i><span>B-CITY</span></span>
+          </div>
+
+          <article class="cx-node cx-node--n">
+            <span class="cx-ic"><img src="assets/icon/concept-aidata.svg?v=2" alt=""
+                   width="31.9" height="29.55" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">AI DATA</p>
+          </article>
+          <article class="cx-node cx-node--w">
+            <span class="cx-ic"><img src="assets/icon/concept-bio.svg?v=2" alt=""
+                   width="16.04" height="32.57" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">BIO<br />INDUSTRY</p>
+          </article>
+          <article class="cx-node cx-node--e">
+            <span class="cx-ic"><img src="assets/icon/concept-physical.svg?v=2" alt=""
+                   width="26.63" height="26.59" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">PHYSICAL AI</p>
+          </article>
+          <article class="cx-node cx-node--s">
+            <span class="cx-ic"><img src="assets/icon/concept-food.svg?v=2" alt=""
+                   width="35.12" height="31.91" loading="lazy" decoding="async" /></span>
+            <p class="cx-tt">FOOD<br />CLUSTER</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 01 AI DATA ===== -->
+    <section class="sec cc-ax" id="ai-data">
+      <!-- 큰 비주얼 — 전폭. 텍스트를 **위에 얹는다**(2026-08-21 지시).
+           ⚠ 미디어를 어둡게 눌러(`.cc-hero-m` opacity) + 스크림 한 겹을 더해
+             흰 글자 대비를 실측으로 확보한다. 레퍼런스는 미디어 40%만 쓰는데
+             그러면 작은 글자가 AA 에 못 미친다(17px 에서 약 3.5). -->
+      <figure class="cc-hero rv">
+          <video class="cc-hero-m" muted loop playsinline preload="none"
+                 poster="assets/still/concept/cc-aidata.jpg"
+                 data-src="assets/vid/cc-aidata.mp4"
+                 aria-label="데이터센터 컴퓨팅 인프라"></video>
+        <div class="cc-hero-tx">
+          <div class="wrap">
+            <p class="cc-ax-eye"><b>01</b>데이터 인프라와 AI 컴퓨팅의 시작</p>
+            <h3 class="cc-big">AI DATA</h3>
+            <p class="cc-t">첨단 스마트 도시를 견인하는<br />최대 330MW 하이퍼스케일 데이터센터</p>
+            <p class="cc-s">AI 확산으로 급증하는 전력 수요에 부합하는 하이퍼스케일 데이터센터 거점 도시</p>
+          </div>
+        </div>
+      </figure>
+
+      <!-- ⚠ 네 축 12장이 **한 세트**다(v5 · 2026-08-26 지시). IM 12·13페이지 아이소메트릭을
+           기준으로 다시 만든 것이라 시점 · 색 · 여백이 통일돼 있다 — 한 장만 다른 데서
+           가져오면 그 카드만 튄다.
+           ⚠ 배경이 **순백(#FFFFFF)** 이다. 앞선 AI DATA 투명본과 달라 `.cc-im-f--iso`
+             (배경 없음 · 라운드 0 · drop-shadow)를 쓰지 않는다 — 기본 카드 이미지 규칙이
+             흰 판에 라운드를 준다.
+           ⚠ FOOD 03 은 납품 라스터에 **연결선이 없다**(별도 SVG 오버레이). 구울 때 합성했다 —
+             선이 빠지면 '지역 연계' 라는 카드 뜻이 사라진다. -->
       <div class="wrap">
-        <p class="eyebrow rv"><i aria-hidden="true"></i><b>CITY CONCEPT</b><span>도시 컨셉</span></p>
-        <h2 class="h2 rv">AI를 기반으로 BIO · 로보틱스 산업이 성장하는<br />
-          <em>AI Living Lab, B-CITY</em></h2>
-        <p class="lede rv">AI DATA · BIO INDUSTRY · PHYSICAL AI · FOOD CLUSTER —
-          4개의 축이 유기적으로 연결되어 완성되는 미래 산업 혁신 허브</p>
+        <ul class="cc-im">
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>01</b>전력 인프라</p>
+            <p class="cc-im-d">최대 330MW 하이퍼스케일 수전 체계</p>
+            <ul class="cc-im-l"><li>최대 수전용량 330MW · 154kV 직접 수전</li><li>IT Load 240MW 규모의 안정적 전력 공급</li><li>목표 PUE 1.2 의 저비용 · 고효율 설계</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-ai-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="송전탑 · 변전 설비 · UPS · 냉각을 거쳐 데이터센터로 이어지는 전력 체계" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>02</b>집적 규모</p>
+            <p class="cc-im-d">DC1~DC5 5개 블록의 데이터센터 집적단지</p>
+            <ul class="cc-im-l"><li>DC1~DC5 5개 블록 순차 개발</li><li>Low &amp; Wide 설계로 초기 투자비 절감</li><li>입주기업 전용 데이터센터 구축</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-ai-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="공용 유틸리티를 가운데 둔 DC1~DC5 저층형 5개 블록" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>03</b>연산 기반</p>
+            <p class="cc-im-d">AI 연산부터 도시 운영까지 담당하는 컴퓨팅 기반</p>
+            <ul class="cc-im-l"><li>NVIDIA 기반 고성능 GPU 바이오 플랫폼</li><li>바이오 · 의료 데이터 수집 · 관리 · 연구</li><li>도시 운영 시스템 실시간 연산 지원</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-ai-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="GPU 연산 · 바이오 분석 · 도시 운영을 담당하는 컴퓨팅 기반" />
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </section>
 
-        <!-- 4축 연결 다이어그램 — 최신 기획서(와이어프레임)에 있는 구성이다.
-             네 축이 **한 방향으로 이어지는 흐름**이라는 게 요지라 화살표로 잇는다.
-             ⚠ 화살표는 CSS 로 그린다 — 삼각형 하나라 SVG 가 필요 없다.
-             ⚠ 좁은 화면에서는 세로로 쌓고 화살표도 아래를 향한다. 목록 순서가 곧 흐름이라
-               마크업은 그대로 두고 CSS 만 바꾼다. -->
-        <ol class="cc-flow rv">
-          <li class="cc-flow-i"><b>01</b><span>AI 데이터센터</span></li>
-          <li class="cc-flow-i"><b>02</b><span>BIO INDUSTRY</span></li>
-          <li class="cc-flow-i"><b>03</b><span>PHYSICAL AI</span></li>
-          <li class="cc-flow-i"><b>04</b><span>FOOD CLUSTER</span></li>
-        </ol>
-
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>01</b>AI DATA</p>
-          <h3 class="cc-t">첨단 스마트 도시를 견인하는<br />최대 330MW 하이퍼스케일 데이터센터</h3>
-          <p class="cc-s">AI 확산으로 급증하는 전력 수요에 부합하는 하이퍼스케일 데이터센터 거점 도시</p>
-          <p class="cc-d">B-CITY는 최대 330MW 규모의 하이퍼스케일 데이터센터를 기반으로 도시 전반의 컴퓨팅 인프라를 구축합니다. AI 연산, 바이오 데이터 처리, 도시 운영 시스템까지 지원하는 차세대 컴퓨팅 허브입니다.</p>
+    <!-- ===== 02 BIO INDUSTRY ===== -->
+    <section class="sec cc-ax" id="bio">
+      <!-- 큰 비주얼 — 전폭. 텍스트를 **위에 얹는다**(2026-08-21 지시).
+           ⚠ 미디어를 어둡게 눌러(`.cc-hero-m` opacity) + 스크림 한 겹을 더해
+             흰 글자 대비를 실측으로 확보한다. 레퍼런스는 미디어 40%만 쓰는데
+             그러면 작은 글자가 AA 에 못 미친다(17px 에서 약 3.5). -->
+      <figure class="cc-hero rv">
+          <video class="cc-hero-m" muted loop playsinline preload="none"
+                 poster="assets/still/concept/cc-bio.jpg"
+                 data-src="assets/vid/cc-bio.mp4"
+                 aria-label="정밀 바이오 연구"></video>
+        <div class="cc-hero-tx">
+          <div class="wrap">
+            <p class="cc-ax-eye"><b>02</b>연구부터 생산까지 이어지는 바이오 혁신 생태계</p>
+            <h3 class="cc-big">BIO INDUSTRY</h3>
+            <p class="cc-t">美 생물보안법 시행에 따른 역대급 수주기회를 선점할<br />AI를 활용한 신약개발 및 중소형 CDMO 거점 도시</p>
+            <p class="cc-s">27~28년 美 생물보안법 효력 발생 시 글로벌 제약사의 中 의존 탈피 및 블록버스터 특허 만료 도래, 한국 CDMO · CRO에 역대급 수주 기회</p>
+          </div>
         </div>
+      </figure>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>02</b>BIO INDUSTRY</p>
-          <h3 class="cc-t">美 생물보안법 시행에 따른 역대급 수주기회를 선점할<br />AI를 활용한 신약개발 및 중소형 CDMO 거점 도시</h3>
-          <p class="cc-s">27~28년 美 생물보안법 효력 발생 시 글로벌 제약사의 中 의존 탈피 및 블록버스터 특허 만료 도래, 한국 CDMO · CRO에 역대급 수주 기회</p>
-          <p class="cc-d">AI 신약개발부터 위탁생산 · 임상까지 이어지는 완결형 바이오 밸류체인을 82,000평 규모에 집적합니다.</p>
+      <div class="wrap">
+        <ul class="cc-im">
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>01</b>연구개발</p>
+            <p class="cc-im-d">AI 신약개발 · 유전체 분석 기반 R&amp;D</p>
+            <ul class="cc-im-l"><li>AI 기반 신약 R&amp;D (암 · 당뇨 등 난치 · 희귀 질환)</li><li>유전체 분석 기반 바이오마커 발굴</li><li>AI 기반 디지털 헬스케어 연구 · 개발</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-bio-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="AI 신약개발과 유전체 분석 연구 환경" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>02</b>생산 · 임상</p>
+            <p class="cc-im-d">위탁생산부터 임상까지 완결형 밸류체인</p>
+            <ul class="cc-im-l"><li>중소형 CDMO 공장 신 · 증설에 적합한 부지</li><li>중소 규모 바이오 · 제약 기업 집적</li><li>임상 연구 지원 인프라를 통한 상용화 지원</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-bio-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="상단 생산 설비와 하단 품질관리 · 임상 지원의 2단 구성" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>03</b>집적 규모</p>
+            <p class="cc-im-d">82,000평 규모 첨단 바이오 클러스터</p>
+            <ul class="cc-im-l"><li>첨단 바이오 클러스터 82,000평 조성</li><li>데이터 수집 · AI 분석 · 생산으로 이어지는 밸류체인</li><li>생산 · 임상 데이터 환류로 선순환 구조 실현</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-bio-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="연구 · 데이터 · 생산 · 임상이 이어지는 클러스터" />
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 03 PHYSICAL AI ===== -->
+    <section class="sec cc-ax" id="physical-ai">
+      <!-- 큰 비주얼 — 전폭. 텍스트를 **위에 얹는다**(2026-08-21 지시).
+           ⚠ 미디어를 어둡게 눌러(`.cc-hero-m` opacity) + 스크림 한 겹을 더해
+             흰 글자 대비를 실측으로 확보한다. 레퍼런스는 미디어 40%만 쓰는데
+             그러면 작은 글자가 AA 에 못 미친다(17px 에서 약 3.5). -->
+      <figure class="cc-hero rv">
+          <img class="cc-hero-m" src="assets/img/concept/cc-physical-hero.avif"
+               width="1920" height="820" loading="lazy" decoding="async"
+               alt="도시에 적용되는 서비스 로봇" />
+        <div class="cc-hero-tx">
+          <div class="wrap">
+            <p class="cc-ax-eye"><b>03</b>로봇 · 모빌리티 · AI 자동화가 구현되는 미래 도시</p>
+            <h3 class="cc-big">PHYSICAL AI</h3>
+            <p class="cc-t">로봇 · 자율주행 · AI 자동화를 구현하는<br />첨단 Physical AI 선도 도시</p>
+            <p class="cc-s">AI 기술을 실제 도시 환경에 적용하여 산업 · 교통 · 생활 전반의 혁신을 실현하는 미래 도시</p>
+          </div>
         </div>
+      </figure>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>03</b>PHYSICAL AI</p>
-          <h3 class="cc-t">로봇 · 자율주행 · AI 자동화를 구현하는<br />첨단 Physical AI 선도 도시</h3>
-          <p class="cc-s">AI 기술을 실제 도시 환경에 적용하여 산업 · 교통 · 생활 전반의 혁신을 실현하는 미래 도시</p>
-          <ul class="cc-gs">
-            <li class="cc-g">
-              <b class="cc-g-t">지능형 로보틱스</b>
-              <p class="cc-g-s">휴머노이드 · 서비스 로봇 실증 거점</p>
-              <ul class="cc-g-l"><li>AI 기반 로보틱스 R&amp;D 센터 유치</li><li>휴머노이드 · 서비스 로봇 실증 트랙 구축</li><li>로봇 부품 · 소재 협력 클러스터 조성</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">스마트 모빌리티</b>
-              <p class="cc-g-s">자율주행 · 미래 모빌리티 상용화 도시</p>
-              <ul class="cc-g-l"><li>자율주행 실증 도로망 구축</li><li>도심항공교통(UAM) 이착륙 인프라 조성</li><li>스마트 물류 · 배송 로봇 상용화 지원</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">AI 자동화</b>
-              <p class="cc-g-s">설계부터 관제까지 도시 전반의 디지털 통합 운영</p>
-              <ul class="cc-g-l"><li>도시 설계 단계 디지털 트윈 시뮬레이션 기반 최적화</li><li>설계 · 건설 · 에너지 · 교통 등 도시 인프라 통합 관리 시스템 구현</li><li>AI를 통한 도시데이터 표준화 및 실시간 대응</li></ul>
-            </li>
-          </ul>
+      <!-- IM 슬라이드 12(도시 핵심 컨셉 3 · PHYSICAL AI)의 구성을 그대로 옮겼다
+           (2026-08-25 지시). 실측 배치 — 카드 3장(x 46 · 449 · 852, 폭 382, 높이 405),
+           각 카드는 [번호 원 + 제목] · [한 줄 설명] · [불릿 3개] · [하단 이미지].
+           ⚠ 색은 IM 의 네이비가 아니라 **이 축의 색(`--ax`)** 을 쓴다. 컨셉 페이지는 축마다
+             색이 다르고, IM 은 한 벌이라 네이비였을 뿐이다. 작은 글자는 `--ax-t` 를 쓴다
+             (8대 권역색 원본은 밝은 바탕에서 4.5 에 못 미친다 · §11.44).
+           ⚠ 이 축만 다른 구성이 된다 — 나머지 세 축은 [3항목 | 사진 2x2] 그대로다. -->
+      <div class="wrap">
+        <ul class="cc-im">
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>01</b>지능형 로보틱스</p>
+            <p class="cc-im-d">휴머노이드 · 서비스 로봇 실증 거점</p>
+            <ul class="cc-im-l"><li>AI 기반 로보틱스 R&amp;D 센터 유치</li><li>휴머노이드 · 서비스 로봇 실증 트랙 구축</li><li>로봇 부품 · 소재 협력 클러스터 조성</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-phy-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="휴머노이드 · 서비스 로봇 · 부품 시험 실증 환경" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>02</b>스마트 모빌리티</p>
+            <p class="cc-im-d">자율주행 · 미래 모빌리티 상용화 도시</p>
+            <ul class="cc-im-l"><li>자율주행 실증 도로망 구축</li><li>도심항공교통(UAM) 이착륙 인프라 조성</li><li>스마트 물류 · 배송 로봇 상용화 지원</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-phy-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="자율주행 · UAM · 배송 로봇 실증 환경" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>03</b>AI 자동화</p>
+            <p class="cc-im-d">설계부터 관제까지 도시 전반의 디지털 통합 운영</p>
+            <ul class="cc-im-l"><li>도시 설계 단계 디지털 트윈 시뮬레이션 기반 최적화</li><li>설계 · 건설 · 에너지 · 교통 등 도시 인프라 통합 관리 시스템 구현</li><li>AI 를 통한 도시데이터 표준화 및 실시간 대응</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-phy-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="소형 도시 운영 모듈과 AI 통합 관제" />
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 04 FOOD CLUSTER ===== -->
+    <section class="sec cc-ax" id="food">
+      <!-- 큰 비주얼 — 전폭. 텍스트를 **위에 얹는다**(2026-08-21 지시).
+           ⚠ 미디어를 어둡게 눌러(`.cc-hero-m` opacity) + 스크림 한 겹을 더해
+             흰 글자 대비를 실측으로 확보한다. 레퍼런스는 미디어 40%만 쓰는데
+             그러면 작은 글자가 AA 에 못 미친다(17px 에서 약 3.5). -->
+      <figure class="cc-hero rv">
+          <img class="cc-hero-m" src="assets/img/concept/cc-food-hero.avif"
+               width="1920" height="820" loading="lazy" decoding="async"
+               alt="푸드물류 클러스터" />
+        <div class="cc-hero-tx">
+          <div class="wrap">
+            <p class="cc-ax-eye"><b>04</b>스마트 푸드와 물류가 연결되는 산업 허브</p>
+            <h3 class="cc-big">FOOD CLUSTER</h3>
+            <p class="cc-t">연 2조원의 대규모 군 급식 민간 위탁 수요를 안정적으로 확보하는<br />차세대 강원형 푸드물류 클러스터 거점 도시</p>
+            <p class="cc-s">2022년부터 급식업체 선정에 완전경쟁입찰제가 도입되어 민간 위탁 급식이 점진적으로 확대되고 있습니다</p>
+          </div>
         </div>
+      </figure>
 
-        <div class="cc-axis rv">
-          <p class="cc-cat"><b>04</b>FOOD CLUSTER</p>
-          <h3 class="cc-t">연 2조원의 대규모 군 급식 민간 위탁 수요를 안정적으로 확보하는<br />차세대 강원형 푸드물류 클러스터 거점 도시</h3>
-          <p class="cc-s">2022년부터 급식업체 선정에 완전경쟁입찰제가 도입되어 민간 위탁 급식이 점진적으로 확대되고 있습니다</p>
-          <ul class="cc-gs">
-            <li class="cc-g">
-              <b class="cc-g-t">콜드체인 인프라</b>
-              <ul class="cc-g-l"><li>대규모 저온 · 냉동 저장소</li><li>전국 연결 물류 네트워크</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">푸드테크 생태계</b>
-              <ul class="cc-g-l"><li>ICT · R&amp;D 기반 미래형 식품산업</li><li>새로운 표준 제시</li></ul>
-            </li>
-            <li class="cc-g">
-              <b class="cc-g-t">지역 연계</b>
-              <ul class="cc-g-l"><li>강원 · 수도권 · 전국을 잇는 광역 물류 거점</li><li>강원권 군 부대 군 급식 위탁 수요 연계 (안정적 대규모 판로 확보)</li></ul>
-            </li>
-          </ul>
-        </div>
+      <div class="wrap">
+        <ul class="cc-im">
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>01</b>콜드체인 인프라</p>
+            <p class="cc-im-d">대규모 저온 · 냉동 저장소와 전국 물류 네트워크</p>
+            <ul class="cc-im-l"><li>AI 환경제어 스마트 보관 시스템</li><li>대규모 저온 · 냉동 저장소 운영</li><li>강원 · 수도권 · 전국 통합 물류 네트워크</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-food-1.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="대규모 저온 · 냉동 저장과 전력 · 물류 네트워크" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>02</b>푸드테크 생태계</p>
+            <p class="cc-im-d">ICT · R&amp;D 기반 미래형 식품산업</p>
+            <ul class="cc-im-l"><li>ICT 환경제어 스마트 연구관리</li><li>라이프로그 · 헬스데이터 기반 맞춤 케이터링</li><li>차세대 먹거리 연구 · 양산 산업 환경 조성</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-food-2.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="ICT 환경제어 · R&amp;D · 맞춤형 케이터링 생태계" />
+            </figure>
+          </li>
+          <li class="cc-im-c rv rv-x">
+            <p class="cc-im-h"><b>03</b>지역 연계</p>
+            <p class="cc-im-d">광역 물류 거점과 군 급식 위탁 수요 연계</p>
+            <ul class="cc-im-l"><li>강원 · 수도권 · 전국을 잇는 광역 물류 거점</li><li>강원권 군 부대 급식 위탁 수요 연계</li><li>안정적 대규모 판로 확보</li></ul>
+            <figure class="cc-im-f">
+              <img src="assets/img/concept/iso-food-3.avif" width="1200" height="676"
+                   loading="lazy" decoding="async"
+                   alt="중앙 물류 거점과 냉동창고 · 군부대 · 단체급식 수요처 연계" />
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </section>
 
+    <!-- ===== 마무리 ===== -->
+    <section class="sec">
+      <div class="wrap">
         <div class="closer rv">
-          <p>4대 산업이 만드는 <em>하나의 도시</em><br />
-            B-CITY는 대한민국 첨단 산업의 새로운 중심이 됩니다</p>
+          <p>4대 산업이 만드는 하나의 도시, B-CITY는 대한민국 첨단 산업의 <em>새로운 중심</em>이 됩니다</p>
         </div>
-
-        <p class="note">※ 상기 계획(안)은 국토교통부 통합개발계획 접수(안) 기준으로 작성된 것으로, 추후 사업 주체 또는 관계 기관 사정, 인허가 과정 등에 따라 변경될 수 있습니다.</p>
       </div>
     </section>

@@ -359,6 +359,9 @@ function field({ label, req, type, control, hint }) {
 const input = (ph) => `<input class="ad-in" type="text" placeholder="${esc(ph)}" />`;
 const sel = (opts) => `<select class="ad-sel">${opts.map((o) => `<option>${esc(o)}</option>`).join('')}</select>`;
 const date = () => '<input class="ad-in" type="date" style="max-width:220px" />';
+/* 요약처럼 짧은 여러 줄 입력. 본문은 `editor()` 를 쓴다 — 이쪽은 서식이 필요 없다. */
+const area = (ph, rows = 2) => `<textarea class="ad-in" rows="${rows}"`
+  + ` placeholder="${esc(ph)}" style="resize:vertical"></textarea>`;
 /* 토글은 실제로 눌린다(2026-08-18 지시). `<div>` 가 아니라 `<button aria-pressed>` 로
    내야 키보드·스크린리더에서도 상태가 읽힌다 — 상태 전환은 셸의 인라인 스크립트가 맡는다. */
 const toggle = (on, t) => `<button type="button" class="ad-toggle${on ? ' is-on' : ''}"`
@@ -566,12 +569,16 @@ pages['notice-form.html'] = shell({
     title: '공지사항 등록 / 수정',
     slug: 'notice', preview: '../notice.html',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '필수 · 최대 100자' }),
-      field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '리치 텍스트 에디터 · 이미지 삽입 가능' }),
-      field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '다중 첨부 · 파일당 최대 20MB')
+      field({ label: '제목', req: true, type: 'INPUT', control: input('공지 제목'), hint: '꼭 입력해 주세요. 100자까지.' }),
+      /* ⚠ 요약 칸이 없었다(2026-08-28 점검). notice.json 의 summary 가 목록에 실제로
+           나온다(.pr-sum) — 비면 제목만 남아 목록이 허전해진다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('목록에 보일 한두 줄'),
+        hint: '목록에서 제목 아래에 보입니다. 비워 두면 제목만 나옵니다.' }),
+      field({ label: '내용', req: true, type: 'TEXT EDITOR', control: editor(), hint: '글자 꾸미기와 이미지 넣기를 할 수 있습니다.' }),
+      field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.')
         + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
-        hint: '다중 첨부 · 파일당 최대 20MB' }),
-      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '목록 최상단에 [공지] 배지와 함께 노출됩니다.' }),
+        hint: '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.' }),
+      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '켜면 목록 맨 위에 고정됩니다.' }),
       pubState(1),
     ],
   }),
@@ -616,12 +623,18 @@ pages['press-form.html'] = shell({
   body: formCard({
     title: '언론보도 등록 / 수정',
     slug: 'press', preview: '../press.html',
-    note: '※ 링크를 클릭하면 해당 기사 URL 로 이동합니다(새 창).',
+    note: '※ 목록에서 제목을 누르면 언론사 기사가 새 창으로 열립니다.',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '필수 · 최대 200자' }),
-      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '목록의 매체명 필터에 그대로 쓰입니다.' }),
-      field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '원 기사 게재일' }),
-      field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 웹사이트 URL · http(s):// 로 시작' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('언론사 원문 제목'), hint: '꼭 입력해 주세요. 200자까지.' }),
+      field({ label: '매체명', req: true, type: 'INPUT', control: input('예: 강원일보 · 파이낸셜뉴스'), hint: '기사 목록에 매체명으로 표시됩니다.' }),
+      field({ label: '보도일자', req: true, type: 'DATE PICKER', control: date(), hint: '기사가 실린 날짜입니다.' }),
+      /* ⚠ 요약 · 본문 칸이 없었다. press.json 은 둘 다 쓴다 —
+           summary 는 목록 줄, body 는 상세 페이지(.post-body)다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('목록에 보일 한두 줄'),
+        hint: '목록에서 제목 아래에 보입니다.' }),
+      field({ label: '내용', type: 'TEXT EDITOR', control: editor(),
+        hint: '상세 페이지에 실릴 본문입니다. 비워 두면 기사 링크로만 안내합니다.' }),
+      field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 기사 주소를 붙여 넣습니다.' }),
       pubState(2),
     ],
   }),
@@ -656,14 +669,25 @@ pages['video-form.html'] = shell({
   body: formCard({
     title: '홍보영상 등록 / 수정',
     slug: 'video', preview: '../video.html',
-    note: '※ 메인 노출은 최대 4편까지 지정할 수 있습니다.',
+    note: '※ 메인 화면에 보여 줄 영상은 4편까지 고를 수 있습니다.',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '카드 썸네일 아래 노출' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '목록 카드에서 제목 아래에 표시됩니다.' }),
       field({ label: '영상 소스', req: true, type: 'SELECT + URL',
         control: `<div style="display:flex;gap:8px;flex-wrap:wrap">${sel(['YouTube', '직접 업로드'])}
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
-        hint: 'YouTube 링크 · 썸네일은 링크에서 자동 추출' }),
-      field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 노출 · 초과 지정 시 경고' }),
+        hint: 'YouTube 주소를 붙여 넣습니다. 목록에 보이는 이미지는 아래에서 따로 등록합니다.' }),
+      /* ⚠ 썸네일 칸이 **없었다**(2026-08-28 지적). 위 안내가 '아래에서 따로 등록합니다' 라고
+           하는데 등록할 자리가 없었다. `video.json` 은 `image` 를 실제로 쓴다 —
+           빠뜨리면 목록 카드가 빈다. 갤러리 폼의 '대표 이미지' 와 같은 어법으로 맞춘다. */
+      field({ label: '썸네일', req: true, type: 'IMAGE UPLOAD',
+        control: drop('목록에 보이는 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
+          + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>썸네일</b></div></div>',
+        hint: '목록 카드에 이 이미지가 보입니다. 영상 화면과 다른 장면을 써도 됩니다.' }),
+      /* 재생 시간 칸은 두지 않는다(2026-08-28 지시). 사람이 적을 값이 아니다 —
+         직접 업로드는 파일 메타데이터에서, YouTube 는 Data API 로 서버가 읽어 채운다.
+         DEV: 못 읽으면 `duration` 을 비워 두면 된다. 빌더가 값이 없으면 배지를
+         아예 그리지 않으므로(`pages.mjs` 의 `badge ? … : ''`) 빈 배지가 남지 않는다. */
+      field({ label: '메인 노출', type: 'TOGGLE', control: toggle(true, '홈페이지 메인 영상으로 지정'), hint: '4편까지 고를 수 있습니다.' }),
       pubState(3),
     ],
   }),
@@ -699,17 +723,20 @@ pages['gallery-form.html'] = shell({
   body: formCard({
     title: '갤러리 등록 / 수정',
     slug: 'gallery', preview: '../gallery.html',
-    note: '※ 다중 이미지 업로드 및 드래그로 순서를 조정합니다.',
+    note: '※ 사진을 여러 장 한 번에 올리고, 끌어서 순서를 바꿀 수 있습니다.',
     fields: [
-      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 — 갤러리 분류 탭 기준' }),
-      field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '앨범 단위 제목' }),
+      field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 중에서 고릅니다. 표지 왼쪽 위에 표시됩니다.' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '사진 묶음 전체의 제목입니다.' }),
+      /* ⚠ 요약 칸이 없었다. gallery.json 의 summary 를 카드가 쓴다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('카드에 보일 한두 줄'),
+        hint: '카드에서 제목 아래에 보입니다.' }),
       field({ label: '대표 이미지', req: true, type: 'IMAGE UPLOAD',
-        control: drop('썸네일 · 리스트 대표 이미지', '권장 1600×900 이상 · JPG · PNG · WebP')
+        control: drop('썸네일 · 리스트 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))"><div class="ad-thumb"><b>대표</b></div></div>',
-        hint: '권장 1600×900 이상 · JPG · PNG · WebP' }),
+        hint: '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.' }),
       field({ label: '이미지 업로드', req: true, type: 'MULTI UPLOAD',
         control: drop('여러 장을 한 번에 끌어다 놓으세요', '드래그 앤 드롭 · 순서 조정 가능') + thumbs(8),
-        hint: '썸네일을 끌어 순서를 바꿉니다. 순서가 화면 노출 순서입니다.' }),
+        hint: '사진을 끌어 순서를 바꿉니다. 이 순서대로 화면에 보입니다.' }),
       pubState(4),
     ],
   }),
@@ -751,19 +778,19 @@ pages['publication-form.html'] = shell({
   body: formCard({
     title: '발행물 등록 / 수정',
     slug: 'publication', preview: '../publication.html',
-    note: '※ PDF 우선 · 파일당 최대 100MB.',
+    note: '※ PDF 를 권장합니다. 파일 하나에 100MB 까지.',
     fields: [
-      field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']), hint: '표지 왼쪽 위 배지로 노출됩니다.' }),
-      field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목'), hint: '목록에서 두 줄까지 노출됩니다.' }),
+      field({ label: '발행물 구분', req: true, type: 'SELECT', control: sel(['IM', '브로슈어', '리포트', '카달로그']), hint: '표지 왼쪽 위에 표시됩니다.' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('발행물 공식 제목'), hint: '목록에서 두 줄까지 보입니다.' }),
       field({ label: '표지 이미지', type: 'IMAGE UPLOAD',
         control: drop('발행물 표지 이미지', '권장 세로형 4:5 · 등록하지 않으면 기본 표지가 생성됩니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"><div class="ad-thumb" style="aspect-ratio:4/5"><b>표지</b></div></div>',
-        hint: '권장 세로형 4:5 · 등록하지 않으면 기본 표지가 자동 생성됩니다.' }),
+        hint: '세로로 긴 4:5 비율을 권장합니다. 올리지 않으면 기본 표지가 자동으로 만들어집니다.' }),
       field({ label: '파일 업로드', req: true, type: 'FILE UPLOAD',
         control: drop('PDF 파일을 끌어다 놓으세요', 'PDF 우선 · 최대 100MB')
           + fileList([['bcity-im.pdf', '12.4MB']]),
-        hint: 'PDF 우선 · 파일당 최대 100MB' }),
-      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '비활성화하면 [보기]만 노출되고 [다운로드] 버튼이 안 보입니다.' }),
+        hint: 'PDF 를 권장합니다. 파일 하나에 100MB 까지.' }),
+      field({ label: '다운로드 허용', type: 'TOGGLE', control: toggle(true, '내려받기 허용'), hint: '끄면 [보기]만 남고 [다운로드] 버튼이 사라집니다.' }),
       pubState(5),
     ],
   }),
@@ -806,15 +833,24 @@ pages['partner-form.html'] = shell({
   body: formCard({
     title: '파트너사 등록 / 수정',
     slug: 'partner', preview: '../company.html',
-    note: '※ 로고는 면적 기준으로 자동 정규화됩니다(높이만 맞추면 크기가 달라 보입니다).',
+    /* ⚠⚠ **이 정규화는 아직 구현돼 있지 않다.** 지금은 사람이 로고마다 높이를 눈으로 맞춰
+         `company.html` 에 인라인 `--lh` 로 박아 넣는다(28~39px, 로고마다 다르다).
+         이 화면은 개발 인계용 시안이므로 문구를 '됩니다' 가 아니라 **'맞춰 줍니다'** 로 두되,
+         DEV 주석에 구현 사항을 남긴다.
+       DEV: 로고 업로드 시 서버가 해야 할 일 — ① 알파/흰 배경을 스캔해 콘텐츠 bbox 를 구하고
+         여백을 잘라낸다 ② 잘라낸 그림의 **면적(가로x세로)** 이 로고마다 비슷해지도록 배율을
+         정한다(기준값 AREA 약 3,400 · 높이 상한 약 39px). 높이만 맞추면 안 되는 이유는
+         아래 note 문구에 적어 둔 그대로다. 산출 근거는 CLAUDE.md §4.4. */
+    note: '※ 로고마다 여백과 글자 굵기가 달라, 높이를 똑같이 맞추면 어떤 로고는 크게 · 어떤 로고는 작게 보입니다. '
+        + '로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
-      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 파트너 그룹과 구조도 위치를 결정합니다.' }),
-      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '사업주체 페이지 카드와 구조도에 함께 쓰입니다.' }),
-      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: 'EN 페이지 대비 · 선택 항목입니다.' }),
+      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.' }),
+      field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '정식 상호를 적습니다. 카드와 사업구조도에 그대로 표시됩니다.' }),
+      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: '영문 페이지를 만들 때 씁니다. 비워 두어도 됩니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
-        control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 여백은 자동 트리밍')
+        control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 로고 둘레의 빈 여백은 잘라내고 씁니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
-        hint: '흰배경의 JPG 는 어두운 배경에서 흰 박스로 보입니다 — 투명 png 파일을 권장합니다.' }),
+        hint: '배경이 흰색인 JPG 는 어두운 화면에서 흰 네모로 보입니다. 배경이 비치는 PNG 를 올려 주세요.' }),
       /* 지분율은 상태가 **세 가지**다 — 확정된 값 / 확정 전(TBD) / 표기 안 함.
          텍스트 입력 하나로는 구분되지 않아 '확정 전' 체크박스를 함께 둔다.
          (2026-08-18 지적: 문구만 보면 입력칸에 '확정 전' 이라고 적는 것처럼 읽힌다) */
@@ -824,9 +860,9 @@ pages['partner-form.html'] = shell({
                   placeholder="37.3" id="eq" /><i>%</i></span>
                 <label class="ad-cb"><input type="checkbox" id="eqTbd" /> 확정 전 (TBD 로 표시)</label>
               </div>`,
-        hint: '확정된 지분율만 숫자로 적습니다. 확정 전이면 체크하세요 — 구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율을 표기하지 않습니다.' }),
-      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '구조도 상호 아래 설명 부분입니다.' }),
-      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '비활성화하면 사업주체 페이지에만 노출됩니다.' }),
+        hint: '확정된 지분율만 숫자로 적습니다. 아직 정해지지 않았으면 체크해 주세요 — 사업구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.' }),
+      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '사업구조도에서 상호 아래에 들어가는 설명입니다.' }),
+      field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '끄면 메인 화면에는 나오지 않고 사업주체 페이지에만 표시됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
       pubState(6),
@@ -855,17 +891,27 @@ const ROLE_DEFAULT = {
   '열람전용': MENUS.map(() => 'read'),
 };
 
-const permMatrix = (role) => `<div class="ad-scroll">
+/* 삭제 권한은 등록 · 수정과 별개로 본다 — 잘못 지우면 되돌릴 수 없기 때문이다.
+   ⚠ `계정 관리` 의 삭제만 **최고관리자로 제한**한다. 편집자가 계정을 지울 수 있으면
+     자기 상급자 계정을 지워 잠글 수 있다. 계정 폼의 안내문
+     ('계정 삭제 권한은 최고관리자만 가집니다')이 원래 이 규칙을 말하고 있었는데
+     코드는 등급을 보지 않고 `계정 관리` 면 무조건 껐다 — 세 등급을 나란히 놓는
+     등급 편집 화면(role-form)이 생기면서 그 어긋남이 드러나 맞췄다(2026-09-03). */
+const canDelete = (role, menu, lv) =>
+  lv === 'edit' && (menu !== '계정 관리' || role === '최고관리자');
+
+const permMatrix = (role, opts = {}) => `<div class="ad-scroll">
                 <table class="ad-tbl ad-perm">
                   <thead><tr><th>메뉴</th><th class="is-ctr">열람</th><th class="is-ctr">등록 · 수정</th><th class="is-ctr">삭제</th></tr></thead>
                   <tbody>
 ${MENUS.map((m, i) => {
   const lv = ROLE_DEFAULT[role][i];
-  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''} />`;
+  const dis = opts.locked ? ' disabled' : '';
+  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''}${dis} />`;
   return `                    <tr><td>${esc(m)}</td>`
     + `<td class="is-ctr">${ck(lv !== 'none')}</td>`
     + `<td class="is-ctr">${ck(lv === 'edit')}</td>`
-    + `<td class="is-ctr">${ck(lv === 'edit' && m !== '계정 관리')}</td></tr>`;
+    + `<td class="is-ctr">${ck(canDelete(role, m, lv))}</td></tr>`;
 }).join('\n')}
                   </tbody>
                 </table>
@@ -892,7 +938,7 @@ ${pager(2)}
         </div>
         <div class="ad-card">
           <div class="ad-card-h"><h2>권한 등급 기준</h2>
-            <a class="ad-btn ad-btn--sm" href="account-form.html">등급별 권한 편집</a></div>
+            <a class="ad-btn ad-btn--sm" href="role-form.html">등급별 권한 편집</a></div>
           <div class="ad-scroll">
             <table class="ad-tbl">
               <thead><tr><th>등급</th>${MENUS.map((m) => `<th class="is-ctr">${esc(m)}</th>`).join('')}</tr></thead>
@@ -912,26 +958,67 @@ pages['account-form.html'] = shell({
   h1: '계정 등록 / 수정',
   body: formCard({
     title: '계정 등록 / 수정', slug: 'account', preview: 'account.html',
-    note: '※ 등급을 바꾸면 메뉴 권한이 기본값으로 다시 채워집니다',
+    note: '※ 등급을 바꾸면 아래 메뉴 권한이 그 등급의 기본값으로 다시 채워집니다.',
     dev: '권한 집행 확인 — 화면 체크는 표시일 뿐이다. 서버가 막지 않으면 URL 직접 입력으로 모두 접근된다.',
     fields: [
       field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
-        hint: '목록과 게시물 작성자에 표시됩니다.' }),
+        hint: '목록과 게시물의 작성자 이름으로 표시됩니다.' }),
       field({ label: '아이디', req: true, type: 'EMAIL INPUT',
         control: '<input class="ad-in" type="email" placeholder="name@biotech-iv.com" />',
-        hint: '로그인 아이디로 사용됩니다' }),
+        hint: '로그인할 때 쓰는 아이디입니다.' }),
       // DEV: 아이디 정책 확인 — 회사 메일(@biotech-iv.com) 도메인만 허용할지 결정 필요.
       field({ label: '임시 비밀번호', req: true, type: 'BUTTON',
         control: '<button type="button" class="ad-btn" onclick="document.getElementById(\'pwDlg\').showModal()">임시 비밀번호 발급</button>',
-        hint: '서버가 생성해 본인 메일로 보내고, 첫 로그인에서 변경을 강제합니다.' }),
+        hint: '임시 비밀번호를 본인 메일로 보내 드립니다. 첫 로그인 때 새 비밀번호로 바꾸게 됩니다.' }),
       // 힌트를 두지 않는다 — 같은 내용이 폼 하단 안내에 있어 한 화면에서 두 번 읽혔다(2026-08-18 감사).
       field({ label: '권한 등급', req: true, type: 'SELECT', control: sel(ROLES) }),
       field({ label: '메뉴 권한', type: 'CHECKBOX MATRIX', control: permMatrix('편집자'),
-        hint: '등급 기본값에서 개별 조정할 수 있습니다. 계정 관리 삭제 권한은 최고관리자만 갖습니다.' }),
+        hint: '등급 기본값에서 하나씩 바꿀 수 있습니다. 계정 삭제 권한은 최고관리자만 가집니다.' }),
       field({ label: '계정 상태', type: 'TOGGLE', control: toggle(true, '활성'),
-        hint: '비활성화하면 로그인할 수 없습니다. 삭제하지 않고 잠글 때 씁니다.' }),
+        hint: '끄면 로그인할 수 없습니다. 계정을 지우지 않고 잠가 둘 때 씁니다.' }),
     ],
   }),
+});
+
+/* ── 등급별 권한 편집 ────────────────────────────────────────────────
+   ⚠⚠ 이 화면이 없어서 `등급별 권한 편집` 버튼이 **계정 등록/수정 화면**으로 가고 있었다
+     (2026-09-03 지적). 둘은 다른 일이다 —
+       · account-form  계정 **한 개**의 권한을 그 계정에만 적용
+       · role-form     등급의 **기본값**을 바꿔 앞으로 만들 계정에 적용
+     계정 폼으로 보내면 등급 기준을 고치려던 사람이 남의 계정을 고치게 된다.
+
+   ⚠ 최고관리자 행은 **잠근다.** 풀어 두면 계정 관리 권한을 스스로 지워
+     아무도 계정을 만들 수 없는 상태가 되고, 화면으로는 되돌릴 방법이 없다.
+     (서버에서도 같은 제한을 걸어야 한다 — 화면 disabled 는 표시일 뿐이다.) */
+pages['role-form.html'] = shell({
+  title: '등급별 권한', navKey: 'account', crumb: '계정 관리 › 등급별 권한',
+  h1: '등급별 권한 기준',
+  body: `        <div class="ad-card">
+          <div class="ad-card-h"><h2>등급별 권한 기준</h2>
+            <a class="ad-btn ad-btn--sm" href="account.html">‹ 계정 관리로</a></div>
+          <div class="ad-form">
+${ROLES.map((r) => {
+  const locked = r === '최고관리자';
+  return `            <div class="ad-row">
+              <p class="ad-lb">${esc(r)}</p>
+              <div class="ad-fd">
+                ${permMatrix(r, { locked })}
+                <p class="ad-hint">${locked
+                  ? '최고관리자는 모든 권한을 가지며 여기서 줄일 수 없습니다. 잠금을 풀면 계정을 만들 사람이 없어질 수 있습니다.'
+                  : '체크를 풀면 그 메뉴가 좌측 메뉴에서도 보이지 않습니다.'}</p>
+              </div>
+            </div>`;
+}).join('\n')}
+          </div>
+          ${dev('적용 범위 확인 — 지금 화면은 "앞으로 만들 계정에만 적용" 을 전제로 문구를 썼다. 기존 계정에 소급 적용할지, 한다면 계정마다 따로 조정한 값을 덮어쓸지 정책 결정이 필요하다.')}
+          ${dev('열람전용의 계정 관리 열람 확인 — 지금 기본값은 켜져 있어 전 직원의 이름 · 아이디 · 최근 로그인 시각이 보인다. 세 등급을 나란히 놓으니 드러난 것이라 값은 그대로 두었다. 개인정보라 끄는 편이 맞아 보이지만 운영 정책 확정이 필요하다.')}
+          ${dev('권한 집행 확인 — 최고관리자 행의 disabled 는 표시일 뿐이다. 서버가 막지 않으면 요청을 직접 보내 최고관리자 권한도 낮출 수 있다.')}
+          <div class="ad-foot">
+            <p class="ad-note">※ 여기서 바꾼 값은 <b>앞으로 만들 계정의 기본값</b>입니다. 이미 있는 계정의 권한은 그대로입니다 — 계정마다 따로 조정한 값을 덮어쓰지 않습니다</p>
+            <a class="ad-btn" href="account.html">취소</a>
+            <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">저장</button>
+          </div>
+        </div>`,
 });
 
 pages['password.html'] = shell({

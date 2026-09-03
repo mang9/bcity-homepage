@@ -1,0 +1,187 @@
+<!--build
+{
+  "slug": "about",
+  "title": "회사소개 · B-CITY 춘천기업혁신파크",
+  "description": "춘천 기업혁신파크 B-CITY의 시행사 바이오테크이노밸리피에프브이㈜를 소개합니다. 회사개요와 비전, PFV·AMC 두 축의 사업 시행 체계, 연락처를 담았습니다.",
+  "nav": "about",
+  "heroImg": "assets/img/gallery/green-complex.avif",
+  "heroLede": "춘천 기업혁신파크 B-CITY의 비전을 설계하고 실현해가는 시행사,<br />㈜바이오테크이노밸리PFV를 소개합니다",
+  "h1": "회사소개",
+  "css": ["page-shared", "page-about"]
+}
+-->
+    <!-- ===== 회사소개 (기획 #p-company · Storyboard p.101~104) =====
+         구성은 기획서 그대로다 — [회사개요 표 + 비전] · [PFV / AMC 역할] · [CONTACT].
+         ⚠ **대메뉴에 올리지 않는다**(2026-08-25 지시) — 푸터의 `회사소개` 에서만 닿는
+           단일 페이지다. 그래서 하위 메뉴(LNB)도 앵커 내비게이션도 없다.
+           섹션 `id` 는 남겨 둔다 — 메뉴가 아니라 외부에서 특정 대목을 가리킬 때 쓴다. -->
+    <section class="sec" id="profile">
+      <div class="wrap">
+        <div class="sub-h"><h2 class="sub-t">회사개요</h2></div>
+
+        <!-- ⚠ 법인명은 **정식 표기**를 쓴다(`바이오테크이노밸리피에프브이㈜`). 사업개요 표와
+             추진일정이 이미 그렇게 적고 있다 — 푸터·메인의 `바이오테크 이노밸리 PFV` 는
+             줄여 부르는 이름이라 여기서는 쓰지 않는다. -->
+        <table class="spec rv">
+          <caption class="sr">바이오테크이노밸리피에프브이㈜ 회사개요</caption>
+          <thead>
+            <tr><th scope="col">구분</th><th scope="col">내용</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">회사명</th><td><b>바이오테크이노밸리피에프브이㈜</b></td></tr>
+            <tr><th scope="row">영문명</th><td>Biotech Innovalley PFV Co., Ltd.</td></tr>
+            <tr><th scope="row">법적 성격</th><td>PFV <span class="sub">Project Financing Vehicle · 명목회사</span></td></tr>
+            <!-- ⚠ 기획서는 `2025년 8월` 까지만 적었다. 날짜는 추진일정이 이미 공개 중인
+                 `2025.08.28`(PFV 설립)과 맞춘 것이다 — 같은 사실이 두 페이지에서 달라지면 안 된다. -->
+            <tr><th scope="row">설립일</th><td>2025년 8월 28일</td></tr>
+            <tr><th scope="row">사업</th><td>춘천 기업혁신파크 선도사업 시행</td></tr>
+            <tr><th scope="row">본사</th><td>서울특별시 광진구 자양로 58, 태림빌딩 3층</td></tr>
+            <tr><th scope="row">홈페이지</th><td>
+              <a href="https://www.biotech-iv.com/" target="_blank" rel="noopener">www.biotech-iv.com<span class="sr"> (새 창)</span></a>
+            </td></tr>
+          </tbody>
+        </table>
+        <p class="note">※ 자산관리 수탁자 — 바이오테크이노밸리자산관리㈜ (AMC)</p>
+
+        <!-- 비전 — ⚠ **상자에 담지 않는다**(2026-08-26 지시: "박스와 라인이 너무 ai 스타일같아").
+             흰 면 + 위쪽 강조선 + 알약 슬로건은 이 페이지에서 걷어냈다. 지금은 로고를 머리에 두고
+             타이포 위계와 여백만으로 세운다 — 덩이를 나누는 일은 로고가 한다. -->
+        <div class="ab-vision rv">
+          {{> pfv-logo}}
+          <h3 class="ab-vision-h">수도권의 한계를 넘어선 <em>기업도시의 표준</em></h3>
+          <!-- ⚠ `<br>` 은 첫 문장 뒤 하나뿐이다. 옛 상자 폭에 맞춰 두 개를 박아 뒀더니
+               상자를 걷은 뒤 마지막 줄에 `합니다.` 만 남는 고아 줄이 생겼다 —
+               둘째 문장은 `text-wrap: balance` 가 폭에 맞춰 고르게 나눈다. -->
+          <p class="ab-vision-d">바이오테크이노밸리는 단순한 사업 시행사가 아닌, B-CITY의 비전 동반자입니다.<br />
+            AI와 BIO가 융합되는 첨단산업 도시, 일과 삶이 어우러지는 자족형 도시, 자연과 첨단이 공존하는
+            지속가능한 도시를 만들어가며 대한민국 미래 도시의 새로운 기준을 제시하고자 합니다.</p>
+          <p class="ab-slogan">Be the Light, Be the Future</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="role">
+      <div class="wrap">
+        <div class="sub-h"><h2 class="sub-t">역할</h2></div>
+        <p class="sub-d">PFV와 AMC, 두 축으로 운영되는 사업 시행 체계</p>
+
+        <!-- ⚠ 두 카드는 **같은 무게**다. 한쪽만 강조하면 '분리 운영' 이라는 요지가 흐려진다. -->
+        <ul class="ab-roles">
+          <li class="ab-role rv rv-x">
+            <p class="ab-role-k">PFV<span>명목회사</span></p>
+            <p class="ab-role-t">사업 시행 주체</p>
+            <p class="ab-role-d">바이오테크이노밸리피에프브이㈜는 자본 · 자산 · 수익이 집중되는 사업 시행의 중심으로,
+              토지 확보부터 분양까지 B-CITY 사업의 전 과정을 총괄합니다</p>
+          </li>
+          <li class="ab-role rv rv-x">
+            <p class="ab-role-k">AMC<span>자산관리</span></p>
+            <p class="ab-role-t">전문 운영 수탁자</p>
+            <p class="ab-role-d">바이오테크이노밸리자산관리㈜는 PFV의 자산을 전문적으로 운용하는 자산관리회사로,
+              사업 실행의 전문성과 안정성을 책임집니다</p>
+          </li>
+        </ul>
+        <p class="ab-role-sum rv">PFV와 AMC가 <em>분리 운영</em>되어 사업의 투명성과 책임성을 동시에 확보합니다</p>
+      </div>
+    </section>
+
+    <!-- ⚠ id 를 `contact` 로 두지 않는다 — 문의 **모달**의 id 가 `contact` 다.
+         겹치면 `getElementById` 가 이 섹션을 집어 와서 모달 스크립트가 통째로 죽는다
+         (2026-08-26 실측: position static · 폼 필드 0 · 예외 2건). -->
+    <section class="sec" id="contact-info">
+      <div class="wrap">
+        <!-- ⚠ 문의 폼을 여기에 두지 않는다. 실제 접수 폼은 메인 `#contact` 한 곳뿐이고
+             (백엔드 미연결 시 메일로 넘기는 분기까지 그쪽에 있다), 지도는 투자·입주의
+             문의하기 페이지가 갖는다. 여기서는 기획서대로 연락처만 적는다. -->
+        <div class="ab-contact">
+          <!-- ⚠ 제목·서브카피도 이 칸 **안**에 둔다(2026-08-31 지시). 밖에 두면 격자가
+               그 아래에서 시작해 지도만 119px 늦게 떨어진다 — 오른쪽 위가 통째로 빈다.
+               안에 넣으면 격자 첫 행이 곧 제목 윗변이라 매직 넘버 없이 맞는다.
+             ⚠ 정보 목록과 버튼도 **같은 칸**이다. 형제로 두면 버튼이 2번째 칸을
+               차지해 지도가 다음 줄로 밀린다(2026-08-26 실측). -->
+          <div class="ab-col">
+            <div class="sub-h"><h2 class="sub-t">CONTACT</h2></div>
+            <p class="sub-d">함께 미래를 만들어갈 파트너를 기다립니다</p>
+
+          <dl class="ab-info rv">
+            <div>
+              <dt>주소</dt>
+              <dd>서울특별시 광진구 자양로 58, 태림빌딩 3층</dd>
+            </div>
+            <div>
+              <dt>대표 전화</dt>
+              <dd><a href="tel:07041300423">070-4130-0423</a></dd>
+            </div>
+            <div>
+              <dt>홈페이지</dt>
+              <dd><a href="https://www.biotech-iv.com/" target="_blank" rel="noopener">www.biotech-iv.com<span class="sr"> (새 창)</span></a></dd>
+            </div>
+          </dl>
+
+            <!-- ⚠ 문의하기는 `#contact` 다 — `contact.js` 가 클릭을 가로채 **이 페이지에서**
+                 모달을 연다(2026-08-26 지시). `index.html#contact` 로 두면 메인으로 넘어간다.
+               ⚠ 셋 중 문의하기만 면을 채운다 — 이 페이지의 유일한 주행동이다. -->
+            <!-- ⚠ 길찾기는 **도착지가 입력된 채로** 열린다(2026-08-31 지시).
+                 카카오맵 링크 스킴 `link/to/{이름},{위도},{경도}` 를 쓴다 — 좌표만 주는
+                 `?urlX=…` 형태는 지도를 그 자리로 옮길 뿐 도착지 칸이 비어 있다.
+               ⚠ 이름·좌표는 **카카오에 등록된 장소**(`1104377075` 바이오테크 이노밸리자산관리 ·
+                 서울 광진구 자양로 58)의 것이다. 지어낸 라벨이 아니라 검색으로 확인되는 값이다.
+               ⚠ 장소 ID 로 `link/to/1104377075` 를 쓰면 **도착지 이름이 '바이오테크' 로 잘린다**
+                 (실측). 이름+좌표 형태라야 전체 이름이 나온다 — 그래서 ID 는 지도 쪽에만 쓴다.
+               ⚠ 모바일에서는 이 주소가 앱 설치 벽으로 튄다 — `common.js` 가 `data-k*` 를 읽어
+                 모바일 길찾기 주소로 바꾼다. **세 값을 함께 고칠 것.** -->
+            <p class="ab-acts rv">
+              <a class="ab-act" href="tel:07041300423">전화 연결</a>
+              <a class="ab-act" data-kakao-route data-kname="바이오테크 이노밸리자산관리" data-kx="518882" data-ky="1120501"
+                 href="https://map.kakao.com/link/to/바이오테크%20이노밸리자산관리,37.5332705,127.0854540" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창 · 도착지 입력됨)</span></a>
+              <a class="ab-act ab-act--go" href="#contact">문의하기</a>
+            </p>
+          </div>
+
+          <!-- 카카오 정적 지도(2026-08-26 지시). ⚠ 정적 이미지라 **키가 필요 없다** —
+               네이버는 정적·동적 모두 키가 필요하고 iframe 도 막혀 있다(§11.73).
+               ⚠ 중심은 **카카오 등록 장소의 좌표**다(`1104377075`). 링크와 같은 지점이라야
+                 지도의 핀과 길찾기 도착지가 어긋나지 않는다.
+               ⚠⚠ 그 전까지는 스크린샷과 대조해 손으로 잡았고 두 번 틀렸다 —
+                 ① `MX 518908 / MY 1119990` : 자양로 서쪽 약 500m(§11.74)
+                 ② `MX 518795 / MY 1120863` : 사용자가 준 퍼가기 값. 자양로 동쪽은 맞지만
+                    **약 400 단위(≈160px @SCALE 2.5) 북쪽**이라 동서울터미널 부지를 가리켰다.
+                 지금 값은 피넛호텔 · 한국외국인근로자복지개발원 사이(자양로 동쪽 · 뚝섬로 북쪽)다.
+                 ⚠ 다시 잡을 때 — SCALE 2.5 에서 **1px = 2.5 WCONGNAMUL 단위**다(MY 를 500 내리니
+                   지형지물이 200px 올라갔다). 목표 지점의 픽셀 오프셋 × 2.5 를 중심에서 빼면 된다.
+               ⚠ 퍼가기 원본은 `IW=504` 라 표시 폭과 1:1 이라 흐리다. `SCALE` 은 그대로 두고
+                 `IW/IH` 만 키우면 **더 넓은 지역**이 나온다(같은 화면의 2배 해상도가 아니다).
+                 실측으로 `SCALE=3.0 · 1000x616` 이 이 자리에 맞는 조합이었다
+                 (`0.5` 는 지형지물이 없어 위치를 못 알아본다).
+               ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고 그것이 유일한 표기다.
+               ⚠⚠ 링크의 위경도(WGS84)와 이미지의 `MX/MY`(WCONGNAMUL)는 **같은 지점**이다.
+                 정적 지도는 WCONGNAMUL, 링크 스킴은 WGS84 만 받아서 두 벌로 적는다.
+                 한쪽만 고치면 지도와 링크가 다른 곳을 가리킨다 — 반드시 함께 고칠 것.
+                 환산법(2026-08-31): 정적 지도가 `COORDSTM=WGS84` 도 받으므로, 같은 화면을
+                 두 좌표계로 각각 렌더해 템플릿 매칭으로 어긋난 픽셀을 재고 되먹이면 된다.
+                 그렇게 SAD 0(픽셀 완전 일치)까지 맞춘 값이다. `link/to` 의 리다이렉트가
+                 `518865,1120488` 을 되돌려 주는 것으로 교차 확인했다. -->
+          <figure class="ab-map rv">
+            <!-- 지도 클릭 → **등록된 장소 페이지**로 열린다(장소 ID `1104377075`).
+                 이름 말풍선 + 주소 + 길찾기 버튼이 함께 뜬다. 모바일에서는
+                 `m.map.kakao.com/actions/detailInfoView` 로 정상 리다이렉트된다(실측).
+               ⚠ 길찾기와 지도가 **주소 형태가 다르다.** 경로 화면은 장소 말풍선을 렌더하지
+                 않아서(조합 5종 실측) 한 화면에 둘 다는 못 담는다 — 그래서 역할을 나눴다:
+                 지도 클릭 = 말풍선 · 길찾기 버튼 = 도착지 입력. -->
+            <a class="ab-map-a" href="https://map.kakao.com/link/map/1104377075" target="_blank" rel="noopener">
+              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=3.0&amp;MX=518882&amp;MY=1120501&amp;S=0&amp;IW=1000&amp;IH=616&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo"
+                   width="1000" height="616" loading="lazy" decoding="async"
+                   alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
+              <!-- 건물 표시 — 정적 지도는 `MX`/`MY` 를 **중심**으로 그리므로 가운데에 얹는다.
+                   ⚠ 마커 파라미터는 이 엔드포인트에서 무시된다(§11.65). 이름표도 같은 이유로
+                     우리가 얹는다 — 지도 이미지에는 굽지 못한다.
+                   ⚠ 이름표는 `aria-hidden` 이다. 이 링크의 이름은 아래 `.sr` 가 이미 말하고
+                     있어서, 함께 읽히면 상호가 두 번 나온다. -->
+              <span class="ab-pin-l" aria-hidden="true">바이오테크 이노밸리</span>
+              <span class="ab-pin" aria-hidden="true"></span>
+              <span class="sr">카카오맵에서 바이오테크 이노밸리 위치 보기 (새 창)</span>
+            </a>
+          </figure>
+        </div>
+
+      </div>
+    </section>

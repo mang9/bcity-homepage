@@ -1,5 +1,8 @@
 .DS_Store
-capture.html
+# ⚠ **`/` 로 앵커한다.** 앵커가 없으면 모든 깊이에서 매칭돼
+#   tools/parity/capture.html 처럼 이름이 같은 파일이 조용히 무시된다(2026-08-20 실제로 겪었다).
+#   원래 의도는 §8.4 의 **루트** 캡처 사본 하나를 빼는 것이다.
+/capture.html
 
 # Figma 재캡처용 임시 파일
 _filetest*.html

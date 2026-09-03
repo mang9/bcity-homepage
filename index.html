@@ -31,7 +31,11 @@
   <link rel="stylesheet" href="assets/css/app.css" />
 
   <!-- Design tokens: DESIGN.md -->
-  
+
+  <!-- 문의 모달 · 문의 폼 — 서브페이지와 **같은 파일**을 쓴다(정본 src/shared/contact.js).
+       `assets/js/contact.js` 는 `npm run build:pages` 가 만드는 생성물이므로 직접 고치지 말 것.
+       ⚠ `defer` 라 DOM 이 준비된 뒤 돈다 — 스크립트 안에서 DOMContentLoaded 를 기다리지 않는다. -->
+  <script src="assets/js/contact.js" defer></script>
 </head>
 
 <body class="antialiased">
@@ -84,7 +88,7 @@
         <div class="gnb-lang hidden items-center gap-1 text-xs font-semibold transition-colors sm:flex">
           <button class="rounded px-1.5 py-0.5 font-bold">KO</button>
           <span class="opacity-40">|</span>
-          <button class="rounded px-1.5 py-0.5 opacity-70 transition hover:opacity-100">EN</button>
+          <button class="gnb-en rounded px-1.5 py-0.5 transition" aria-disabled="true">EN</button>
         </div>
         <div class="gnb-sns flex items-center gap-2 transition-colors">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube" class="transition hover:opacity-80">
@@ -160,7 +164,13 @@
       <p class="anim hero-shadow mt-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg" style="animation-delay:.45s">
         AI 데이터를 중심으로 한 새로운 기회의 도시가 춘천에 탄생합니다
       </p>
-      <a href="#location" class="anim mt-9 inline-flex h-[54px] items-center gap-2 rounded-full border border-line bg-transparent px-7 text-base font-semibold text-white transition hover:bg-white hover:text-navy" style="animation-delay:.65s">
+      <!-- ⚠ 목적지는 **구역 소개 페이지**다(2026-08-31 사용자 선택).
+           원래 `#location`(입지) 이었는데 라벨과 맞지 않았다 — 입지는 교통·광역 인프라,
+           즉 도시가 **어디** 있나이고 바로 다음 섹션이라 한 화면만 내려갔다.
+           같은 페이지의 `#zones`(8개 권역 오버뷰)를 거쳐 갔다가, 곧바로 상세 페이지로
+           보내는 쪽으로 정했다. `#zones` 의 카드들도 같은 곳(`districts.html#tab-N`)으로 간다.
+           ⚠ 이 페이지는 히어로가 없다(§11.61) — 도입부 띠가 곧 첫 화면이다. -->
+      <a href="districts.html" class="anim mt-9 inline-flex h-[54px] items-center gap-2 rounded-full border border-line bg-transparent px-7 text-base font-semibold text-white transition hover:bg-white hover:text-navy" style="animation-delay:.65s">
         도시 살펴보기 <span aria-hidden="true">→</span>
       </a>
     </div>
@@ -170,7 +180,7 @@
   <section id="location" class="page cine ov ov--light" data-cine="loc" style="height:480vh">
     <div class="cine-stage bg-bg">
       <p class="ov-eyebrow"><i class="ov-rule" aria-hidden="true"></i><b>01</b><span>LOCATION · 입지</span></p>
-      <a href="#business" class="ov-more">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
+      <a href="location.html" class="ov-more">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
       <div class="lo-grid">
         <!-- 지도 · 경로 모션그래픽 (좌측 유지)
              배경 지도 이미지를 받으면 아래 <img>의 주석을 풀고 파일명을 넣는다.
@@ -231,7 +241,7 @@
             <p class="cp-el lo-desc">한국과 세계를 잇는 첨단 바이오 비즈니스의 글로벌 게이트웨이</p>
             <div class="cp-el lo-pills">
               <span class="lo-pill">양양국제공항 <b>60분</b></span>
-              <span class="lo-pill">인천국제공항 <b>80분</b></span>
+              <span class="lo-pill">김포공항 <b>80분</b></span>
               <span class="lo-pill">속초항 <b>90분</b></span>
               <span class="lo-pill">동해항 <b>120분</b></span>
             </div>
@@ -250,7 +260,7 @@
   </section>
 
   <!-- ============ 3. 사업개요 (슬라이드 8·9) — 스크럽 영상 2페이지 ============ -->
-  <section id="business" class="page cine ov" data-cine="biz" data-clip="assets/vid/business.mp4?v=bio2" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio2" style="height:400vh">
+  <section id="business" class="page cine ov" data-cine="biz" data-play="loop" data-clip="assets/vid/business.mp4?v=bio2" data-clip-hevc="assets/vid/business-hevc.mp4?v=bio2" style="height:100vh">
     <div class="cine-stage bg-navy">
       <video muted playsinline preload="auto" data-scrub="biz"></video>
       <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/still/seg05@m.avif" /><source type="image/avif" srcset="assets/still/seg05.avif" /><img src="assets/still/seg05.jpg?v=bio1" alt="" class="absolute inset-0 h-full w-full object-cover" data-poster="biz" /></picture>
@@ -261,7 +271,7 @@
       <!-- 상단 좌: 섹션 라벨 -->
       <p class="ov-eyebrow"><i class="ov-rule" aria-hidden="true"></i><b>02</b><span>OVERVIEW · 사업개요</span></p>
       <!-- 상단 우: 자세히 보기 -->
-      <a href="#zones" class="ov-more">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
+      <a href="overview.html" class="ov-more">자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5"/></svg></a>
       <!-- 우측 세로 라벨 -->
 
       <!-- 중앙 카피 2페이지 -->
@@ -416,7 +426,7 @@
                지도 형태 그대로 뒤에 깐다 (어두운 조감도가 비치는 문제 해결) -->
           <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/landuse/zone-base@m.avif" /><source type="image/avif" srcset="assets/landuse/zone-base.avif" /><img class="az-map-plate" src="assets/landuse/zone-base.png?v=4" alt="" aria-hidden="true" decoding="async" loading="lazy" /></picture>
           <picture><source type="image/avif" media="(max-width: 767px)" srcset="assets/landuse/zone-base@m.avif" /><source type="image/avif" srcset="assets/landuse/zone-base.avif" /><img class="az-map-base" src="assets/landuse/zone-base.png?v=4" alt="" decoding="async" loading="lazy" /></picture>
-          <img class="az-map-hl" data-zone="1" src="assets/landuse/zone-01.svg?v=4" loading="lazy" decoding="async" alt="" />
+          <img class="az-map-hl" data-zone="1" src="assets/landuse/zone-01.svg?v=5" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="2" src="assets/landuse/zone-02.svg?v=6" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="3" src="assets/landuse/zone-03.svg?v=7" loading="lazy" decoding="async" alt="" />
           <img class="az-map-hl" data-zone="4" src="assets/landuse/zone-04.svg?v=4" loading="lazy" decoding="async" alt="" />
@@ -439,7 +449,7 @@
           <!-- 헤더: 제목 좌 / 탭 우 -->
           <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
             <div>
-              <p class="text-base font-bold uppercase tracking-[0.18em] text-azure">City Districts</p>
+              <p class="text-base font-bold uppercase tracking-[0.18em] text-label-blue">City Districts</p>
               <h2 class="font-display mt-2 text-4xl font-bold tracking-tight text-text md:text-h2">구역소개</h2>
             </div>
             <div class="inline-flex shrink-0 rounded-full border border-line bg-surface p-1.5 text-lg font-bold shadow-sm">
@@ -451,7 +461,6 @@
           <!-- 상세 구역 아코디언 (펼치면 부지개요) -->
           <div id="dzAcc" class="flex flex-col gap-3"></div>
 
-          <p id="dzIndex" class="font-display text-xs font-bold text-text-muted"></p>
         </div>
 
         <!-- 우: 풀블리드 이미지 (스크롤 시 위아래 슬라이드) -->
@@ -467,7 +476,9 @@
                  이 폭에서 8개 카피 모두 2줄 이내이고 끝줄 채움 20~47% 로 고르다.
                  break-keep(word-break:keep-all): 한국어는 기본값에서 어절 중간이 잘린다. -->
             <p id="dzDesc" class="dz-fade mt-4 max-w-[440px] break-keep text-sm leading-relaxed text-white/85 md:text-base"></p>
-            <a id="dzArea" href="#contact" class="dz-fade mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white hover:text-navy">
+            <!-- ⚠ 전에는 `#contact` 였다 — 라벨이 `자세히 보기` 인데 문의 모달이 열렸다(2026-08-28 교정).
+                 JS 가 건드리지 않는 정적 링크라 권역과 무관하게 늘 같은 곳으로 간다. -->
+            <a id="dzArea" href="districts.html" class="dz-fade mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white hover:text-navy">
               자세히 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h14m0 0-5-5m5 5-5 5"/></svg>
             </a>
           </div>
@@ -483,19 +494,19 @@
   <section id="pr" class="page bg-surface">
     <div class="relative mx-auto wrap-x px-6 py-24">
       <div class="reveal relative mb-10 max-w-2xl">
-        <p class="text-base font-bold uppercase tracking-[0.18em] text-azure">PR Center</p>
+        <p class="text-base font-bold uppercase tracking-[0.18em] text-label-blue">PR Center</p>
         <h2 class="lr font-display mt-2 text-4xl font-bold tracking-tight text-text md:text-h2">홍보센터</h2>
       </div>
       <!-- 아이콘 카드 (사진 대신 우측 상단 아이콘) -->
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg">
+        <a href="press.html" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg">
           <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
             <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2Z"/>
               <path stroke-linecap="round" d="M7 9h6M7 13h10M7 17h10"/>
             </svg>
           </span>
-          <p class="text-sm font-bold text-azure">01</p>
+          <p class="text-sm font-bold text-label-blue">01</p>
           <div>
             <h3 class="font-display text-card font-bold text-text">언론보도</h3>
             <p class="mt-2 text-sm leading-relaxed text-text-muted">B-CITY의 최신 소식을 언론 기사로 만나보세요.</p>
@@ -503,14 +514,14 @@
           </div>
         </a>
 
-        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.09s">
+        <a href="video.html" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.09s">
           <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
             <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
               <rect x="2.5" y="5" width="19" height="14" rx="3"/>
               <path d="M10.5 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/>
             </svg>
           </span>
-          <p class="text-sm font-bold text-azure">02</p>
+          <p class="text-sm font-bold text-label-blue">02</p>
           <div>
             <h3 class="font-display text-card font-bold text-text">홍보영상</h3>
             <p class="mt-2 text-sm leading-relaxed text-text-muted">도시의 비전을 담은 영상 콘텐츠.</p>
@@ -518,7 +529,7 @@
           </div>
         </a>
 
-        <a href="#" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.18s">
+        <a href="gallery.html" class="pr-card reveal group relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-lg border border-line bg-bg p-8 transition duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-lg" style="transition-delay:.18s">
           <span class="pr-ico absolute right-7 top-7 flex h-14 w-14 items-center justify-center rounded-full border border-line bg-surface text-primary transition duration-300 group-hover:scale-110 group-hover:border-primary group-hover:bg-primary group-hover:text-white">
             <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
               <rect x="3" y="4.5" width="18" height="15" rx="3"/>
@@ -526,7 +537,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="m4 17 4.5-4.5 3.5 3.5 3-3L20 16.5"/>
             </svg>
           </span>
-          <p class="text-sm font-bold text-azure">03</p>
+          <p class="text-sm font-bold text-label-blue">03</p>
           <div>
             <h3 class="font-display text-card font-bold text-text">갤러리</h3>
             <p class="mt-2 text-sm leading-relaxed text-text-muted">B-CITY의 조감도와 현장 이미지.</p>
@@ -535,10 +546,10 @@
         </a>
       </div>
       <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <a href="#" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
+        <a href="notice.html" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
           <span class="font-display font-bold text-text">공지사항</span><span class="text-primary" aria-hidden="true">→</span>
         </a>
-        <a href="#" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
+        <a href="publication.html" class="flex items-center justify-between rounded-md border border-line bg-bg px-6 py-5 transition hover:border-primary">
           <span class="font-display font-bold text-text">B-CITY 발행물</span><span class="text-primary" aria-hidden="true">→</span>
         </a>
       </div>
@@ -548,17 +559,15 @@
   <!-- ============ 8. 파트너 + 푸터 (슬라이드 21) — 밝은 톤 ============ -->
   <section id="footer" class="page border-t border-line bg-bg">
     <div class="mx-auto wrap-x px-6 py-24">
-      <div class="reveal mb-14 flex flex-wrap items-end justify-between gap-6">
+      <div class="reveal mb-14">
         <!-- max-w-3xl(768px) 캡이 있으면 md:text-h3(38px, 큰 화면 44/50px)에서 둘째 줄
              「…완성합니다」의 끝 글자가 떨어진다. 캡을 없애고 break-keep 으로 어절 중간
-             분리도 막는다. 부모가 flex-wrap 이라 폭이 부족하면 버튼이 아래로 내려가고
-             h2 가 전체 폭을 쓰므로 좁은 화면에서도 2줄이 유지된다. -->
+             분리도 막는다.
+             ⚠ `flex justify-between` 을 걷었다(2026-08-27 지시로 파트너 보기 버튼 삭제) —
+               나란히 놓을 상대가 없으면 flex 는 아무 일도 하지 않고 이름만 남는다. -->
         <h2 class="font-display break-keep text-3xl font-bold leading-snug tracking-tight text-text md:text-h3">
           대한민국 AI·바이오 산업의 중심에서<br />글로벌 경쟁력을 갖춘 혁신 생태계를 완성합니다
         </h2>
-        <a href="#" class="inline-flex shrink-0 items-center gap-2 rounded-md bg-primary px-7 py-4 text-base font-bold text-white transition hover:bg-primary-hover">
-          파트너 보기 <span aria-hidden="true">→</span>
-        </a>
       </div>
       <p class="reveal mb-4 text-xs font-bold uppercase tracking-widest text-text-muted">참여기관 &amp; 파트너</p>
       <!-- 흐르는 로고 (마퀴) — 호버 시 일시정지 -->
@@ -598,23 +607,32 @@
         <span>© 2026 B-CITY. All rights reserved.</span>
         <!-- 푸터 메뉴 -->
         <nav class="flex items-center gap-4 font-semibold text-text" aria-label="푸터 메뉴">
-          <a href="company.html" class="transition hover:text-primary">회사소개</a>
+          <a href="about.html" class="transition hover:text-primary">회사소개</a>
           <span class="h-3 w-px bg-line" aria-hidden="true"></span>
-          <a href="#privacy" class="transition hover:text-primary">개인정보이용약관</a>
+          <a href="#privacy" class="transition hover:text-primary">개인정보처리방침</a>
         </nav>
       </div>
     </div>
   </section>
 
-  <!-- ============ 문의하기 모달 (관심고객등록) ============ -->
+  <!-- @shared:contact-modal — 이 구간은 `tools/build/pages.mjs` 가 `src/shared/contact-modal.html`
+       에서 생성한다. **여기를 직접 고치지 말고 그 파일을 고칠 것.** 서브페이지가 같은 파일을 쓴다.
+       (마커 한 쌍을 지우면 빌드가 실패한다 — 조용히 어긋나지 않게 하려는 의도다.) -->
+<!-- ===== 문의 모달 =====
+     메인 `index.html` 의 `#contact` 폼을 서브페이지로 옮긴 것이다(2026-08-26 지시:
+     "해당 페이지에서 모달창으로"). 전에는 `index.html#contact` 로 보내 페이지가 넘어갔다.
+     ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
+       합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
+       옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
+     ⚠ `처리방침 보기` 는 **그 자리에서 모달**로 연다 — 처리방침도 공용이라 세 화면 모두에 있다
+       (2026-08-27 이전에는 서브만 `index.html#privacy` 새 창이었다). -->
   <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
     <div class="pv-back" data-pv-close></div>
     <div class="pv-panel" role="document">
       <header class="pv-head">
         <div>
-          <p class="text-xs font-bold uppercase tracking-[0.18em] text-azure">Contact</p>
-          <h2 id="ctTitle" class="font-display mt-1.5 text-2xl font-bold text-text md:text-3xl">문의하기</h2>
-          <p class="mt-2 text-sm leading-relaxed text-text-muted">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+          <h2 id="ctTitle" class="ct-title">문의하기</h2>
+          <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
         </div>
         <button type="button" class="pv-x" data-pv-close aria-label="닫기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -623,7 +641,7 @@
         </button>
       </header>
       <div class="pv-body">
-        <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div class="ct-grid">
         <form id="contactForm" class="ct-form" novalidate>
           <!-- 관심분야 -->
           <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
@@ -636,7 +654,7 @@
             <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
           </div>
 
-          <div class="grid gap-6 sm:grid-cols-2">
+          <div class="ct-two">
             <div class="ct-row">
               <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
               <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
@@ -668,7 +686,7 @@
               <span>
                 <b class="ct-tag ct-tag--req">필수</b>
                 개인정보 수집 · 이용에 모두 동의합니다
-                <a href="#privacy" class="ct-view">약관 보기</a>
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
               </span>
             </label>
             <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
@@ -677,7 +695,7 @@
               <span>
                 <b class="ct-tag ct-tag--opt">선택</b>
                 마케팅 활용 동의에 동의합니다
-                <a href="#privacy" class="ct-view">약관 보기</a>
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
               </span>
             </label>
           </div>
@@ -687,13 +705,8 @@
         <!-- 안내 -->
         <aside class="ct-side">
           <div class="ct-card">
-            <p class="ct-card-h">담당자 연락처</p>
-            <a class="ct-card-a" href="mailto:invest@biotech-iv.com">invest@biotech-iv.com</a>
-            <p class="ct-card-p">평일 09:00 – 18:00 (주말 · 공휴일 제외)</p>
-          </div>
-          <div class="ct-card">
             <p class="ct-card-h">사업 주관</p>
-            <p class="ct-card-p"><span class="font-semibold text-text">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+            <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
           </div>
           <div class="ct-card">
             <p class="ct-card-h">처리 절차</p>
@@ -703,8 +716,17 @@
               <li>유선 또는 이메일 회신</li>
             </ol>
           </div>
+          <!-- ⚠⚠ **여기에 구체적인 보유 기간(숫자)을 적지 않는다**(2026-08-27 지시).
+               기간을 두 곳에 적으면 한쪽만 고쳐져 갈린다 — 실제로 갈렸다(처리방침만 3년으로
+               고치고 여기는 `입주/이주 완료 후 자동 파기` 로 남아 있었다).
+               숫자는 **처리방침 제3조 한 곳**에만 두고 여기서는 원칙만 밝힌다.
+               ⚠ 이 문구는 사용자가 직접 준 것이다 — 임의로 다듬지 말 것.
+               ⚠ 링크를 따로 붙이지 않았다. 바로 위 동의 항목 두 개에 이미
+                 `처리방침 보기` 가 있어 같은 화면에서 세 번 반복된다. -->
           <p class="ct-card-note">
-            수집된 개인정보는 &lsquo;개인정보 보호법&rsquo;에 따라 안전하게 보관되며, 입주/이주 완료 후 자동 파기됩니다.
+            수집한 개인정보는 &lsquo;개인정보 보호법&rsquo; 등 관련 법령에 따라 안전하게 관리되며,
+            문의 처리 목적이 달성된 후 관련 법령 및 내부 방침에 따른 보유 기간 동안 보관된 뒤
+            지체 없이 파기됩니다.
           </p>
           <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
           <div class="ct-actions">
@@ -717,15 +739,66 @@
       </div>
     </div>
   </div>
+  <!-- /@shared:contact-modal -->
 
-  <!-- ============ 개인정보 수집·이용약관 (문의하기 동의 항목) ============ -->
+  <!-- @shared:privacy-modal — 이 구간은 `tools/build/pages.mjs` 가 `src/shared/privacy-modal.html`
+       에서 생성한다. **여기를 직접 고치지 말고 그 파일을 고칠 것.** 서브페이지가 같은 파일을 쓴다. -->
+<!-- ===== 개인정보처리방침 =====
+     메인과 서브페이지가 **함께 쓰는 한 벌**이다. 싣는 경로는 두 개다:
+       메인   `index.html` 의 `@shared:privacy-modal` 마커 구간(빌드가 채운다)
+       서브   `layout.html` 의 파티셜 호출
+     ⚠ **주석에도 파티셜 호출 문법을 글자로 쓰지 않는다.** `render()` 는 주석을 구분하지
+       않으므로 자기 이름을 적으면 무한 재귀가 되어 빌드가 죽는다(§11.61 · 2026-08-27 재발).
+
+     ── 2026-08-27: `개인정보 수집·이용약관` → `개인정보처리방침` 으로 다시 썼다 ──
+     전에는 **문의 폼 동의서**(개인정보보호법 제15조)였는데 푸터 메뉴명이 `개인정보이용약관`
+     이었다. 셋이 서로 다른 문서를 가리키고 있었다:
+       · 이용약관        서비스 이용 조건 · 회원 의무 — **이 사이트에는 없는 문서다**
+       · 수집·이용 동의서 폼을 보낼 때 받는 동의 (제15조)
+       · 처리방침        상시 공개 의무 문서 (제30조) ← 실서비스에 필요한 것
+     법 제30조 제1항의 **9개 필수 기재사항**을 순서대로 담았다.
+
+     ⚠ 폼의 `약관 보기` 도 이 문서를 연다. 동의 항목(필수/선택)은 §2 에 그대로 남겨 두었다 —
+       동의받는 내용과 공개하는 내용이 갈리면 안 된다.
+     ✅ 개인정보 보호책임자 — **류지은 · postmaster@biotech-iv.com**(2026-08-27 지시로 확정).
+       ⚠ 문의 폼의 담당자 연락처(`juyoung@`)와 **다른 주소다.** 역할이 달라 일부러 나눠 둔 것이니
+         한쪽을 고칠 때 다른 쪽을 함께 바꾸지 말 것.
+     ✅ 처리 위탁 — **주식회사 더존비즈온 / 아마란스**(2026-08-27 사용자 확인).
+       위탁에 해당하는 근거는 도메인의 MX 레코드다 — `biotech-iv.com` 의 메일이
+       `mail.bizboxa.com` 으로 가고 SPF 도 `_spfblocka.bizboxa.com` 이다. 즉 문의 메일이
+       외부 서비스에 **저장**되므로 법 제26조의 위탁이며, '회사 메일이니 위탁 아니다' 가
+       성립하지 않는다.
+       ⚠⚠ **제품명을 MX 호스트에서 유추하지 말 것.** 호스트가 `bizboxa.com` 이라 처음에
+         `BizBox Alpha` 로 적었는데, 실제 계약 제품은 **아마란스**다(사용자 정정).
+         더존의 메일 인프라를 여러 제품이 함께 쓰는 것으로 보인다 — DNS 는 **위탁 여부**의
+         근거일 뿐이고 **제품명의 근거가 아니다.**
+       ⚠ 법이 요구하는 것은 수탁자와 **위탁 업무의 내용**이다(제품명은 부가 설명이다).
+         제품이 바뀌면 괄호만 고치면 되고, 메일 서비스 자체가 바뀌면 표를 다시 쓴다.
+         위탁 여부 확인법: `dig MX biotech-iv.com`
+       ⚠ 남은 확인 사항: 서버 소재지. 국외면 법 제28조의8(국외 이전) 항목을 따로 넣어야 한다 —
+         국내 서비스로 보이지만 계약서로 확인할 것.
+       ⚠ 홈페이지 호스팅(GitHub Pages)은 위탁에 넣지 않았다. 이 사이트에는 백엔드가 없고
+         폼이 `mailto:` 로 동작해 **개인정보가 서버를 거치지 않는다**(§11 문의 폼 참조).
+         나중에 폼 전송 API(`CT_ENDPOINT`)를 붙이면 그 사업자도 수탁자가 된다.
+     ✅ 보유기간 — **3년**(2026-08-27 결정). 근거와 대안은 아래.
+       · 10년은 쓰지 않았다. 문의 회신 목적에 10년을 정당화하기 어렵고(법 제3조 제2항
+         최소보유 원칙), 유출 시 피해 범위와 제재 위험만 커진다.
+       · '준공(2033) 시까지' 처럼 사업 일정에 매는 표현도 쓰지 않았다. 일정이 밀리면
+         기간이 계속 늘어나 **기간을 정한 것이 아니게 된다.**
+       · 3년은 분양·입주 상담 문의에서 가장 널리 쓰이는 값이다. 더 길게 가야 하면
+         **5년**까지가 방어 가능한 상한이고, 그 이상은 재동의로 해결한다(§3 각주).
+       ⚠ 값을 바꾸면 폼의 동의 문구(제2조)와 어긋나지 않는지 함께 본다.
+     ⚠ 쿠키 · 접속기록 자동수집은 **없다**고 적었다 — 2026-08-27 실측으로 확인했다
+       (`localStorage` · `document.cookie` · 분석 스크립트 0건). 나중에 GA 등을 붙이면
+       §9 를 고치고 시행일을 올려야 한다.
+     ⚠ 시행일을 바꿀 때는 §12 의 이력 줄도 함께 남긴다. -->
   <div id="privacy" class="pv" role="dialog" aria-modal="true" aria-labelledby="pvTitle" hidden>
     <div class="pv-back" data-pv-close></div>
     <div class="pv-panel" role="document">
       <header class="pv-head">
         <div>
-          <p class="text-xs font-bold uppercase tracking-[0.18em] text-azure">Privacy</p>
-          <h2 id="pvTitle" class="font-display mt-1.5 text-2xl font-bold text-text md:text-3xl">개인정보 수집 · 이용약관</h2>
+          <p class="ct-eyebrow">Privacy</p>
+          <h2 id="pvTitle" class="ct-title">개인정보처리방침</h2>
         </div>
         <button type="button" class="pv-x" data-pv-close aria-label="닫기">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -735,73 +808,227 @@
       </header>
 
       <div class="pv-body">
-        <p class="text-sm leading-relaxed text-text-muted">
-          바이오테크 이노밸리 PFV(이하 &lsquo;회사&rsquo;)는 춘천기업혁신파크 B-CITY 문의 접수를 위해 아래와 같이 개인정보를 수집·이용합니다.
-          내용을 확인하신 후 동의 여부를 결정해 주시기 바랍니다.
+        <p class="pv-p">
+          바이오테크이노밸리피에프브이㈜(이하 &lsquo;회사&rsquo;)는 &lsquo;개인정보 보호법&rsquo; 제30조에 따라
+          정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하게 처리할 수 있도록
+          다음과 같이 개인정보처리방침을 수립·공개합니다.
         </p>
 
-        <!-- 필수 -->
+        <!-- 1. 처리 목적 -->
         <section class="pv-sec">
-          <h3 class="pv-h3">개인정보 수집 · 이용 동의 <span class="pv-tag pv-tag--req">필수</span></h3>
-          <table class="pv-tbl">
-            <caption class="sr-only">필수 개인정보 수집·이용 항목</caption>
-            <tbody>
-              <tr><th scope="row">수집 · 이용 목적</th><td>문의 접수 및 회신, 홍보 및 모집정보 안내(전화, 문자, 이메일, 우편)</td></tr>
-              <tr><th scope="row">수집 항목</th><td>관심분야, 회사명/이름, 휴대전화번호, 이메일, 문의 내용</td></tr>
-              <tr><th scope="row">보유 · 이용 기간</th><td>입주/분양 완료 시까지<br /><span class="text-text-muted">단, 관계 법령에 보존 의무가 규정된 경우 해당 기간 동안 별도 보관 후 파기</span></td></tr>
-            </tbody>
-          </table>
-          <p class="pv-note">
-            귀하는 개인정보 수집 · 이용에 동의하지 않을 권리가 있습니다. 다만 필수 항목에 동의하지 않으실 경우 문의 접수 및 회신이 제한됩니다.
+          <h3 class="pv-h3">제1조 (개인정보의 처리 목적)</h3>
+          <p class="pv-p">
+            회사는 춘천기업혁신파크 B-CITY 사업에 관한 문의 접수와 회신을 위해 개인정보를 처리합니다.
+            처리하는 개인정보는 다음 목적 이외의 용도로는 이용하지 않으며, 목적이 변경되는 경우에는
+            법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행합니다.
           </p>
-        </section>
-
-        <!-- 선택 -->
-        <section class="pv-sec">
-          <h3 class="pv-h3">마케팅 활용 동의 <span class="pv-tag pv-tag--opt">선택</span></h3>
-          <table class="pv-tbl">
-            <caption class="sr-only">선택 마케팅 활용 항목</caption>
-            <tbody>
-              <tr><th scope="row">활용 목적</th><td>춘천기업혁신파크 관련 각종 안내(SMS, 전화, 우편 등)</td></tr>
-              <tr><th scope="row">활용 항목</th><td>성명, 성별, 연령대, 연락처, 주소(동 단위)</td></tr>
-              <tr><th scope="row">보유 기간</th><td>입주/분양 완료 시 또는 <strong class="font-semibold text-text">철회 요청 시 즉시 파기</strong></td></tr>
-            </tbody>
-          </table>
-          <p class="pv-note">
-            선택 항목에 동의하지 않으셔도 문의 접수는 정상적으로 가능하며, 동의 후에도 언제든지 철회하실 수 있습니다.
-          </p>
-        </section>
-
-        <!-- 안내 -->
-        <section class="pv-sec">
-          <h3 class="pv-h3">개인정보의 보호 및 파기</h3>
           <ul class="pv-list">
-            <li>수집된 개인정보는 &lsquo;개인정보 보호법&rsquo; 및 &lsquo;정보통신망 이용촉진 및 정보보호 등에 관한 법률&rsquo;에 따라 안전하게 보관되며, 입주/이주 완료 후 자동 파기됩니다.</li>
-            <li>수집 목적이 달성되거나 보유 기간이 경과한 개인정보는 지체 없이 복구·재생이 불가능한 방법으로 파기합니다.</li>
-            <li>회사는 정보주체의 동의 없이 개인정보를 제3자에게 제공하지 않습니다. 단, 법령에 근거한 요청이 있는 경우는 예외로 합니다.</li>
-            <li>정보주체는 개인정보의 열람 · 정정 · 삭제 · 처리정지 및 동의 철회를 언제든지 요구할 수 있습니다.</li>
+            <li><span class="ct-strong">문의 접수 및 회신</span> — 기업입주 · 투자 · 사업 문의의 내용 확인, 담당자 배정, 유선 또는 이메일 회신</li>
+            <li><span class="ct-strong">사업 안내</span>(선택 동의 시) — 춘천기업혁신파크 관련 홍보 및 모집 정보 제공</li>
           </ul>
         </section>
 
-        <!-- 문의처 -->
-        <section class="pv-sec pv-sec--last">
-          <h3 class="pv-h3">개인정보 보호 문의</h3>
+        <!-- 2. 처리 항목 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제2조 (처리하는 개인정보의 항목)</h3>
+          <p class="pv-p">
+            회사는 홈페이지의 문의하기 양식을 통해 정보주체가 직접 입력한 정보만을 수집합니다.
+            정보주체가 입력하지 않은 정보는 어떠한 방법으로도 수집하지 않습니다.
+          </p>
           <table class="pv-tbl">
+            <caption class="sr-only">처리하는 개인정보 항목과 보유 기간</caption>
             <tbody>
-              <tr><th scope="row">처리 주체</th><td>바이오테크 이노밸리 PFV</td></tr>
-              <tr><th scope="row">주소</th><td>서울특별시 광진구 자양로58 태림빌딩 3층</td></tr>
-              <tr><th scope="row">이메일</th><td><a class="text-primary underline decoration-line underline-offset-2 hover:decoration-primary" href="mailto:invest@biotech-iv.com">invest@biotech-iv.com</a></td></tr>
+              <tr>
+                <th scope="row">필수 항목 <span class="pv-tag pv-tag--req">필수</span></th>
+                <td>회사명/이름, 휴대전화번호, 이메일, 관심분야, 문의 내용</td>
+              </tr>
+              <tr>
+                <th scope="row">선택 항목 <span class="pv-tag pv-tag--opt">선택</span></th>
+                <td>마케팅 활용 동의 여부<br /><span class="pv-note">동의하지 않아도 문의 접수와 회신은 정상적으로 이루어집니다.</span></td>
+              </tr>
+              <tr>
+                <th scope="row">수집 방법</th>
+                <td>홈페이지 문의하기 양식(정보주체의 직접 입력)</td>
+              </tr>
             </tbody>
           </table>
+          <p class="pv-note">
+            정보주체는 필수 항목의 수집·이용에 동의하지 않을 권리가 있습니다.
+            다만 이 경우 문의 접수 및 회신이 제한됩니다.
+          </p>
+        </section>
+
+        <!-- 3. 보유 기간 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제3조 (개인정보의 처리 및 보유 기간)</h3>
+          <p class="pv-p">
+            회사는 법령에 따른 개인정보 보유·이용 기간 또는 정보주체로부터 개인정보를 수집할 때
+            동의받은 기간 내에서 개인정보를 처리·보유합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">문의 접수 및 회신</span> — 수집일로부터 <span class="ct-strong">3년</span></li>
+            <li><span class="ct-strong">마케팅 활용</span>(선택 동의) — 동의 철회 시까지, 최대 수집일로부터 <span class="ct-strong">3년</span></li>
+            <li>보유 기간이 경과하기 전에 처리 목적이 달성된 경우에는 그 시점에 지체 없이 파기합니다.</li>
+            <li>관계 법령에 보존 의무가 규정된 경우에는 해당 기간 동안 별도로 분리 보관한 후 파기합니다.</li>
+          </ul>
+          <p class="pv-note">
+            보유 기간이 지난 후에도 사업 안내가 필요한 경우에는 정보주체에게 다시 동의를 받습니다.
+          </p>
+        </section>
+
+        <!-- 4. 제3자 제공 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제4조 (개인정보의 제3자 제공)</h3>
+          <p class="pv-p">
+            회사는 정보주체의 개인정보를 제1조에 명시한 목적 범위 내에서만 처리하며,
+            <span class="ct-strong">정보주체의 별도 동의 없이 제3자에게 제공하지 않습니다.</span>
+            다만 법 제17조 및 제18조에 해당하는 경우(법령에 근거한 수사기관 · 감독기관의
+            적법한 요청 등)에는 예외로 합니다.
+          </p>
+        </section>
+
+        <!-- 5. 처리 위탁 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제5조 (개인정보 처리의 위탁)</h3>
+          <p class="pv-p">
+            회사는 원활한 개인정보 업무 처리를 위하여 아래와 같이 개인정보 처리 업무를 위탁하고 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">개인정보 처리 위탁 현황</caption>
+            <tbody>
+              <tr>
+                <th scope="row">주식회사 더존비즈온</th>
+                <td>그룹웨어 · 전자우편 시스템(아마란스) 운영 및 문의 메일 보관</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pv-p">
+            회사는 위탁계약 체결 시 법 제26조에 따라 위탁 업무 수행 목적 외 개인정보 처리 금지,
+            기술적 · 관리적 보호조치, 재위탁 제한, 수탁자에 대한 관리 · 감독,
+            손해배상 등 책임에 관한 사항을 계약서 등 문서에 명시하고,
+            수탁자가 개인정보를 안전하게 처리하는지를 감독하고 있습니다.
+          </p>
+          <p class="pv-note">
+            위탁 업무의 내용이나 수탁자가 변경될 경우에는 지체 없이 이 개인정보처리방침을 통하여 공개합니다.
+          </p>
+        </section>
+
+        <!-- 6. 정보주체의 권리 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제6조 (정보주체와 법정대리인의 권리 · 의무 및 행사 방법)</h3>
+          <p class="pv-p">정보주체는 회사에 대해 언제든지 다음 각 호의 권리를 행사할 수 있습니다.</p>
+          <ul class="pv-list">
+            <li>개인정보 열람 요구</li>
+            <li>오류가 있는 경우 정정 요구</li>
+            <li>삭제 요구</li>
+            <li>처리정지 요구 및 동의 철회</li>
+          </ul>
+          <p class="pv-p">
+            권리 행사는 제10조의 연락처로 서면 또는 전자우편을 통해 하실 수 있으며,
+            회사는 지체 없이 조치하겠습니다. 정보주체가 개인정보의 오류에 대한 정정 또는 삭제를
+            요구한 경우, 회사는 정정 또는 삭제를 완료할 때까지 해당 개인정보를 이용하거나
+            제공하지 않습니다. 법정대리인이나 위임을 받은 자 등 대리인을 통하여 권리를 행사할 수도 있으며,
+            이 경우 &lsquo;개인정보 처리 방법에 관한 고시&rsquo; 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.
+          </p>
+        </section>
+
+        <!-- 7. 파기 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제7조 (개인정보의 파기 절차 및 방법)</h3>
+          <p class="pv-p">
+            회사는 개인정보 보유 기간의 경과, 처리 목적 달성 등 개인정보가 불필요하게 되었을 때에는
+            지체 없이 해당 개인정보를 파기합니다.
+          </p>
+          <ul class="pv-list">
+            <li><span class="ct-strong">파기 절차</span> — 파기 사유가 발생한 개인정보를 선정하고, 개인정보 보호책임자의 승인을 받아 파기합니다.</li>
+            <li><span class="ct-strong">파기 방법</span> — 전자적 파일 형태는 복구 및 재생이 불가능한 방법으로 영구 삭제하며, 종이 문서는 분쇄하거나 소각합니다.</li>
+          </ul>
+        </section>
+
+        <!-- 8. 안전성 확보조치 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제8조 (개인정보의 안전성 확보조치)</h3>
+          <p class="pv-p">회사는 법 제29조에 따라 다음과 같은 안전성 확보조치를 하고 있습니다.</p>
+          <ul class="pv-list">
+            <li>개인정보 취급 담당자의 최소화 및 담당자에 대한 교육</li>
+            <li>개인정보에 대한 접근 권한의 차등 부여 및 접근 통제</li>
+            <li>개인정보의 암호화 및 전송 구간 암호화(HTTPS) 적용</li>
+            <li>개인정보를 보관하는 시스템에 대한 물리적 접근 통제</li>
+          </ul>
+        </section>
+
+        <!-- 9. 자동 수집 장치 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제9조 (개인정보 자동 수집 장치의 설치 · 운영 및 거부)</h3>
+          <p class="pv-p">
+            이 홈페이지는 <span class="ct-strong">쿠키(cookie)를 사용하지 않으며,</span>
+            접속 기록 · 행태 정보를 수집하는 분석 도구나 광고 식별자를 설치·운영하지 않습니다.
+            따라서 정보주체가 별도로 거부 설정을 하실 필요가 없습니다.
+          </p>
+          <p class="pv-note">
+            홈페이지에 포함된 외부 서비스 링크(YouTube, LinkedIn)를 통해 이동하시는 경우,
+            해당 사이트에서의 개인정보 처리는 각 사업자의 개인정보처리방침을 따릅니다.
+          </p>
+        </section>
+
+        <!-- 10. 보호책임자 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제10조 (개인정보 보호책임자 및 열람 청구 접수 부서)</h3>
+          <p class="pv-p">
+            회사는 개인정보 처리에 관한 업무를 총괄하여 책임지고, 개인정보 처리와 관련한
+            정보주체의 문의 · 불만 처리 및 피해 구제 등을 위하여 아래와 같이 개인정보 보호책임자를
+            지정하고 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">개인정보 보호책임자 연락처</caption>
+            <tbody>
+              <tr><th scope="row">처리 주체</th><td>바이오테크이노밸리피에프브이㈜</td></tr>
+              <tr><th scope="row">주소</th><td>서울특별시 광진구 자양로58 태림빌딩 3층</td></tr>
+              <tr><th scope="row">개인정보 보호책임자</th><td>류지은</td></tr>
+              <tr><th scope="row">이메일</th><td><a class="pv-link" href="mailto:postmaster@biotech-iv.com">postmaster@biotech-iv.com</a></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 11. 권익침해 구제 -->
+        <section class="pv-sec">
+          <h3 class="pv-h3">제11조 (권익침해 구제 방법)</h3>
+          <p class="pv-p">
+            정보주체는 개인정보 침해로 인한 구제를 받기 위하여 아래 기관에 분쟁 해결이나 상담 등을
+            신청할 수 있습니다.
+          </p>
+          <table class="pv-tbl">
+            <caption class="sr-only">권익침해 구제 기관 연락처</caption>
+            <tbody>
+              <tr><th scope="row">개인정보 분쟁조정위원회</th><td>1833-6972 (www.kopico.go.kr)</td></tr>
+              <tr><th scope="row">개인정보침해 신고센터</th><td>118 (privacy.kisa.or.kr)</td></tr>
+              <tr><th scope="row">대검찰청 사이버수사과</th><td>1301 (www.spo.go.kr)</td></tr>
+              <tr><th scope="row">경찰청 사이버수사국</th><td>182 (ecrm.police.go.kr)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 12. 변경 -->
+        <section class="pv-sec pv-sec--last">
+          <h3 class="pv-h3">제12조 (개인정보처리방침의 변경)</h3>
+          <p class="pv-p">
+            이 개인정보처리방침은 시행일부터 적용되며, 법령 및 방침에 따른 변경 내용의 추가 · 삭제 및
+            정정이 있는 경우에는 변경 사항의 시행 7일 전부터 홈페이지를 통하여 공지합니다.
+          </p>
+          <ul class="pv-list">
+            <li>2026년 7월 30일 — 제정 (개인정보 수집 · 이용 동의)</li>
+            <li>2026년 8월 27일 — 개인정보처리방침으로 전부 개정</li>
+          </ul>
         </section>
       </div>
 
       <footer class="pv-foot">
-        <p class="text-xs text-text-muted">시행일 : 2026년 7월 30일</p>
+        <p class="pv-foot-note">시행일 : 2026년 8월 27일</p>
         <button type="button" class="pv-ok" data-pv-close>확인</button>
       </footer>
     </div>
   </div>
+  <!-- /@shared:privacy-modal -->
 
   <script>
     /* ---------- 사이트맵 ---------- */
@@ -820,7 +1047,7 @@
         ['추진일정','schedule.html'],
         ['사업주체','company.html'],
       ]},
-      { no:'02', title:'도시소개', href:'#concept', items:[
+      { no:'02', title:'도시소개', href:'brand.html', items:[
         /* 02 도시소개 서브페이지 4개 완성(2026-08-13).
            ⚠ src/sub/nav.json 과 항목·순서를 맞출 것 — 두 벌이라 한쪽만 고치면 어긋난다. */
         ['브랜드','brand.html'],
@@ -828,12 +1055,12 @@
         ['구역 소개','districts.html'],
         ['정주환경','living.html'],
       ]},
-      /* 03 투자·입주 서브페이지 3개 완성(2026-08-13). 문의하기만 메인 앵커로 남는다.
+      /* 03 투자·입주 — 세 페이지를 invest.html 한 장으로 합쳤다(2026-08-24 지시).
+         앞의 세 항목은 그 페이지의 앵커다. 문의하기는 별도 페이지(2026-08-24 기획 #p-contact).
          ⚠ src/sub/nav.json 과 항목·순서를 맞출 것 — 두 벌이라 한쪽만 고치면 어긋난다. */
-      { no:'03', title:'투자·입주', href:'land.html', items:[
-        ['토지확보 현황','land.html'],
-        ['특구별 혜택','zone-benefit.html'],
-        ['주요 혜택','benefit.html'],
+      { no:'03', title:'투자·입주', href:'invest.html', items:[
+        ['토지확보 요건','invest.html#land'],
+        ['투자 혜택','invest.html#zone'],
         ['문의하기','#contact'],
       ]},
       { no:'04', title:'홍보센터', href:'notice.html', items:[
@@ -864,7 +1091,7 @@
       '<div class="m-acc border-b border-line/70">'+
         '<button class="m-acc-btn flex w-full items-center justify-between px-4 py-4 text-left font-display text-base font-bold text-text">'+
           '<span class="flex items-baseline gap-2.5">'+
-            '<span class="text-xs font-bold text-azure">'+m.no+'</span>'+m.title+
+            '<span class="text-xs font-bold text-label-blue">'+m.no+'</span>'+m.title+
           '</span>'+
           '<svg class="m-caret h-5 w-5 text-text-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 9l6 6 6-6"/></svg></button>'+
         '<div class="m-sub"><div class="flex flex-col gap-0.5 px-4 pb-3">'+
@@ -891,6 +1118,18 @@
       const sec = el ? el.closest('section') : null;
       return sec ? ['hero','business','zones'].includes(sec.id) : false;
     }
+    /* EN 안내 — 영문 페이지가 아직 없다(2026-08-27 지시).
+       ⚠ 마크업에 글자를 박지 않는다. CSS 가 늦거나 실패하면 `준비중입니다` 가 그대로
+         보인다 — 서브페이지(`src/sub/js/common.js`)와 **같은 방식**으로 JS 가 넣는다. */
+    (function(){
+      const en = document.querySelector('#gnb .gnb-en');
+      if (!en || en.querySelector('.gnb-tip')) return;
+      const tip = document.createElement('span');
+      tip.className = 'gnb-tip';
+      tip.textContent = '준비중입니다';
+      en.appendChild(tip);
+    })();
+
     gnb.addEventListener('mouseenter', ()=>{ menuOpen=true; gnb.classList.add('open'); syncGnb(); });
     gnb.addEventListener('mouseleave', ()=>{ menuOpen=false; gnb.classList.remove('open'); syncGnb(); });
     document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ menuOpen=false; gnb.classList.remove('open'); syncGnb(); } });
@@ -917,7 +1156,7 @@
          zone-05.svg=하우징 · zone-06.svg=에듀 · zone-07.svg=비즈니스 다.
          n 을 그대로 data-zone 에 쓰면 5(비즈니스) 호버 시 하우징 구역이 켜진다. */
     const areas = [
-      ['1','AI 데이터','6.1만평','district-ai','1'],   ['2','바이오','8.2만평','district-bio','2'],
+      ['1','AI 데이터','6.2만평','district-ai','1'],   ['2','바이오','8.2만평','district-bio','2'],
       ['3','푸드','4.2만평','district-food','3'],      ['4','바이오 MICE','3.9만평','district-mice','4'],
       ['5','비즈니스','1.7만평','district-biz','7'],   ['6','하우징','9.7만평','district-housing','5'],
       ['7','에듀','2.7만평','district-edu','6'],       ['8','골프레저','28.5만평','district-golf','8'],
@@ -990,6 +1229,15 @@
     document.querySelectorAll('#areaGrid .cnt').forEach(el=>cntIO.observe(el));
 
     /* 조감도 배경 미세 확대 (스크롤 반응) */
+    /* HEVC(H.265) 재생 가능하면 그쪽을 쓴다 — 히어로 · 사업개요 · 구역 영상이 함께 쓴다.
+       ⚠ **구역 블록보다 앞에** 있어야 한다. `dzRenderGroup()` 이 초기화 때 바로 돌면서
+         이 값을 읽으므로, 뒤에 두면 `const` 의 TDZ 에 걸려 스크립트가 죽는다. */
+    const CAN_HEVC = (()=>{
+      const v = document.createElement('video');
+      return v.canPlayType('video/mp4; codecs="hvc1"') !== '' ||
+             v.canPlayType('video/mp4; codecs="hev1"') !== '';
+    })();
+
     const zonesSec=document.getElementById('zones'), zonesBg=document.getElementById('zonesBg');
     function zonesParallax(){
       const r=zonesSec.getBoundingClientRect();
@@ -1002,37 +1250,37 @@
     /* ---------- 구역 상세 (슬라이드 12~19) ---------- */
     const zones = {
       cluster: [
-        { n:'01', vid:'assets/vid/district/d01.mp4?v=dz2', poster:'assets/still/district/d01.jpg?v=dz2', c:'district-ai', t:'AI데이터 클러스터', img:'assets/slide-datarush.jpg', area:'약 6.1만평',
+        { n:'01', vid:'assets/vid/district/d01.mp4?v=dz3', vidHevc:'assets/vid/district/d01-hevc.mp4?v=dz3', poster:'assets/still/district/d01.jpg?v=dz3', c:'district-ai', t:'AI데이터 클러스터', img:'assets/slide-datarush.jpg', area:'약 6.2만평',
           head:'국가대표급 하이퍼스케일',
           desc:'최대 330MW AI 데이터센터 집적단지 조성 및 고성능 GPU 기반 AI바이오 데이터센터 구축',
-          specs:[['부지 면적','약 6.1만평','207,486㎡ (61,264평)'],['구성','DC1~DC5','총 5개 블럭'],['전력','330MW','IT Load 240MW'],['용도지역','준공업지역','건폐율 70% · 용적률 400% / 목표 PUE 1.2']] },
-        { n:'02', vid:'assets/vid/district/d02.mp4?v=dz2', poster:'assets/still/district/d02.jpg?v=dz2', c:'district-bio', t:'첨단 바이오 클러스터', img:'assets/img-bio.jpg', area:'약 8.2만평',
+          specs:[['부지 면적','약 6.2만평','207,486㎡ (62,765평)'],['구성','DC1~DC5','총 5개 블럭'],['전력','330MW','IT Load 240MW'],['용도지역','준공업지역','건폐율 70% · 용적률 400% / 목표 PUE 1.2']] },
+        { n:'02', vid:'assets/vid/district/d02.mp4?v=dz3', vidHevc:'assets/vid/district/d02-hevc.mp4?v=dz3', poster:'assets/still/district/d02.jpg?v=dz3', c:'district-bio', t:'첨단 바이오 클러스터', img:'assets/img-bio.jpg', area:'약 8.2만평',
           head:'AI 기반 신약 R&D 및 중소형 CDMO 거점',
           desc:'미국 BIOSECURE Act 및 블록버스터 특허 만료에 완벽히 대응할 AI 기반 첨단바이오산업 생태계 구축',
           specs:[['부지 면적','약 8.2만평','270,910㎡ (81,950평)'],['구성','HT1~HT2','총 2개 구역'],['산업 연계','국가첨단전략산업','특화단지'],['용도지역','일반공업지역','건폐율 70% · 용적률 350%']] },
-        { n:'03', vid:'assets/vid/district/d03.mp4?v=dz2', poster:'assets/still/district/d03.jpg?v=dz2', c:'district-food', t:'푸드 물류 클러스터', img:'assets/img-logistics.jpg', area:'약 4.2만평',
+        { n:'03', vid:'assets/vid/district/d03.mp4?v=dz3', vidHevc:'assets/vid/district/d03-hevc.mp4?v=dz3', poster:'assets/still/district/d03.jpg?v=dz3', c:'district-food', t:'푸드 물류 클러스터', img:'assets/img-logistics.jpg', area:'약 4.2만평',
           head:'AI 콜드체인 허브이자 군 급식 수요 대응 거점',
           desc:'AI데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응',
-          specs:[['부지 면적','약 4.2만평','138,860㎡ (42,254평)'],['구성','FL1~FL4','총 4개 구역'],['접근성','남춘천IC 3분','서울양양고속도로'],['용도지역','준공업지역','건폐율 70% · 용적률 400%']] },
-        { n:'04', vid:'assets/vid/district/d04.mp4?v=dz2', poster:'assets/still/district/d04.jpg?v=dz2', c:'district-mice', t:'바이오MICE 클러스터', img:'assets/img-shuttle.jpg', area:'약 3.9만평',
+          specs:[['부지 면적','약 4.2만평','138,860㎡ (42,005평)'],['구성','FL1~FL4','총 4개 구역'],['접근성','남춘천IC 3분','서울양양고속도로'],['용도지역','준공업지역','건폐율 70% · 용적률 400%']] },
+        { n:'04', vid:'assets/vid/district/d04.mp4?v=dz3', vidHevc:'assets/vid/district/d04-hevc.mp4?v=dz3', poster:'assets/still/district/d04.jpg?v=dz3', c:'district-mice', t:'바이오MICE 클러스터', img:'assets/img-shuttle.jpg', area:'약 3.9만평',
           head:'지속가능한 바이오·헬스 산업 커뮤니티 조성',
           desc:'일회성·정기성을 넘어, 의료+바이오+헬스+투자가 상시 교류하는 산업 네트워크 완성',
           specs:[['부지 면적','약 3.9만평','128,634㎡ (38,912평)'],['구성','BIO1~BIO4','4개 구역'],['특구','AI 헬스케어','국가첨단전략산업'],['용도지역','복합용지','MICE·의료시설 등']] },
       ],
       complex: [
-        { n:'05', vid:'assets/vid/district/d05.mp4?v=dz2', poster:'assets/still/district/d05.jpg?v=dz2', c:'district-biz', t:'비즈니스 콤플렉스', img:'assets/img-street.jpg', area:'약 1.7만평',
+        { n:'05', vid:'assets/vid/district/d05.mp4?v=dz3', vidHevc:'assets/vid/district/d05-hevc.mp4?v=dz3', poster:'assets/still/district/d05.jpg?v=dz3', c:'district-biz', t:'비즈니스 콤플렉스', img:'assets/img-city.jpg', area:'약 1.7만평',
           head:'상업‧업무‧문화가 융합된 강원 관문',
           desc:'도시를 넘어 광역 유동인구까지 흡수하는 직·주·락 중심 주민친화적 단핵 복합 상권 조성',
           specs:[['부지 면적','약 1.7만평','55,703㎡ (16,850평)'],['핵심시설','업무시설','8,949평 (29,583㎡)'],['핵심시설','상업시설','7,901평 (26,120㎡)'],['용도지역','일반상업지역','건폐율 80% · 용적률 600%']] },
-        { n:'06', vid:'assets/vid/district/d06.mp4?v=dz2', poster:'assets/still/district/d06.jpg?v=dz2', c:'district-housing', t:'하우징 콤플렉스', img:'assets/img-mirror.jpg', area:'약 9.7만평',
+        { n:'06', vid:'assets/vid/district/d06.mp4?v=dz3', vidHevc:'assets/vid/district/d06-hevc.mp4?v=dz3', poster:'assets/still/district/d06.jpg?v=dz3', c:'district-housing', t:'하우징 콤플렉스', img:'assets/img-mirror.jpg', area:'약 9.7만평',
           head:'첨단 기술과 자연을 누리는 하우징 / 시니어',
           desc:'AI·로보틱스·자율주행 등 첨단기술로 완성되는 하이엔드 하우징 및 하이퍼엔드 시니어 하우징',
           specs:[['부지 면적','약 9.7만평','321,307㎡ (97,195평)'],['계획 세대','6,366세대','공동주택 4,000 · 시니어 2,000'],['계획 인구','15,917명',''],['주택 유형','공동주택','시니어하우징']] },
-        { n:'07', vid:'assets/vid/district/d07.mp4?v=dz2', poster:'assets/still/district/d07.jpg?v=dz2', c:'district-edu', t:'에듀 콤플렉스', img:'assets/img-family.jpg', area:'약 2.7만평',
+        { n:'07', vid:'assets/vid/district/d07.mp4?v=dz3', vidHevc:'assets/vid/district/d07-hevc.mp4?v=dz3', poster:'assets/still/district/d07.jpg?v=dz3', c:'district-edu', t:'에듀 콤플렉스', img:'assets/img-family.jpg', area:'약 2.7만평',
           head:'생애 전주기 교육하는 ‘생각하는 도시’ 글로벌',
           desc:'춘천시 연계 개방형 지역 협력 교육 거버넌스와 글로벌 인재 육성·유입',
           specs:[['부지 면적','약 2.7만평','90,147㎡ (27,269평)'],['도입시설','유·초·중·고','외국교육기관'],['연계','교육발전특구','(시범사업)'],['외국인교육기관','약 1.2만평','40,539㎡']] },
-        { n:'08', vid:'assets/vid/district/d08.mp4?v=dz2', poster:'assets/still/district/d08.jpg?v=dz2', c:'district-golf', t:'골프레저 콤플렉스', img:'assets/img-park.jpg', area:'약 28.5만평',
+        { n:'08', vid:'assets/vid/district/d08.mp4?v=dz3', vidHevc:'assets/vid/district/d08-hevc.mp4?v=dz3', poster:'assets/still/district/d08.jpg?v=dz3', c:'district-golf', t:'골프레저 콤플렉스', img:'assets/img-park.jpg', area:'약 28.5만평',
           head:'바이오 스마트·피지컬 AI 기반 웰니스',
           desc:'친환경 그린 인프라에서 경험하는 로봇 캐디·메디컬 케어 등 미래형 라이프스타일 플랫폼 완성',
           specs:[['부지 면적','약 28.5만평','942,975㎡ (285,250평)'],['코스','대중형·18홀','PAR 72'],['코스연장','6,570m',''],['부대시설','4대 시설','클럽하우스·그늘집·관리동·연습시설']] },
@@ -1055,8 +1303,11 @@
       const items = dzItems();
       // 이미지 스택 (대기=아래 / 지나감=위)
       dzImgs.innerHTML = items.map(z=>
+        /* ⚠ 코덱 선택은 **여기서 한 번만** 한다. `<source>` 두 개를 쓰지 않는 이유는
+             `data-src` 로 지연 주입하는 구조라 `<source>` 가 안 먹기 때문이다.
+             HEVC 는 같은 화질을 30% 작은 파일로 준다(실측 · Safari · iOS 가 받는다). */
         '<video class="dz-vid" muted loop playsinline preload="none" '+
-          'poster="'+z.poster+'" data-src="'+z.vid+'"></video>'
+          'poster="'+z.poster+'" data-src="'+((CAN_HEVC && z.vidHevc) ? z.vidHevc : z.vid)+'"></video>'
       ).join('');
       // 좌측 아코디언 (예전 형식: 펼치면 서브카피 + 부지개요)
       dzAcc.innerHTML = items.map((z,i)=>
@@ -1163,13 +1414,21 @@
       [...dzDots.children].forEach((b,k)=>b.classList.toggle('on', k === i));
       dzAcc.querySelectorAll('.za').forEach((c,k)=>c.classList.toggle('open', k === i));
 
+      /* '자세히 보기' 는 **그 권역의 탭**을 연다(2026-08-28 지시).
+         구역소개 페이지의 탭 버튼 id 가 `tab-01`~`tab-08` 이고 여기 `z.n` 과 1:1 이다.
+         ⚠ 전환 애니메이션(`dz-swap`) 밖에서 바로 바꾼다 — 카드를 넘긴 직후 링크를 누를 때
+           200ms 동안 이전 권역으로 가는 것을 막는다. */
+      const dzA = document.getElementById('dzArea');
+      if (dzA) {
+        dzA.href = 'districts.html#tab-' + z.n;
+        dzA.setAttribute('aria-label', z.t + ' 자세히 보기');
+      }
+
       dzStage.classList.add('dz-swap');
       setTimeout(()=>{
         document.getElementById('dzHead').textContent  = z.n + ' · ' + z.head;
         document.getElementById('dzTitle').textContent = z.t;
         document.getElementById('dzDesc').textContent  = z.desc;
-        document.getElementById('dzIndex').textContent =
-          z.n + ' · ' + (dzGroup === 'cluster' ? 'CLUSTER' : 'COMPLEX') + ' ' + (i+1) + '/' + dzItems().length;
         dzStage.classList.remove('dz-swap');
       }, 200);
       dzCur = i;
@@ -1190,13 +1449,19 @@
       window.scrollTo({ top: dzSec.offsetTop + total * ((i + 0.5) / n), behavior: 'smooth' });
     }
 
-    // 탭 전환: 그룹 교체 후 현재 스크롤 위치에 맞는 항목 표시
+    /* 탭 전환: 그룹을 갈고 **그 그룹의 첫 카드**로 간다 (2026-08-27 지시).
+       ⚠ 전에는 `dzUpdate()` 로 현재 스크롤 위치에 맞는 항목을 띄웠다. 그래서 클러스터
+         3번을 보다가 콤플렉스를 누르면 콤플렉스 3번(에듀)이 나왔다 — 탭을 바꾼 사용자는
+         그 그룹의 처음을 기대한다.
+       ⚠ `dzRender(0)` 만으로는 안 된다. 항목 번호는 **스크롤 위치**가 정하므로
+         다음 스크롤에 `dzUpdate()` 가 곧바로 원래 번호로 되돌린다 —
+         런웨이 위치까지 함께 옮겨야 한다(도트·아코디언 클릭과 같은 경로다). */
     document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
       if (b.dataset.tab === dzGroup) return;
       dzGroup = b.dataset.tab;
       dzRenderGroup();
-      dzUpdate();
-      if (dzCur < 0) dzRender(0);
+      dzRender(0);
+      dzScrollTo(0);
     }));
 
     dzRenderGroup();
@@ -1206,29 +1471,36 @@
     window.addEventListener('resize', dzUpdate);
 
     /* ---------- 스크럽 시네마 엔진 ---------- */
-    /* HEVC(H.265) 재생 가능하면 2560 고화질을, 아니면 1920 H.264를 쓴다 */
-    const CAN_HEVC = (()=>{
-      const v = document.createElement('video');
-      return v.canPlayType('video/mp4; codecs="hvc1"') !== '' ||
-             v.canPlayType('video/mp4; codecs="hev1"') !== '';
-    })();
-
+    /* 동작 최소화 설정 — `data-play="loop"` 섹션의 자동재생을 끄는 데 쓴다.
+       ⚠ 스크럽 섹션은 여기 영향을 받지 않는다. 스크럽은 사용자가 스크롤한 만큼만 움직이므로
+         '스스로 움직이는 모션' 이 아니다. */
+    const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cines = [...document.querySelectorAll('.cine')].map(sec=>{
       const key = sec.dataset.cine;
       const pages = [...sec.querySelectorAll('.cine-page')];
       const dots = sec.querySelector('[data-dots="'+key+'"]');
       if (dots && pages.length > 1) {
         // 인디케이터는 표시 전용이 아니라 조작 가능해야 한다.
-        // 페이지 전환은 스크롤 진행률(c.p)이 구동하므로, 클릭하면 해당 구간으로 스크롤한다
-        // (입지 하단 탭과 같은 방식). 그러면 tick() 이 나머지를 알아서 맞춘다.
         dots.innerHTML = pages.map((_,i)=>
           '<i role="button" tabindex="0" aria-label="'+(i+1)+'페이지로 이동"'
           + (i===0 ? ' class="on"' : '') + '></i>').join('');
+        /* 두 갈래다.
+           · 런웨이가 있는 섹션 — 그 구간으로 스크롤하면 tick() 이 나머지를 맞춘다.
+           · 런웨이가 없는 자동재생 섹션(`data-play="loop"`) — 스크롤로는 옮길 수 없다.
+             씬을 직접 바꾸고 **영상을 처음으로 되감는다** — 안 되감으면 남은 몇 초 뒤
+             바로 다음 씬으로 넘어가 방금 고른 씬을 읽을 시간이 없다. */
         const go = i => {
           const runway = sec.offsetHeight - innerHeight;
-          if (runway <= 0) return;
-          scrollTo({ top: sec.offsetTop + runway * ((i + 0.5) / pages.length),
-                     behavior: 'smooth' });
+          if (runway > 0) {
+            scrollTo({ top: sec.offsetTop + runway * ((i + 0.5) / pages.length),
+                       behavior: 'smooth' });
+            return;
+          }
+          const c = cines.find(x => x.sec === sec);
+          if (!c) return;
+          c.autoIdx = i;
+          const v = c.video;
+          if (v && v.duration) { try { v.currentTime = 0; c.lastT = 0; } catch(e){} }
         };
         [...dots.children].forEach((el, i) => {
           el.addEventListener('click', ()=>go(i));
@@ -1243,6 +1515,10 @@
         video: sec.querySelector('video[data-scrub="'+key+'"]'),
         poster: sec.querySelector('[data-poster="'+key+'"]'),
         clip: (CAN_HEVC && sec.dataset.clipHevc) ? sec.dataset.clipHevc : (sec.dataset.clip || null),
+        /* `data-play="loop"` 인 섹션은 **스크럽하지 않는다** — 영상이 스스로 돌고
+           스크롤은 카피 페이지만 넘긴다(2026-08-28 지시). 없으면 기존 스크럽 그대로다. */
+        playLoop: sec.dataset.play === 'loop',
+        autoIdx: null, scrollIdx: null, lastT: null,
         cur: 0, loaded: false, seeking: false, target: 0
       };
     });
@@ -1265,6 +1541,13 @@
       }
       await ready();
       if (c.video.readyState >= 2 && c.poster) c.poster.style.opacity = '0';
+      /* 스스로 도는 섹션은 여기서 재생을 건다.
+         ⚠ `muted` + `playsinline` 이라야 자동재생이 허용된다(마크업에 이미 있다).
+         ⚠ 동작 최소화 설정에서는 **재생하지 않는다** — 첫 프레임에 멈춰 있게 둔다. */
+      if (c.playLoop && !REDUCE) {
+        c.video.loop = true;
+        c.video.play().catch(()=>{});
+      }
     }
     const loadIO = new IntersectionObserver(es=>{
       es.forEach(e=>{ if(e.isIntersecting){ const c=cines.find(x=>x.sec===e.target); if(c) loadClip(c); } });
@@ -1302,9 +1585,36 @@
       cines.forEach(c=>{
         if (c.prog) c.prog.style.width = (c.p*100).toFixed(1) + '%';
 
-        // 영상: 목표 시간으로 부드럽게 수렴 (스크롤이 멈춘 뒤에도 잔여 이동 → 영상 느낌)
         const v = c.video;
-        if (v && v.duration && c.visible) {
+        /* ⚠ `return` 을 쓰지 않는다 — `forEach` 콜백에서 빠져나가면 **아래 카피 페이지 전환까지**
+             건너뛴다. 스크롤로 씬을 넘기는 것이 이 섹션의 남은 역할이므로 분기로만 가른다. */
+        if (v && c.playLoop) {
+          /* 스스로 도는 섹션 — `currentTime` 을 건드리지 않는다. 스크롤이 멈춰도 계속 움직인다.
+             화면 밖에서는 세워 둔다(배터리·디코딩 낭비를 막는다). */
+          if (!REDUCE) {
+            if (c.visible && v.paused) v.play().catch(()=>{});
+            else if (!c.visible && !v.paused) v.pause();
+          }
+          /* 씬 자동 전환 — **영상이 한 바퀴 돌 때마다** 다음 카피로 넘긴다(2026-08-28 지시:
+             "스크롤 안 해도 모션이 끝난 후에 두 번째 씬으로 자동으로 계속 루프").
+             ⚠ 반 바퀴씩 나누지 않는다. 이 영상은 5.7초라 2등분하면 씬당 2.85초뿐이고
+               두 줄 제목 + 설명을 읽기에 짧다. 한 바퀴 = 한 씬이라야 5.7초가 확보된다.
+             ⚠ 루프 판정은 `currentTime` 이 **되감긴 것**으로 한다. `ended` 는 `loop` 가
+               걸린 요소에서 발화하지 않는다. */
+          if (c.pages.length > 1 && v.duration) {
+            if (c.autoIdx == null) c.autoIdx = c.cur;
+            if (c.lastT != null && v.currentTime < c.lastT - 0.4) {
+              c.autoIdx = (c.autoIdx + 1) % c.pages.length;
+            }
+            c.lastT = v.currentTime;
+          }
+        }
+        /* 스크럽 경로 — 스크롤이 `currentTime` 을 직접 끈다.
+           ⚠ **2026-08-28 현재 이 가지를 타는 섹션이 없다.** `#business` 는 자동재생으로
+             바뀌었고 `#location` 은 영상이 아니라 지도 SVG 다. 지우지 않는 이유는
+             스크럽 섹션을 다시 넣을 때 필요한 유일한 구현이기 때문이다(`linger()` 포함). */
+        // 영상: 목표 시간으로 부드럽게 수렴 (스크롤이 멈춘 뒤에도 잔여 이동 → 영상 느낌)
+        else if (v && v.duration && c.visible) {
           const target = Math.min(linger(c.p, c.pages.length) * v.duration, v.duration - 0.05);
           c.shown = (c.shown == null) ? target : c.shown + (target - c.shown) * 0.18;
           if (!v.seeking && Math.abs(v.currentTime - c.shown) > 0.016) {
@@ -1314,7 +1624,15 @@
 
         // 카피 페이지 전환
         if (c.pages.length > 1) {
-          const idx = Math.min(Math.floor(c.p * c.pages.length), c.pages.length - 1);
+          const scrollIdx = Math.min(Math.floor(c.p * c.pages.length), c.pages.length - 1);
+          /* 스스로 도는 섹션은 **영상 루프만** 씬을 정한다(2026-08-28 지시).
+             ⚠ 전에는 스크롤 위치도 씬을 바꿨는데, 런웨이가 400vh 라 스크롤을 내릴수록
+               카피가 따라 바뀌어 **스크롤이 영상을 감는 것처럼** 보였다. 그게 지적받은 증상이다.
+               지금은 런웨이가 없고(100vh) 스크롤은 다음 섹션으로 지나갈 뿐이다.
+             ⚠ 동작 최소화에서는 영상이 돌지 않아 자동 전환이 없다 —
+               그때는 스크롤 위치(= 0)로 첫 씬을 보여 준다. 카피가 사라지지 않게 하는 최소 보장이다. */
+          let idx = scrollIdx;
+          if (c.playLoop && !REDUCE && c.autoIdx != null) idx = c.autoIdx;
           if (idx !== c.cur) {
             c.pages[c.cur].classList.remove('on');
             c.pages[idx].classList.add('on');
@@ -1366,110 +1684,6 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('.reveal, .lr, .cn-dia').forEach(el=>io.observe(el));
 
-    /* ---------- 문의하기 폼 ----------
-       서버가 없으므로 기본 동작은 메일 클라이언트로 내용을 넘기는 방식이다.
-       백엔드가 준비되면 CT_ENDPOINT에 URL을 넣으면 fetch POST로 전송된다. */
-    const CT_ENDPOINT = '';   // 예: 'https://api.b-city.kr/inquiry'
-    (function(){
-      const form = document.getElementById('contactForm');
-      if (!form) return;
-      const status = document.getElementById('ctStatus');
-      const showErr = (key, on) => {
-        const el = form.querySelector('[data-err="'+key+'"]');
-        if (el) el.classList.toggle('on', on);
-      };
-      const setBad = (el, on) => el && el.classList.toggle('bad', on);
-
-      // 휴대전화 자동 하이픈
-      const tel = form.elements.tel;
-      tel.addEventListener('input', () => {
-        const d = tel.value.replace(/\D/g,'').slice(0,11);
-        tel.value = d.length < 4 ? d
-          : d.length < 8 ? d.slice(0,3)+'-'+d.slice(3)
-          : d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);
-      });
-
-      const checks = {
-        interest: () => [...form.querySelectorAll('input[name="interest"]')].some(c=>c.checked),
-        name:     () => form.elements.name.value.trim().length > 0,
-        tel:      () => /^01[016789]-?\d{3,4}-?\d{4}$/.test(form.elements.tel.value.replace(/\s/g,'')),
-        email:    () => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.elements.email.value.trim()),
-        message:  () => form.elements.message.value.trim().length > 0,
-        agreeRequired: () => form.elements.agreeRequired.checked,
-      };
-
-      // 입력 중 에러 해제
-      ['name','tel','email','message'].forEach(k=>{
-        form.elements[k].addEventListener('input', ()=>{
-          if (checks[k]()) { showErr(k,false); setBad(form.elements[k],false); }
-        });
-      });
-      form.querySelectorAll('input[name="interest"]').forEach(c=>
-        c.addEventListener('change', ()=>{ if(checks.interest()) showErr('interest',false); }));
-      form.elements.agreeRequired.addEventListener('change', ()=>{
-        if (checks.agreeRequired()) showErr('agreeRequired',false); });
-
-      form.addEventListener('submit', e=>{
-        e.preventDefault();
-        status.className = 'ct-status';
-        let firstBad = null;
-        for (const key of Object.keys(checks)) {
-          const ok = checks[key]();
-          showErr(key, !ok);
-          // name이 여러 개인 필드(interest)는 RadioNodeList가 오므로 focus 가능한 요소로 바꾼다
-          let field = form.elements[key];
-          if (!field || typeof field.focus !== 'function') field = form.querySelector('[name="'+key+'"]');
-          if (field && field.classList.contains('ct-input')) setBad(field, !ok);
-          if (!ok && !firstBad) firstBad = field;
-        }
-        if (firstBad) {
-          firstBad.focus({ preventScroll:false });
-          status.textContent = '입력하지 않은 필수 항목이 있습니다.';
-          status.className = 'ct-status on ng';
-          return;
-        }
-
-        const data = {
-          관심분야: [...form.querySelectorAll('input[name="interest"]:checked')].map(c=>c.value).join(', '),
-          '회사명/이름': form.elements.name.value.trim(),
-          휴대전화: form.elements.tel.value.trim(),
-          이메일: form.elements.email.value.trim(),
-          문의내용: form.elements.message.value.trim(),
-          마케팅활용동의: form.elements.agreeMarketing.checked ? '동의' : '미동의',
-        };
-
-        if (CT_ENDPOINT) {
-          const btn = document.querySelector('#contact .ct-submit');
-          btn.disabled = true;
-          status.textContent = '전송 중입니다…';
-          status.className = 'ct-status on';
-          fetch(CT_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'},
-                               body: JSON.stringify(data) })
-            .then(r=>{ if(!r.ok) throw new Error(r.status); form.reset();
-              status.textContent = '문의가 정상적으로 접수되었습니다. 담당자가 확인 후 연락드립니다.';
-              status.className = 'ct-status on ok';
-              setTimeout(()=>{ if (window.bcityCloseModal) window.bcityCloseModal(document.getElementById('contact')); }, 1800); })
-            .catch(()=>{ status.textContent = '전송에 실패했습니다. invest@biotech-iv.com 로 직접 보내주세요.';
-              status.className = 'ct-status on ng'; })
-            .finally(()=>{ btn.disabled = false; });
-          return;
-        }
-
-        // 백엔드 미연결: 메일 본문으로 넘긴다
-        const body = Object.entries(data).map(([k,v])=>k+' : '+v).join('\n');
-        const subject = '[B-CITY 문의] ' + data['회사명/이름'] + ' - ' + data.관심분야;
-        location.href = 'mailto:invest@biotech-iv.com?subject=' + encodeURIComponent(subject)
-                      + '&body=' + encodeURIComponent(body);
-        status.textContent = '메일 작성 창이 열립니다. 열리지 않으면 invest@biotech-iv.com 로 보내주세요.';
-        status.className = 'ct-status on ok';
-      });
-
-      form.addEventListener('reset', ()=>{
-        form.querySelectorAll('.ct-err.on').forEach(el=>el.classList.remove('on'));
-        form.querySelectorAll('.ct-input.bad').forEach(el=>el.classList.remove('bad'));
-        status.className = 'ct-status';
-      });
-    })();
 
     /* ---------- 입지: 경로 모션그래픽 ----------
        좌표계 = 배경 지도 이미지의 픽셀 공간(viewBox 1600×900 · 16:9).
@@ -1537,8 +1751,8 @@
                // 각도를 균등하게 주면 세로로 눌린 타원의 우측에서 간격이 좁아진다.
                hubArc: { from: -34, to: 78, order: ['속초항', '양양국제공항', '동해항'] } },
         nodes: [
-          // bx: 바닥 앵커의 가로 오프셋 — 인천은 받침대 우측 바닥 끝에서 출발한다
-          { x: 350,  y: 436, name: '인천국제공항', tag: '80분',  bow: 0.09,  hubT: 172,
+          // bx: 바닥 앵커의 가로 오프셋 — 김포는 받침대 우측 바닥 끝에서 출발한다
+          { x: 350,  y: 436, name: '김포공항', tag: '80분',  bow: 0.09,  hubT: 172,
             clear: { rx: 80, ry: 68, cy: -6, base: 62, bx: 54 },
           },
           { x: 1154, y: 142, name: '속초항',       tag: '90분',  bow: -0.11,
@@ -1977,70 +2191,11 @@
       }, { threshold: 0.15 }).observe(sec);
     })();
 
-    /* ---------- 모달 (문의하기 · 개인정보 약관) ----------
-       #contact 안에서 #privacy를 열 수 있으므로 스택으로 관리한다. */
-    (function(){
-      const stack = [];
-      const modals = [...document.querySelectorAll('.pv')];
-      if (!modals.length) return;
-
-      const lock   = () => { document.body.style.overflow = 'hidden'; };
-      const unlock = () => { if (!stack.length) document.body.style.overflow = ''; };
-
-      function open(el, trigger){
-        if (!el || stack.includes(el)) return;
-        el.__return = trigger || document.activeElement;
-        el.style.zIndex = 120 + stack.length * 10;   // 위에 열리는 모달이 항상 앞
-        el.hidden = false;
-        lock();
-        void el.offsetWidth;                          // 리플로우 강제 → rAF 없이 전환 시작
-        el.classList.add('on');
-        stack.push(el);
-        (el.querySelector('.pv-x') || el.querySelector('.pv-panel')).focus({ preventScroll:true });
-      }
-
-      function close(el){
-        const i = stack.indexOf(el);
-        if (i === -1) return;
-        stack.splice(i, 1);
-        el.classList.remove('on');
-        const panel = el.querySelector('.pv-panel');
-        let fired = false;
-        const done = () => { if (fired) return; fired = true; el.hidden = true; unlock(); };
-        // 트랜지션이 없거나 끝나지 않는 환경에서도 확실히 닫히도록
-        panel.addEventListener('transitionend', done, { once:true });
-        setTimeout(done, 420);
-        if (el.__return && el.__return.focus) el.__return.focus({ preventScroll:true });
-      }
-
-      modals.forEach(el=>{
-        el.querySelector('.pv-panel').setAttribute('tabindex','-1');
-        el.querySelectorAll('[data-pv-close]').forEach(b=>b.addEventListener('click', ()=>close(el)));
-        el.addEventListener('keydown', e=>{                       // 패널 안 포커스 순환
-          if (e.key !== 'Tab') return;
-          const f = [...el.querySelectorAll('.pv-panel a[href],.pv-panel button,.pv-panel input,.pv-panel textarea,.pv-panel [tabindex]:not([tabindex="-1"])')]
-            .filter(n=>n.offsetParent !== null && !n.disabled);
-          if (!f.length) return;
-          const first = f[0], last = f[f.length-1];
-          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-        });
-      });
-
-      // 해당 id를 가리키는 모든 링크가 모달을 연다
-      document.querySelectorAll('a[href^="#"]').forEach(a=>{
-        const el = document.getElementById(a.getAttribute('href').slice(1));
-        if (!el || !el.classList.contains('pv')) return;
-        a.addEventListener('click', e=>{ e.preventDefault(); open(el, a); });
-      });
-
-      // ESC → 가장 위 모달만 닫기
-      document.addEventListener('keydown', e=>{
-        if (e.key === 'Escape' && stack.length) close(stack[stack.length - 1]);
-      });
-
-      window.bcityCloseModal = close;   // 폼 전송 완료 후 닫기용
-    })();
+    /* ---------- 문의 모달 · 문의 폼 ----------
+       ⚠ 스크립트는 여기 없다 — `assets/js/contact.js`(소스 `src/shared/contact.js`)를
+         `<head>` 에서 defer 로 받는다. **서브페이지가 같은 파일을 쓴다.**
+         2026-08-27 에 합쳤다 — 전에는 모달 엔진과 검증 로직이 여기와
+         `src/sub/js/contact.js` 두 곳에 있었고 기능이 서로 달랐다. */
 
     /* ---------- 도시컨셉 다이어그램: Figma 1320px 좌표를 컨테이너 폭에 맞춰 축소 ---------- */
     (function(){

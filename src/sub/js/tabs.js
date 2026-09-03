@@ -46,6 +46,31 @@
           });
         });
 
+        /* 해시로 탭을 연다 — 메인 구역소개의 '자세히 보기' 가
+           `districts.html#tab-05` 처럼 그 권역을 바로 가리킨다(2026-08-28 지시).
+           ⚠ 해시는 **탭 버튼의 id** 다. 패널 id 를 쓰면 안 된다 — 선택되지 않은 패널은
+             `hidden` 이라 브라우저가 그리로 스크롤하지 못한다.
+           ⚠ 이 묶음에 없는 해시면 아무것도 하지 않는다. 페이지에 탭 묶음이 둘이므로
+             (클러스터 · 콤플렉스) 남의 해시에 반응하면 엉뚱한 쪽이 함께 움직인다. */
+        var fromHash = function (scroll) {
+          var id = location.hash.slice(1);
+          if (!id || !/^[\w-]+$/.test(id)) return false;
+          var el = root.querySelector('#' + id + '[data-tab]');
+          if (!el) return false;
+          apply(el.dataset.tab, false);
+          /* 브라우저의 기본 점프는 JS 가 탭을 바꾸기 **전에** 일어나 위치가 어긋난다.
+             바꾼 뒤 다시 맞춘다. 고정 GNB · LNB 아래로 오도록 `scroll-margin-top` 은 CSS 가 준다. */
+          if (scroll) el.scrollIntoView({ block: 'center' });
+          return true;
+        };
+
         apply(tabs[0].dataset.tab, false);
+        fromHash(true);
+        /* ⚠ 한 번만 맞추면 어긋난다. 이 페이지는 지연 이미지(계획도 · 사진)가 뒤늦게 들어와
+             레이아웃이 밀리므로, 자산이 다 들어온 뒤 **한 번 더** 맞춘다.
+             `load` 는 이미지까지 끝난 시점이다. 이미 지난 뒤면 바로 한 번 더 부른다. */
+        if (document.readyState === 'complete') setTimeout(function () { fromHash(true); }, 0);
+        else window.addEventListener('load', function () { fromHash(true); });
+        window.addEventListener('hashchange', function () { fromHash(true); });
       });
     })();

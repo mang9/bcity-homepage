@@ -1,0 +1,168 @@
+/* ===== 회사소개 =====
+   기획 #p-company(Storyboard p.101~104) 구성 그대로다 —
+   [회사개요 표 + 비전] · [PFV / AMC 역할] · [CONTACT].
+   ⚠ 이 페이지는 공용 조각을 최대한 그대로 쓴다(`.sub-h` · `.note` · `.closer` · `.sr`).
+     회사개요 표는 **사업개요와 같은 `.spec`** 이다(2026-08-26 지시로 통일 · page-shared.css).
+     예전에는 `.ab-spec` 으로 같은 모양을 다시 정의하고 있었다 — 한쪽만 고치면 갈라진다.
+     이 파일에만 있는 것은 세 가지다: 비전 · 역할 카드 · 연락처. */
+
+/* ── 히어로 스크림 — 이 페이지만 진하게 ──────────────────────────────
+   건물 근접 컷(`gallery/green-complex.avif`)은 밝아서 공용 스크림(가운데 .30)으로는
+   흰 글자가 AA 에 못 미친다 — 실측 최저 **2.56**(크럼, 1440). 크럼은 색이
+   `rgba(255,255,255,.72)` 라 늘 여기가 최저다.
+   ⚠ 공용 `30-hero-lnb.css` 를 고치지 않는다. 다른 히어로 8곳은 지금 값으로 통과 중이라
+     전역으로 올리면 그 사진들이 필요 이상으로 어두워진다. 이 파일은 회사소개만 싣는다.
+   ⚠ 사진을 갈아끼우면 **다시 잰다**(§11.20). 가운데 정지점 실측:
+     .30 → 2.56 / .48 → 4.14 / **.58 → 5.45** / .68 → 7.29 (전부 1440 기준 최저) */
+.hero-scrim { background: linear-gradient(180deg,
+  rgb(var(--scrim-rgb) / .78) 0%, rgb(var(--scrim-rgb) / .58) 46%,
+  rgb(var(--scrim-rgb) / .84) 100%); }
+
+/* ── 비전 ──────────────────────────────────────────────────────────
+   ⚠ **상자를 쓰지 않는다**(2026-08-26 지시: "박스와 라인이 너무 ai 스타일같아").
+     흰 면 + 위쪽 강조선 + 알약 슬로건은 걷어냈다 — 그 조합(라운드 카드 + 상단 액센트 바)이
+     정확히 지적받은 형태다. 지금은 **로고 · 타이포 위계 · 여백**만으로 세운다.
+   ⚠ 되살리지 말 것: background · border · border-radius · box-shadow. 덩이를 나누는 일은
+     위쪽 로고와 넉넉한 여백이 한다. */
+.ab-vision { margin-top: clamp(48px, 6vw, 96px); text-align: center; }
+/* 로고 — 이 덩이의 머리다(2026-08-26 지시). 파티셜은 사업주체 구조도와 공유한다.
+   ⚠ `.bs-logo` 는 `page-company.css` 에도 있지만 이 페이지 번들에는 없다 —
+     여기서 크기를 정해 둬야 한다(§11.11 의 2번 유형). */
+.ab-vision .bs-logo { display: block; width: min(72%, 232px); height: auto;
+  margin: 0 auto clamp(22px, 2.6vw, 38px); }
+/* ⚠ 크기는 **이미 있는 램프**에서 고른다(2026-08-27 지시: "다른 페이지들 폰트 위계에 맞춰").
+     새 단계를 만들면 DESIGN.md 의 census 가 어긋나 `design-system-font-size` 경고가 소음이 된다.
+       제목   `clamp(30px, 3.4vw, 54px)` = 정주환경 `.lv-big-h`
+       본문   `clamp(15px, 1.15vw, 19px)` = 공용 `.lede` · `.hero-lede`
+       슬로건 `clamp(26px, 2.5vw, 42px)` = 공용 `.h2`
+     히어로 램프(최대 62px)는 쓰지 않는다 — 같은 페이지 h1 과 같아져 서로 다툰다. */
+.ab-vision-h { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(30px, 3.4vw, 54px); line-height: 1.24; letter-spacing: -.025em;
+  word-break: keep-all; }
+.ab-vision-h em { font-style: normal; color: var(--color-primary); }
+/* ⚠ 폭이 62ch 아래면 마지막 줄에 `합니다.` 만 남는 고아 줄이 생긴다(실측: 52·58ch 에서 4줄).
+     `text-wrap: balance/pretty` 로는 안 잡힌다 — 폭으로 잡는다. */
+.ab-vision-d { margin: clamp(18px, 2vw, 28px) auto 0; max-width: 62ch;
+  font-size: clamp(15px, 1.15vw, 19px); line-height: 1.8;
+  color: var(--color-text-muted); word-break: keep-all; }
+/* 슬로건 — 알약을 벗기고 **큰 활자**로 세운다. 따옴표는 마크업이 아니라
+   `::before/::after` 가 갖는다(낭독에 기호를 넣지 않는다). */
+.ab-slogan { margin: clamp(26px, 3vw, 44px) 0 0;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(26px, 2.5vw, 42px); letter-spacing: -.015em;
+  color: var(--color-primary); }
+.ab-slogan::before { content: "\201C"; margin-right: 3px; opacity: .5; }
+.ab-slogan::after  { content: "\201D"; margin-left: 3px; opacity: .5; }
+
+/* ── 역할 — PFV / AMC 두 카드 ───────────────────────────────────────
+   ⚠ 두 카드는 **같은 무게**다(면 · 테두리 · 크기 모두 같다). 한쪽만 강조하면
+     '분리 운영으로 투명성을 확보한다' 는 이 블록의 요지가 흐려진다. */
+.ab-roles { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 1.8vw, 28px); margin: clamp(20px, 2.2vw, 32px) 0 0; padding: 0;
+  /* ⚠ 카드가 `.rv rv-x` 로 오른쪽에서 들어온다 — 등장 **전** 시작 위치가
+       `translateX(28px)` 라 390px 에서 문서 가로 스크롤이 생긴다(§11.70 과 같은 함정).
+       `hidden` 이 아니라 `clip` 이어야 안쪽에 스크롤 컨테이너가 생기지 않는다. */
+  overflow-x: clip; }
+.ab-role { min-width: 0; padding: clamp(22px, 2.4vw, 36px);
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-radius: var(--radius-md); }
+.ab-role-k { display: flex; align-items: baseline; gap: 10px; margin: 0;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(20px, 1.9vw, 30px); letter-spacing: .01em; color: var(--color-primary); }
+.ab-role-k span { font-family: var(--font-body); font-size: 12.5px; font-weight: 700;
+  letter-spacing: 0; color: var(--color-text-muted); }
+.ab-role-t { margin: clamp(12px, 1.2vw, 18px) 0 0; font-family: var(--font-display);
+  font-weight: 700; font-size: clamp(15px, 1.25vw, 19px); letter-spacing: -.015em; }
+.ab-role-d { margin: 9px 0 0; font-size: clamp(13.5px, 1vw, 15px); line-height: 1.75;
+  color: var(--color-text-muted); word-break: keep-all; }
+/* 한 줄 정리 — 두 카드를 묶는 문장이라 가운데에 둔다 */
+.ab-role-sum { margin: clamp(18px, 1.8vw, 26px) 0 0; text-align: center;
+  font-size: clamp(14px, 1.05vw, 17px); line-height: 1.7; color: var(--color-text-muted); }
+.ab-role-sum em { font-style: normal; font-weight: 700; color: var(--color-text); }
+
+/* ── CONTACT ───────────────────────────────────────────────────────
+   상자를 쓰지 않고 **밑줄로만** 나누는 사양 목록이다 — 문의하기 페이지(`.ci-info`)와 같은
+   어법을 써서 같은 성격의 정보가 페이지마다 다른 모양으로 나오지 않게 한다.
+   ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
+/* 연락처 + 지도 2단(2026-08-26 지시).
+   ⚠ 제목·서브카피가 이 격자의 **왼쪽 칸 안**에 있다(2026-08-31 지시) — 밖에 두면 격자가
+     그 아래에서 시작해 지도만 119px 늦게 떨어진다. 그래서 여기에는 위 마진을 두지 않는다.
+   ⚠ `align-items: center` — 두 칸의 **중심을 맞춘다**(2026-08-31 지시). `start` 로 두면
+     지도 윗변만 제목에 붙고 아랫변은 버튼보다 한참 내려가 비대칭이 된다(실측: 1920 에서
+     지도가 53px · 2560 에서 104px 더 길다. `--wrap` 이 1800 · 2300 에서 커지므로
+     넓은 화면일수록 벌어진다 · §6.3).
+   ⚠ 지도에만 `align-self: center` 를 거는 것으로는 안 된다. 줄 높이는 큰 쪽이 정하는데
+     넓은 화면에서는 지도가 그 큰 쪽이라 **자기 기준으로 움직일 곳이 없다**(실측 0px).
+   ⚠ `stretch` 는 쓰지 않는다 — 지도는 비율이 고정이라 늘어나지 않고 **빈 상자만** 늘어난다. */
+.ab-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+  gap: clamp(24px, 3vw, 52px); align-items: center; }
+/* ⚠ 서브 카피 아래 간격을 여기서 준다(2026-08-26 지시: "내용이 너무 붙어있어").
+     `.sub-d` 는 공용이라 그쪽을 벌리면 다른 페이지까지 함께 벌어진다. */
+.ab-info { margin: clamp(26px, 3vw, 48px) 0 0; }
+.ab-info > div { display: grid; grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
+  gap: clamp(14px, 1.6vw, 28px); align-items: baseline;
+  padding: clamp(14px, 1.5vw, 21px) 0; border-bottom: 1px solid var(--color-line); }
+.ab-info > div:first-child { padding-top: 0; }
+.ab-info dt { font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
+  color: var(--color-text-muted); }
+.ab-info dd { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.3vw, 20px); line-height: 1.5; letter-spacing: -.018em;
+  color: var(--color-text); word-break: keep-all; }
+.ab-info a { color: var(--color-primary); text-decoration: none; }
+.ab-info a:hover, .ab-info a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+
+/* 버튼 3개 — 정보 목록 아래(2026-08-26 지시). 문의하기만 면을 채운다.
+   ⚠ 문의하기는 `href="#contact"` 다 — `contact.js` 가 가로채 **이 페이지에서** 모달을 연다. */
+.ab-col { min-width: 0; }
+.ab-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: clamp(20px, 2.2vw, 30px) 0 0; }
+.ab-act { padding: clamp(9px, .9vw, 12px) clamp(16px, 1.7vw, 24px);
+  border: 1px solid var(--color-line); border-radius: 999px;
+  background: var(--color-surface); font-size: 13.5px; font-weight: 700;
+  color: var(--color-primary); text-decoration: none;
+  transition: border-color .2s, background .2s; }
+.ab-act:hover, .ab-act:focus-visible { border-color: var(--color-primary); background: var(--color-bg); }
+.ab-act--go { background: var(--color-primary); border-color: var(--color-primary); color: #ffffff; }
+.ab-act--go:hover, .ab-act--go:focus-visible { background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover); }
+
+/* 지도 — ⚠ 자르지 않는다(`cover` 금지). 카카오 로고가 이미지 왼쪽 아래에 구워져 있고
+   하단 바가 없는 지금은 그것이 유일한 표기라, 잘리면 표기가 사라진다.
+   ⚠ `aspect-ratio` 는 원본(1000x616)과 **짝이다** — 한쪽만 고치면 지도가 눌린다.
+   ⚠ 문의하기 페이지(`page-contact.css`)에 같은 모양이 있지만 그 페이지는 지금 빌드에서
+     빠져 있다(2026-08-26 숨김) — 살아 있는 정의는 여기 하나뿐이다.
+     그 페이지를 되살릴 때 둘을 공용으로 합칠 것. */
+.ab-map { margin: 0; border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  overflow: hidden; background: var(--color-bg); }
+.ab-map-a { position: relative; display: block; }
+.ab-map-a img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 616; }
+/* 건물 핀 — ⚠ `bottom: 50%` 라야 **핀 끝**이 중심에 닿는다.
+   45° 회전은 경계 상자를 키운다(26px → 36.8px) — 그만큼 아래 여백으로 끌어올린다(§11.65). */
+.ab-pin { position: absolute; left: 50%; bottom: 50%; width: 26px; height: 26px;
+  margin-left: -13px; margin-bottom: 5px;
+  background: var(--color-primary); border: 3px solid #ffffff;
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  box-shadow: 0 3px 10px -2px rgb(var(--navy-rgb) / .45); }
+.ab-pin::after { content: ""; position: absolute; inset: 0; margin: auto;
+  width: 7px; height: 7px; border-radius: 50%; background: #ffffff; }
+/* 핀 이름표 — ⚠ 핀 **위**에 둔다. 옆에 두면 가리키는 지점을 이름표가 덮는다.
+   ⚠ 아래 여백은 회전한 핀의 실제 높이보다 커야 한다(핀 상자 26px 이지만 45° 회전으로
+     37px 를 차지한다 · §11.65). 46px 은 그 위에 6px 을 남긴 값이다.
+   ⚠ `white-space: nowrap` 이라 좁은 화면에서 지도(`overflow: hidden`)에 잘릴 수 있다 —
+     390px 에서 지도 폭 350px · 이름표 약 150px 로 여유가 있는 것을 실측했다.
+     상호가 길어지면 다시 잴 것. */
+.ab-pin-l { position: absolute; left: 50%; bottom: 50%; transform: translateX(-50%);
+  margin-bottom: 46px; padding: 5px 11px; border-radius: 999px;
+  background: rgb(255 255 255 / .95); border: 1px solid var(--color-line);
+  box-shadow: 0 3px 10px -3px rgb(var(--navy-rgb) / .35);
+  font-family: var(--font-display); font-size: 12.5px; font-weight: 700;
+  letter-spacing: -.01em; color: var(--color-primary); white-space: nowrap; }
+
+@media (max-width: 1023px) {
+  /* 두 칸을 나란히 두면 주소가 6~7자마다 끊기고 지도도 작아진다 → 쌓는다 */
+  .ab-contact { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 767px) {
+  /* 두 카드를 나란히 두면 설명이 6~7자마다 끊긴다 → 위아래로 쌓는다 */
+  .ab-roles { grid-template-columns: minmax(0, 1fr); }
+}

@@ -182,11 +182,17 @@
      그때는 사진이 조금 잘린다 — 100vh 를 쓰면 세로가 짧은 창에서 카피가 잘린다. */
 .inf-hero { position: relative; width: 100vw; margin-inline: calc(50% - 50vw);
   margin-top: calc(-1 * clamp(58px, 6.4vw, 112px));   /* .sec 상단 패딩을 상쇄해 위 섹션과 붙인다 */
-  aspect-ratio: 1918 / 1046;                          /* = assets/img/infra-bg.avif */
+  /* ⚠ 사진의 **위 150px(천장 + 창틀)을 잘라낸** 판이다(2026-08-26 지시:
+       "배경 이미지 위쪽에 어두운 영역으로 잡혀서 단절이 된 느낌").
+       원본 1918x1046 은 실내에서 창밖을 보는 구도라 위쪽에 어두운 소핏이 있었다
+       (행 평균 밝기 77~80, 창틀 행은 11 · 중앙은 176). 잘라낸 뒤 첫 행이 196 이다.
+     ⚠ 띠 높이는 콘텐츠(카피 + 원 3개)가 정하므로 이 비율은 세로 크롭이 아니라
+       **가로 크롭**으로 작동한다. 사진을 갈아끼우면 이 값도 함께 고친다. */
+  aspect-ratio: 1918 / 896;                           /* = assets/img/infra-bg2.avif */
   min-height: clamp(560px, 62vh, 820px);
   display: flex; align-items: center; overflow: hidden; }
 .inf-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: center 62%; }
+  object-fit: cover; object-position: center 55%; }
 /* 스크림 — 왼쪽(카피 쪽)을 더 짙게 해서 글은 살리고 사진은 남긴다 */
 .inf-hero::after { content: ""; position: absolute; inset: 0;
   /* ⚠ 배경 사진을 갈아끼우면 **대비를 다시 재야 한다.** 2026-08-13 에 사진을 바꾸자

@@ -1,0 +1,121 @@
+<!-- ===== 문의 모달 =====
+     메인 `index.html` 의 `#contact` 폼을 서브페이지로 옮긴 것이다(2026-08-26 지시:
+     "해당 페이지에서 모달창으로"). 전에는 `index.html#contact` 로 보내 페이지가 넘어갔다.
+     ⚠ 메인 쪽 마크업을 고치면 **여기도 함께 고쳐야 한다** — 두 벌이다.
+       합칠 수 없는 이유: 메인은 Tailwind 유틸리티, 서브는 평문 CSS 라 번들이 다르다.
+       옮기며 바꾼 유틸리티 5개: ct-eyebrow · ct-title · ct-sub · ct-grid · ct-two · ct-strong.
+     ⚠ `처리방침 보기` 는 **그 자리에서 모달**로 연다 — 처리방침도 공용이라 세 화면 모두에 있다
+       (2026-08-27 이전에는 서브만 `index.html#privacy` 새 창이었다). -->
+  <div id="contact" class="pv pv--wide" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
+    <div class="pv-back" data-pv-close></div>
+    <div class="pv-panel" role="document">
+      <header class="pv-head">
+        <div>
+          <h2 id="ctTitle" class="ct-title">문의하기</h2>
+          <p class="ct-sub">기업입주 · 투자 · 사업 문의를 남겨주시면 담당자가 순차적으로 연락드립니다.</p>
+        </div>
+        <button type="button" class="pv-x" data-pv-close aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </header>
+      <div class="pv-body">
+        <div class="ct-grid">
+        <form id="contactForm" class="ct-form" novalidate>
+          <!-- 관심분야 -->
+          <div class="ct-row ct-row--inline" role="group" aria-labelledby="ctInterestLabel">
+            <p class="ct-label" id="ctInterestLabel">관심분야 <span class="ct-req" aria-hidden="true">*</span></p>
+            <div class="ct-chips">
+              <label class="ct-chip"><input type="checkbox" name="interest" value="기업입주문의" /><span>기업입주문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="투자문의" /><span>투자문의</span></label>
+              <label class="ct-chip"><input type="checkbox" name="interest" value="사업문의" /><span>사업문의</span></label>
+            </div>
+            <p class="ct-err" data-err="interest">관심분야를 1개 이상 선택해 주세요.</p>
+          </div>
+
+          <div class="ct-two">
+            <div class="ct-row">
+              <label class="ct-label" for="ctName">회사명/이름 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctName" name="name" type="text" autocomplete="organization" placeholder="예) 비시티(주) / 홍길동" />
+              <p class="ct-err" data-err="name">회사명 또는 이름을 입력해 주세요.</p>
+            </div>
+            <div class="ct-row">
+              <label class="ct-label" for="ctTel">휴대전화 <span class="ct-req" aria-hidden="true">*</span></label>
+              <input class="ct-input" id="ctTel" name="tel" type="tel" inputmode="numeric" autocomplete="tel" maxlength="13" placeholder="010-0000-0000" />
+              <p class="ct-err" data-err="tel">휴대전화번호를 정확히 입력해 주세요.</p>
+            </div>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctEmail">이메일 <span class="ct-req" aria-hidden="true">*</span></label>
+            <input class="ct-input" id="ctEmail" name="email" type="email" autocomplete="email" placeholder="name@company.com" />
+            <p class="ct-err" data-err="email">이메일 주소를 정확히 입력해 주세요.</p>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-label" for="ctMsg">문의 내용 <span class="ct-req" aria-hidden="true">*</span></label>
+            <textarea class="ct-input ct-area" id="ctMsg" name="message" rows="4" placeholder="문의하실 내용을 입력해 주세요."></textarea>
+            <p class="ct-err" data-err="message">문의 내용을 입력해 주세요.</p>
+          </div>
+
+          <!-- 동의 -->
+          <div class="ct-agree">
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeReq" name="agreeRequired" />
+              <span>
+                <b class="ct-tag ct-tag--req">필수</b>
+                개인정보 수집 · 이용에 모두 동의합니다
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
+              </span>
+            </label>
+            <p class="ct-err" data-err="agreeRequired">필수 항목에 동의해 주세요.</p>
+            <label class="ct-check">
+              <input type="checkbox" id="ctAgreeOpt" name="agreeMarketing" />
+              <span>
+                <b class="ct-tag ct-tag--opt">선택</b>
+                마케팅 활용 동의에 동의합니다
+                <a href="#privacy" class="ct-view">처리방침 보기</a>
+              </span>
+            </label>
+          </div>
+
+        </form>
+
+        <!-- 안내 -->
+        <aside class="ct-side">
+          <div class="ct-card">
+            <p class="ct-card-h">사업 주관</p>
+            <p class="ct-card-p"><span class="ct-strong">바이오테크 이노밸리 PFV</span><br />서울특별시 광진구 자양로58 태림빌딩 3층</p>
+          </div>
+          <div class="ct-card">
+            <p class="ct-card-h">처리 절차</p>
+            <ol class="ct-steps">
+              <li>문의 접수</li>
+              <li>담당자 배정 · 내용 검토</li>
+              <li>유선 또는 이메일 회신</li>
+            </ol>
+          </div>
+          <!-- ⚠⚠ **여기에 구체적인 보유 기간(숫자)을 적지 않는다**(2026-08-27 지시).
+               기간을 두 곳에 적으면 한쪽만 고쳐져 갈린다 — 실제로 갈렸다(처리방침만 3년으로
+               고치고 여기는 `입주/이주 완료 후 자동 파기` 로 남아 있었다).
+               숫자는 **처리방침 제3조 한 곳**에만 두고 여기서는 원칙만 밝힌다.
+               ⚠ 이 문구는 사용자가 직접 준 것이다 — 임의로 다듬지 말 것.
+               ⚠ 링크를 따로 붙이지 않았다. 바로 위 동의 항목 두 개에 이미
+                 `처리방침 보기` 가 있어 같은 화면에서 세 번 반복된다. -->
+          <p class="ct-card-note">
+            수집한 개인정보는 &lsquo;개인정보 보호법&rsquo; 등 관련 법령에 따라 안전하게 관리되며,
+            문의 처리 목적이 달성된 후 관련 법령 및 내부 방침에 따른 보유 기간 동안 보관된 뒤
+            지체 없이 파기됩니다.
+          </p>
+          <!-- 버튼: 우측 컬럼 하단. 폼 밖이므로 form 속성으로 연결한다. -->
+          <div class="ct-actions">
+            <button type="submit" form="contactForm" class="ct-submit">등록하기</button>
+            <button type="reset" form="contactForm" class="ct-reset">다시쓰기</button>
+            <p id="ctStatus" class="ct-status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+      </div>
+      </div>
+    </div>
+  </div>

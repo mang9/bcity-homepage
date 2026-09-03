@@ -1,0 +1,131 @@
+/* ===== 문의하기 (투자·입주) =====
+   구성은 기획 #p-contact "16 · 투자·입주 > 문의하기"(Storyboard p.104) 그대로다 —
+   [시행자 정보 + 길찾기·전화·문의하기 | 지도] 2단.
+   ⚠ 마무리 카피와 접수 안내 문단은 2026-08-24 지시로 뺐다 — 문의하기 버튼이 그 역할을 한다.
+   ⚠ 문의 폼은 여기에 없다. 실제 접수 폼은 메인 `#contact` 한 곳뿐이고, 두 벌이 되면
+     한쪽만 고쳐져 접수가 새는 쪽이 생긴다. 여기서는 그 폼으로 보낸다. */
+
+/* 지도가 오른쪽에 온다(2026-08-24 지시). 지도 비율(504:310)이 정해져 있으므로
+   왼쪽 정보 칸을 조금 넓게 잡아 두 칸의 아래가 크게 어긋나지 않게 한다. */
+/* ⚠ **세 행짜리 격자**다 — 1행 아이브로우 / 2행 제목+리드 / 3행 [정보+버튼].
+     지도는 **2~3행**을 차지해 윗변이 제목 줄(`B-CITY를 만들어가는 시행자`)에 정확히 맞는다
+     (2026-08-25 지시 — "시행자 글씨라인까지 높이를 높여줘").
+   ⚠ `row-gap` 은 **0** 이다. 행마다 필요한 간격이 달라서(아이브로우↔제목 20px,
+     리드↔정보 22~38px) 하나로는 못 맞춘다 — 각 항목의 **마진**이 갖는다.
+     마진은 그 항목이 속한 행 안에 들어가므로 행 경계는 흐트러지지 않는다.
+   ⚠ 지도를 **버튼 줄에 박지 말 것.** 왼쪽 칸보다 424px 늦게 시작하고 302px 아래로
+     삐져나온다(§11.73 에서 겪은 그대로). */
+.ci-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  column-gap: clamp(22px, 2.6vw, 48px); row-gap: 0;
+  margin-top: clamp(28px, 3vw, 48px); align-items: start; }
+/* ⚠ 아이브로우는 `<p>` 이고 이 프로젝트에 `p { margin: 0 }` 리셋이 없다 — 기본 `1em`(12.5px)이
+     위아래로 붙는다. 위는 지우고, 아래는 **제목까지의 간격**(원래 상쇄값 20px)으로 못 박는다.
+     그래야 2행의 윗변이 곧 제목 윗변이 된다. */
+.ci-eye  { grid-area: 1 / 1; margin: 0 0 20px; }
+.ci-lead { grid-area: 2 / 1; }
+/* 제목의 위 마진은 아이브로우가 대신 갖는다 — 남겨 두면 그만큼 지도가 제목보다 위에서 시작한다 */
+.ci-lead .h2 { margin-top: 0; }
+.ci-body { grid-area: 3 / 1; min-width: 0; margin-top: clamp(22px, 2.4vw, 38px); }
+.ci-map  { grid-area: 2 / 2 / 4 / 3; }
+/* ⚠ 지도가 왼쪽 칸보다 크므로 줄 높이는 **지도**가 정한다. 그 남는 높이를 버튼이 받아
+     바닥으로 내려가면 두 칸의 아래가 정확히 맞는다. `margin-top: auto` 가 원래 있던
+     위 여백을 덮어쓰므로 최소 간격은 `padding-top` 으로 따로 지킨다 — 안 그러면 정보가
+     길어져 남는 높이가 0 이 될 때 버튼이 괘선에 붙는다. */
+/* ⚠ `align-self: start` 다. 지도가 더 클 때는 어차피 줄 높이와 같지만, 왼쪽이 더 길어지는
+     화면에서 `stretch` 로 두면 **이미지 아래에 흰 상자만 늘어난다**(자르지 않으므로). */
+.ci-map  { align-self: start; }
+
+/* ── 시행자 정보 — **카드가 아니다**(2026-08-24 지시) ────────────────────
+   흰 상자 + 위쪽 강조선은 투자·입주의 특구/혜택 카드가 쓰는 어법이다. 여기서 또 쓰면
+   같은 카테고리 안에서 카드 종류가 구분되지 않는다. 그래서 상자를 걷고 **밑줄로만**
+   나누는 사양 목록으로 바꿨다 — 구역 개요(`.dz-ov`)와 같은 어법이다.
+   ⚠ `<dl>` 안에서 한 쌍을 `<div>` 로 묶는다. dl 직계에 grid 를 걸면 쌍이 흩어진다. */
+/* ⚠ 행을 늘려 높이를 맞추지 않는다(2026-08-25 지적 — "좌측 컨텐츠 간격이 너무 넓어졌어").
+     `flex: 1` 로 남는 높이를 나눠 갖게 했더니 1920 에서 행마다 30px 씩 벌어졌다.
+     두 칸의 아래는 **지도 비율**로 맞춘다(1000:820) — 어긋남은 −45 ~ +53px 다.
+   ⚠ 위 마진은 `.ci-body` 가 갖는다. 여기 되살리면 왼쪽만 내려가 지도와 어긋난다. */
+.ci-info { margin: 0; }
+.ci-info > div { display: grid; grid-template-columns: minmax(76px, auto) minmax(0, 1fr);
+  gap: clamp(14px, 1.6vw, 28px); align-items: baseline;
+  padding: clamp(14px, 1.5vw, 21px) 0; border-bottom: 1px solid var(--color-line); }
+.ci-info > div:first-child { padding-top: 0; }
+.ci-info dt { font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
+  color: var(--color-text-muted); }
+.ci-info dd { margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(15px, 1.3vw, 20px); line-height: 1.5; letter-spacing: -.018em;
+  color: var(--color-text); word-break: keep-all; }
+/* ⚠ 첫 줄(시행자)은 **본문색**이다(2026-08-24 지시). 프라이머리로 두었더니 아래
+     전화·홈페이지 링크(같은 색)와 같은 무게로 읽혀 링크처럼 보였다. */
+.ci-info > div:first-child dd { color: var(--color-text); }
+.ci-info a { color: var(--color-primary); text-decoration: none; }
+.ci-info a:hover, .ci-info a:focus-visible { text-decoration: underline;
+  text-underline-offset: 3px; }
+
+/* 길찾기 · 전화 — 외곽선 알약. 면을 채우면 아래 [문의 남기기] 버튼과 무게가 겹친다.
+   ⚠ `margin-top: auto` 를 걸지 말 것 — 아래는 맞지만 남는 높이가 버튼 앞 한 자리에
+     몰린다(1920 에서 156px). 두 번 시도했다가 두 번 되돌렸다. */
+.ci-acts { display: flex; flex-wrap: wrap; gap: 8px;
+  margin: clamp(18px, 1.8vw, 26px) 0 0; }
+.ci-act { padding: clamp(9px, .9vw, 12px) clamp(18px, 1.8vw, 26px);
+  border: 1px solid var(--color-line); border-radius: 999px;
+  background: var(--color-surface); font-size: 13.5px; font-weight: 700;
+  color: var(--color-primary); text-decoration: none;
+  transition: border-color .2s, background .2s; }
+.ci-act:hover, .ci-act:focus-visible { border-color: var(--color-primary);
+  background: var(--color-bg); }
+/* 문의하기 — 이 페이지의 유일한 주행동이므로 셋 중 하나만 면을 채운다.
+   ⚠ 실제 접수 폼은 메인 `#contact` 한 곳뿐이다(백엔드 미연결 시 메일로 넘기는 분기까지
+     그쪽에 있다). 여기서 폼을 복제하면 한쪽만 고쳐져 접수가 새는 쪽이 생긴다. */
+.ci-act--go { background: var(--color-primary); border-color: var(--color-primary);
+  color: #ffffff; }
+.ci-act--go:hover, .ci-act--go:focus-visible { background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover); }
+
+/* ── 지도 (카카오맵 정적 지도) ─────────────────────────────────────────
+   ⚠ 퍼가기 코드의 고정 폭(504px)을 쓰지 않는다. 이미지는 칸 폭에 맞추고 비율만 지킨다.
+     요청을 1000x1000 으로 올려 두었으므로 넓은 칸에서도 흐려지지 않는다.
+   ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고, 하단 바를 걷어낸
+     지금은 그것이 유일한 표기다 — `object-fit: cover` 로 두면 넓은 칸에서 좌우가 잘려
+     로고가 사라진다(1440 기준 좌우 16%씩 잘린다). 비율 그대로 두고 폭만 맞춘다. */
+.ci-map { margin: 0; border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  overflow: hidden; background: var(--color-bg); }
+.ci-map-a { position: relative; display: block; }
+/* 건물 핀 — 지도 중심(= 태림빌딩)에 얹는다.
+   ⚠ `bottom: 50%` 로 잡아야 **핀 끝**이 중심에 닿는다. `top: 50%` + translateY(-50%) 로
+     두면 핀의 가운데가 중심에 오고 끝이 아래로 내려가 다른 건물을 가리킨다.
+   ⚠ 물방울 모양은 원 + 회전으로 만든다 — 한쪽 모서리만 각지게 해 아래를 향하게 한다.
+     이미지(아이콘 파일)를 쓰지 않으므로 확대·색 변경에 자유롭다. */
+.ci-pin { position: absolute; left: 50%; bottom: 50%; width: 26px; height: 26px;
+  /* ⚠ 45° 회전하면 **경계 상자가 커진다**(32px 정사각 → 45.3px). 회전한 정사각형의
+       모서리는 상자 변의 가운데에 닿으므로, 핀 끝이 상자 밑변에 오고 그만큼(≈6.6px)
+       중심보다 내려간다. 실측 8px 이 이 값이다 — 아래 여백으로 그만큼 끌어올린다. */
+  margin-left: -13px; margin-bottom: 5px;
+  background: var(--color-primary); border: 3px solid #ffffff;
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  box-shadow: 0 3px 10px -2px rgb(var(--navy-rgb) / .45); }
+/* 안쪽 점 — 핀이 단색 물방울로만 보이지 않게 한다 */
+.ci-pin::after { content: ""; position: absolute; inset: 0; margin: auto;
+  width: 7px; height: 7px; border-radius: 50%; background: #ffffff; }
+/* 핀 이름표 — 회사소개(`.ab-pin-l`)와 같은 어법이다.
+   ⚠ 두 페이지에 같은 모양이 두 벌 있다. 이 페이지를 되살릴 때 공용으로 합칠 것(§11.83). */
+.ci-pin-l { position: absolute; left: 50%; bottom: 50%; transform: translateX(-50%);
+  margin-bottom: 46px; padding: 5px 11px; border-radius: 999px;
+  background: rgb(255 255 255 / .95); border: 1px solid var(--color-line);
+  box-shadow: 0 3px 10px -3px rgb(var(--navy-rgb) / .35);
+  font-family: var(--font-display); font-size: 12.5px; font-weight: 700;
+  letter-spacing: -.01em; color: var(--color-primary); white-space: nowrap; }
+.ci-map-a picture { display: block; }
+.ci-map-a img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 820; }
+
+@media (max-width: 899px) {
+  /* 두 칸을 나란히 두면 주소가 3~4줄로 접히고 지도도 너무 작아진다 → 위아래로 쌓는다. */
+  /* ⚠ 명시한 자리를 함께 푼다. 안 풀면 지도가 없는 2열에 남아 잘린다. */
+  /* ⚠ `row-gap` 을 되살리지 않는다. 데스크톱과 마찬가지로 간격은 각 항목의 마진이 갖는다 —
+       `row-gap` 을 주면 아이브로우 아래 마진(20px)에 얹혀 제목까지가 71px 로 벌어진다(실측).
+       쌓였을 때 새로 필요한 것은 **본문↔지도** 간격 하나뿐이다. */
+  .ci-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+  .ci-eye, .ci-lead, .ci-body, .ci-map { grid-area: auto; }
+  .ci-map { margin-top: clamp(24px, 3.4vw, 36px); }
+  /* ⚠ 쌓이면 지도가 전체 폭을 쓴다. 비율이 이미 가로로 넓어(1000:590) 따로 줄이지 않는다 —
+       picture 요소로 원본을 갈라 두었다가 걷었다(원본이 하나면 비율도 한 곳에서만 정한다). */
+}

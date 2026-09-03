@@ -1,0 +1,113 @@
+<!--build
+{
+  "slug": "contact",
+  "title": "Contact · B-CITY 춘천기업혁신파크",
+  "description": "B-CITY 춘천기업혁신파크 시행자 ㈜바이오테크이노밸리피에프브이의 주소 · 대표 전화 · 홈페이지와 찾아오시는 길을 안내합니다.",
+  "nav": "contact",
+  "heroImg": "assets/img/gallery/plaza-walk.avif",
+  "h1": "Contact",
+  "crumb": "문의하기",
+  "heroLede": "함께 미래를 만들어갈 파트너를 기다립니다",
+  "css": ["page-shared", "page-contact"]
+}
+-->
+    <!-- ⚠⚠ 이 페이지는 **빌드에서 빠져 있다**(2026-08-26 지시: "우선 숨김처리").
+         파일 이름이 `_` 로 시작하면 `tools/build/pages.mjs` 가 목록에서 거른다.
+         투자·입주의 `문의하기` 는 지금 **메인의 문의 폼**(`index.html#contact`)으로 간다.
+         되살리려면 ① 이름에서 `_` 를 떼고 ② nav.json · index.html 의 siteMap 에서
+         `index.html#contact` 를 `contact.html` 로 되돌린다.
+         ⚠ 되살릴 때 지도 CSS 를 `page-about.css` 의 `.ab-map*` 과 **합칠 것** — 같은 모양이다. -->
+    <!-- ===== 문의하기 — 기획 #p-contact "16 · 투자·입주 > 문의하기" (Storyboard p.104) =====
+         구성은 기획서 그대로다 — [시행자 정보 표] · [마무리 카피] · [찾아오시는 길].
+         ⚠ 제목은 `Contact` 다(2026-08-24 지시). 메뉴 이름은 `문의하기` 로 남는다 —
+           브레드크럼(`crumb`)이 그 이름을 쓴다.
+         ⚠ 문의 **폼은 여기에 두지 않는다.** 기획서에도 없고, 실제 접수 폼은 메인 `#contact`
+           한 곳에만 있다(백엔드 미연결 시 메일로 넘기는 분기까지 그쪽에 있다).
+           두 벌이 되면 한쪽만 고쳐져 접수가 새는 쪽이 생긴다 → 여기서는 그 폼으로 보낸다. -->
+    <section class="sec" id="contact-info">
+      <div class="wrap">
+        <!-- 제목까지 왼쪽 칸에 넣는다 — 그래야 지도가 **제목 옆까지 올라온다**(2026-08-24 지시).
+             제목을 그리드 밖에 두면 오른쪽 제목 옆이 통째로 비고 지도는 그 아래에서 시작한다. -->
+        <div class="ci-grid rv">
+          <!-- 격자는 **세 행**이다 — 1행 아이브로우 / 2행 제목+리드 / 3행 [정보+버튼].
+               지도는 **2~3행**을 차지해 윗변이 제목(`B-CITY를 만들어가는 시행자`) 줄에
+               정확히 맞는다(2026-08-25 지시).
+               ⚠ 아이브로우를 `.ci-lead` 밖으로 뺀 이유가 이것이다. 안에 두면 지도 시작점을
+                 `40px` 같은 **매직 넘버**로 맞춰야 한다(아이브로우 줄 20px + 상쇄된 마진 20px).
+                 자기 행으로 빼면 행 경계가 곧 제목 윗변이라 값을 적을 필요가 없다.
+               ⚠ 지도를 버튼 줄에 박지 말 것 — 왼쪽 칸보다 424px 늦게 시작하고 302px
+                 아래로 삐져나온다(§11.73). -->
+          <p class="eyebrow ci-eye"><i aria-hidden="true"></i><b>CONTACT</b><span>문의하기</span></p>
+          <div class="ci-lead">
+            <h2 class="h2">B-CITY를 만들어가는 <em>시행자</em></h2>
+            <p class="lede">사업 · 투자 · 입주에 관한 문의를 기다립니다</p>
+          </div>
+          <!-- 좌: 시행자 정보. 카드 대신 **밑줄로만 나누는 사양 목록**이다(2026-08-24 지시) —
+               이 페이지에만 흰 카드가 또 있으면 투자·입주의 카드들과 구분이 안 된다.
+               `구분` 에 시행자(회사명)를 더했다. 표기는 사이트가 이미 쓰는 `바이오테크 이노밸리 PFV`
+               로 맞춘다 — 법인 전체 이름은 아래 마무리 카피에 그대로 있다. -->
+          <div class="ci-body">
+          <dl class="ci-info">
+            <div>
+              <dt>시행자</dt>
+              <dd>바이오테크 이노밸리 PFV</dd>
+            </div>
+            <div>
+              <dt>주소</dt>
+              <dd>서울특별시 광진구 자양로 58, 태림빌딩 3층</dd>
+            </div>
+            <div>
+              <dt>대표 전화</dt>
+              <dd><a href="tel:07041300423">070-4130-0423</a></dd>
+            </div>
+            <div>
+              <dt>홈페이지</dt>
+              <dd><a href="https://www.biotech-iv.com/" target="_blank" rel="noopener">www.biotech-iv.com<span class="sr"> (새 창)</span></a></dd>
+            </div>
+          </dl>
+          <p class="ci-acts">
+            <!-- ⚠ 길찾기는 **도착지가 입력된 채로** 열린다(2026-08-31). 링크 스킴 `link/to/{이름},{위도},{경도}`.
+                 좌표만 주는 `?urlX=…` 형태는 지도만 옮기고 도착지 칸이 빈다. 위경도(WGS84)는
+                 아래 이미지의 `MX/MY`(WCONGNAMUL)와 **같은 지점**이다 — 함께 고칠 것. -->
+            <a class="ci-act" data-kakao-route data-kname="바이오테크 이노밸리자산관리" data-kx="518882" data-ky="1120501"
+                 href="https://map.kakao.com/link/to/바이오테크%20이노밸리자산관리,37.5332705,127.0854540" target="_blank" rel="noopener">길찾기<span class="sr"> (새 창)</span></a>
+            <a class="ci-act" href="tel:07041300423">전화 연결</a>
+            <a class="ci-act ci-act--go" href="index.html#contact">문의하기</a>
+          </p>
+          </div>
+
+          <!-- 우: 카카오맵 정적 지도. 사용자가 준 퍼가기 코드를 바탕으로 했다.
+               ⚠ **2~3행**을 차지한다 — 윗변이 제목 줄, 아랫변이 버튼 아래다(2026-08-25 지시).
+                 `grid-row` 를 버튼 줄에 박으면 §11.73 의 결함이 그대로 재현된다.
+               ⚠ 비율 1000:820 은 **그 두 지점 사이를 채우도록** 고른 값이다. 폭은 칸이 정하므로
+                 비율이 곧 높이다 — 실측 필요비율이 폭마다 1.06~1.36 이라 하나로는 정확히 맞출 수
+                 없고, 1.22 가 어긋남을 가장 고르게 나눈다(−45 ~ +53px).
+               ⚠ `SCALE` 이 확대 단계다(작을수록 확대 · `S`/`LEVEL` 은 무시된다). 실측 구간은
+                 0.5 / 0.75~1.25 / 1.5~2.5 / 3~5 / 6~ 다. 2.5 → **1.0** 으로 한 단계 당겼다.
+               ⚠ **자르지 않는다.** 카카오 로고가 이미지 왼쪽 아래에 구워져 있고 하단 바를
+                 걷어낸 지금은 그것이 유일한 표기다 — `cover` 로 채우면 잘려 사라진다.
+               ⚠ 정적 이미지라 키가 필요 없다. 네이버 지도는 정적·동적 모두 키가 필요하고
+                 iframe 도 막혀 있다(2026-08-25 실측 · §11.73). -->
+          <figure class="ci-map">
+            <a class="ci-map-a" href="https://map.kakao.com/link/map/1104377075" target="_blank" rel="noopener">
+              <!-- ⚠ 좁은 화면에는 **가로가 넓은 원본**을 준다. 정사각은 쌓인 화면에서
+                   너무 높고, 잘라서 줄이면 왼쪽 아래 카카오 로고가 사라진다.
+                   CSS 의 `aspect-ratio` 두 값이 이 두 원본과 짝이다 — 한쪽만 고치면 눌린다. -->
+              <img src="https://staticmap.kakao.com/map/mapservice?FORMAT=PNG&amp;SCALE=3.0&amp;MX=518882&amp;MY=1120501&amp;S=0&amp;IW=1000&amp;IH=820&amp;LANG=0&amp;COORDSTM=WCONGNAMUL&amp;logo=kakao_logo" width="1000" height="820" loading="lazy" decoding="async"
+                   alt="태림빌딩(서울특별시 광진구 자양로 58) 주변 지도" />
+              <!-- 건물 표시(2026-08-24 지시). 정적 지도는 `MX`/`MY`(= 태림빌딩)를 **중심**으로
+                   그려지므로 정확히 가운데에 두면 그 건물을 가리킨다.
+                   ⚠ 카카오 정적 지도의 마커 파라미터는 이 엔드포인트에서 무시된다
+                     (`MARKERS=` 를 붙여도 응답 이미지가 기준과 동일했다 — md5 일치).
+                     그래서 이미지 위에 얹는다. -->
+              <!-- 이름표 — 카카오 정적 지도는 마커 파라미터를 무시하므로 우리가 얹는다(§11.65).
+                   ⚠ `aria-hidden` 이다. 링크 이름은 아래 `.sr` 가 이미 말한다. -->
+              <span class="ci-pin-l" aria-hidden="true">바이오테크 이노밸리</span>
+              <span class="ci-pin" aria-hidden="true"></span>
+              <span class="sr">카카오맵에서 바이오테크 이노밸리 위치 보기 (새 창)</span>
+            </a>
+          </figure>
+        </div>
+
+      </div>
+    </section>

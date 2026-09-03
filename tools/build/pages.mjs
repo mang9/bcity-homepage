@@ -18,30 +18,56 @@
  *   {{key}}        치환. 값이 없으면 빌드를 실패시킨다(조용한 빈칸 방지)
  *   {{> partial}}  src/sub/partials/<partial>.html|svg 삽입 (1단 중첩까지)
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, rmSync, mkdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SUB = join(ROOT, 'src', 'sub');
+/** 메인(`index.html`)과 **함께 쓰는** 소스. 서브 전용 파일과 섞지 않으려고 폴더를 나눴다.
+ *  CSS · JS · 파티셜 이름을 여기서 먼저 찾고, 없으면 `src/sub/` 로 떨어진다. */
+const SHARED = join(ROOT, 'src', 'shared');
 const CHECK = process.argv.includes('--check');
 
 const read = (...p) => readFileSync(join(...p), 'utf8');
 
 /** 공통 CSS — 이 순서가 곧 캐스케이드 순서다. 페이지 CSS 는 항상 뒤에 붙는다.
  *  overview.html 원본과 같은 순서를 유지하고 있다(리팩터 제로디프의 근거). */
-const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', '30-hero-lnb', '40-section', '80-footer', '90-motion'];
+const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion', 'contact'];
 
 const nav = JSON.parse(read(SUB, 'nav.json'));
 const layout = read(SUB, 'layout.html');
 
-const partial = (name) => {
-  for (const ext of ['.html', '.svg']) {
-    const f = join(SUB, 'partials', name + ext);
-    if (existsSync(f)) return readFileSync(f, 'utf8').replace(/\n$/, '');
-  }
-  throw new Error(`파티셜 없음: ${name}`);
+/** 공용(`src/shared/`) 을 먼저 보고 없으면 서브 전용에서 찾는다.
+ *  ⚠ 같은 이름을 양쪽에 두지 않는다 — 공용이 조용히 이기므로 어느 쪽이 쓰였는지 알 수 없다.
+ *    `assertNoShadow()` 가 빌드 때마다 검사한다. */
+const pick = (kind, name, exts) => {
+  for (const base of [SHARED, kind === 'partial' ? join(SUB, 'partials') : join(SUB, kind)])
+    for (const ext of exts) {
+      const f = join(base, name + ext);
+      if (existsSync(f)) return f;
+    }
+  return null;
 };
+
+const partial = (name) => {
+  const f = pick('partial', name, ['.html', '.svg']);
+  if (!f) throw new Error(`파티셜 없음: ${name}`);
+  return readFileSync(f, 'utf8').replace(/\n$/, '');
+};
+
+/** 같은 이름이 `src/shared/` 와 `src/sub/` 양쪽에 있으면 공용이 조용히 이긴다 —
+ *  어느 파일이 쓰였는지 알 수 없어지므로 빌드를 죽인다. */
+(function assertNoShadow() {
+  if (!existsSync(SHARED)) return;
+  const dup = [];
+  for (const f of readdirSync(SHARED)) {
+    for (const dir of ['css', 'js', 'partials']) {
+      if (existsSync(join(SUB, dir, f))) dup.push(`src/shared/${f} ↔ src/sub/${dir}/${f}`);
+    }
+  }
+  if (dup.length) throw new Error('공용과 서브 전용에 같은 이름이 있다 — 하나를 없앨 것:\n  ' + dup.join('\n  '));
+})();
 
 /** 파티셜 전개 → 치환. 남은 {{...}} 가 있으면 실패시킨다. */
 function render(tpl, ctx, depth = 0) {
@@ -61,7 +87,9 @@ function parsePage(src, file) {
   if (!m) throw new Error(`${file}: 선두 <!--build … --> 블록이 없다`);
   let fm;
   try { fm = JSON.parse(m[1]); } catch (e) { throw new Error(`${file}: front-matter JSON 오류 — ${e.message}`); }
-  for (const k of ['slug', 'title', 'description', 'nav', 'heroImg', 'h1']) {
+  /* ⚠ `heroImg` 는 여기서 검사하지 않는다 — 히어로가 없는 카테고리(nav.json 의
+       `hero: false`)는 아예 두지 않기 때문이다. 카테고리를 아는 자리에서 검사한다. */
+  for (const k of ['slug', 'title', 'description', 'nav', 'h1']) {
     if (!fm[k]) throw new Error(`${file}: front-matter 에 ${k} 가 없다`);
   }
   return { fm, body: src.slice(m[0].length).replace(/\s*$/, '') };
@@ -509,12 +537,26 @@ function filterTabs(CAT, rows, keyOf, label) {
 
 /** GNB · 모바일 메뉴 · LNB · 푸터 — nav.json 에서 유도 */
 function navBits(cat, navKey) {
+  /* 대메뉴 — 호버하면 하위 메뉴가 펼쳐진다(2026-08-27 지시). 메인 `index.html` 과 같은
+     **전체 폭 드롭**(§9-1 확정 사양)이며, 하위 항목은 같은 `nav.json` 에서 온다.
+     ⚠ 카테고리 키로 짝지운다 — `gnb` 배열과 `categories` 배열이 따로라 순서에 기대면 어긋난다. */
   const gnbItems = nav.gnb.map((g) => {
     const on = g.key === cat.key;
-    return `        <a href="${g.href}"${on ? ' class="is-on" aria-current="page"' : ''}>${esc(g.label)}</a>`;
+    const c = nav.categories.find((x) => x.key === g.key);
+    const subs = (c ? c.items : []).map((i) =>
+      `            <a href="${i.href}"${i.key === navKey ? ' class="is-on"' : ''}>${esc(i.label)}</a>`
+    ).join('\n');
+    return `        <div class="gnb-item">
+          <a class="gnb-link${on ? ' is-on' : ''}" href="${g.href}"${on ? ' aria-current="page"' : ''}>${esc(g.label)}</a>
+          <div class="gnb-sub">
+${subs}
+          </div>
+        </div>`;
   }).join('\n');
 
-  const mnavItems = nav.categories.map((c) => {
+  /* ⚠ `menu: false` 카테고리는 대메뉴에도 모바일 메뉴에도 넣지 않는다 — 푸터에서만 닿는
+       단일 페이지다(회사소개). 여기서 거르지 않으면 GNB 에는 없는데 모바일에만 나온다. */
+  const mnavItems = nav.categories.filter((c) => c.menu !== false).map((c) => {
     const head = `      <h2>${c.no} ${esc(c.label)}</h2>`;
     const links = c.items.map((i) => {
       const on = i.key === navKey;
@@ -536,10 +578,37 @@ function navBits(cat, navKey) {
   return { gnbItems, mnavItems, lnbItems, footItems };
 }
 
+/** 히어로 제목 아래 한 줄. front-matter 의 `heroLede` 가 있을 때만 문단을 만든다.
+ *  ⚠ 값이 없을 때 빈 `<p>` 를 내보내면 히어로 아래에 여백만 남는다 — 빈 문자열을 준다.
+ *  ⚠ `<br />` 를 쓸 수 있어야 하므로 이스케이프하지 않는다. 이 값은 우리가 쓴 것이고
+ *    사용자 입력이 아니다. */
+const heroLede = (fm) => fm.heroLede
+  ? `        <p class="hero-lede">${fm.heroLede}</p>` : '';
+
+/** 상단 블록 — 카테고리의 `hero` 가 false 면 [LNB 만], 아니면 [히어로 + LNB].
+ *  ⚠ **미리 펼쳐서** 넘긴다. `render()` 는 ctx 값을 치환만 하고 그 안을 다시 훑지 않으므로
+ *    (본문 `main` 과 같은 사정) 여기서 펼치지 않으면 `{{ }}` 가 남아 빌드가 죽는다. */
+/** 히어로 사진의 구도 — front-matter `heroPos` 가 있을 때만 인라인 `object-position` 을 낸다.
+ *  ⚠ 값이 없으면 **속성을 아예 내지 않는다.** 빈 `style=""` 을 남기면 마크업만 지저분해진다. */
+const heroPos = (fm) => (fm.heroPos ? ` style="object-position: ${esc(fm.heroPos)}"` : '');
+
+function heroBlock(cat, fm, ctx, file) {
+  const on = cat.hero !== false;
+  if (on && !fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 있는 카테고리다 — front-matter 에 heroImg 가 필요하다`);
+  if (!on && fm.heroImg) throw new Error(`${file}: ${cat.label} 은 히어로가 없다 — 쓰이지 않는 heroImg 를 지울 것`);
+  /* 세 갈래다 — [히어로 + LNB] · [LNB 만] · [히어로만].
+     ⚠ 마지막은 대메뉴에 속하지 않는 단일 페이지용이다(`lnb: false`). LNB 를 그대로 두면
+       항목이 자기 자신 하나뿐인 메뉴 줄이 남는다. */
+  if (on && cat.lnb === false) return render(partial('hero-only'), ctx, 1);
+  return render(partial(on ? 'hero' : 'hero-lnb'), ctx, 1);
+}
+
 /** CSS 번들 — 공통 순서 뒤에 페이지 CSS. 파일마다 구분 주석을 남긴다 */
 function cssBundle(fm) {
   return [...CSS_COMMON, ...(fm.css || [])].map((n) => {
-    const src = read(SUB, 'css', n + '.css').replace(/\s*$/, '');
+    const f = pick('css', n, ['.css']);
+    if (!f) throw new Error(`CSS 없음: ${n}.css (src/shared · src/sub/css 둘 다 확인했다)`);
+    const src = readFileSync(f, 'utf8').replace(/\s*$/, '');
     return `    /* ── ${n}.css ─────────────────────────────────────────── */\n` +
       src.split('\n').map((l) => (l ? '    ' + l : l)).join('\n');
   }).join('\n\n');
@@ -547,8 +616,11 @@ function cssBundle(fm) {
 
 /** JS 번들 — common 은 항상 첫 번째 */
 function jsBundle(fm) {
-  return ['common', ...(fm.js || [])]
-    .map((n) => read(SUB, 'js', n + '.js').replace(/\s*$/, '')).join('\n\n');
+  return ['common', 'contact', ...(fm.js || [])].map((n) => {
+    const f = pick('js', n, ['.js']);
+    if (!f) throw new Error(`JS 없음: ${n}.js (src/shared · src/sub/js 둘 다 확인했다)`);
+    return readFileSync(f, 'utf8').replace(/\s*$/, '');
+  }).join('\n\n');
 }
 
 const banner = (srcFile) =>
@@ -574,6 +646,16 @@ function build(file) {
     console.log(`    ${fm.slug}: ${fm.list.kind} 노출 ${rows.length}건`);
   }
 
+  const heroCtx0 = {
+    heroImg: fm.heroImg, heroPos: heroPos(fm), h1: fm.h1, heroLede: heroLede(fm),
+    catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
+    navLabel: esc(fm.crumb || item.label),
+    ...navBits(cat, fm.nav),
+  };
+  const heroCtx = { ...heroCtx0,
+    hero: heroBlock(cat, fm, heroCtx0, file),
+    bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
+
   const html = render(layout, {
     title: esc(fm.title),
     description: esc(fm.description),
@@ -585,11 +667,7 @@ function build(file) {
     main: body.replace('{{list}}', () => listHtml)
                .replace('{{controls}}', () => pressControls())
                .replace(/\{\{>\s*([\w-]+)\s*\}\}/g, (_, n) => partial(n)),
-    heroImg: fm.heroImg,
-    h1: fm.h1,
-    catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
-    navLabel: esc(fm.crumb || item.label),
-    ...navBits(cat, fm.nav),
+    ...heroCtx,
   });
 
   return { out: join(ROOT, fm.slug + '.html'), html: banner(file) + html, slug: fm.slug };
@@ -606,6 +684,16 @@ function buildDetails(file) {
   const rows = loadContent(kind);
   const { cat, item } = locate(fm.nav, file);
   const out = [];
+
+  const dHeroCtx0 = {
+    heroImg: fm.heroImg, heroPos: heroPos(fm), h1: fm.h1, heroLede: heroLede(fm),
+    catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
+    navLabel: esc(item.label),
+    ...navBits(cat, fm.nav),
+  };
+  const dHeroCtx = { ...dHeroCtx0,
+    hero: heroBlock(cat, fm, dHeroCtx0, file),
+    bodyAttr: cat.hero === false ? ' class="no-hero"' : '' };
 
   rows.forEach((r, i) => {
     const excerpt = (r.summary || (Array.isArray(r.body) ? r.body[0] : r.body) || r.title).slice(0, 150);
@@ -627,10 +715,7 @@ function buildDetails(file) {
       title: fill(fm.title), description: fill(fm.description),
       css: cssBundle(fm), js: jsBundle(fm),
       main: render(body, ctx, 1),
-      heroImg: fm.heroImg, h1: fm.h1,
-      catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
-      navLabel: esc(item.label),
-      ...navBits(cat, fm.nav),
+      ...dHeroCtx,
     });
     out.push({ out: join(ROOT, detailPath(fm.slugPrefix, r.id)), html: banner(file) + html,
                slug: detailPath(fm.slugPrefix, r.id).replace(/\.html$/, '') });
@@ -659,17 +744,21 @@ for (const t of detailTemplates) jobs.push(...buildDetails(t));
 const detailPrefixes = [...new Set(detailTemplates
   .map((t) => JSON.parse(read(SUB, 'pages', t).match(/^<!--build\s*([\s\S]*?)-->/)[1]).slugPrefix))];
 const wanted = new Set(jobs.map((j) => basename(j.out)));
+/* ⚠ 상세 페이지만 보면 안 된다. 2026-08-24 에 투자·입주 세 페이지를 한 장으로 합쳤을 때
+     옛 `land.html` · `zone-benefit.html` · `benefit.html` 이 접두어와 맞지 않아 검사에서
+     빠졌고, 그대로 두면 **목록에는 없는데 URL 로는 열리는 페이지**가 영구히 남는다.
+     이제 **배너가 있는데 이번 빌드가 만들지 않은 루트 HTML 전부**를 고아로 본다.
+     배너 없는 손글씨 파일(index.html · 리다이렉트 stub)은 여전히 건드리지 않는다. */
 const orphans = readdirSync(ROOT)
   .filter((f) => f.endsWith('.html') && !wanted.has(f)
-    && detailPrefixes.some((p) => f.startsWith(p + '-'))
     && readFileSync(join(ROOT, f), 'utf8').startsWith('<!-- 생성물이다.'));
 
 if (orphans.length) {
   if (CHECK) {
     stale += orphans.length;
-    orphans.forEach((f) => console.log(`  ✗ ${f} — 이번 빌드가 만들지 않은 상세 페이지가 남아 있다`));
+    orphans.forEach((f) => console.log(`  ✗ ${f} — 이번 빌드가 만들지 않은 생성물이 남아 있다`));
   } else {
-    orphans.forEach((f) => { rmSync(join(ROOT, f)); console.log(`  ✕ ${f} (남겨진 상세 페이지 — 삭제)`); });
+    orphans.forEach((f) => { rmSync(join(ROOT, f)); console.log(`  ✕ ${f} (남겨진 생성물 — 삭제)`); });
   }
 }
 
@@ -683,10 +772,47 @@ for (const { out, html, slug } of jobs) {
   writeFileSync(out, html);
   console.log(`  → ${slug}.html (${(html.length / 1024).toFixed(1)} KB)`);
 }
+/* ── 공용 소스를 메인(`index.html`)에도 반영한다 ──────────────────────
+   서브페이지는 위에서 파티셜·번들로 받았고, 메인은 손글씨 파일이라 여기서 맞춰 준다.
+   ⚠ **`src/shared/` 가 정본이다.** `index.html` 의 마커 구간과 `assets/js/contact.js` 는
+     생성물이므로 직접 고치면 다음 빌드에 덮어써진다.
+   ⚠ 마커가 없으면 조용히 넘기지 않고 **빌드를 죽인다** — 한쪽만 갈라지는 것이
+     이 정리로 없애려던 바로 그 상태다. */
+function syncShared(write) {
+  const changed = [];
+
+  // ① index.html 의 마커 구간 = src/shared/contact-modal.html
+  const idxPath = join(ROOT, 'index.html');
+  const idx = readFileSync(idxPath, 'utf8');
+  let next = idx;
+  for (const name of ['contact-modal', 'privacy-modal']) {
+    const re = new RegExp(`([ \\t]*<!-- @shared:${name}[\\s\\S]*?-->\\n?)[\\s\\S]*?([ \\t]*<!-- /@shared:${name} -->)`);
+    if (!re.test(next)) throw new Error(`index.html 에 @shared:${name} 마커 한 쌍이 없다 — 지웠으면 되살릴 것`);
+    const body = readFileSync(join(SHARED, name + '.html'), 'utf8').replace(/\n$/, '');
+    next = next.replace(re, (_, head, tail) => head + body + '\n' + tail);
+  }
+  if (next !== idx) { if (write) writeFileSync(idxPath, next); changed.push('index.html (문의 · 약관 모달 마크업)'); }
+
+  // ② assets/js/contact.js = src/shared/contact.js  (메인이 <script src> 로 받는다)
+  const jsDir = join(ROOT, 'assets', 'js');
+  const jsOut = join(jsDir, 'contact.js');
+  const jsSrc = '/* 생성물이다. 이 파일을 고치지 말 것 — 소스는 src/shared/contact.js 다.\n'
+    + '   서브페이지는 같은 소스를 인라인으로 받는다(tools/build/pages.mjs). */\n'
+    + readFileSync(join(SHARED, 'contact.js'), 'utf8');
+  if (!existsSync(jsOut) || readFileSync(jsOut, 'utf8') !== jsSrc) {
+    if (write) { mkdirSync(jsDir, { recursive: true }); writeFileSync(jsOut, jsSrc); }
+    changed.push('assets/js/contact.js');
+  }
+  return changed;
+}
+
 if (CHECK) {
+  const drift = syncShared(false);
+  if (drift.length) { stale += drift.length; drift.forEach((f) => console.log(`  ✗ ${f} 이 src/shared 와 다르다`)); }
   console.log(stale ? `  ${stale}개 생성물이 낡았다 — npm run build:pages 를 돌려라` : '  생성물 최신 상태');
   process.exit(stale ? 1 : 0);
 }
+syncShared(true).forEach((f) => console.log(`  → ${f}`));
 console.log(`  서브페이지 ${jobs.length}개 빌드 완료 (목록 ${files.length} · 상세 ${jobs.length - files.length})`);
 
 if (SAMPLE_WARNINGS.length) {
