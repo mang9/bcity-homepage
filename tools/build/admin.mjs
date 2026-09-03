@@ -891,17 +891,27 @@ const ROLE_DEFAULT = {
   '열람전용': MENUS.map(() => 'read'),
 };
 
-const permMatrix = (role) => `<div class="ad-scroll">
+/* 삭제 권한은 등록 · 수정과 별개로 본다 — 잘못 지우면 되돌릴 수 없기 때문이다.
+   ⚠ `계정 관리` 의 삭제만 **최고관리자로 제한**한다. 편집자가 계정을 지울 수 있으면
+     자기 상급자 계정을 지워 잠글 수 있다. 계정 폼의 안내문
+     ('계정 삭제 권한은 최고관리자만 가집니다')이 원래 이 규칙을 말하고 있었는데
+     코드는 등급을 보지 않고 `계정 관리` 면 무조건 껐다 — 세 등급을 나란히 놓는
+     등급 편집 화면(role-form)이 생기면서 그 어긋남이 드러나 맞췄다(2026-09-03). */
+const canDelete = (role, menu, lv) =>
+  lv === 'edit' && (menu !== '계정 관리' || role === '최고관리자');
+
+const permMatrix = (role, opts = {}) => `<div class="ad-scroll">
                 <table class="ad-tbl ad-perm">
                   <thead><tr><th>메뉴</th><th class="is-ctr">열람</th><th class="is-ctr">등록 · 수정</th><th class="is-ctr">삭제</th></tr></thead>
                   <tbody>
 ${MENUS.map((m, i) => {
   const lv = ROLE_DEFAULT[role][i];
-  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''} />`;
+  const dis = opts.locked ? ' disabled' : '';
+  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''}${dis} />`;
   return `                    <tr><td>${esc(m)}</td>`
     + `<td class="is-ctr">${ck(lv !== 'none')}</td>`
     + `<td class="is-ctr">${ck(lv === 'edit')}</td>`
-    + `<td class="is-ctr">${ck(lv === 'edit' && m !== '계정 관리')}</td></tr>`;
+    + `<td class="is-ctr">${ck(canDelete(role, m, lv))}</td></tr>`;
 }).join('\n')}
                   </tbody>
                 </table>
@@ -928,7 +938,7 @@ ${pager(2)}
         </div>
         <div class="ad-card">
           <div class="ad-card-h"><h2>권한 등급 기준</h2>
-            <a class="ad-btn ad-btn--sm" href="account-form.html">등급별 권한 편집</a></div>
+            <a class="ad-btn ad-btn--sm" href="role-form.html">등급별 권한 편집</a></div>
           <div class="ad-scroll">
             <table class="ad-tbl">
               <thead><tr><th>등급</th>${MENUS.map((m) => `<th class="is-ctr">${esc(m)}</th>`).join('')}</tr></thead>
@@ -968,6 +978,47 @@ pages['account-form.html'] = shell({
         hint: '끄면 로그인할 수 없습니다. 계정을 지우지 않고 잠가 둘 때 씁니다.' }),
     ],
   }),
+});
+
+/* ── 등급별 권한 편집 ────────────────────────────────────────────────
+   ⚠⚠ 이 화면이 없어서 `등급별 권한 편집` 버튼이 **계정 등록/수정 화면**으로 가고 있었다
+     (2026-09-03 지적). 둘은 다른 일이다 —
+       · account-form  계정 **한 개**의 권한을 그 계정에만 적용
+       · role-form     등급의 **기본값**을 바꿔 앞으로 만들 계정에 적용
+     계정 폼으로 보내면 등급 기준을 고치려던 사람이 남의 계정을 고치게 된다.
+
+   ⚠ 최고관리자 행은 **잠근다.** 풀어 두면 계정 관리 권한을 스스로 지워
+     아무도 계정을 만들 수 없는 상태가 되고, 화면으로는 되돌릴 방법이 없다.
+     (서버에서도 같은 제한을 걸어야 한다 — 화면 disabled 는 표시일 뿐이다.) */
+pages['role-form.html'] = shell({
+  title: '등급별 권한', navKey: 'account', crumb: '계정 관리 › 등급별 권한',
+  h1: '등급별 권한 기준',
+  body: `        <div class="ad-card">
+          <div class="ad-card-h"><h2>등급별 권한 기준</h2>
+            <a class="ad-btn ad-btn--sm" href="account.html">‹ 계정 관리로</a></div>
+          <div class="ad-form">
+${ROLES.map((r) => {
+  const locked = r === '최고관리자';
+  return `            <div class="ad-row">
+              <p class="ad-lb">${esc(r)}</p>
+              <div class="ad-fd">
+                ${permMatrix(r, { locked })}
+                <p class="ad-hint">${locked
+                  ? '최고관리자는 모든 권한을 가지며 여기서 줄일 수 없습니다. 잠금을 풀면 계정을 만들 사람이 없어질 수 있습니다.'
+                  : '체크를 풀면 그 메뉴가 좌측 메뉴에서도 보이지 않습니다.'}</p>
+              </div>
+            </div>`;
+}).join('\n')}
+          </div>
+          ${dev('적용 범위 확인 — 지금 화면은 "앞으로 만들 계정에만 적용" 을 전제로 문구를 썼다. 기존 계정에 소급 적용할지, 한다면 계정마다 따로 조정한 값을 덮어쓸지 정책 결정이 필요하다.')}
+          ${dev('열람전용의 계정 관리 열람 확인 — 지금 기본값은 켜져 있어 전 직원의 이름 · 아이디 · 최근 로그인 시각이 보인다. 세 등급을 나란히 놓으니 드러난 것이라 값은 그대로 두었다. 개인정보라 끄는 편이 맞아 보이지만 운영 정책 확정이 필요하다.')}
+          ${dev('권한 집행 확인 — 최고관리자 행의 disabled 는 표시일 뿐이다. 서버가 막지 않으면 요청을 직접 보내 최고관리자 권한도 낮출 수 있다.')}
+          <div class="ad-foot">
+            <p class="ad-note">※ 여기서 바꾼 값은 <b>앞으로 만들 계정의 기본값</b>입니다. 이미 있는 계정의 권한은 그대로입니다 — 계정마다 따로 조정한 값을 덮어쓰지 않습니다</p>
+            <a class="ad-btn" href="account.html">취소</a>
+            <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">저장</button>
+          </div>
+        </div>`,
 });
 
 pages['password.html'] = shell({
