@@ -181,6 +181,26 @@ const SCRIPTS = `  <script>
       t.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
 
+    /* 기본 세팅값 — 고른 묶음으로 그 등급의 표를 한 번에 채운다.
+       클라이언트만으로 되는 부분이라 실제로 동작시킨다(저장은 하지 않는다).
+       ⚠ 선택지 이름을 화면과 스크립트가 **같은 문자열**로 쓴다. 따로 코드를 두면
+         한쪽만 고칠 때 조용히 어긋난다. */
+    document.addEventListener('change', function (e) {
+      var s = e.target.closest('[data-preset]');
+      if (!s) return;
+      var tbl = document.querySelector('[data-perm="' + s.getAttribute('data-preset') + '"]');
+      if (!tbl) return;
+      var v = s.value;
+      var on = { read: v !== '권한 없음',
+                 edit: v === '전체 권한' || v === '등록 · 수정까지',
+                 del:  v === '전체 권한' };
+      var boxes = tbl.querySelectorAll('input[type="checkbox"]');
+      for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].disabled) continue;
+        boxes[i].checked = on[boxes[i].getAttribute('data-col')];
+      }
+    });
+
     /* 비밀번호 규칙·일치 검사 — 클라이언트만으로 되는 부분이라 실제로 동작시킨다.
        ⚠ **서버 검증을 대체하지 않는다.** 화면 검사는 개발자 도구로 우회할 수 있다. */
     (function () {
@@ -884,11 +904,34 @@ pages['partner-form.html'] = shell({
 const ROLES = ['최고관리자', '편집자', '열람전용'];
 const MENUS = ['공지사항', '언론보도', '홍보영상', '갤러리', '발행물', '파트너사', '계정 관리'];
 
-/* 권한 매트릭스 — 등급별 기본값. 개발 인계용 기준표이기도 하다. */
+/* 권한 매트릭스 — 등급별 기본값. 개발 인계용 기준표이기도 하다.
+   ⚠ `계정 관리` 는 **최고관리자만** 다룬다(2026-09-03 지시). 편집자·열람전용에게는
+     그 줄을 아예 보여 주지 않는다 — 열람만 켜 둬도 전 직원의 이름 · 아이디 ·
+     최근 로그인 시각이 보이기 때문이다. 끌 수 있는 체크박스로 두는 것과
+     줄 자체를 없애는 것은 다르다: 없으면 실수로 켜는 일이 생기지 않는다. */
 const ROLE_DEFAULT = {
   '최고관리자': MENUS.map(() => 'edit'),
   '편집자': ['edit', 'edit', 'edit', 'edit', 'edit', 'edit', 'none'],
-  '열람전용': MENUS.map(() => 'read'),
+  '열람전용': ['read', 'read', 'read', 'read', 'read', 'read', 'none'],
+};
+
+/* 그 등급이 실제로 다루는 메뉴. 원래 인덱스를 유지해야 ROLE_DEFAULT 와 짝이 맞는다. */
+const roleMenus = (role) => MENUS
+  .map((m, i) => ({ m, i }))
+  .filter(({ m }) => m !== '계정 관리' || role === '최고관리자');
+
+/* 기본 세팅값 — 매트릭스를 한 번에 채우는 묶음. 메뉴가 7개라 하나씩 21번 누르는 대신
+   먼저 큰 틀을 고르고 필요한 것만 손보게 한다.
+   ⚠ 값(키)은 화면에 보이는 이름 그대로 쓴다. 따로 코드를 두면 화면과 스크립트가
+     갈라질 때 조용히 어긋난다. */
+const PRESETS = ['전체 권한', '등록 · 수정까지', '열람만', '권한 없음'];
+const presetOf = (role) => {
+  const lv = ROLE_DEFAULT[role];
+  const used = roleMenus(role).map(({ i }) => lv[i]);
+  if (used.every((x) => x === 'edit')) return '전체 권한';
+  if (used.every((x) => x === 'read')) return '열람만';
+  if (used.every((x) => x === 'none')) return '권한 없음';
+  return '등록 · 수정까지';
 };
 
 /* 삭제 권한은 등록 · 수정과 별개로 본다 — 잘못 지우면 되돌릴 수 없기 때문이다.
@@ -901,17 +944,17 @@ const canDelete = (role, menu, lv) =>
   lv === 'edit' && (menu !== '계정 관리' || role === '최고관리자');
 
 const permMatrix = (role, opts = {}) => `<div class="ad-scroll">
-                <table class="ad-tbl ad-perm">
+                <table class="ad-tbl ad-perm"${opts.tag ? ` data-perm="${esc(role)}"` : ''}>
                   <thead><tr><th>메뉴</th><th class="is-ctr">열람</th><th class="is-ctr">등록 · 수정</th><th class="is-ctr">삭제</th></tr></thead>
                   <tbody>
-${MENUS.map((m, i) => {
+${roleMenus(role).map(({ m, i }) => {
   const lv = ROLE_DEFAULT[role][i];
   const dis = opts.locked ? ' disabled' : '';
-  const ck = (on) => `<input type="checkbox"${on ? ' checked' : ''}${dis} />`;
+  const ck = (on, col) => `<input type="checkbox" data-col="${col}"${on ? ' checked' : ''}${dis} />`;
   return `                    <tr><td>${esc(m)}</td>`
-    + `<td class="is-ctr">${ck(lv !== 'none')}</td>`
-    + `<td class="is-ctr">${ck(lv === 'edit')}</td>`
-    + `<td class="is-ctr">${ck(canDelete(role, m, lv))}</td></tr>`;
+    + `<td class="is-ctr">${ck(lv !== 'none', 'read')}</td>`
+    + `<td class="is-ctr">${ck(lv === 'edit', 'edit')}</td>`
+    + `<td class="is-ctr">${ck(canDelete(role, m, lv), 'del')}</td></tr>`;
 }).join('\n')}
                   </tbody>
                 </table>
@@ -972,8 +1015,9 @@ pages['account-form.html'] = shell({
         hint: '임시 비밀번호를 본인 메일로 보내 드립니다. 첫 로그인 때 새 비밀번호로 바꾸게 됩니다.' }),
       // 힌트를 두지 않는다 — 같은 내용이 폼 하단 안내에 있어 한 화면에서 두 번 읽혔다(2026-08-18 감사).
       field({ label: '권한 등급', req: true, type: 'SELECT', control: sel(ROLES) }),
+      // 안내문은 화면에 실제로 보이는 것과 맞춘다 — '계정 관리' 줄은 최고관리자에게만 나온다.
       field({ label: '메뉴 권한', type: 'CHECKBOX MATRIX', control: permMatrix('편집자'),
-        hint: '등급 기본값에서 하나씩 바꿀 수 있습니다. 계정 삭제 권한은 최고관리자만 가집니다.' }),
+        hint: '등급 기본값에서 하나씩 바꿀 수 있습니다. 계정 관리는 최고관리자만 다룰 수 있어 다른 등급에는 나타나지 않습니다.' }),
       field({ label: '계정 상태', type: 'TOGGLE', control: toggle(true, '활성'),
         hint: '끄면 로그인할 수 없습니다. 계정을 지우지 않고 잠가 둘 때 씁니다.' }),
     ],
@@ -999,22 +1043,28 @@ pages['role-form.html'] = shell({
           <div class="ad-form">
 ${ROLES.map((r) => {
   const locked = r === '최고관리자';
+  const preset = `<select class="ad-sel" data-preset="${esc(r)}"${locked ? ' disabled' : ''}>`
+    + PRESETS.map((p) => `<option${p === presetOf(r) ? ' selected' : ''}>${esc(p)}</option>`).join('')
+    + '</select>';
   return `            <div class="ad-row">
               <p class="ad-lb">${esc(r)}</p>
               <div class="ad-fd">
-                ${permMatrix(r, { locked })}
+                <div class="ad-preset">
+                  <span>기본 세팅값</span>${preset}
+                  <em>고른 값으로 아래 표가 한 번에 채워집니다. 이후 하나씩 바꿀 수 있습니다.</em>
+                </div>
+                ${permMatrix(r, { locked, tag: true })}
                 <p class="ad-hint">${locked
-                  ? '최고관리자는 모든 권한을 가지며 여기서 줄일 수 없습니다. 잠금을 풀면 계정을 만들 사람이 없어질 수 있습니다.'
-                  : '체크를 풀면 그 메뉴가 좌측 메뉴에서도 보이지 않습니다.'}</p>
+                  ? '최고관리자는 모든 권한을 가지며 수정할 수 없습니다.'
+                  : '‘열람’을 끄면 이 등급으로 로그인한 사람에게는 그 메뉴가 왼쪽 목록에 나타나지 않습니다.'}</p>
               </div>
             </div>`;
 }).join('\n')}
           </div>
-          ${dev('적용 범위 확인 — 지금 화면은 "앞으로 만들 계정에만 적용" 을 전제로 문구를 썼다. 기존 계정에 소급 적용할지, 한다면 계정마다 따로 조정한 값을 덮어쓸지 정책 결정이 필요하다.')}
-          ${dev('열람전용의 계정 관리 열람 확인 — 지금 기본값은 켜져 있어 전 직원의 이름 · 아이디 · 최근 로그인 시각이 보인다. 세 등급을 나란히 놓으니 드러난 것이라 값은 그대로 두었다. 개인정보라 끄는 편이 맞아 보이지만 운영 정책 확정이 필요하다.')}
-          ${dev('권한 집행 확인 — 최고관리자 행의 disabled 는 표시일 뿐이다. 서버가 막지 않으면 요청을 직접 보내 최고관리자 권한도 낮출 수 있다.')}
+          ${dev('적용 범위 확인 — 지금 화면은 "앞으로 만들 계정에만 적용" 을 전제로 문구를 썼다. 기존 계정에 소급 적용할지 정책 결정이 필요하다.')}
+          ${dev('권한 집행 확인 — 최고관리자 행의 disabled 와 계정 관리 줄을 감춘 것은 표시일 뿐이다. 서버가 막지 않으면 요청을 직접 보내 최고관리자 권한을 낮추거나 계정 관리 권한을 켤 수 있다.')}
           <div class="ad-foot">
-            <p class="ad-note">※ 여기서 바꾼 값은 <b>앞으로 만들 계정의 기본값</b>입니다. 이미 있는 계정의 권한은 그대로입니다 — 계정마다 따로 조정한 값을 덮어쓰지 않습니다</p>
+            <p class="ad-note">※ 여기서 바꾼 값은 <b>앞으로 만들 계정의 기본값</b>입니다. 이미 있는 계정에는 반영하지 않습니다</p>
             <a class="ad-btn" href="account.html">취소</a>
             <button type="button" class="ad-btn ad-btn--primary" onclick="document.getElementById('saveDlg').showModal()">저장</button>
           </div>
