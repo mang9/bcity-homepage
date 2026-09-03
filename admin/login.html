@@ -457,6 +457,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* 로그인 계열 보조 문구 — 로그인 · 비밀번호 재설정이 함께 쓴다 */
 .ad-login-h { margin: 0 0 6px; font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+/* 화면에는 없지만 낭독에는 있어야 하는 제목.
+   ⚠ `display: none` · `visibility: hidden` 은 낭독에서도 사라진다 — 쓰지 말 것.
+   로그인 화면은 디자인상 제목 글자가 없어(로고가 그 역할) h1 을 이 방식으로 둔다. */
+.ad-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .ad-login-d { margin: 0 0 18px; font-size: 12.5px; line-height: 1.6; color: var(--color-text-muted); }
 .ad-login-alt { margin: 16px 0 0; text-align: center; font-size: 12.5px; }
 .ad-login-alt a { color: var(--color-primary); font-weight: 700; }
@@ -473,7 +478,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
         <svg viewBox="0 0 2518 421" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="B-CITY"><path d="M0.0957031 417.731V4.06756L349.36 2.90723C395.387 2.90723 429.423 12.5768 451.47 31.9159C473.903 50.8681 485.12 79.49 485.12 117.781C485.12 156.073 472.356 184.114 446.829 201.906C463.847 211.189 476.417 223.566 484.54 239.037C492.662 254.122 496.723 273.654 496.723 297.635C496.723 336.7 485.507 366.482 463.073 386.981C441.027 407.094 406.99 417.15 360.963 417.15L0.0957031 417.731ZM338.336 77.1693H92.9233V169.997H338.336C373.533 169.997 391.132 154.139 391.132 122.423C391.132 92.2538 373.533 77.1693 338.336 77.1693ZM349.94 244.259H92.9233V342.888H349.94C385.137 342.888 402.736 326.257 402.736 292.993C402.736 260.504 385.137 244.259 349.94 244.259Z" fill="#2C3E91"/><path d="M690.875 240.579C703.945 222.22 703.166 202.476 688.537 181.349L689.001 181.68C709.383 185.341 725.277 179.163 736.681 163.143C748.149 147.034 751.337 129.572 746.245 110.759C740.724 90.1492 725.283 70.8171 699.923 52.7633L688.016 44.2869L557.22 228.016L571.447 238.144C597.426 256.638 621.065 265.872 642.364 265.847C662.724 265.831 678.894 257.409 690.875 240.579Z" fill="#3DBFA8"/><path d="M731.605 180.058C718.535 198.418 719.314 218.161 733.943 239.288L733.479 238.958C713.097 235.296 697.203 241.475 685.799 257.494C674.331 273.604 671.143 291.065 676.235 309.878C681.756 330.488 697.197 349.82 722.557 367.874L734.464 376.351L865.26 192.622L851.033 182.494C825.054 164 801.415 154.765 780.116 154.791C759.756 154.806 743.586 163.229 731.605 180.058Z" fill="#0095D9"/><path d="M1162.47 420.637C1085.88 420.637 1027.29 403.039 986.673 367.841C946.061 332.257 925.755 279.653 925.755 210.032C925.755 140.797 946.061 88.3871 986.673 52.8027C1027.29 17.2183 1085.88 -0.380544 1162.47 0.00623834L1371.33 1.16659V75.4298H1168.85C1118.57 75.4298 1081.24 86.0664 1056.87 107.34C1032.51 128.613 1020.32 162.844 1020.32 210.032C1020.32 257.22 1032.51 291.644 1056.87 313.304C1081.24 334.577 1118.57 345.214 1168.85 345.214H1377.13V420.637H1162.47Z" fill="#2C3E91"/><path d="M1421.01 417.729V2.90552H1513.83V417.729H1421.01Z" fill="#2C3E91"/><path d="M1557.71 2.90552H2068.26L2068.51 78.3279H1847.79V417.729H1754.97V78.3279H1557.71V2.90552Z" fill="#2C3E91"/><path d="M2205.46 417.729V269.785L1985.58 2.90552H2100.45L2251.88 190.881L2402.72 2.90552H2517.6L2298.87 269.205V417.729H2205.46Z" fill="#2C3E91"/></svg>
         <span>PR CENTER ADMIN</span>
       </div>
-      <form class="ad-login-f" onsubmit="return false">
+      <h1 class="ad-sr">관리자 로그인</h1>
+      <form class="ad-login-f" onsubmit="location.href='index.html'; return false;">
         <label>아이디
           <input class="ad-in" type="text" autocomplete="username" placeholder="관리자 아이디" />
         </label>
@@ -484,7 +490,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
           <label style="display:flex;gap:6px;align-items:center;font-weight:600">
             <input type="checkbox" /> 아이디 기억하기</label>
         </div>
-        <a class="ad-btn ad-btn--primary" href="index.html">로그인</a>
+        <button type="submit" class="ad-btn ad-btn--primary">로그인</button>
       </form>
       <p class="ad-login-alt"><a href="password-reset.html">비밀번호를 잊으셨나요?</a></p>
     </div>
@@ -527,6 +533,19 @@ button, input, select, textarea { font: inherit; color: inherit; }
        ⚠ 처음 값을 따로 저장하지 않는다. defaultChecked 가 HTML 의 checked 속성,
          곧 **화면이 처음 그려졌을 때의 값**이라 그대로 쓰면 된다.
          변수에 담아 두면 화면과 갈라질 자리가 하나 늘어난다. */
+    /* 게시 상태 — '예약' 을 골랐을 때만 날짜·시각 칸을 편다.
+       ⚠ 라디오는 change 가 **선택된 쪽에서만** 난다. 해제되는 쪽은 이벤트가 없으므로
+         묶음 전체를 다시 훑어야 한다. */
+    document.addEventListener('change', function (e) {
+      var r = e.target.closest('.ad-radios input[type="radio"]');
+      if (!r) return;
+      var box = r.closest('.ad-radios');
+      var when = document.getElementById(box.getAttribute('data-when'));
+      if (!when) return;
+      var picked = box.querySelector('input[data-opens]');
+      when.classList.toggle('is-open', !!(picked && picked.checked));
+    });
+
     document.addEventListener('click', function (e) {
       var b = e.target.closest('[data-reset]');
       if (!b) return;
