@@ -186,6 +186,19 @@ const SCRIPTS = `  <script>
        ⚠ 처음 값을 따로 저장하지 않는다. defaultChecked 가 HTML 의 checked 속성,
          곧 **화면이 처음 그려졌을 때의 값**이라 그대로 쓰면 된다.
          변수에 담아 두면 화면과 갈라질 자리가 하나 늘어난다. */
+    /* 게시 상태 — '예약' 을 골랐을 때만 날짜·시각 칸을 편다.
+       ⚠ 라디오는 change 가 **선택된 쪽에서만** 난다. 해제되는 쪽은 이벤트가 없으므로
+         묶음 전체를 다시 훑어야 한다. */
+    document.addEventListener('change', function (e) {
+      var r = e.target.closest('.ad-radios input[type="radio"]');
+      if (!r) return;
+      var box = r.closest('.ad-radios');
+      var when = document.getElementById(box.getAttribute('data-when'));
+      if (!when) return;
+      var picked = box.querySelector('input[data-opens]');
+      when.classList.toggle('is-open', !!(picked && picked.checked));
+    });
+
     document.addEventListener('click', function (e) {
       var b = e.target.closest('[data-reset]');
       if (!b) return;
@@ -371,7 +384,11 @@ function field({ label, req, type, control, hint }) {
 }
 
 const input = (ph) => `<input class="ad-in" type="text" placeholder="${esc(ph)}" />`;
-const sel = (opts) => `<select class="ad-sel">${opts.map((o) => `<option>${esc(o)}</option>`).join('')}</select>`;
+/* ⚠ 이름을 반드시 준다. 첫 선택지가 '언론사 전체' 처럼 안내를 겸하면 눈으로는 알 수 있지만
+     낭독에는 '콤보 상자' 로만 읽힌다. 라벨이 붙는 자리(.ad-row)에서는 생략해도 되지만
+     목록 위 필터처럼 라벨이 없는 자리에서는 이것이 유일한 이름이다. */
+const sel = (opts, label) => `<select class="ad-sel"${label ? ` aria-label="${esc(label)}"` : ''}>`
+  + opts.map((o) => `<option>${esc(o)}</option>`).join('') + '</select>';
 const date = () => '<input class="ad-in" type="date" style="max-width:220px" />';
 /* 요약처럼 짧은 여러 줄 입력. 본문은 `editor()` 를 쓴다 — 이쪽은 서식이 필요 없다. */
 const area = (ph, rows = 2) => `<textarea class="ad-in" rows="${rows}"`
@@ -380,10 +397,17 @@ const area = (ph, rows = 2) => `<textarea class="ad-in" rows="${rows}"`
    내야 키보드·스크린리더에서도 상태가 읽힌다 — 상태 전환은 셸의 인라인 스크립트가 맡는다. */
 const toggle = (on, t) => `<button type="button" class="ad-toggle${on ? ' is-on' : ''}"`
   + ` aria-pressed="${on ? 'true' : 'false'}"><span class="ad-toggle-t"></span><b>${esc(t)}</b></button>`;
-const radios = (arr, openIdx) => `<div class="ad-radios">${arr.map((a, i) =>
-  `<label><input type="radio" name="st${openIdx ?? ''}"${i === 0 ? ' checked' : ''} />${esc(a)}</label>`).join('')}</div>
-              <div class="ad-when is-open"><input class="ad-in" type="date" style="max-width:200px" />
-                <input class="ad-in" type="time" style="max-width:150px" /></div>`;
+/* ⚠ 예약 시각은 '예약' 을 골랐을 때만 편다(2026-09-03 감사). 전에는 항상 `is-open` 이라
+     '공개' 가 선택된 채로 예약 날짜·시각 칸이 함께 떠 있어, 무엇이 적용되는 상태인지
+     화면만 보고는 알 수 없었다. `.ad-when` 은 원래 접힘이 기본이고 CSS 도 그렇게
+     쓰여 있었는데 마크업이 늘 펴 둔 것이라 조건부 규칙이 죽어 있었다.
+   ⚠ 날짜·시각 칸에 이름을 준다. 라벨이 '게시 상태' 하나뿐이라 낭독하면 둘 다
+     그냥 '편집 상자' 로만 읽힌다. */
+const radios = (arr, openIdx) => `<div class="ad-radios" data-when="w${openIdx ?? ''}">${arr.map((a, i) =>
+  `<label><input type="radio" name="st${openIdx ?? ''}"${i === 0 ? ' checked' : ''}`
+  + `${a === '예약' ? ' data-opens="1"' : ''} />${esc(a)}</label>`).join('')}</div>
+              <div class="ad-when" id="w${openIdx ?? ''}"><input class="ad-in" type="date" aria-label="예약 날짜" style="max-width:200px" />
+                <input class="ad-in" type="time" aria-label="예약 시각" style="max-width:150px" /></div>`;
 
 /* 게시 상태 — 6개 폼이 **완전히 같은 필드**를 반복하고 있었다(2026-08-18 감사).
    문구를 한 번만 고치면 되도록 헬퍼로 묶는다. radios 의 name 만 화면마다 달라진다. */
@@ -478,7 +502,8 @@ const pages = {};
 /* 로그인 — 기획서에 명세가 없어 새로 설계했다(사용자 요청). */
 pages['login.html'] = loginShell({
   title: '로그인',
-  body: `      <form class="ad-login-f" onsubmit="return false">
+  body: `      <h1 class="ad-sr">관리자 로그인</h1>
+      <form class="ad-login-f" onsubmit="location.href='index.html'; return false;">
         <label>아이디
           <input class="ad-in" type="text" autocomplete="username" placeholder="관리자 아이디" />
         </label>
@@ -489,7 +514,7 @@ pages['login.html'] = loginShell({
           <label style="display:flex;gap:6px;align-items:center;font-weight:600">
             <input type="checkbox" /> 아이디 기억하기</label>
         </div>
-        <a class="ad-btn ad-btn--primary" href="index.html">로그인</a>
+        <button type="submit" class="ad-btn ad-btn--primary">로그인</button>
       </form>
       <p class="ad-login-alt"><a href="password-reset.html">비밀번호를 잊으셨나요?</a></p>`,
   aside: `    <aside class="ad-login-note">
@@ -604,8 +629,8 @@ pages['press.html'] = shell({
   actions: NEW_BTN('언론보도 등록', 'press-form.html'),
   body: `        <div class="ad-card">
           <div class="ad-filter">${chips(['전체'])}
-            ${sel(['언론사 전체', '강원일보', '파이낸셜뉴스', '한국경제', '연합뉴스'])}
-            ${sel(['기간 전체', '최근 1개월', '최근 3개월', '직접 입력'])}
+            ${sel(['언론사 전체', '강원일보', '파이낸셜뉴스', '한국경제', '연합뉴스'], '언론사')}
+            ${sel(['기간 전체', '최근 1개월', '최근 3개월', '직접 입력'], '보도 기간')}
             ${search('제목 · 내용 검색')}</div>
           <div class="ad-scroll">
             <table class="ad-tbl">
@@ -1098,13 +1123,13 @@ pages['password.html'] = shell({
      알아낼 수 있다(계정 열거). 그래서 화면 문구도 '있으면 보냈다' 로 쓰지 않는다. */
 pages['password-reset.html'] = loginShell({
   title: '비밀번호 재설정',
-  body: `      <p class="ad-login-h">비밀번호 재설정</p>
+  body: `      <h1 class="ad-login-h">비밀번호 재설정</h1>
       <p class="ad-login-d">가입한 아이디(메일)를 입력하면 재설정 링크를 보내 드립니다.</p>
-      <form class="ad-login-f" onsubmit="return false">
+      <form class="ad-login-f" onsubmit="location.href='password-reset-sent.html'; return false;">
         <label>아이디
           <input class="ad-in" type="email" autocomplete="username" placeholder="name@biotech-iv.com" />
         </label>
-        <a class="ad-btn ad-btn--primary" href="password-reset-sent.html">재설정 링크 받기</a>
+        <button type="submit" class="ad-btn ad-btn--primary">재설정 링크 받기</button>
       </form>
       <p class="ad-login-alt"><a href="login.html">‹ 로그인으로 돌아가기</a></p>`
     + dev('계정 열거 방지 — 계정이 없어도 같은 응답을 보낼 것. 요청 횟수 제한(권장 5분에 3회)도 필요하다.'),
@@ -1112,7 +1137,7 @@ pages['password-reset.html'] = loginShell({
 
 pages['password-reset-sent.html'] = loginShell({
   title: '재설정 메일 발송',
-  body: `      <p class="ad-login-h">메일을 확인해 주세요</p>
+  body: `      <h1 class="ad-login-h">메일을 확인해 주세요</h1>
       <p class="ad-login-d">입력한 주소로 재설정 링크를 보냈습니다. 링크는 30분 동안만 쓸 수 있습니다.
         메일이 오지 않으면 스팸함을 확인해 주세요.</p>
       <div class="ad-login-f">
@@ -1125,9 +1150,9 @@ pages['password-reset-sent.html'] = loginShell({
 
 pages['password-reset-new.html'] = loginShell({
   title: '새 비밀번호 설정',
-  body: `      <p class="ad-login-h">새 비밀번호 설정</p>
+  body: `      <h1 class="ad-login-h">새 비밀번호 설정</h1>
       <p class="ad-login-d">앞으로 사용할 비밀번호를 입력해 주세요.</p>
-      <form class="ad-login-f" onsubmit="return false">
+      <form class="ad-login-f" onsubmit="location.href='login.html'; return false;">
         <label>새 비밀번호
           <input class="ad-in" type="password" id="pw1" autocomplete="new-password" />
         </label>
@@ -1140,7 +1165,7 @@ pages['password-reset-new.html'] = loginShell({
           <input class="ad-in" type="password" id="pw2" autocomplete="new-password" />
         </label>
         <p class="ad-hint" id="pwMatch">두 입력이 같아야 합니다.</p>
-        <a class="ad-btn ad-btn--primary" href="login.html">변경하고 로그인</a>
+        <button type="submit" class="ad-btn ad-btn--primary">변경하고 로그인</button>
       </form>`
     + dev('토큰 검증 — 1회용 · 30분 유효 · 사용 후 즉시 폐기. 만료·재사용 시 별도 안내 화면이 필요하다.'),
 });

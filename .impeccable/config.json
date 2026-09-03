@@ -44,6 +44,42 @@
         "value": "cubic-bezier(.34, 1.4, .64, 1)",
         "createdAt": "2026-08-28T09:01:59.160Z",
         "reason": "컨셉 허브 등장 — 오버슈트 실측 +1.38%(250px 기준 3.4px)로 바운스가 아니라 한 번 정착하는 모션. cubic-bezier 는 진동이 불가능하다. 2026-08-28 사용자 확인"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "4px",
+        "files": [
+          "src/admin/css/admin.css"
+        ],
+        "createdAt": "2026-09-03T04:15:27.020Z",
+        "reason": "관리자 본문 편집기 서식 버튼(.ad-editor-bar span) 24px 아이콘 — 홈페이지 라운드 램프(8/12/16)를 쓰면 알약처럼 보인다. 관리자 화면 전용 UI (2026-09-03 사용자 확인)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "28px",
+        "files": [
+          "src/admin/css/admin.css"
+        ],
+        "createdAt": "2026-09-03T04:15:27.079Z",
+        "reason": "관리자 대시보드 숫자 타일(.ad-tile strong) — 홈페이지 타입 램프에 없는 단계다. 내리면 라벨과 구분이 사라져 훑기 어려워진다 (2026-09-03 사용자 확인)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(0 17 34 / .34)",
+        "files": [
+          "src/admin/css/admin.css"
+        ],
+        "createdAt": "2026-09-03T04:15:27.137Z",
+        "reason": "로그인 상자 그림자(.ad-login-box) — 팔레트 색이 아니라 --scrim-rgb(#001122)의 알파 변형이다 (2026-09-03 사용자 확인)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgb(0 17 34 / .3)",
+        "files": [
+          "src/admin/css/admin.css"
+        ],
+        "createdAt": "2026-09-03T04:15:27.192Z",
+        "reason": "확인 대화상자 그림자(.ad-dlg) — 위와 같은 스크림 알파 변형 (2026-09-03 사용자 확인)"
       }
     ]
   }
