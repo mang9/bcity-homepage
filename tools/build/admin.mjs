@@ -617,7 +617,8 @@ pages['notice-form.html'] = shell({
       field({ label: '첨부파일', type: 'FILE UPLOAD', control: drop('파일을 끌어다 놓으세요', '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.')
         + fileList([['통합개발계획_요약.pdf', '2.4MB'], ['설명회_안내.hwp', '380KB']]),
         hint: '여러 개 첨부할 수 있습니다. 파일 하나에 20MB 까지.' }),
-      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '켜면 목록 맨 위에 고정됩니다.' }),
+      field({ label: '상단 고정', type: 'TOGGLE', control: toggle(true, '메인 상단에 고정'), hint: '켜면 날짜와 상관없이 목록 맨 위에 둡니다.' }),
+      // DEV: 상단 고정 확인 — 정렬은 지금 order 오름차순 → date 내림차순뿐이고 고정 처리가 없다(tools/build/pages.mjs). 필드를 추가하거나 order 로 대신할지 정할 것.
       pubState(1),
     ],
   }),
@@ -670,7 +671,7 @@ pages['press-form.html'] = shell({
       /* ⚠ 요약 · 본문 칸이 없었다. press.json 은 둘 다 쓴다 —
            summary 는 목록 줄, body 는 상세 페이지(.post-body)다. */
       field({ label: '요약', type: 'TEXTAREA', control: area('목록에 보일 한두 줄'),
-        hint: '목록에서 제목 아래에 보입니다.' }),
+        hint: '목록에는 나오지 않습니다 — 상세 페이지의 첫 문단과 <b>검색어</b>로 쓰입니다. 비워 두면 본문 첫 줄이 대신 쓰입니다.' }),
       field({ label: '내용', type: 'TEXT EDITOR', control: editor(),
         hint: '상세 페이지에 실릴 본문입니다. 비워 두면 기사 링크로만 안내합니다.' }),
       field({ label: '기사 링크', req: true, type: 'URL INPUT', control: '<input class="ad-in" type="url" placeholder="https://" />', hint: '언론사 기사 주소를 붙여 넣습니다.' }),
@@ -710,7 +711,8 @@ pages['video-form.html'] = shell({
     slug: 'video', preview: '../video.html',
     note: '※ 메인 화면에 보여 줄 영상은 4편까지 고를 수 있습니다.',
     fields: [
-      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'), hint: '목록 카드에서 제목 아래에 표시됩니다.' }),
+      field({ label: '제목', req: true, type: 'INPUT', control: input('영상 대표 제목'),
+        hint: '목록 카드의 이미지 아래에 표시됩니다. 확대해서 볼 때 위쪽 이름으로도 쓰입니다.' }),
       field({ label: '영상 소스', req: true, type: 'SELECT + URL',
         control: `<div style="display:flex;gap:8px;flex-wrap:wrap">${sel(['YouTube', '직접 업로드'])}
                 <input class="ad-in" type="url" placeholder="https://www.youtube.com/watch?v=" style="flex:1;min-width:220px" /></div>`,
@@ -767,8 +769,10 @@ pages['gallery-form.html'] = shell({
       field({ label: '카테고리', req: true, type: 'SELECT', control: sel(['행사', '현장', '조감도', '기타']), hint: '행사 · 현장 · 조감도 · 기타 중에서 고릅니다. 표지 왼쪽 위에 표시됩니다.' }),
       field({ label: '제목', req: true, type: 'INPUT', control: input('갤러리 앨범 제목'), hint: '사진 묶음 전체의 제목입니다.' }),
       /* ⚠ 요약 칸이 없었다. gallery.json 의 summary 를 카드가 쓴다. */
-      field({ label: '요약', type: 'TEXTAREA', control: area('카드에 보일 한두 줄'),
-        hint: '카드에서 제목 아래에 보입니다.' }),
+      /* ⚠ 갤러리 카드는 [이미지 · 분류 배지 · 제목 · 날짜] 만 그린다. 요약은 화면에 나오지 않는다
+     (2026-09-03 실제 렌더와 대조). '카드에 보일' 이라고 적어 두면 넣어도 안 보여서 잘못을 찾게 된다. */
+      field({ label: '요약', type: 'TEXTAREA', control: area('사진을 설명하는 한두 줄'),
+        hint: '지금 화면에는 나오지 않습니다 — 사진을 나중에 찾기 위한 설명으로만 저장됩니다. 비워 두어도 됩니다.' }),
       field({ label: '대표 이미지', req: true, type: 'IMAGE UPLOAD',
         control: drop('썸네일 · 리스트 대표 이미지', '1600×900 이상을 권장합니다. JPG · PNG · WebP 를 올릴 수 있습니다.')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))"><div class="ad-thumb"><b>대표</b></div></div>',
@@ -883,9 +887,19 @@ pages['partner-form.html'] = shell({
     note: '※ 로고마다 여백과 글자 굵기가 달라, 높이를 똑같이 맞추면 어떤 로고는 크게 · 어떤 로고는 작게 보입니다. '
         + '로고가 실제로 차지하는 넓이가 서로 비슷해지도록 크기를 맞춰 줍니다.',
     fields: [
-      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']), hint: '사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.' }),
+      /* ⚠ 같은 분류가 두 자리에서 **다른 이름**으로 나온다(2026-09-03 대조).
+           카드 그룹 : 관계 기관 · 앵커 기업 · 자산관리 · 금융 파트너 · 전략적 파트너
+           구조도 칸 : 앵커기업 · AMC / GI · 공공 / FI · 금융 / CI · 시공 / SI · 전략
+         관리자에서 고르는 값은 **키**이고 표시 이름은 화면이 각자 갖는다.
+         그래서 안내에 '같은 이름으로 나온다' 고 적으면 안 된다.
+         DEV: 분류 -> 두 화면의 표시 이름 매핑을 서버(또는 설정)에 두어야 한다.
+           지금은 company.html 마크업에 이름이 직접 박혀 있다. */
+      field({ label: '분류', req: true, type: 'SELECT', control: sel(['앵커기업', '자산관리', '금융', '시공', '전략적 투자자', '공공']),
+        hint: '카드가 묶이는 그룹과 사업구조도에서 들어갈 칸이 함께 정해집니다. 화면에 보이는 그룹 이름은 자리마다 조금 다릅니다(예: 공공 → 카드에서는 ‘관계 기관’).' }),
       field({ label: '상호', req: true, type: 'INPUT', control: input('정식 상호'), hint: '정식 상호를 적습니다. 카드와 사업구조도에 그대로 표시됩니다.' }),
-      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'), hint: '영문 페이지를 만들 때 씁니다. 비워 두어도 됩니다.' }),
+      // 카드 그룹 머리의 영문(ANCHOR PARTNER 등)은 **그룹** 이름이지 회사 영문 상호가 아니다. 혼동 주의.
+      field({ label: '영문 상호', type: 'INPUT', control: input('예: Douzone Bizon'),
+        hint: '지금 화면에는 쓰이지 않습니다. 영문 페이지를 만들 때를 대비해 받아 둡니다 — 비워 두어도 됩니다.' }),
       field({ label: '로고', req: true, type: 'IMAGE UPLOAD',
         control: drop('로고 파일', '배경 투명 PNG · SVG 권장 · 로고 둘레의 빈 여백은 잘라내고 씁니다')
           + '<div class="ad-thumbs" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))"><div class="ad-thumb" style="aspect-ratio:16/9"><b>로고</b></div></div>',
@@ -899,8 +913,16 @@ pages['partner-form.html'] = shell({
                   placeholder="37.3" id="eq" /><i>%</i></span>
                 <label class="ad-cb"><input type="checkbox" id="eqTbd" /> 확정 전 (TBD 로 표시)</label>
               </div>`,
-        hint: '확정된 지분율만 숫자로 적습니다. 아직 정해지지 않았으면 체크해 주세요 — 사업구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.' }),
-      field({ label: '보조 설명', type: 'INPUT', control: input('예: 부지조성공사 등'), hint: '사업구조도에서 상호 아래에 들어가는 설명입니다.' }),
+        hint: '확정된 지분율만 숫자로 적습니다. 사업구조도의 지분율 자리와 파트너사 카드 설명에 함께 나옵니다(카드에서는 ‘출자 37.3%’ 처럼 보입니다). 아직 정해지지 않았으면 체크해 주세요 — 구조도에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.' }),
+      /* ⚠⚠ 설명이 **두 자리**다. 하나로 합치면 안 된다(2026-09-03 지적으로 분리).
+           · 카드 설명   — 파트너사 카드에서 상호 아래 한두 줄. 카드에서 가장 큰 글이다.
+                          전에는 이 칸이 **아예 없어서** 카드 본문을 관리자에서 넣을 수 없었다.
+           · 보조 설명   — 사업구조도에서만 쓰는 10.5px 한 줄(.bs-hn 안의 i).
+                          지금 실제로 쓰는 곳은 SI 한 곳뿐이다(중소형 CDMO → 제약 · 바이오기업). */
+      field({ label: '설명', type: 'TEXTAREA', control: area('파트너사 카드에 보일 한두 줄'),
+        hint: '파트너사 카드에서 상호 아래에 나오는 문장입니다. 줄을 바꾸면 화면에서도 줄이 바뀝니다.' }),
+      field({ label: '보조 설명', type: 'INPUT', control: input('예: 제약 · 바이오기업'),
+        hint: '<b>사업구조도에서만</b> 상호 아래에 작게 붙는 한 줄입니다. 카드에는 나오지 않습니다. 대개 비워 둡니다.' }),
       field({ label: '푸터 노출', type: 'TOGGLE', control: toggle(true, '메인 푸터 파트너 영역에 노출'), hint: '끄면 메인 화면에는 나오지 않고 사업주체 페이지에만 표시됩니다.' }),
       field({ label: '정렬 순서', type: 'DRAG / NUMBER', control: '<input class="ad-in" type="number" value="1" style="max-width:120px" />',
         hint: '목록에서 행을 끌어 조정할 수도 있습니다.' }),
@@ -1011,7 +1033,7 @@ pages['account-form.html'] = shell({
     dev: '권한 집행 확인 — 화면 체크는 표시일 뿐이다. 서버가 막지 않으면 URL 직접 입력으로 모두 접근된다.',
     fields: [
       field({ label: '이름', req: true, type: 'INPUT', control: input('담당자 이름'),
-        hint: '목록과 게시물의 작성자 이름으로 표시됩니다.' }),
+        hint: '관리자 화면의 계정 목록에 표시됩니다. 홈페이지 게시물에는 작성자를 표기하지 않습니다.' }),
       field({ label: '아이디', req: true, type: 'EMAIL INPUT',
         control: '<input class="ad-in" type="email" placeholder="name@biotech-iv.com" />',
         hint: '로그인할 때 쓰는 아이디입니다.' }),
