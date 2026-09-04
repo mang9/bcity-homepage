@@ -511,7 +511,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
             <p class="ad-lb">분류<i>*</i></p>
             <div class="ad-fd">
               <select class="ad-sel"><option>앵커기업</option><option>자산관리</option><option>금융</option><option>시공</option><option>전략적 투자자</option><option>공공</option></select>
-              <p class="ad-hint">사업주체 페이지의 카드와 사업구조도에 함께 쓰입니다.</p>
+              <p class="ad-hint">카드가 묶이는 그룹과 사업구조도에서 들어갈 칸이 함께 정해집니다. 화면에 보이는 그룹 이름은 자리마다 조금 다릅니다(예: 공공 → 카드에서는 ‘관계 기관’).</p>
             </div>
           </div>
           <div class="ad-row">
@@ -525,7 +525,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
             <p class="ad-lb">영문 상호</p>
             <div class="ad-fd">
               <input class="ad-in" type="text" placeholder="예: Douzone Bizon" />
-              <p class="ad-hint">영문 페이지를 만들 때 씁니다. 비워 두어도 됩니다.</p>
+              <p class="ad-hint">지금 화면에는 쓰이지 않습니다. 영문 페이지를 만들 때를 대비해 받아 둡니다 — 비워 두어도 됩니다.</p>
             </div>
           </div>
           <div class="ad-row">
@@ -544,14 +544,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
                   placeholder="37.3" id="eq" /><i>%</i></span>
                 <label class="ad-cb"><input type="checkbox" id="eqTbd" /> 확정 전 (TBD 로 표시)</label>
               </div>
-              <p class="ad-hint">확정된 지분율만 숫자로 적습니다. 아직 정해지지 않았으면 체크해 주세요 — 사업구조도의 지분율 자리에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.</p>
+              <p class="ad-hint">확정된 지분율만 숫자로 적습니다. 사업구조도의 지분율 자리와 파트너사 카드 설명에 함께 나옵니다(카드에서는 ‘출자 37.3%’ 처럼 보입니다). 아직 정해지지 않았으면 체크해 주세요 — 구조도에 <b>TBD</b> 가 들어갑니다. 숫자도 비우고 체크도 하지 않으면 지분율이 표시되지 않습니다.</p>
+            </div>
+          </div>
+          <div class="ad-row">
+            <p class="ad-lb">설명</p>
+            <div class="ad-fd">
+              <textarea class="ad-in" rows="2" placeholder="파트너사 카드에 보일 한두 줄" style="resize:vertical"></textarea>
+              <p class="ad-hint">파트너사 카드에서 상호 아래에 나오는 문장입니다. 줄을 바꾸면 화면에서도 줄이 바뀝니다.</p>
             </div>
           </div>
           <div class="ad-row">
             <p class="ad-lb">보조 설명</p>
             <div class="ad-fd">
-              <input class="ad-in" type="text" placeholder="예: 부지조성공사 등" />
-              <p class="ad-hint">사업구조도에서 상호 아래에 들어가는 설명입니다.</p>
+              <input class="ad-in" type="text" placeholder="예: 제약 · 바이오기업" />
+              <p class="ad-hint"><b>사업구조도에서만</b> 상호 아래에 작게 붙는 한 줄입니다. 카드에는 나오지 않습니다. 대개 비워 둡니다.</p>
             </div>
           </div>
           <div class="ad-row">
