@@ -95,9 +95,13 @@ EOF
 echo "── 푸시"
 cd "$STAGE"
 git init -q
-# ⚠ 운영 저장소의 .gitignore 가 함께 복사된다. 그 안의 `/admin/` 규칙 때문에
-#   관리자 화면 20개가 통째로 빠진 적이 있다(2026-08-28). 여기서는 규칙을 걷는다.
-[ -f .gitignore ] && sed -i '' '/^\/admin\/$/d' .gitignore
+# ⚠⚠ 운영 저장소의 .gitignore 가 함께 복사된다. 저장소에서 제외하는 것들이
+#   **여기서는 올라가야 하는 것**이라 규칙을 걷어야 한다.
+#     /admin/       관리자 화면 20개가 통째로 빠진 적이 있다(2026-08-28)
+#     /dev-states/  상태 스냅숏이 통째로 빠진 적이 있다(2026-09-07)
+#   ⚠ 새로 /무엇/ 을 .gitignore 에 넣을 때마다 **여기도 함께 본다.**
+#     파일은 스테이지에 있는데 커밋만 안 되므로 `test -f` 검증으로는 잡히지 않는다.
+[ -f .gitignore ] && sed -i '' -E '/^\/(admin|dev-states)\/$/d' .gitignore
 git add -A
 git -c user.email=byg0988@synapsemkt.co.kr -c user.name=mang9 \
     commit -q -m "컨펌용 스냅숏 — 운영본 $(git -C "$SRC" rev-parse --short HEAD) 기준"
@@ -106,8 +110,9 @@ git remote add origin "https://github.com/$REPO.git"
 git push -q --force origin main
 
 echo "── 검증"
+# ⚠ 파일 존재가 아니라 **커밋에 들어갔는지**를 본다. .gitignore 가 걸러도 파일은 남는다.
 for f in admin/login.html notice.html robots.txt dev-states/index.html; do
-  test -f "$STAGE/$f" || { echo "  ✗ 빠짐: $f"; exit 1; }
+  git ls-files --error-unmatch "$f" >/dev/null 2>&1 || { echo "  ✗ 커밋에 없음: $f"; exit 1; }
 done
 printf '  상세 %s쪽 · 관리자 %s개 · noindex %s개\n' \
   "$(ls "$STAGE"/notice-*.html "$STAGE"/press-*.html 2>/dev/null | wc -l | tr -d ' ')" \
