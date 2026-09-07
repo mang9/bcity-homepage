@@ -36,6 +36,11 @@ rsync -a \
   --exclude 'package*.json' --exclude '*.command' \
   "$SRC/" "$STAGE/"
 
+# 클릭해야 보이는 화면(라이트박스 · 모달 · 호버)을 파일로 만든다.
+# ⚠ 스테이지에서만 만든다 — 저장소에 두면 샘플 게시물이 든 사본이 커밋된다.
+echo "── 개발 확인용 상태 스냅숏"
+node "$SRC/tools/build/dev-states.mjs" "$STAGE"
+
 echo "── 검색 색인 차단"
 cat > "$STAGE/robots.txt" <<'EOF'
 # 컨펌용 임시 사이트입니다. 검색 색인을 원하지 않습니다.
@@ -101,7 +106,7 @@ git remote add origin "https://github.com/$REPO.git"
 git push -q --force origin main
 
 echo "── 검증"
-for f in admin/login.html notice.html robots.txt; do
+for f in admin/login.html notice.html robots.txt dev-states/index.html; do
   test -f "$STAGE/$f" || { echo "  ✗ 빠짐: $f"; exit 1; }
 done
 printf '  상세 %s쪽 · 관리자 %s개 · noindex %s개\n' \
