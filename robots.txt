@@ -1,11 +1,30 @@
 # B-CITY 춘천기업혁신파크 — https://mang9.github.io/bcity-homepage/
 #
+# ⚠⚠ **이 파일은 현재 아무 효력이 없다.** 2026-09-08 실측.
+#   크롤러는 robots.txt 를 **원점(scheme+host+port) 루트에서만** 읽는다(RFC 9309 §2.3).
+#   즉 실제로 읽히는 주소는 `https://mang9.github.io/robots.txt` 이고 그건 **404** 다
+#   (mang9 계정에 `mang9.github.io` 저장소가 없어 루트 자체가 비어 있다 — 우리가 만들 수도
+#   있지만 그건 이 프로젝트와 무관한 별개 사이트가 된다).
+#   지금 이 파일은 `/bcity-homepage/robots.txt` 에 있어 200 으로 열리기만 하고 **아무도 안 읽는다.**
+#
+#   그래서 지금 벌어지는 일:
+#     · 아래 `Disallow` 4줄이 **하나도 적용되지 않는다.** `src/`·`tools/` 는 실제로 200 이며
+#       크롤링 가능하다(`admin/`·`dev-states/` 는 .gitignore 덕에 404 라 무관하다).
+#     · 아래 `Sitemap:` 줄도 읽히지 않는다 → **사이트맵은 각 콘솔에 손으로 제출해야 한다.**
+#
+#   ✅ 이 파일이 유효해지는 조건은 **하나뿐이다 — 사이트가 호스트 루트에 오는 것.**
+#      `www.biotech-iv.com` 을 연결하면 `https://www.biotech-iv.com/robots.txt` 가 되어
+#      그때부터 전부 정상 동작한다. 그 작업 때 이 주석도 지운다.
+#
 # ⚠ 이 파일은 손으로 관리한다(빌더가 만들지 않는다).
 #   도메인을 옮기면 아래 Sitemap 주소도 함께 고친다 —
 #   tools/build/pages.mjs 의 SITE_URL 과 **같은 값**이어야 한다.
 #
 # ⚠ 컨펌용 사이트(bcity-homepage-review)에는 이것과 **정반대**의 robots.txt 가 있다
 #   (Disallow: / — 색인 차단). tools/review-sync.sh 가 따로 만든다. 헷갈리지 말 것.
+#   ⚠ 그 사이트도 같은 이유로 차단이 안 걸린다 — 하위 경로이기 때문이다.
+#     컨펌 사이트를 확실히 감추려면 robots.txt 가 아니라 저장소를 비공개로 두거나
+#     각 페이지에 `<meta name="robots" content="noindex">` 를 넣어야 한다.
 
 User-agent: *
 Allow: /

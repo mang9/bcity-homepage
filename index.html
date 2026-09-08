@@ -12,8 +12,14 @@
          robots.txt 와 **이 블록 세 곳**을 함께 고쳐야 한다.
        ⚠ og:image 는 절대 주소여야 한다. 상대 경로면 카카오톡 · 네이버가 못 읽어
          공유 카드에 이미지가 비어 나온다.
-       ⚠ 검색엔진 소유확인 메타태그(google-site-verification · naver-site-verification)는
-         **여기에 넣는다.** 발급받은 값이 없는 상태에서 빈 태그를 두지 말 것. -->
+       ⚠ 검색엔진 소유확인 메타태그는 **여기에 넣는다.** 아래 두 줄의 주석을 벗기고
+         `content` 만 콘솔이 준 값으로 채운다. **빈 값으로 두지 말 것** — 소유확인이
+         실패로 확정되면 콘솔이 재시도를 며칠 막는다.
+       ⚠ 값이 들어오면 태그를 **지우지 않는다.** 구글 · 네이버 모두 나중에 태그가 사라지면
+         소유확인이 해제되고 데이터 수집이 멈춘다. 도메인을 옮겨도 그대로 둔다.
+       ⚠ 서브페이지에는 넣을 필요가 없다 — 소유확인은 등록한 주소의 **첫 화면**만 본다. -->
+  <!-- <meta name="google-site-verification" content="" /> -->
+  <!-- <meta name="naver-site-verification" content="" /> -->
   <link rel="canonical" href="https://mang9.github.io/bcity-homepage/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="B-CITY 춘천기업혁신파크" />
