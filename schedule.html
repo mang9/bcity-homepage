@@ -938,8 +938,9 @@
     </nav>
 
 <!-- ===== 추진일정 (스토리보드 v2 slide39~40) =====
-         상태 구분은 2026-08 기준이다. 2026-09 이후 항목이 실행되면
-         해당 .tl-year 의 --now / .tl-item 의 --plan 을 옮겨 주면 된다.
+         상태 구분은 2026-09 기준이다. 2026년 4 · 7 · 8월은 지난 일이라 완료로,
+         12월만 --plan(예정)으로 둔다. 그 뒤 항목이 실행되면 해당 .tl-year 의 --now /
+         .tl-item 의 --plan 을 옮겨 주면 된다.
          일자·공문번호는 스토리보드 원문 그대로다(임의 보정하지 않았다). -->
     <section class="sec" id="journey">
       <div class="wrap">
@@ -983,11 +984,18 @@
             </ul>
           </div>
 
+          <!-- ⚠ 7월은 세 건이라 날짜를 **첫 줄에만** 보인다. 나머지 두 줄의 `.tl-d` 는
+                 비워 두지 않고 `.sr` 로 감춘 `7월` 을 넣는다 — 빈 칸으로 두면 낭독에서
+                 그 두 항목이 몇 월인지 사라진다(`.tl-d` 는 min-width 가 있어 폭은 유지된다). -->
           <div class="tl-year tl-year--now">
             <p class="tl-y">2026</p>
             <ul class="tl-items">
-              <li class="tl-item tl-item--plan"><span class="tl-d">9월</span><span class="tl-t">통합심의 <span class="st st--plan">예정</span></span></li>
-              <li class="tl-item tl-item--plan"><span class="tl-d">10월</span><span class="tl-t">통합개발계획 국토부 승인, 토지보상 개시 <span class="st st--plan">예정</span></span></li>
+              <li class="tl-item"><span class="tl-d">4월</span><span class="tl-t">광판리 주민 간담회</span></li>
+              <li class="tl-item"><span class="tl-d">7월</span><span class="tl-t">춘천기업혁신파크 선도사업 통합개발계획(안) 공청회</span></li>
+              <li class="tl-item"><span class="tl-d"><span class="sr">7월</span></span><span class="tl-t">사업성 분석 용역 착수</span></li>
+              <li class="tl-item"><span class="tl-d"><span class="sr">7월</span></span><span class="tl-t">LIMAC 착수</span></li>
+              <li class="tl-item"><span class="tl-d">8월</span><span class="tl-t">국토교통부 전략 및 환경영향평가 본안 제출</span></li>
+              <li class="tl-item tl-item--plan"><span class="tl-d">12월</span><span class="tl-t">통합개발계획 국토교통부 승인 <span class="st st--plan">예정</span></span></li>
             </ul>
           </div>
 
