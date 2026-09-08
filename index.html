@@ -32,7 +32,7 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "바이오테크 이노밸리 PFV",
-    "alternateName": "B-CITY 춘천기업혁신파크",
+    "alternateName": ["B-CITY 춘천기업혁신파크", "비시티", "비시티 춘천"],
     "url": "https://mang9.github.io/bcity-homepage/",
     "logo": "https://mang9.github.io/bcity-homepage/assets/favicon/icon-512.png",
     "address": {
@@ -193,8 +193,12 @@
     <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/55 via-navy/20 to-transparent"></div>
 
     <div class="relative mx-auto w-full wrap-x px-6 pt-24">
+      <!-- ⚠ 국문 독음 '비시티' 를 함께 적는다(2026-09-08 지시). 검색엔진은 페이지에 있는
+           글로만 판단하므로, 이 표기가 없으면 '비시티' 로는 찾을 수 없다.
+           ⚠ 이 줄은 `uppercase` + `tracking-[0.2em]` 이다 — 한글에 자간 0.2em 이 걸리면
+             낱자가 벌어진다. 실측으로 확인하고 넣었다. -->
       <p class="anim hero-shadow text-sm font-semibold uppercase tracking-[0.2em] text-light-blue" style="animation-delay:.1s">
-        B-CITY 춘천기업혁신파크
+        B-CITY 비시티 · 춘천기업혁신파크
       </p>
       <!-- max-w-4xl(896px) 캡이 있으면 2300px↑ 에서 --text-hero 가 96px 로 커져 둘째 줄이
            3줄로 쪼개진다. 캡을 없애고 break-keep 으로 어절 중간 분리를 막는다. -->
