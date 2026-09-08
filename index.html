@@ -191,14 +191,16 @@
     </video>
     <div class="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/50 via-black/20 to-transparent"></div>
     <!-- 히어로 스크림. 카피가 왼쪽에 있으므로 **왼쪽이 짙고 오른쪽이 열린다.**
-         2026-09-08 에 .55/.20/투명 → .78/.46/.12 로 올렸다(아이브로우를 36px·bold 로,
-         리드를 xl 로 키우면서 글자가 영상의 밝은 구간까지 침범해서다).
+         2026-09-08 이력: `.55/.20/투명`(원래) → `.78/.46/.12` → **`.62/.26/.05`**(현재).
+         아이브로우를 36px·bold 로, 리드를 xl 로 키우면서 한 번 크게 올렸다가,
+         영상이 너무 묻힌다는 지시로 **원래보다 아주 약간만 짙은 선**으로 내렸다.
          ⚠ 영상 위 글자의 대비는 **하나의 WCAG 값으로 잴 수 없다** — 프레임마다 배경이 바뀐다.
            2026-09-08 에 픽셀 최소값으로 재려다 같은 그라디언트에서 실행마다 모순된 값
            (2.62/4.17/7.48 ↔ 1.01/1.11/1.18)을 얻었다. 그 수치를 근거로 쓰지 말 것.
            대비를 더 확보해야 하면 (a) 여기 알파를 올리거나 (b) 아이브로우를 흰색으로 바꾼다.
-         ⚠ 오른쪽을 완전 투명으로 되돌리면 넓은 화면에서 리드 끝이 밝은 하늘에 걸린다. -->
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/78 via-navy/46 to-navy/12"></div>
+         ⚠ 오른쪽 끝을 `to-transparent` 로 되돌리지 말 것 — 넓은 화면에서 리드 끝이
+           밝은 하늘에 걸린다. 그래서 내리면서도 `.05` 는 남겼다. -->
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/62 via-navy/26 to-navy/5"></div>
 
     <div class="relative mx-auto w-full wrap-x px-6 pt-24">
       <!-- ⚠ 국문 독음 '비시티' 는 2026-09-08 지시로 이 줄에서 **뺐다.**
