@@ -195,9 +195,21 @@
     <div class="relative mx-auto w-full wrap-x px-6 pt-24">
       <!-- ⚠ 국문 독음 '비시티' 를 함께 적는다(2026-09-08 지시). 검색엔진은 페이지에 있는
            글로만 판단하므로, 이 표기가 없으면 '비시티' 로는 찾을 수 없다.
-           ⚠ 이 줄은 `uppercase` + `tracking-[0.2em]` 이다 — 한글에 자간 0.2em 이 걸리면
-             낱자가 벌어진다. 실측으로 확인하고 넣었다. -->
-      <p class="anim hero-shadow text-sm font-semibold uppercase tracking-[0.2em] text-light-blue" style="animation-delay:.1s">
+
+           ⚠⚠ 크기를 키울 때 자간이 한계를 정한다(2026-09-08 실측). 한글 20자에 자간이
+             걸리므로 폭이 빠르게 늘어난다 — 320px 에서 쓸 수 있는 조합은
+             **16px + 0.12em 하나뿐**이다(0.14em 이면 이미 두 줄).
+             320px 도 지금 문서 넘침 0 으로 동작하므로 깨뜨리지 않는다.
+
+               폭     16px          17px    18px    20px
+               320    0.12em 만 ✓   ✗       ✗       ✗
+               360    0.2em ✓       0.2em ✓ 0.14em  ✗
+               390    0.2em ✓       0.2em ✓ 0.2em ✓ 0.14em
+
+             그래서 **모바일만 자간을 0.12em 으로 좁히고** md 부터 0.2em 을 되살린다.
+             작은 화면에서 0.2em 은 가로를 낭비하기도 한다.
+           ⚠ 크기를 더 올리려면 이 표를 다시 재라. 눈으로 보고 정하지 말 것. -->
+      <p class="anim hero-shadow text-base font-semibold uppercase tracking-[0.12em] text-light-blue md:text-xl md:tracking-[0.2em] lg:text-2xl" style="animation-delay:.1s">
         B-CITY 비시티 · 춘천기업혁신파크
       </p>
       <!-- max-w-4xl(896px) 캡이 있으면 2300px↑ 에서 --text-hero 가 96px 로 커져 둘째 줄이
