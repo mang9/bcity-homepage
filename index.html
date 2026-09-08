@@ -190,7 +190,15 @@
       <source src="assets/vid/hero.mp4?v=hd3" type="video/mp4" />
     </video>
     <div class="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/50 via-black/20 to-transparent"></div>
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/55 via-navy/20 to-transparent"></div>
+    <!-- 히어로 스크림. 카피가 왼쪽에 있으므로 **왼쪽이 짙고 오른쪽이 열린다.**
+         2026-09-08 에 .55/.20/투명 → .78/.46/.12 로 올렸다(아이브로우를 36px·bold 로,
+         리드를 xl 로 키우면서 글자가 영상의 밝은 구간까지 침범해서다).
+         ⚠ 영상 위 글자의 대비는 **하나의 WCAG 값으로 잴 수 없다** — 프레임마다 배경이 바뀐다.
+           2026-09-08 에 픽셀 최소값으로 재려다 같은 그라디언트에서 실행마다 모순된 값
+           (2.62/4.17/7.48 ↔ 1.01/1.11/1.18)을 얻었다. 그 수치를 근거로 쓰지 말 것.
+           대비를 더 확보해야 하면 (a) 여기 알파를 올리거나 (b) 아이브로우를 흰색으로 바꾼다.
+         ⚠ 오른쪽을 완전 투명으로 되돌리면 넓은 화면에서 리드 끝이 밝은 하늘에 걸린다. -->
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/78 via-navy/46 to-navy/12"></div>
 
     <div class="relative mx-auto w-full wrap-x px-6 pt-24">
       <!-- ⚠ 국문 독음 '비시티' 는 2026-09-08 지시로 이 줄에서 **뺐다.**
@@ -198,21 +206,28 @@
            (src/sub/pages/brand.html 의 .br-wm-spec). 그 줄을 지우면 그 말로 찾을 수 없다.
 
            ⚠⚠ 크기를 키울 때 자간이 한계를 정한다. 한글에 자간이 걸리므로 폭이 빠르게 늘어난다.
-             아래는 **현재 문구 기준** 실측 격자다(자간 x 크기 · 1줄로 들어가는가).
-             '비시티' 가 있던 시절에는 320px 에서 `16px + 0.12em` 하나뿐이었는데,
-             문구가 짧아져 여유가 생겼다 — 그래서 모바일 자간을 0.2em 으로 되돌렸다.
+             2026-09-08 에 `font-semibold` → **`font-bold`** 로 올렸다. 실측 여유(px):
 
-               폭     16px      18px      20px      22px      24px
-               320    0.2em ✓   0.2em ✓   0.16em    0.1em     ✗
-               360    0.2em ✓   0.2em ✓   0.2em ✓   0.2em ✓   0.14em
-               390    0.2em ✓   0.2em ✓   0.2em ✓   0.2em ✓   0.2em ✓
+               폭     글자 폭 / 칸 폭   여유    크기
+               320    219.3 /  272      53    16px
+               360    219.3 /  312      93    16px
+               390    219.3 /  342     123    16px
+               768      329 /  720     391    24px
+               1024↑  493.5 / 976~1512 483↑   36px
 
+             ⚠⚠ **글자 폭은 `Range.getClientRects()` 로 재라.** 이 요소는 블록(`<p>`)이라
+               `p.getBoundingClientRect().width` 는 **항상 칸 폭과 같다** — 그 값을 글자 폭으로
+               읽으면 "여유 0, 한계" 라는 가짜 결론이 나온다(2026-09-08 에 실제로 그랬다).
+               줄 수도 같은 이유로 Range 의 rect 개수로 센다.
+             ⚠ 가장 빡빡한 320px 에도 53px = 한글 약 2~3자분 여유가 있다(16px + 자간 3.2px).
+               문구를 그보다 늘리거나 더 굵게(900) 하려면 320 을 먼저 재고,
+               걸리면 자간을 0.16em 으로 내리는 것이 가장 손해가 적다.
              ⚠ 320px 도 문서 넘침 0 으로 동작한다 — 확인하고 깨뜨리지 않는다.
                (갤럭시 폴드 커버 화면 같은 좁은 기기가 여기 걸린다.)
              ⚠ 문구를 고치면 이 표를 **다시 재라.** 글자 수가 곧 폭이다.
              ⚠ `.m-panel` 은 모든 폭에서 '넘치는 요소' 로 잡히는데 닫힌 모바일 메뉴라 정상이다 —
                판단은 `scrollWidth - innerWidth` 로 한다. -->
-      <p class="anim hero-shadow text-base font-semibold uppercase tracking-[0.2em] text-light-blue md:text-2xl lg:text-4xl" style="animation-delay:.1s">
+      <p class="anim hero-shadow text-base font-bold uppercase tracking-[0.2em] text-light-blue md:text-2xl lg:text-4xl" style="animation-delay:.1s">
         B-CITY 춘천기업혁신파크
       </p>
       <!-- max-w-4xl(896px) 캡이 있으면 2300px↑ 에서 --text-hero 가 96px 로 커져 둘째 줄이
@@ -220,7 +235,7 @@
       <h1 class="anim hero-shadow font-display break-keep mt-5 text-4xl font-bold leading-tight tracking-tight text-white md:text-hero" style="animation-delay:.25s">
         서부개척 시대의 골드러시가<br />21세기 데이터 러시로
       </h1>
-      <p class="anim hero-shadow mt-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg" style="animation-delay:.45s">
+      <p class="anim hero-shadow mt-6 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl" style="animation-delay:.45s">
         AI 데이터를 중심으로 한 새로운 기회의 도시가 춘천에 탄생합니다
       </p>
       <!-- ⚠ 목적지는 **구역 소개 페이지**다(2026-08-31 사용자 선택).
