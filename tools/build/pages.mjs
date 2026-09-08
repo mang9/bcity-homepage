@@ -163,6 +163,17 @@ const SHOW_LIST_FILTERS = false;
 const SHOW_SAMPLES = process.env.SHOW_SAMPLES === '0' ? false
   : (process.env.SHOW_SAMPLES === '1' || existsSync(join(ROOT, '.claude', 'SAMPLES')));
 
+/* ── 검색 노출용 절대 주소 ─────────────────────────────────────────────
+   canonical · Open Graph · sitemap.xml 이 **모두 이 한 값**을 쓴다.
+   ⚠ 도메인을 옮기면 여기 한 줄만 고치고 `npm run build` 를 돌린다.
+     세 곳에 흩어 두면 한쪽만 바뀌어 canonical 이 없는 주소를 가리키게 되고,
+     그러면 검색엔진이 옮긴 페이지를 색인에서 내린다.
+   ⚠ 뒤에 슬래시를 붙이지 않는다(경로를 그대로 이어 붙인다). */
+const SITE_URL = 'https://mang9.github.io/bcity-homepage';
+
+/* 공유 카드에 쓰는 대표 이미지. 1200x630 이상이어야 카카오톡 · 페이스북이 큰 카드로 낸다. */
+const OG_IMAGE = 'assets/still/hero.jpg';
+
 const SAMPLE_WARNINGS = [];
 
 function loadContent(kind) {
@@ -628,6 +639,28 @@ const banner = (srcFile) =>
   `     소스: src/sub/pages/${srcFile} + src/sub/{layout.html,partials,css,js,nav.json}\n` +
   '     빌드: npm run build:pages -->\n';
 
+/* ── canonical · Open Graph · Twitter 카드 ─────────────────────────────
+   ⚠ canonical 은 **자기 자신**을 가리켜야 한다. 같은 내용이 여러 주소로 열릴 때
+     어느 쪽이 정본인지 알려 주는 값이라, 다른 페이지를 가리키면 그 페이지가 색인에서 빠진다.
+   ⚠ og:image 는 **절대 주소**여야 한다. 상대 경로면 카카오톡 · 네이버가 못 읽어
+     공유 카드에 이미지가 비어 나온다.
+   ⚠ og:description 을 따로 쓰지 않고 meta description 을 그대로 쓴다 —
+     두 벌이 되면 한쪽만 고쳐져 검색 결과와 공유 카드의 문구가 갈라진다. */
+function seoBlock(slug, title, description) {
+  const url = `${SITE_URL}/${slug}.html`;
+  return [
+    `  <link rel="canonical" href="${url}" />`,
+    `  <meta property="og:type" content="website" />`,
+    `  <meta property="og:site_name" content="B-CITY 춘천기업혁신파크" />`,
+    `  <meta property="og:locale" content="ko_KR" />`,
+    `  <meta property="og:url" content="${url}" />`,
+    `  <meta property="og:title" content="${title}" />`,
+    `  <meta property="og:description" content="${description}" />`,
+    `  <meta property="og:image" content="${SITE_URL}/${OG_IMAGE}" />`,
+    `  <meta name="twitter:card" content="summary_large_image" />`,
+  ].join('\n');
+}
+
 function build(file) {
   const { fm, body } = parsePage(read(SUB, 'pages', file), file);
   const { cat, item } = locate(fm.nav, file);
@@ -659,6 +692,7 @@ function build(file) {
   const html = render(layout, {
     title: esc(fm.title),
     description: esc(fm.description),
+    seo: seoBlock(fm.slug, esc(fm.title), esc(fm.description)),
     css: cssBundle(fm), js: jsBundle(fm),
     /* ⚠ 본문 안의 {{> partial}} 은 여기서 먼저 펼친다.
        render() 는 ctx 값(main)을 **치환만** 하고 그 안을 다시 훑지 않으므로,
@@ -711,14 +745,15 @@ function buildDetails(file) {
     // front-matter 의 title/description 도 {{postTitle}} 등을 쓴다 → 먼저 채운다
     const fill = (s) => String(s).replace(/\{\{(postTitle|postExcerpt)\}\}/g, (_, k) => ctx[k]);
 
+    const slug = detailPath(fm.slugPrefix, r.id).replace(/\.html$/, '');
     const html = render(layout, {
       title: fill(fm.title), description: fill(fm.description),
+      seo: seoBlock(slug, fill(fm.title), fill(fm.description)),
       css: cssBundle(fm), js: jsBundle(fm),
       main: render(body, ctx, 1),
       ...dHeroCtx,
     });
-    out.push({ out: join(ROOT, detailPath(fm.slugPrefix, r.id)), html: banner(file) + html,
-               slug: detailPath(fm.slugPrefix, r.id).replace(/\.html$/, '') });
+    out.push({ out: join(ROOT, `${slug}.html`), html: banner(file) + html, slug });
   });
   return out;
 }
@@ -760,6 +795,28 @@ if (orphans.length) {
   } else {
     orphans.forEach((f) => { rmSync(join(ROOT, f)); console.log(`  ✕ ${f} (남겨진 생성물 — 삭제)`); });
   }
+}
+
+/* ── sitemap.xml ─────────────────────────────────────────────────────
+   ⚠⚠ **배포 빌드에서만 쓴다.** 샘플 빌드에서 쓰면 가짜 게시물 16쪽이 사이트맵에 실려
+     검색엔진에 제출된다 — 그러면 "등록된 게시물이 없습니다" 인 사이트에 유령 주소가
+     색인되고, 지우는 데 훨씬 오래 걸린다.
+   ⚠ 목록은 readdirSync 가 아니라 **이번 빌드가 만든 jobs** 에서 뽑는다. 디스크를 읽으면
+     남겨진 생성물 · 손글씨 파일(capture.html)까지 섞인다.
+   ⚠ index.html 은 빌더가 만들지 않으므로 손으로 더한다. */
+if (!CHECK && !SHOW_SAMPLES) {
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = ['', ...jobs.map((j) => `${j.slug}.html`)];
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + urls.map((u) => '  <url>\n'
+        + `    <loc>${SITE_URL}/${u}</loc>\n`
+        + `    <lastmod>${today}</lastmod>\n`
+        + `    <priority>${u === '' ? '1.0' : '0.7'}</priority>\n`
+        + '  </url>').join('\n')
+    + '\n</urlset>\n';
+  writeFileSync(join(ROOT, 'sitemap.xml'), xml);
+  console.log(`  → sitemap.xml (${urls.length}쪽)`);
 }
 
 for (const { out, html, slug } of jobs) {

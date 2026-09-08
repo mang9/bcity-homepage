@@ -5,6 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>B-CITY · 춘천기업혁신파크</title>
   <meta name="description" content="서부개척 시대의 골드러시가 21세기 데이터 러시로. AI 데이터를 중심으로 한 새로운 기회의 도시가 춘천에 탄생합니다." />
+
+  <!-- 검색 노출 · 공유 카드 ─────────────────────────────────────────────
+       ⚠ 서브페이지는 `tools/build/pages.mjs` 의 SITE_URL 하나로 이 태그들을 만든다.
+         **메인만 손글씨라 여기 주소를 직접 적는다** — 도메인을 옮기면 SITE_URL 과
+         robots.txt 와 **이 블록 세 곳**을 함께 고쳐야 한다.
+       ⚠ og:image 는 절대 주소여야 한다. 상대 경로면 카카오톡 · 네이버가 못 읽어
+         공유 카드에 이미지가 비어 나온다.
+       ⚠ 검색엔진 소유확인 메타태그(google-site-verification · naver-site-verification)는
+         **여기에 넣는다.** 발급받은 값이 없는 상태에서 빈 태그를 두지 말 것. -->
+  <link rel="canonical" href="https://mang9.github.io/bcity-homepage/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="B-CITY 춘천기업혁신파크" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:url" content="https://mang9.github.io/bcity-homepage/" />
+  <meta property="og:title" content="B-CITY · 춘천기업혁신파크" />
+  <meta property="og:description" content="서부개척 시대의 골드러시가 21세기 데이터 러시로. AI 데이터를 중심으로 한 새로운 기회의 도시가 춘천에 탄생합니다." />
+  <meta property="og:image" content="https://mang9.github.io/bcity-homepage/assets/still/hero.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- 검색 결과에 사업 주체 · 위치를 함께 보여 주기 위한 구조화 데이터.
+       ⚠ 여기 적는 값은 화면에 실제로 있는 것만 쓴다 — 화면에 없는 정보를 넣으면
+         구글이 스팸으로 판단한다(회사소개 페이지의 주소 · 전화와 같은 값이다). -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "바이오테크 이노밸리 PFV",
+    "alternateName": "B-CITY 춘천기업혁신파크",
+    "url": "https://mang9.github.io/bcity-homepage/",
+    "logo": "https://mang9.github.io/bcity-homepage/assets/favicon/icon-512.png",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "자양로 58, 태림빌딩 3층",
+      "addressLocality": "광진구",
+      "addressRegion": "서울특별시",
+      "addressCountry": "KR"
+    },
+    "telephone": "+82-70-4130-0423"
+  }
+  </script>
   <!-- 파비콘 — 원본 심볼은 assets/favicon/favicon.svg 이고 PNG·ICO 는 거기서 파생된다.
        SVG 를 먼저 두면 지원 브라우저는 그것만 쓴다(선명하고 4KB 미만).
        루트의 favicon.ico 는 <link> 와 무관하게 브라우저가 자동으로 요청하므로 함께 둔다. -->

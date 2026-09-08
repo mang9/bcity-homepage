@@ -1,0 +1,19 @@
+# B-CITY 춘천기업혁신파크 — https://mang9.github.io/bcity-homepage/
+#
+# ⚠ 이 파일은 손으로 관리한다(빌더가 만들지 않는다).
+#   도메인을 옮기면 아래 Sitemap 주소도 함께 고친다 —
+#   tools/build/pages.mjs 의 SITE_URL 과 **같은 값**이어야 한다.
+#
+# ⚠ 컨펌용 사이트(bcity-homepage-review)에는 이것과 **정반대**의 robots.txt 가 있다
+#   (Disallow: / — 색인 차단). tools/review-sync.sh 가 따로 만든다. 헷갈리지 말 것.
+
+User-agent: *
+Allow: /
+
+# 검색에 나올 필요가 없는 것
+Disallow: /admin/
+Disallow: /dev-states/
+Disallow: /tools/
+Disallow: /src/
+
+Sitemap: https://mang9.github.io/bcity-homepage/sitemap.xml
