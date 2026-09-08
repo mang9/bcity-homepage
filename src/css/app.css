@@ -206,7 +206,13 @@
       .m-caret { transition: transform .3s ease; }
 
       /* ===== 타이포 연출 ===== */
-      .hero-shadow { text-shadow: 0 2px 18px rgba(0,10,30,.5), 0 1px 3px rgba(0,10,30,.35); }
+      /* 히어로 영상 위 글자. ⚠ 아이브로우 · 제목 · 리드 **세 곳**이 함께 쓴다 —
+         한 곳만 바꾸려면 클래스를 나눠야 한다.
+       ⚠ 2026-09-08 에 진하게 했다(.5/.35 → .74/.56). 네 단계를 렌더해 눈으로 골랐다 —
+         .86/.68 은 글리프 뒤에 어두운 번짐이 보여 탈락했다.
+       ⚠ text-shadow 는 WCAG 대비 계산에 **들어가지 않는다.** 읽힘은 좋아지지만
+         대비 수치는 그대로다 — 대비는 색으로 확보해야 한다. */
+      .hero-shadow { text-shadow: 0 2px 22px rgba(0,10,30,.74), 0 1px 4px rgba(0,10,30,.56); }
       @keyframes heroUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
       .anim { opacity: 0; animation: heroUp .9s cubic-bezier(.22,1,.36,1) forwards; }
       .reveal { opacity: 0; transform: translateY(28px);
