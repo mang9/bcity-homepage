@@ -171,6 +171,41 @@ const SHOW_SAMPLES = process.env.SHOW_SAMPLES === '0' ? false
    ⚠ 뒤에 슬래시를 붙이지 않는다(경로를 그대로 이어 붙인다). */
 const SITE_URL = 'https://mang9.github.io/bcity-homepage';
 
+/* ── 색인 차단 스위치 ─────────────────────────────────────────────────
+   2026-09-08 지시로 켰다. 이 사이트(github.io)는 **미리보기**이고, 실제 공개 사이트는
+   개발자가 운영하는 `biotech-iv.com` 이다. 같은 프로젝트가 두 주소에 색인되면
+   어느 쪽이 대표가 될지 우리가 통제할 수 없으므로 이쪽을 검색에서 뺀다.
+
+   ⚠ robots.txt 로는 막을 수 없다 — 크롤러는 robots.txt 를 **원점 루트**에서만 읽고
+     `https://mang9.github.io/robots.txt` 는 404 다(우리 파일은 하위 경로에 있다).
+     그래서 **페이지마다 메타태그**를 넣는 것이 유일한 방법이다.
+
+   ⚠⚠ **콘텐츠를 `biotech-iv.com` 으로 넘길 때 이 값을 `false` 로 내려야 한다.**
+     안 내리면 이 `noindex` 가 소스와 함께 따라가 **진짜 사이트가 검색에서 사라진다.**
+     아래 SITE_URL 정합 검사가 그 실수를 잡지만, 검사를 지우지 말 것.
+   ⚠ 되돌리기는 이 한 줄이다. 그리고 index.html 의 같은 태그도 **함께** 지운다
+     (메인은 손글씨라 이 스위치가 닿지 않는다). */
+const NOINDEX = true;
+
+/* ⚠ 스위치와 도메인이 어긋나면 여기서 막는다.
+   github.io = 미리보기 → noindex 여야 하고, 그 밖의 도메인 = 실서비스 → 색인돼야 한다. */
+{
+  const isPreview = SITE_URL.includes('github.io');
+  if (isPreview && !NOINDEX) {
+    console.error('\n  ⚠ SITE_URL 이 github.io(미리보기)인데 NOINDEX 가 false 다.');
+    console.error('    미리보기가 색인되면 실서비스와 중복된다. NOINDEX = true 로 두거나');
+    console.error('    SITE_URL 을 실제 도메인으로 바꿔라.\n');
+    process.exit(1);
+  }
+  if (!isPreview && NOINDEX) {
+    console.error(`\n  ⚠ SITE_URL 이 실서비스 도메인(${SITE_URL})인데 NOINDEX 가 true 다.`);
+    console.error('    이대로 배포하면 **사이트 전체가 검색에서 빠진다.**');
+    console.error('    tools/build/pages.mjs 의 NOINDEX 를 false 로 내리고,');
+    console.error('    index.html 의 <meta name="robots" content="noindex"> 도 함께 지워라.\n');
+    process.exit(1);
+  }
+}
+
 /* 공유 카드에 쓰는 대표 이미지. 1200x630 이상이어야 카카오톡 · 페이스북이 큰 카드로 낸다. */
 const OG_IMAGE = 'assets/still/hero.jpg';
 
@@ -655,6 +690,9 @@ const banner = (srcFile) =>
 function seoBlock(slug, title, description) {
   const url = `${SITE_URL}/${slug}.html`;
   return [
+    /* ⚠ 색인 차단은 canonical **앞**에 둔다 — 순서가 동작을 바꾸지는 않지만,
+         사람이 소스를 열었을 때 가장 먼저 보이는 편이 안전하다(§ NOINDEX 주석). */
+    ...(NOINDEX ? [`  <meta name="robots" content="noindex" />`] : []),
     `  <link rel="canonical" href="${url}" />`,
     `  <meta property="og:type" content="website" />`,
     `  <meta property="og:site_name" content="B-CITY 춘천기업혁신파크" />`,
