@@ -279,8 +279,13 @@ const ICON = {
       + '<circle cx="11" cy="11" r="7"/><path d="M11 8.4v5.2M8.4 11h5.2M16.2 16.2 20 20"/></svg>',
 };
 
+/* ⚠ alt 를 비우지 않는다. 이 이미지들은 장식이 아니라 **콘텐츠 자체**다 —
+     갤러리 사진 · 영상 포스터 · 발행물 표지가 그 목록의 본체이고, alt 가 비면
+     구글 · 네이버 **이미지 검색에서 통째로 빠진다**(2026-09-08 감사에서 17장 확인).
+   ⚠ 데이터의 title 을 그대로 쓴다. 따로 문구를 만들면 제목을 고칠 때 alt 만 낡는다.
+   ⚠ 화면에는 아무 변화가 없다 — alt 는 이미지가 못 뜰 때만 보인다. */
 const thumbOf = (r) => r.image
-  ? `<img src="${esc(r.image)}" alt="" loading="lazy" decoding="async" />`
+  ? `<img src="${esc(r.image)}" alt="${esc(r.title || '')}" loading="lazy" decoding="async" />`
   : '<span class="pr-noimg">이미지 준비 중</span>';
 
 /** 갤러리(이미지 확대) · 홍보영상(재생) — 둘 다 **화면 안에서** 연다.
@@ -322,7 +327,8 @@ function renderCards(rows, kind) {
  *  목록 전체가 미완성으로 보인다. 그래서 로고를 얹은 표지를 만들어 자리표시가 아니라
  *  **기본 표지**로 쓴다(사용자 지시 2026-08-10). 왼쪽 세로 띠는 제본 등(spine) 느낌이다. */
 function pubCover(r) {
-  if (r.image) return `<img src="${esc(r.image)}" alt="" loading="lazy" decoding="async" />`;
+  // alt 는 thumbOf 와 같은 이유로 제목을 쓴다(표지는 발행물의 본체다).
+  if (r.image) return `<img src="${esc(r.image)}" alt="${esc(r.title || '')} 표지" loading="lazy" decoding="async" />`;
   /* 로고를 **원톤**으로 바꿔 넣는다. 원본은 워드마크(currentColor) + 민트·블루 심볼의
      3색인데, 표지 위에서는 심볼만 튀어 로고가 아니라 스티커처럼 보인다.
      색 지정을 전부 currentColor 로 바꾸면 CSS 의 color 하나로 톤을 잡을 수 있다. */
