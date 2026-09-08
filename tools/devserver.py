@@ -19,9 +19,12 @@
 
   python3 tools/devserver.py 8893 /Users/lyj/bcity-homepage
 """
+import os
+import posixpath
 import sys
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import unquote
 
 NO_STORE = ('.html', '.json', '.webmanifest')
 
@@ -34,6 +37,38 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_header('Pragma', 'no-cache')
             self.send_header('Expires', '0')
         super().end_headers()
+
+    # ── 404 를 우리 `404.html` 로 내준다 (2026-09-08) ─────────────────────
+    #  왜: `http.server` 기본 404 는 텍스트 한 줄이라 **404 페이지를 로컬에서 확인할 수
+    #  없었다.** GitHub Pages 는 루트의 `404.html` 을 자동으로 쓰고 nginx 는
+    #  `error_page 404 /404.html;` 로 같은 동작을 하므로, 로컬도 그렇게 맞춘다.
+    #
+    #  ⚠ 요청 경로에서 **위로 올라가며** 찾는다. 서버 루트가 저장소일 때(`/a/b/c` →
+    #    `/404.html`)와 GitHub Pages 구조를 흉내낼 때(`/bcity-homepage/a/b` →
+    #    `/bcity-homepage/404.html`) 양쪽이 같은 코드로 처리된다.
+    #  ⚠ 상태코드는 **404 를 유지한다.** 200 으로 바꾸면 실제 서버의 소프트 404 문제를
+    #    로컬에서 재현하지 못한다(HANDOFF §10.12).
+    def send_error(self, code, message=None, explain=None):
+        if code != 404:
+            return super().send_error(code, message, explain)
+
+        rel = unquote(self.path.split('?', 1)[0].split('#', 1)[0])
+        parts = [p for p in posixpath.normpath(rel).split('/') if p and p != '..']
+        root = self.directory
+        # 요청 경로의 디렉터리부터 루트까지 훑는다
+        for i in range(len(parts), -1, -1):
+            cand = os.path.join(root, *parts[:i], '404.html')
+            if os.path.isfile(cand):
+                with open(cand, 'rb') as f:
+                    body = f.read()
+                self.send_response(404, message)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                if self.command != 'HEAD':
+                    self.wfile.write(body)
+                return
+        super().send_error(code, message, explain)
 
     def log_message(self, fmt, *args):          # 404 만 남긴다 — 200 로그는 소음이다
         if args and str(args[1]).startswith(('4', '5')):

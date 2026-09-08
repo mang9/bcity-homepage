@@ -1,0 +1,158 @@
+/* ===== 404 — 요청한 주소가 없을 때 =====
+   2026-09-08 신설. 개발자 서버가 없는 경로를 **외부 도메인(errdoc.gabia.net)으로 302**
+   하고 있어서(HANDOFF §10.9-1) 그 자리를 대신할 자기 도메인 404 가 필요했다.
+
+   ⚠⚠ 이 페이지는 **어느 깊이에서든** 서비스된다(`/a/b/c` 요청에도 이 파일이 나온다).
+     그래서 상대 경로가 전부 깨진다 — 자산 · 링크 주소는 빌더(`build404()`)가
+     **루트 상대**로 바꿔 넣고, 남아 있으면 빌드를 죽인다. CSS 안에서 `url()` 을
+     쓸 때도 같은 함정이 있으니 **여기에 이미지를 쓰지 말 것.**
+
+   ⚠ 히어로가 없다(`no-hero`). 오류 화면에서 큰 이미지를 받게 하지 않는다 —
+     사용자는 여기 머물 생각이 없고, 느린 회선에서 오류 페이지가 무거우면 이탈한다.
+
+   ── 시각 구성 (2026-09-08 지시로 두 번 바뀐 자리다) ──────────────────
+   처음에는 아이브로우 한 줄(`404 · NOT FOUND`)만 뒀는데 "너무 밋밋하다" 는 지적을 받았고,
+   네 안을 렌더해 비교한 뒤 **큰 숫자 `4 ◆ 4`(0 자리에 브랜드 심볼)** 로 정했다.
+   그다음 "꽉 찬 색 말고 얇은 라인" · "컬러는 프라이머리 한 톤" 으로 정리됐다.
+
+   즉 지금 이 화면의 시각 요소는 **프라이머리 한 톤의 얇은 윤곽선 `4 ◆ 4`** 하나다.
+   ⚠ 아이브로우는 없다 — 숫자가 그 역할을 하므로 두면 `404` 가 두 번 나온다. */
+
+.nf {
+  /* GNB(고정 64px)를 뺀 나머지를 채워 푸터가 화면 아래에 자연스럽게 오게 한다.
+     ⚠ `vh` 가 아니라 `svh` 다 — 모바일 주소창이 접힐 때 높이가 튀지 않는다. */
+  min-height: calc(100svh - var(--gnb-h));
+  display: flex;
+  align-items: center;
+  padding-block: clamp(56px, 8vw, 120px);
+}
+
+.nf-in { width: 100%; text-align: center; }
+
+/* ── 큰 숫자 `4 ◆ 4` ─────────────────────────────────────────────────
+   이 화면의 시각 요소다. 0 자리에 브랜드 심볼이 들어간다(빌더의 symbolSvg).
+
+   ⚠⚠ **크기는 이 한 줄(`font-size`)이 정한다.** 심볼은 `em` 으로 따라오므로
+     여기만 고치면 숫자와 심볼이 같은 비율로 함께 커진다. 심볼에 px 를 주면
+     글자 크기를 바꿀 때 둘의 비례가 깨진다.
+   ⚠ 서체는 `--font-display`(Paperlogy)다. 본문 서체로 두면 숫자가 가늘어
+     이 크기에서 존재감이 사라진다.
+   ⚠ `line-height: 1` 이 필요하다 — 기본 행간이면 숫자 위아래에 큰 빈칸이 생긴다. */
+.nf-num {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 0.9vw, 14px);
+  font-family: var(--font-display);
+  font-weight: 700;
+  /* ⚠ 두 끝점 **84px · 128px 은 DESIGN.md 의 `scale` 에 이미 있는 단계**다(§1.2 census).
+       처음 132px 로 잡았다가 훅이 램프 밖으로 잡아 128 로 내렸다 — 4px 차이는 이 크기에서
+       눈에 띄지 않고, 새 단계를 만들면 census 가 어긋나 `design-system-font-size` 경고가
+       소음이 된다. **다른 값으로 바꿀 때도 그 표(80·82·84·96·116·128)에서 고를 것.** */
+  font-size: clamp(84px, 9vw, 128px);
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--color-primary);
+}
+
+/* ── 숫자를 얇은 윤곽선으로 ───────────────────────────────────────────
+   2026-09-08 지시("꽉 찬 색 말고 라인으로 · 얇게").
+
+   ⚠⚠ `@supports` 로 감싼다. `-webkit-text-stroke` 를 모르는 브라우저에서 위의
+     `color` 만 `transparent` 가 되면 **숫자가 통째로 사라진다.** 감싸 두면 그런
+     환경에서는 면으로 채워진 숫자가 그대로 보인다(기능 저하가 아니라 후퇴).
+   ⚠ 굵기 `1.5px` 은 빌더(`symbolSvg` 의 `SW`)와 **같아야 한다.** 심볼도 화면 px 로
+     고정돼 있어서, 한쪽만 바꾸면 숫자와 심볼의 선 굵기가 어긋난다.
+   ⚠ px 로 두는 이유 — `em` 으로 두면 글자 크기에 따라 굵기가 달라지는데 심볼 쪽은
+     `non-scaling-stroke` 라 안 따라온다. 둘을 항상 같게 두는 편이 중요하다. */
+@supports (-webkit-text-stroke: 1px currentColor) {
+  .nf-num {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-primary);
+  }
+}
+
+/* 심볼 = 0 자리. 높이를 숫자 글자 크기에 비례시켜 캡 높이와 맞춘다.
+   ⚠ `0.78em` 은 실측으로 고른 값이다 — Paperlogy 의 캡 높이가 약 0.72em 이고,
+     `0` 은 원래 숫자보다 위아래로 조금 넘치므로(오버슛) 그만큼 크게 잡았다.
+     서체를 바꾸면 다시 재라.
+   ⚠ `width: auto` 로 두어 원본 비율(308:332)을 지킨다. */
+.nf-sym {
+  display: block;
+  height: .78em;
+  width: auto;
+  flex: none;
+  /* ⚠⚠ **이 줄을 지우면 심볼이 사라진다.** 심볼의 선은 `currentColor` 인데
+       부모 `.nf-num` 이 숫자를 윤곽선으로 만들려고 `color: transparent` 이기 때문이다.
+       여기서 색을 다시 세워야 한다.
+     ⚠ 프라이머리 한 톤이다(2026-09-08 지시) — 숫자와 같은 색이라 하나의 기호로 읽힌다.
+       브랜드 원색으로 되돌리려면 두 패스에 각각 색을 줘야 하므로 빌더를 고쳐야 한다. */
+  color: var(--color-primary);
+}
+
+/* 숫자 ↔ 제목 간격.
+   ⚠ 숫자 상자에는 글리프 위아래로 **빈 공간이 이미 있다**(행 상자가 글자보다 크다 —
+     실측 128px 글자의 칸 높이가 151px 이라 위아래로 각 11px 남는다). 그래서 여기 값은
+     **눈에 보이는 간격보다 크게 잡히므로**, 좁힐 때 이 여유를 감안한다.
+   ⚠ 2026-09-08 지시로 `clamp(26px, 2.8vw, 40px)` 에서 좁혔다. 한 번 `clamp(8px, 1vw, 16px)`
+     까지 내렸는데 **보이는 간격이 3~8px 로 거의 붙었다**(모바일 3px) — 아래 값이
+     여섯 폭에서 고르게 10~12px 이 되도록 다시 잡은 것이다.
+   ⚠ 값을 바꾸면 **margin 이 아니라 '보이는 간격' 을 재라.** 둘은 약 5~8px 차이가 난다
+     (글리프가 행 상자 밑변까지 닿지 않는다). Range 로 재야 정확하다. */
+.nf-num + .nf-h { margin-top: clamp(15px, 1.3vw, 20px); }
+
+/* ⚠ 아이브로우(`.nf-code`)를 걷었다 — 큰 숫자가 그 역할을 하므로 `404` 가 두 번 나왔다.
+     되살릴 일이 있으면 **`justify-content: center` 를 반드시 함께 준다.**
+     `.eyebrow` 는 `display: flex` 라 부모의 `text-align: center` 를 받지 않고,
+     빼면 그 한 줄만 왼쪽에 붙는다(2026-09-08 에 실제로 그렇게 나왔다).
+   ⚠ `lint-classes` 는 마크업 → CSS 방향만 본다 — 마크업을 지워도 CSS 는 남으므로
+     이렇게 손으로 확인해야 한다(§11.40). */
+
+/* ⚠ 제목의 위 간격은 위의 `.nf-num + .nf-h` 가 정한다. 여기에 또 두면 특이도가 낮아
+     항상 지고, 값이 두 곳으로 갈라져 어느 쪽이 먹는지 헷갈린다 — 두지 않는다. */
+
+.nf-d {
+  margin: 18px auto 0;
+  /* ⚠⚠ 이 상한은 **둘째 문장의 실측 폭**에서 나왔다. 마크업이 `<br />` 로 문장마다
+       줄을 끊는데, 상한이 그보다 좁으면 둘째 문장이 또 접혀 세 줄이 된다.
+       실측(자연 폭): 18px 에서 342 / **502**px · 15px 에서 285 / **418**px.
+       `ch` 는 글자 크기에 비례하므로 한 값이 전 구간을 덮는다 —
+       58ch = 18px 에서 약 522px · 15px 에서 약 435px 로 둘 다 여유가 있다.
+     ⚠ 카피를 고치면 이 값을 **다시 재라.** 글자 수가 곧 폭이다.
+     ⚠ 390px 에서는 컨테이너(350px)가 이겨 세 줄이 된다 — 폭이 모자라서이며 정상이다. */
+  max-width: 58ch;
+  /* ⚠ `word-break: keep-all` 이 있어야 한글이 어절 중간에서 끊기지 않는다. */
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.nf-acts { margin-top: clamp(26px, 3vw, 40px); }
+
+/* 메인으로 — 이 화면의 유일한 주행동이라 면을 채운다. */
+.nf-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 26px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .18s ease;
+}
+.nf-home:hover { background: var(--color-primary-hover); }
+.nf-home svg { width: 17px; height: 17px; flex: none; }
+
+/* ⚠ 전체 메뉴 미니 사이트맵을 두지 않는다(2026-09-08 지시). 상단 GNB 가 호버로 하위
+     18개를 전부 펼치고 모바일은 햄버거로 같은 목록이 열린다 — 같은 것을 두 번 두면서
+     화면만 1,000px 늘어났다. `.nf-map`/`.nf-map-t`/`.nf-grid`/`.nf-card`/`.nf-no`/
+     `.nf-cat`/`.nf-links` 규칙 일곱 벌과 미디어쿼리 두 줄을 함께 걷었다.
+     ⚠ `lint-classes` 는 **마크업 → CSS 방향만** 본다. 마크업을 지워도 CSS 는 남으므로
+       이렇게 손으로 확인해야 한다(§11.40). */
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-home { transition: none; }
+}

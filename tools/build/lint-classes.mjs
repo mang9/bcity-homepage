@@ -127,6 +127,13 @@ function usedIn(slug) {
   return harvest(html, new Map());
 }
 
+/** `_` 로 시작하는 소스 중 **산출물이 있는 것**만 검사한다.
+ *  ⚠ `_detail-*` 은 상세 페이지 템플릿, `_404.html` 은 `build404()` 가 만드는 오류 페이지다.
+ *    `_contact.html` 처럼 숨긴 페이지는 루트에 산출물이 없어 읽다가 ENOENT 로 죽는다.
+ *  ⚠⚠ 여기서 빠뜨리면 그 페이지의 클래스가 **검사되지 않는다.** 404 를 처음 만들 때
+ *    실제로 빠져 있었고, 그러면 `.nf-card` 를 오타 내도 아무도 잡지 못한다(§11.11 의 목적). */
+const LINT_UNDERSCORE = /^_(detail-|404\.html$)/;
+
 /** 페이지 front-matter 에서 CSS 번들과 검사 대상 slug 목록을 읽는다.
  *  일반 페이지는 slug 하나, 상세 템플릿(_detail-*)은 그 접두어로 생성된 파일 전부다. */
 function bundleOf(file) {
@@ -150,7 +157,7 @@ const deadPerFile = new Map();
      `_detail-` 만 템플릿이고, 나머지(`_contact.html` 처럼 숨긴 페이지)는 산출물이
      없으므로 검사 대상이 아니다 — 안 거르면 루트에 없는 HTML 을 읽다 ENOENT 로 죽는다. */
 for (const file of readdirSync(join(SUB, 'pages'))
-  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || f.startsWith('_detail-')))
+  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || LINT_UNDERSCORE.test(f)))
   .sort()) {
   const { slugs, files } = bundleOf(file);
   const def = definedIn(files);
@@ -174,7 +181,7 @@ for (const file of readdirSync(join(SUB, 'pages'))
 // 전역 사용 집합 = 마크업 + JS 가 만들어 내는 것
 const allUsed = new Set(jsClasses.keys());
 for (const file of readdirSync(join(SUB, 'pages'))
-  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || f.startsWith('_detail-')))) {
+  .filter((f) => f.endsWith('.html') && (!f.startsWith('_') || LINT_UNDERSCORE.test(f)))) {
   for (const slug of bundleOf(file).slugs) {
     for (const c of usedIn(slug).keys()) allUsed.add(c);
   }

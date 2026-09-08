@@ -88,8 +88,10 @@ function parsePage(src, file) {
   let fm;
   try { fm = JSON.parse(m[1]); } catch (e) { throw new Error(`${file}: front-matter JSON 오류 — ${e.message}`); }
   /* ⚠ `heroImg` 는 여기서 검사하지 않는다 — 히어로가 없는 카테고리(nav.json 의
-       `hero: false`)는 아예 두지 않기 때문이다. 카테고리를 아는 자리에서 검사한다. */
-  for (const k of ['slug', 'title', 'description', 'nav', 'h1']) {
+       `hero: false`)는 아예 두지 않기 때문이다. 카테고리를 아는 자리에서 검사한다.
+     ⚠ `nav` 도 목록에서 뺐다 — 404 는 `nav.json` 의 어느 카테고리에도 속하지 않는다
+       (`build404()`). 값이 없으면 `locate()` 가 부르는 자리에서 죽으므로 안전하다. */
+  for (const k of ['slug', 'title', 'description', 'h1']) {
     if (!fm[k]) throw new Error(`${file}: front-matter 에 ${k} 가 없다`);
   }
   return { fm, body: src.slice(m[0].length).replace(/\s*$/, '') };
@@ -802,6 +804,119 @@ function buildDetails(file) {
   return out;
 }
 
+/* ── 404 ──────────────────────────────────────────────────────────────
+   소스는 `pages/_404.html` 이고 일반 목록에서 빠져 있다(`_` 접두어). 따로 만드는 이유:
+     ① `nav.json` 의 카테고리에 속하지 않는다 → LNB · 브레드크럼 · `is-on` 이 없다
+     ② **사이트맵에 넣어서는 안 된다** — 오류 페이지를 색인 후보로 제출하는 셈이다
+        (`jobs` 에 넣으면 자동으로 실린다. 그래서 이 산출물은 `jobs` 밖에 둔다)
+     ③ 자산 · 링크 주소를 **루트 상대로 바꿔야** 한다 — 아래 이유가 이 함수의 핵심이다
+
+   ⚠⚠ 404 는 **요청된 주소 그대로의 URL 에서** 그려진다. `/a/b/c` 를 요청하면 브라우저
+     주소는 `/a/b/c` 이고, 이 파일 안의 `assets/…` 는 `/a/b/assets/…` 로 풀린다 —
+     폰트 · 파비콘 · 메뉴 링크가 전부 깨진다. 그래서 상대 주소를 전부 루트 상대로 바꾸고,
+     **하나라도 남으면 빌드를 죽인다.** 접두어는 `SITE_URL` 의 경로에서 나오므로
+     도메인을 옮기면 자동으로 따라온다(github.io 는 `/bcity-homepage/`, 실도메인은 `/`).
+
+   ⚠ 404 는 **404 상태코드와 함께** 나가야 한다. 파일만 있으면 안 된다.
+     GitHub Pages 는 루트의 `404.html` 을 자동으로 그렇게 쓴다.
+     nginx 는 `error_page 404 /404.html;` 이 필요하다. 200 으로 나가면 구글이
+     **소프트 404** 로 쌓는다(HANDOFF §10.12). */
+/* ── 404 의 심볼 아이콘 ────────────────────────────────────────────────
+   큰 숫자 `4 ◆ 4` 에서 **0 자리에 브랜드 심볼**을 넣는다(2026-09-08 사용자 선택 A안).
+   숫자가 화면의 시각 요소가 되어 오류임이 즉시 읽히고, 심볼은 **원형 그대로** 쓰여
+   브랜드가 훼손되지 않는다.
+
+   ⚠ 처음에는 심볼을 맞물림 축으로 **벌려 놓는** 안(연결이 끊긴 core)을 만들었다.
+     의미는 성립했지만 "썩 마음에 들지 않는다" 는 판단으로 폐기했다. 네 안을 렌더해
+     비교한 결과다 — 되살릴 일이 있으면 그때의 실측값을 여기 남겨 둔다:
+       맞물림 축 (116.67, 110.5) · 결합 bbox (557.22, 44.29, 308.04, 332.06)
+       벌림 34 · 점선 `stroke-width 11` + `stroke-dasharray "0.01 26"` + `linecap round`
+
+   ⚠ 패스를 페이지에 복사하지 않고 **`assets/brand/symbol.svg` 에서 읽는다.** 로고가
+     바뀌면 그 파일만 다시 뽑으면 아이콘도 따라온다(§11.21 이 그 절차를 적어 뒀다).
+   ⚠ 숫자와 심볼 **모두 얇은 라인**이고 **색은 프라이머리 한 톤**이다(2026-09-08 지시).
+     한때 심볼만 브랜드 원색(민트 · 애저)으로 뒀는데 "프라이머리 한톤으로 맞춰줘" 로
+     정리됐다 — 숫자와 심볼이 하나의 기호로 읽힌다.
+     되살릴 일이 있으면 `--color-mint` · `--brand-azure` 다(§11.21 · UI 의
+     `--color-label-blue` 와 다른 색이다).
+   ⚠ 크기는 CSS 가 `em` 으로 정한다 — 숫자 글자 크기 하나로 함께 커진다(page-404.css). */
+function symbolSvg() {
+  const src = readFileSync(join(ROOT, 'assets', 'brand', 'symbol.svg'), 'utf8');
+  const paths = [...src.matchAll(/<path\s+d="([^"]+)"/g)].map((m) => m[1]);
+  if (paths.length !== 2) {
+    throw new Error(`assets/brand/symbol.svg 의 패스가 2개가 아니다(${paths.length}개) — `
+      + '심볼 구조가 바뀌었다. tools/build/pages.mjs 의 symbolSvg() 를 다시 맞춰라.');
+  }
+  const vb = (src.match(/viewBox="([^"]+)"/) || [])[1];
+  if (!vb) throw new Error('assets/brand/symbol.svg 에 viewBox 가 없다');
+
+  /* ⚠⚠ **굵기는 화면 px 로 고정한다** — `vector-effect="non-scaling-stroke"` 가 있어야
+       `stroke-width` 가 viewBox 배율과 무관하게 화면 px 이 된다. 없으면 심볼이 작아질 때
+       선도 함께 얇아져 **숫자 윤곽선과 굵기가 어긋난다**(숫자는 CSS px 고정이다).
+     ⚠ 이 값 `1.5` 는 `page-404.css` 의 `-webkit-text-stroke` 와 **같아야 한다.**
+       둘이 다르면 한쪽만 두꺼워 보인다 — 고칠 때 함께 고친다.
+     ⚠ `stroke-linejoin: round` — 심볼에 날카로운 꼭짓점이 있어 miter 로 두면 뾰족하게 튄다.
+
+     ⚠⚠ 색은 `currentColor` 다 — **`page-404.css` 의 `.nf-sym { color }` 가 정한다**(§5 관행).
+       여기에 색을 박으면 CSS 와 두 곳으로 갈라진다.
+     ⚠⚠ 그런데 부모 `.nf-num` 은 `color: transparent` 다(숫자를 윤곽선으로 만들려고).
+       그래서 **`.nf-sym` 에서 `color` 를 다시 세워야 한다** — 안 세우면 심볼이
+       투명을 상속해 **통째로 사라진다.** 그 규칙을 지우지 말 것. */
+  const SW = 1.5;
+  const line = (d) => `<path d="${d}" stroke="currentColor" stroke-width="${SW}"`
+    + ' vector-effect="non-scaling-stroke" stroke-linejoin="round" />';
+
+  return `<svg class="nf-sym" viewBox="${vb}" fill="none" aria-hidden="true"`
+    + ` xmlns="http://www.w3.org/2000/svg">${line(paths[0])}${line(paths[1])}</svg>`;
+}
+
+function build404() {
+  const file = '_404.html';
+  const { fm, body } = parsePage(read(SUB, 'pages', file), file);
+
+  /* nav.json 의 어느 카테고리도 아니다 → 빈 카테고리를 준다.
+     `navBits` 는 이걸로 GNB · 모바일 메뉴 · 푸터를 정상으로 만들고, LNB 만 비운다
+     (`cat.items` 가 빈 배열이라 `lnbItems` 가 ''). */
+  const cat = { key: '', label: '', no: '', en: '', items: [], hero: false };
+
+  /* ⚠ 미니 사이트맵을 만들지 않는다(2026-09-08 지시). 상단 GNB 가 호버로 하위 18개를
+       전부 펼치고 모바일은 햄버거로 같은 목록이 열린다 — 같은 것을 두 번 두는 셈이었다.
+       되살릴 일이 있으면 `nav.categories` 를 `.nf-card` 로 도는 생성기를 여기 다시 만들고
+       (`menu: false` 인 회사소개는 GNB 와 같은 기준으로 제외), CSS 도 함께 되살린다. */
+  const heroCtx = { ...navBits(cat, ''), hero: '', bodyAttr: ' class="no-hero"' };
+
+  let html = banner(file) + render(layout, {
+    title: esc(fm.title),
+    description: esc(fm.description),
+    /* ⚠ canonical · Open Graph 를 넣지 않는다. 오류 페이지는 정본이 아니고 공유 대상도
+         아니다. `noindex` 는 **항상** 넣는다 — 서버가 실수로 200 을 내보내도 색인되지 않게. */
+    seo: '  <meta name="robots" content="noindex" />',
+    css: cssBundle(fm), js: jsBundle(fm),
+    main: body.replace('{{symbol}}', () => symbolSvg()),
+    ...heroCtx,
+  });
+
+  /* ── 루트 상대로 고치기 ─────────────────────────────────────────────
+     ⚠ 이 접두어는 `SITE_URL` 에서 나온다. 도메인을 옮길 때 여기를 따로 고치지 않는다. */
+  const base = new URL(SITE_URL).pathname.replace(/\/+$/, '') + '/';
+  const ABS = /^(?:[a-z][a-z0-9+.-]*:|\/\/|\/|#)/i;   // 절대 · 프로토콜 · 루트 · 앵커
+  html = html.replace(/\s(href|src|srcset)="([^"]*)"/g,
+    (m, attr, val) => (ABS.test(val) || val === '') ? m : ` ${attr}="${base}${val}"`);
+
+  /* ⚠ 남은 상대 주소가 있으면 여기서 죽는다. 조용히 통과시키면 배포 후에야
+       "404 페이지에서 폰트와 메뉴가 깨진다" 로 발견된다. */
+  const left = [...html.matchAll(/\s(?:href|src|srcset)="([^"]*)"/g)]
+    .map((m) => m[1]).filter((v) => v && !ABS.test(v));
+  const cssUrls = [...html.matchAll(/url\(\s*['"]?([^'")]+)/g)]
+    .map((m) => m[1]).filter((v) => !ABS.test(v) && !v.startsWith('data:'));
+  if (left.length || cssUrls.length) {
+    throw new Error('404.html 에 상대 주소가 남았다 — 404 는 어느 깊이에서든 그려지므로 깨진다:\n  '
+      + [...left, ...cssUrls].join('\n  '));
+  }
+
+  return { out: join(ROOT, '404.html'), html, slug: '404' };
+}
+
 const files = readdirSync(join(SUB, 'pages'))
   .filter((f) => f.endsWith('.html') && !f.startsWith('_')).sort();
 const detailTemplates = readdirSync(join(SUB, 'pages'))
@@ -822,7 +937,12 @@ for (const t of detailTemplates) jobs.push(...buildDetails(t));
    선두에 생성물 배너가 있는 파일. 손으로 만든 파일은 배너가 없어 절대 지워지지 않는다. */
 const detailPrefixes = [...new Set(detailTemplates
   .map((t) => JSON.parse(read(SUB, 'pages', t).match(/^<!--build\s*([\s\S]*?)-->/)[1]).slugPrefix))];
-const wanted = new Set(jobs.map((j) => basename(j.out)));
+/* ⚠ 404 는 `jobs` **밖**에 둔다 — `jobs` 는 사이트맵의 목록이기도 해서, 넣으면
+     오류 페이지가 검색엔진에 제출된다. 대신 아래 `wanted`(고아 검사)와 쓰기 루프에는
+     반드시 넣어야 한다. 빠뜨리면 고아 검사가 404.html 을 "이번 빌드가 만들지 않은
+     생성물" 로 보고 **매번 지운다.** */
+const notFound = build404();
+const wanted = new Set([...jobs, notFound].map((j) => basename(j.out)));
 /* ⚠ 상세 페이지만 보면 안 된다. 2026-08-24 에 투자·입주 세 페이지를 한 장으로 합쳤을 때
      옛 `land.html` · `zone-benefit.html` · `benefit.html` 이 접두어와 맞지 않아 검사에서
      빠졌고, 그대로 두면 **목록에는 없는데 URL 로는 열리는 페이지**가 영구히 남는다.
@@ -863,7 +983,7 @@ if (!CHECK && !SHOW_SAMPLES) {
   console.log(`  → sitemap.xml (${urls.length}쪽)`);
 }
 
-for (const { out, html, slug } of jobs) {
+for (const { out, html, slug } of [...jobs, notFound]) {
   const prev = existsSync(out) ? readFileSync(out, 'utf8') : null;
   if (CHECK) {
     if (prev !== html) { stale++; console.log(`  ✗ ${slug}.html 이 소스와 다르다`); }
