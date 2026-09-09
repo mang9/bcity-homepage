@@ -2338,8 +2338,15 @@
                         <caption class="sr-only">첨단 바이오 클러스터 구역별 면적</caption>
                         <thead><tr><th scope="col">구역</th><th scope="col">㎡</th><th scope="col">평</th></tr></thead>
                         <tbody>
-                          <tr><th scope="row">HT1+HT2</th><td class="is-num">241,327</td><td class="is-num">73,002</td></tr>
-                          <tr><th scope="row">HT3</th><td class="is-num">29,583</td><td class="is-num">8,949</td></tr>
+                          <!-- ⚠ 평은 이 표의 다른 행·다른 권역과 같이 **정수**로 적는다.
+                               받은 원값에 소수가 있어도 반올림한다 — 한 행만 소수를 쓰면
+                               같은 열에서 표기가 갈린다.
+                             ⚠ 행의 합이 합계 행과 ㎡ · 평 **양쪽 다** 맞아야 한다.
+                               면적을 고칠 때마다 검산할 것(평 = ㎡ ÷ 3.305785).
+                             ⚠ 개요의 「구성 · 총 N개 구역」과 이 표의 행 수가 어긋나면
+                               한쪽이 낡은 것이다. 경위는 CLAUDE.md §11.93. -->
+                          <tr><th scope="row">HT1</th><td class="is-num">153,674</td><td class="is-num">46,486</td></tr>
+                          <tr><th scope="row">HT2</th><td class="is-num">117,236</td><td class="is-num">35,464</td></tr>
                           <tr class="is-sum"><th scope="row">합계</th><td class="is-num">270,910</td><td class="is-num">81,950</td></tr>
                         </tbody>
                       </table>
