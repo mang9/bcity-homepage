@@ -208,10 +208,29 @@ const NOINDEX = true;
   }
 }
 
-/* 공유 카드에 쓰는 대표 이미지. 1200x630 이상이어야 카카오톡 · 페이스북이 큰 카드로 낸다. */
-const OG_IMAGE = 'assets/still/hero.jpg';
+/* 공유 카드에 쓰는 대표 이미지 — **정사각 로고 150x150**(2026-09-09 지시).
+   ⚠ 세 값은 한 벌이다. 파일을 바꾸면 치수도 함께 고쳐라 — 실제 치수와 어긋나면
+     카카오톡 · 페이스북이 첫 공유에서 잘못된 비율로 자리를 잡는다.
+   ⚠ 치수가 정사각이 아니게 되면 `seoBlock` 의 `twitter:card` 도 함께 봐야 한다
+     (정사각은 `summary`, 1200x630 급 가로 이미지는 `summary_large_image`).
+   ⚠ 카카오톡 · 페이스북은 200x200 미만을 무시한다. 공유 카드에 이미지가 안 나오면
+     같은 그림의 `assets/og/og-logo-300.png`(300x300)으로 세 값을 바꾼다.
+   ⚠ **`index.html` 은 이 상수를 쓰지 않는다**(손글씨다) — 함께 고칠 것. */
+const OG_IMAGE = 'assets/og/og-logo.png';
+const OG_IMAGE_W = 150;
+const OG_IMAGE_H = 150;
+
+/* 페이지 설명(meta description · og:description)의 상한.
+   2026-09-09 네이버 서치어드바이저 보완 요청으로 **80자**로 정했다 — 그 길이에서
+   검색 결과 설명이 잘리지 않는다. 넘으면 빌드를 죽인다(§11.94). */
+const DESC_MAX = 80;
 
 const SAMPLE_WARNINGS = [];
+
+/* 상세 페이지 설명이 DESC_MAX 를 넘었을 때 모아 두는 곳.
+   ⚠ SAMPLE_WARNINGS 에 섞지 말 것 — 그 배열은 "샘플 데이터가 노출 상태다" 라는
+     한 문장으로 합쳐 출력되고, `startsWith(kind + ':')` 로 중복을 거른다. */
+const DESC_WARNINGS = [];
 
 function loadContent(kind) {
   const file = join(SUB, 'data', kind + '.json');
@@ -689,8 +708,17 @@ const banner = (srcFile) =>
      공유 카드에 이미지가 비어 나온다.
    ⚠ og:description 을 따로 쓰지 않고 meta description 을 그대로 쓴다 —
      두 벌이 되면 한쪽만 고쳐져 검색 결과와 공유 카드의 문구가 갈라진다. */
-function seoBlock(slug, title, description) {
+/* @param {boolean} soft 콘텐츠 데이터에서 온 설명(상세 페이지)이면 true — 죽이지 않고 경고만 한다.
+     ⚠ 손으로 쓴 페이지는 죽인다. 그게 이 검사의 목적이다(길이는 내가 통제할 수 있다).
+       상세 페이지의 설명은 JSON 의 `summary` 라 편집자가 나중에 넣는 값이고,
+       그걸로 빌드를 막으면 글 하나 때문에 사이트 전체가 안 만들어진다. */
+function seoBlock(slug, title, description, soft = false) {
   const url = `${SITE_URL}/${slug}.html`;
+  if (description.length > DESC_MAX) {
+    const msg = `${slug}: 페이지 설명이 ${description.length}자다 — ${DESC_MAX}자 이내로 줄여라\n    ${description}`;
+    if (soft) DESC_WARNINGS.push(msg);
+    else throw new Error(msg);
+  }
   return [
     /* ⚠ 색인 차단은 canonical **앞**에 둔다 — 순서가 동작을 바꾸지는 않지만,
          사람이 소스를 열었을 때 가장 먼저 보이는 편이 안전하다(§ NOINDEX 주석). */
@@ -703,7 +731,12 @@ function seoBlock(slug, title, description) {
     `  <meta property="og:title" content="${title}" />`,
     `  <meta property="og:description" content="${description}" />`,
     `  <meta property="og:image" content="${SITE_URL}/${OG_IMAGE}" />`,
-    `  <meta name="twitter:card" content="summary_large_image" />`,
+    `  <meta property="og:image:width" content="${OG_IMAGE_W}" />`,
+    `  <meta property="og:image:height" content="${OG_IMAGE_H}" />`,
+    `  <meta property="og:image:alt" content="B-CITY 춘천기업혁신파크 로고" />`,
+    /* ⚠ 정사각 이미지는 `summary` 다. `summary_large_image` 로 두면 가로로 긴 자리에
+         작은 정사각이 들어가 카드가 비어 보인다 — OG_IMAGE 의 치수를 따라간다. */
+    `  <meta name="twitter:card" content="${OG_IMAGE_W === OG_IMAGE_H ? 'summary' : 'summary_large_image'}" />`,
   ].join('\n');
 }
 
@@ -794,7 +827,7 @@ function buildDetails(file) {
     const slug = detailPath(fm.slugPrefix, r.id).replace(/\.html$/, '');
     const html = render(layout, {
       title: fill(fm.title), description: fill(fm.description),
-      seo: seoBlock(slug, fill(fm.title), fill(fm.description)),
+      seo: seoBlock(slug, fill(fm.title), fill(fm.description), true),
       css: cssBundle(fm), js: jsBundle(fm),
       main: render(body, ctx, 1),
       ...dHeroCtx,
@@ -1035,6 +1068,14 @@ if (CHECK) {
 }
 syncShared(true).forEach((f) => console.log(`  → ${f}`));
 console.log(`  서브페이지 ${jobs.length}개 빌드 완료 (목록 ${files.length} · 상세 ${jobs.length - files.length})`);
+
+if (DESC_WARNINGS.length) {
+  console.log('\n  ' + '='.repeat(66));
+  console.log(`  ⚠  상세 페이지 설명이 ${DESC_MAX}자를 넘었다 — 검색 결과에서 잘린다.`);
+  console.log('     src/sub/data/*.json 의 해당 글 `summary` 를 줄여라.');
+  DESC_WARNINGS.forEach((m) => console.log('     · ' + m));
+  console.log('  ' + '='.repeat(66));
+}
 
 if (SAMPLE_WARNINGS.length) {
   console.log('\n  ' + '='.repeat(66));
