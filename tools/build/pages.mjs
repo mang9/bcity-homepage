@@ -383,6 +383,36 @@ function renderCards(rows, kind) {
   }).join('\n') + '\n        </ul>';
 }
 
+/* 한 쪽에 담는 건수 — 목록 성격이 달라 값이 다르다.
+   ⚠ 카드형이 **12** 인 이유는 열 수의 공배수라서다. `.pr-cards` 는 2열(<768) ·
+     3열(768~1199) · 4열(1200~)로 접히는데, 12 는 2·3·4 로 모두 나뉘어
+     **어느 폭에서도 마지막 줄이 비지 않는다.** 10 이나 15 로 바꾸면 특정 폭에서
+     한 줄에 한두 장만 남아 목록이 끊긴 것처럼 보인다.
+   ⚠ 목록형(공지)은 행이 얇아 한 화면에 많이 들어가므로 언론보도와 같은 **10** 이다
+     (press-list.js 의 PER 과 같은 값 — 두 목록의 리듬을 맞춘다).
+   ⚠ 발행물(`pubs`)도 그리드라 12 를 쓴다.
+
+   ⚠⚠ **언론보도는 여기서 제외한다.** press-list.js 가 검색·분류와 한 덩이로
+     자기 페이저를 갖고 있어, 겹치면 page 상태가 둘이 된다. */
+const PER_PAGE = { rows: 10, cards: 12, pubs: 12 };
+const perPage = (list) => (list.kind === 'press' ? 0 : (PER_PAGE[list.layout] || 0));
+
+/** 목록을 페이저 컨테이너로 감싼다. 건수가 한 쪽에 들어가면 pager.js 가 페이저를
+ *  스스로 내리므로, **콘텐츠가 적은 동안은 아무것도 보이지 않는다.**
+ *  ⚠ 항목은 전부 렌더된 상태로 나간다 — JS 가 없으면 전부 보인다.
+ *  ⚠⚠ **0건이면 감싸지 않는다.** 감싸면 "등록된 게시물이 없습니다" 문단 하나를
+ *    `<div class="pg">` + `<nav aria-label="목록 페이지">` 가 둘러싸게 된다 —
+ *    낭독에 없는 목록의 페이지 내비게이션이 생기고, `pager.js` 는 `ul` 을 못 찾아
+ *    조용히 빠져나가므로 아무 기능도 하지 않는 껍데기만 남는다.
+ *    실제 콘텐츠가 0건인 지금 배포본이 그 상태였다(2026-09-10 발견). */
+function pagerWrap(inner, list, count) {
+  const per = perPage(list);
+  if (!per || !count) return inner;
+  return `        <div class="pg" data-per="${per}">\n${inner}\n`
+    + '          <nav class="pg-nav" hidden aria-label="목록 페이지"></nav>\n'
+    + '        </div>';
+}
+
 /** 발행물 — 썸네일 좌 / 텍스트 우 가로형. 액션은 미리보기 · 다운로드 두 개다(첨부 와이어프레임).
  *  ⚠ 미리보기는 **새 창**이다(스토리보드 slide100 "클릭 시, 새창으로 열림").
  *    갤러리·영상만 화면 안에서 열도록 바꿨다 — PDF 를 모달 iframe 에 넣으면
@@ -763,8 +793,11 @@ function build(file) {
       : fm.list.layout === 'cards' ? renderCards(rows, fm.list.kind)
       : renderRows(rows, fm.list.kind);
     const filters = fm.list.kind === 'gallery' ? renderFilters(rows) : '';
-    listHtml = (filters ? filters + '\n' : '') + inner;
-    console.log(`    ${fm.slug}: ${fm.list.kind} 노출 ${rows.length}건`);
+    listHtml = (filters ? filters + '\n' : '') + pagerWrap(inner, fm.list, rows.length);
+    const per = perPage(fm.list);
+    const pages = per ? Math.max(1, Math.ceil(rows.length / per)) : 1;
+    console.log(`    ${fm.slug}: ${fm.list.kind} 노출 ${rows.length}건`
+      + (per ? ` · 한 쪽 ${per}건 → ${pages}쪽${pages > 1 ? '' : ' (페이저 숨김)'}` : ''));
   }
 
   const heroCtx0 = {

@@ -1087,6 +1087,26 @@
     .src-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
     .src-arrow { display: inline-flex; flex: none; width: 15px; height: 15px; }
     .src-arrow svg { width: 100%; height: 100%; }
+
+    /* ── 목록 페이저 — 공지 · 홍보영상 · 갤러리 · 발행물 공용 (pager.js) ──────────
+       ⚠ 언론보도는 `.pl-pg` 를 쓴다(press-list.js). 두 벌인 이유는 그쪽이 검색·분류와
+         한 덩이라서다 — 모양은 같게 맞춰 뒀으니 한쪽을 고치면 다른 쪽도 본다. */
+    .pg { scroll-margin-top: calc(var(--gnb-h) + var(--lnb-h) + 16px); }
+    /* 분류 필터가 걸러 낸 항목. ⚠ hidden 은 pager.js 의 것이므로 여기서 쓰지 않는다. */
+    .pr-cards [data-cat][data-off], .pub-list [data-cat][data-off] { display: none; }
+
+    .pg-nav { display: flex; justify-content: center; align-items: center; gap: 6px;
+      margin: clamp(26px, 3vw, 44px) 0 0; }
+    .pg-btn { appearance: none; min-width: 36px; height: 36px; padding: 0 9px;
+      border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+      background: var(--color-surface); color: var(--color-text-muted);
+      font: inherit; font-size: 13.5px; line-height: 1; cursor: pointer;
+      transition: color .18s, border-color .18s, background-color .18s; }
+    .pg-btn:hover:not(:disabled) { color: var(--color-primary); border-color: var(--color-primary); }
+    .pg-btn.is-on { background: var(--color-primary); border-color: var(--color-primary);
+      color: #fff; font-weight: 700; }
+    .pg-btn:disabled { opacity: .38; cursor: default; }
+    .pg-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
   </style>
 </head>
 
@@ -1238,7 +1258,41 @@
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>VIDEO</b><span>홍보영상</span></p>
         <h2 class="h2 rv">영상으로 만나는 <em>B-CITY</em></h2>
-        <p class="pr-empty">등록된 게시물이 없습니다.</p>
+        <div class="pg" data-per="12">
+        <ul class="pr-cards">
+          <li class="pr-card">
+            <span class="pr-thumb"><img src="assets/still/hero.jpg" alt="B-CITY 춘천기업혁신파크 메인 홍보영상" loading="lazy" decoding="async" /><a class="pr-cover" href="https://www.youtube.com/@B-CITY-KOREA" data-lb="video" data-video-file="assets/vid/hero.mp4" data-title="B-CITY 춘천기업혁신파크 메인 홍보영상"><svg class="pr-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 15.4 12 10 15.4V8.6Z" fill="currentColor"/></svg><span class="sr">B-CITY 춘천기업혁신파크 메인 홍보영상 재생</span></a><span class="pr-badge">0:12</span></span>
+            <p class="pr-title">B-CITY 춘천기업혁신파크 메인 홍보영상</p>
+            <p class="pr-row-meta"><time datetime="2026-07-28">2026.07.28</time></p>
+          </li>
+          <li class="pr-card">
+            <span class="pr-thumb"><img src="assets/still/seg05.jpg" alt="사업개요 — 1.1조원 국가도시개발 프로젝트" loading="lazy" decoding="async" /><a class="pr-cover" href="https://www.youtube.com/@B-CITY-KOREA" data-lb="video" data-video-file="assets/vid/business.mp4" data-title="사업개요 — 1.1조원 국가도시개발 프로젝트"><svg class="pr-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 15.4 12 10 15.4V8.6Z" fill="currentColor"/></svg><span class="sr">사업개요 — 1.1조원 국가도시개발 프로젝트 재생</span></a><span class="pr-badge">0:34</span></span>
+            <p class="pr-title">사업개요 — 1.1조원 국가도시개발 프로젝트</p>
+            <p class="pr-row-meta"><time datetime="2026-07-25">2026.07.25</time></p>
+          </li>
+          <li class="pr-card">
+            <span class="pr-thumb"><img src="assets/still/district/d01.jpg" alt="AI데이터 클러스터 소개" loading="lazy" decoding="async" /><a class="pr-cover" href="https://www.youtube.com/@B-CITY-KOREA" data-lb="video" data-video-file="assets/vid/district/d01.mp4" data-title="AI데이터 클러스터 소개"><svg class="pr-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 15.4 12 10 15.4V8.6Z" fill="currentColor"/></svg><span class="sr">AI데이터 클러스터 소개 재생</span></a><span class="pr-badge">0:04</span></span>
+            <p class="pr-title">AI데이터 클러스터 소개</p>
+            <p class="pr-row-meta"><time datetime="2026-06-22">2026.06.22</time></p>
+          </li>
+          <li class="pr-card">
+            <span class="pr-thumb"><img src="assets/still/district/d02.jpg" alt="첨단 바이오 클러스터 소개" loading="lazy" decoding="async" /><a class="pr-cover" href="https://www.youtube.com/@B-CITY-KOREA" data-lb="video" data-video-file="assets/vid/district/d02.mp4" data-title="첨단 바이오 클러스터 소개"><svg class="pr-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 15.4 12 10 15.4V8.6Z" fill="currentColor"/></svg><span class="sr">첨단 바이오 클러스터 소개 재생</span></a><span class="pr-badge">0:04</span></span>
+            <p class="pr-title">첨단 바이오 클러스터 소개</p>
+            <p class="pr-row-meta"><time datetime="2026-06-19">2026.06.19</time></p>
+          </li>
+          <li class="pr-card">
+            <span class="pr-thumb"><img src="assets/still/district/d03.jpg" alt="푸드 물류 클러스터 소개" loading="lazy" decoding="async" /><a class="pr-cover" href="https://www.youtube.com/@B-CITY-KOREA" data-lb="video" data-video-file="assets/vid/district/d03.mp4" data-title="푸드 물류 클러스터 소개"><svg class="pr-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 15.4 12 10 15.4V8.6Z" fill="currentColor"/></svg><span class="sr">푸드 물류 클러스터 소개 재생</span></a><span class="pr-badge">0:04</span></span>
+            <p class="pr-title">푸드 물류 클러스터 소개</p>
+            <p class="pr-row-meta"><time datetime="2026-05-16">2026.05.16</time></p>
+          </li>
+          <li class="pr-card">
+            <span class="pr-thumb"><img src="assets/still/district/d04.jpg" alt="바이오 MICE 클러스터 소개" loading="lazy" decoding="async" /><a class="pr-cover" href="https://www.youtube.com/@B-CITY-KOREA" data-lb="video" data-video-file="assets/vid/district/d04.mp4" data-title="바이오 MICE 클러스터 소개"><svg class="pr-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 15.4 12 10 15.4V8.6Z" fill="currentColor"/></svg><span class="sr">바이오 MICE 클러스터 소개 재생</span></a><span class="pr-badge">0:04</span></span>
+            <p class="pr-title">바이오 MICE 클러스터 소개</p>
+            <p class="pr-row-meta"><time datetime="2026-05-13">2026.05.13</time></p>
+          </li>
+        </ul>
+          <nav class="pg-nav" hidden aria-label="목록 페이지"></nav>
+        </div>
       </div>
     </section>
   </main>
@@ -2105,6 +2159,94 @@
         if (e.key === 'Escape') { close(); return; }
         // 포커스를 패널 안에 가둔다 — 닫기 버튼 하나뿐이라 Tab 을 되돌리면 충분하다
         if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
+      });
+    })();
+
+    /* 목록 페이저 — 공지사항 · 홍보영상 · 갤러리 · 발행물이 함께 쓴다.
+       ⚠ 언론보도는 **쓰지 않는다.** 그쪽은 검색·분류와 한 덩이인 press-list.js 가
+         자기 페이저를 갖고 있다. 둘을 같은 목록에 얹으면 서로 다른 page 상태를 갖는다.
+
+       구조 — 빌더가 목록을 이렇게 감싼다:
+         <div class="pg" data-per="12"> <ul>…항목…</ul> <nav class="pg-nav" hidden></nav> </div>
+
+       ⚠⚠ **다시 렌더하지 않는다. 감추기만 한다.** lightbox.js 는 로드 시점에
+         [data-lb] 를 한 번 모으므로, 항목을 다시 그리면 갤러리·홍보영상의
+         확대보기가 조용히 죽는다(§11.29 에서 실제로 겪은 형태다).
+       ⚠⚠ **hidden 을 쓰는 주인은 이 스크립트 하나다.** filter.js 는 data-off 만 세우고
+         보이기는 CSS 가 정한다 — 두 스크립트가 같은 hidden 을 쓰면 서로 덮어
+         "분류를 고르면 다른 분류로 돌아갈 수 없다" 가 재현된다(§11.10 의 실제 사고).
+       ⚠ 마크업에는 항목이 **전부** 들어 있다. JS 가 없거나 죽으면 전부 보인다 —
+         목록에서 사라지는 것이 없어야 한다(§11.13 과 같은 원칙). */
+    (function () {
+      var boxes = [].slice.call(document.querySelectorAll('.pg[data-per]'));
+      if (!boxes.length) return;
+
+      boxes.forEach(function (box) {
+        var per = parseInt(box.dataset.per, 10);
+        if (!(per > 0)) return;
+        var listEl = box.querySelector('ul, ol');
+        if (!listEl) return;
+        var items = [].slice.call(listEl.children);
+        var pager = box.querySelector('.pg-nav');
+        var page = 1;
+
+        /* 분류 필터가 걸러 낸 것(data-off)은 쪽 수 계산에서도 빠진다.
+           안 그러면 '3쪽' 이라고 적어 놓고 3쪽이 텅 비는 일이 생긴다. */
+        var live = function () {
+          return items.filter(function (it) { return !it.hasAttribute('data-off'); });
+        };
+
+        var pagesOf = function (n) { return Math.max(1, Math.ceil(n / per)); };
+
+        var draw = function () {
+          var hit = live();
+          var pages = pagesOf(hit.length);
+          if (page > pages) page = pages;
+          var from = (page - 1) * per;
+
+          items.forEach(function (it) { it.hidden = true; });
+          hit.slice(from, from + per).forEach(function (it) { it.hidden = false; });
+
+          if (!pager) return;
+          /* 한 쪽이면 페이저 자체를 내린다. 그래서 콘텐츠가 적은 동안은
+             아무것도 보이지 않고, 쌓이면 저절로 나타난다. */
+          if (pages <= 1) { pager.innerHTML = ''; pager.hidden = true; return; }
+          pager.hidden = false;
+          var h = '<button type="button" class="pg-btn" data-go="prev"'
+                + (page === 1 ? ' disabled' : '') + ' aria-label="이전 페이지">‹</button>';
+          for (var i = 1; i <= pages; i++) {
+            h += '<button type="button" class="pg-btn' + (i === page ? ' is-on' : '') + '"'
+               + ' data-go="' + i + '"' + (i === page ? ' aria-current="page"' : '')
+               + ' aria-label="' + i + '쪽">' + i + '</button>';
+          }
+          h += '<button type="button" class="pg-btn" data-go="next"'
+             + (page === pages ? ' disabled' : '') + ' aria-label="다음 페이지">›</button>';
+          pager.innerHTML = h;
+        };
+
+        if (pager) {
+          pager.addEventListener('click', function (e) {
+            /* ⚠ e.target 으로 판정하지 않는다 — 숫자 글자를 눌러도 버튼이 잡히게
+               closest 로 올라간다(§11.10 의 닫기 버튼과 같은 이유). */
+            var b = e.target.closest ? e.target.closest('[data-go]') : null;
+            if (!b || b.disabled) return;
+            var g = b.dataset.go;
+            var pages = pagesOf(live().length);
+            page = g === 'prev' ? page - 1 : g === 'next' ? page + 1 : parseInt(g, 10);
+            page = Math.min(Math.max(1, page), pages);
+            draw();
+            /* 쪽을 넘기면 목록 맨 위로 돌아간다 — 아래쪽 페이저를 누른 뒤
+               그 자리에 남으면 바뀐 첫 항목을 못 본다.
+               위를 덮는 GNB·LNB 만큼은 CSS 의 scroll-margin-top 이 비켜 준다. */
+            if (box.scrollIntoView) box.scrollIntoView({ block: 'start' });
+          });
+        }
+
+        /* filter.js 가 분류를 바꾸면 1쪽으로 되돌린다. 3쪽을 보던 중 분류를 좁히면
+           그 분류에는 3쪽이 없을 수 있다. */
+        box.addEventListener('bcity:filtered', function () { page = 1; draw(); });
+
+        draw();
       });
     })();
   </script>

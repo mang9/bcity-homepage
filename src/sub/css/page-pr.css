@@ -336,3 +336,23 @@ a.post-nav-item:hover .post-nav-label { color: var(--color-primary); }
 .src-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
 .src-arrow { display: inline-flex; flex: none; width: 15px; height: 15px; }
 .src-arrow svg { width: 100%; height: 100%; }
+
+/* ── 목록 페이저 — 공지 · 홍보영상 · 갤러리 · 발행물 공용 (pager.js) ──────────
+   ⚠ 언론보도는 `.pl-pg` 를 쓴다(press-list.js). 두 벌인 이유는 그쪽이 검색·분류와
+     한 덩이라서다 — 모양은 같게 맞춰 뒀으니 한쪽을 고치면 다른 쪽도 본다. */
+.pg { scroll-margin-top: calc(var(--gnb-h) + var(--lnb-h) + 16px); }
+/* 분류 필터가 걸러 낸 항목. ⚠ hidden 은 pager.js 의 것이므로 여기서 쓰지 않는다. */
+.pr-cards [data-cat][data-off], .pub-list [data-cat][data-off] { display: none; }
+
+.pg-nav { display: flex; justify-content: center; align-items: center; gap: 6px;
+  margin: clamp(26px, 3vw, 44px) 0 0; }
+.pg-btn { appearance: none; min-width: 36px; height: 36px; padding: 0 9px;
+  border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-text-muted);
+  font: inherit; font-size: 13.5px; line-height: 1; cursor: pointer;
+  transition: color .18s, border-color .18s, background-color .18s; }
+.pg-btn:hover:not(:disabled) { color: var(--color-primary); border-color: var(--color-primary); }
+.pg-btn.is-on { background: var(--color-primary); border-color: var(--color-primary);
+  color: #fff; font-weight: 700; }
+.pg-btn:disabled { opacity: .38; cursor: default; }
+.pg-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
