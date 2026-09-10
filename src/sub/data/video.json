@@ -70,5 +70,113 @@
     "visible": true,
     "order": 6,
     "_sample": true
+  },
+  {
+    "id": "video-07",
+    "title": "비즈니스 콤플렉스 소개",
+    "image": "assets/still/district/d05.jpg",
+    "videoFile": "assets/vid/district/d05.mp4",
+    "duration": "0:08",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-04-17",
+    "visible": true,
+    "order": 7,
+    "_sample": true
+  },
+  {
+    "id": "video-08",
+    "title": "하우징 콤플렉스 소개",
+    "image": "assets/still/district/d06.jpg",
+    "videoFile": "assets/vid/district/d06.mp4",
+    "duration": "0:08",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-04-14",
+    "visible": true,
+    "order": 8,
+    "_sample": true
+  },
+  {
+    "id": "video-09",
+    "title": "글로벌 에듀 콤플렉스 소개",
+    "image": "assets/still/district/d07.jpg",
+    "videoFile": "assets/vid/district/d07.mp4",
+    "duration": "0:08",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-04-11",
+    "visible": true,
+    "order": 9,
+    "_sample": true
+  },
+  {
+    "id": "video-10",
+    "title": "골프레저 콤플렉스 소개",
+    "image": "assets/still/district/d08.jpg",
+    "videoFile": "assets/vid/district/d08.mp4",
+    "duration": "0:08",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-04-08",
+    "visible": true,
+    "order": 10,
+    "_sample": true
+  },
+  {
+    "id": "video-11",
+    "title": "B-CITY 전체 조감 — 도시 전경",
+    "image": "assets/img/gallery/aerial-city.avif",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-03-18",
+    "visible": true,
+    "order": 11,
+    "_sample": true
+  },
+  {
+    "id": "video-12",
+    "title": "센트럴파크 보행 가로",
+    "image": "assets/img/gallery/plaza-walk.avif",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-03-16",
+    "visible": true,
+    "order": 12,
+    "_sample": true
+  },
+  {
+    "id": "video-13",
+    "title": "야외 공연장 — 도시 문화 공간",
+    "image": "assets/img/gallery/open-stage.avif",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-03-14",
+    "visible": true,
+    "order": 13,
+    "_sample": true
+  },
+  {
+    "id": "video-14",
+    "title": "그린 콤플렉스 전경",
+    "image": "assets/img/gallery/green-complex.avif",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-03-12",
+    "visible": true,
+    "order": 14,
+    "_sample": true
+  },
+  {
+    "id": "video-15",
+    "title": "순환 도로망 — 단지 내부 동선",
+    "image": "assets/img/gallery/loop-road.avif",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-03-10",
+    "visible": true,
+    "order": 15,
+    "_sample": true
+  },
+  {
+    "id": "video-16",
+    "title": "골프레저 그린",
+    "image": "assets/img/gallery/golf-green.avif",
+    "url": "https://www.youtube.com/@B-CITY-KOREA",
+    "date": "2026-03-08",
+    "visible": true,
+    "order": 16,
+    "_sample": true
   }
 ]
