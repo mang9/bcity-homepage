@@ -43,23 +43,24 @@
   <meta property="og:url" content="https://mang9.github.io/bcity-homepage/" />
   <meta property="og:title" content="B-CITY · 춘천기업혁신파크" />
   <meta property="og:description" content="강원 춘천에 조성되는 기업혁신파크 선도사업 B-CITY(비시티). AI 데이터센터와 바이오·푸드·MICE 클러스터가 함께하는 자족도시입니다." />
-  <!-- ⚠ 오픈그래프 이미지는 **정사각 600x600 · 가로 로고만** 이다(2026-09-10 지시).
-         `assets/og/og-logo-600.png` 은 `assets/logo/bcity-logo.svg` 하나를
+  <!-- ⚠ 오픈그래프 이미지는 **1200x630 (1.91:1) · 가로 로고만** 이다(2026-09-10 지시).
+         `assets/og/og-card-1200.png` 은 `assets/logo/bcity-logo.svg` 하나를
          가운데 놓은 것이다 — **로고가 바뀌면 다시 뽑는다.**
-       ⚠⚠ **카카오톡은 정사각형을 1.91:1 로 가운데 잘라 보여 준다.** 그림 내용이
-         **가운데 52.4% 띠** 안에 있어야 한다 — 위아래를 채우면 설명 영역에 걸려
-         잘린다. 심볼을 위에 얹었던 판이 실제로 워드마크가 잘려 이렇게 바꿨다.
-       ⚠⚠ **200x200 미만으로 내리지 말 것** — 카카오톡 · 페이스북이 그 크기를 무시해
-         공유 카드에 이미지가 아예 안 나온다.
+       ⚠⚠ **로고 폭은 560px 을 넘기지 말 것.** 1.91:1 을 그대로 보여 주는 곳
+         (카카오톡 · 페이스북)과 **정사각으로 잘라 쓰는 곳**을 함께 만족시켜야 한다.
+         정사각 크롭은 가운데 630px 만 남기므로 560px 이라야 좌우 35px 여유로 들어간다.
+         더 키우면 정사각 쪽에서 `B` 와 `Y` 가 먼저 잘린다.
+       ⚠⚠ **1200px 보다 작게 만들지 말 것** — 구글 Discover 가 폭 1200px 이상을 요구한다.
+         그리고 200x200 미만은 카카오톡 · 페이스북이 아예 무시한다.
        ⚠ `og:image:width` · `height` 를 파일 실제 치수와 **반드시 일치**시킨다. 어긋나면
          카카오톡 · 페이스북이 첫 공유에서 잘못된 비율로 자리를 잡는다.
-       ⚠ 정사각이므로 트위터 카드는 `summary` 다. `summary_large_image` 로 두면
-         가로로 늘린 자리에 작은 정사각이 들어가 카드가 비어 보인다. -->
-  <meta property="og:image" content="https://mang9.github.io/bcity-homepage/assets/og/og-logo-600.png" />
-  <meta property="og:image:width" content="600" />
-  <meta property="og:image:height" content="600" />
+       ⚠ 1.91:1 이므로 트위터 카드는 `summary_large_image` 다. 정사각으로 되돌리면
+         `summary` 로 함께 바꿔야 한다 — 안 그러면 가로로 늘린 자리가 비어 보인다. -->
+  <meta property="og:image" content="https://mang9.github.io/bcity-homepage/assets/og/og-card-1200.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="B-CITY 춘천기업혁신파크 로고" />
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- 검색 결과에 사업 주체 · 위치를 함께 보여 주기 위한 구조화 데이터.
        ⚠ 여기 적는 값은 화면에 실제로 있는 것만 쓴다 — 화면에 없는 정보를 넣으면
