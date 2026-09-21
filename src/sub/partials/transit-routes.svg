@@ -20,6 +20,21 @@
     <g id="route-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
       <path d="M306 520 C403 507 492 486 579 409 C621 411 666 429 710 516"/>
     </g>
+    <!-- ⚠ 2026-09-17 수정사항 추가 — 서울~양평고속도로(예정). 경로는 첨부 시안의
+         **위치 관계만** 참고했다(감일JCT → 양평JCT → 서울양양 간선 합류).
+         시안의 화도IC·금남JCT 는 이 상세 지도에 없어 좌표를 그대로 옮길 수 없다.
+      ⚠ 좌표는 **지리 관계**로 잡았다 — 감일JCT(358,682)는 강일JC(364,581) 바로 남쪽이고
+         (하남 감일 ↔ 강동 강일), 양평JCT(478,652)는 그 동북동이다. 합류점 (520,572)은
+         서울양양 경로의 제어점과 **같은 좌표**라 선이 깔끔히 만난다.
+         처음에 감일JCT 를 (392,724)에 두었더니 강일JC 보다 한참 남쪽이라 어긋났다.
+      ⚠ 예정 노선의 표기 문법은 제2경춘과 같다 — teal `#19B9AE` + `3 15` 점선.
+         운영 중 도로는 `#527EA8` 실선이다. 이 대비가 「예정」을 읽게 한다.
+      ⚠ `data-transport="road"` 만 맞으면 도로 카드 선택에 **자동으로 묶인다**
+         (locmap.js 는 노선 id 를 모른다 · §11.14). JS 를 고칠 필요가 없다.
+      ⚠ transit-flow.svg 에 **같은 d** 가 있어야 한다 — 한쪽만 고치면 흐름이 선을 벗어난다. -->
+    <g id="route-seoul-yangpyeong" data-route="seoul-yangpyeong" data-transport="road" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
+      <path d="M358 682 C398 694 438 680 478 652 C500 625 512 596 520 572"/>
+    </g>
     <g id="route-yangyang-airport" data-route="yangyang-airport" data-transport="air" stroke="#3195E8" stroke-width="6" stroke-dasharray="18 16">
       <path d="M1361 251 C1230 247 1109 287 1002 346 C886 409 790 470 710 516"/>
     </g>

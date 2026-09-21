@@ -14,6 +14,9 @@
       <circle cx="268" cy="637" r="12"/><circle cx="364" cy="581" r="12"/>
     </g>
     <g id="markers-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#527EA8"><circle cx="306" cy="520" r="12"/></g>
+    <g id="markers-seoul-yangpyeong" data-route="seoul-yangpyeong" data-transport="road" stroke="#527EA8">
+      <circle cx="358" cy="682" r="12"/><circle cx="478" cy="652" r="12"/>
+    </g>
     <g id="markers-context-access" data-route="context-access" data-transport="road" stroke="#527EA8">
       <circle cx="615" cy="607" r="12"/><circle cx="865" cy="759" r="12"/><circle cx="780" cy="355" r="12"/>
     </g>

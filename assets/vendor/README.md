@@ -20,9 +20,9 @@
 
 | 굵기 | 쓰이는 곳 |
 |---|---|
-| 600 | `.cn-hub-txt span` (AI Living Lab 허브의 B-CITY) |
+| 600 | `.cn-hub-txt span` (AI Platform 허브의 B-CITY) |
 | 700 | 대부분 — 히어로 H1, 섹션 제목, `.lo-title`, `.ov-title`, `.za-name`, `.lo-pill b` 등 |
-| 800 | `.cn-hub-txt b` / `i` (허브의 AI · Living Lab) |
+| 800 | `.cn-hub-txt b` / `i` (허브의 AI · Platform) |
 
 woff2 는 굵기당 약 160KB 다(Pretendard 는 750KB — Paperlogy 파일이 이미 서브셋이다).
 글리프 커버리지는 페이지가 실제로 쓰는 195자 전부 확인했다(누락 0).

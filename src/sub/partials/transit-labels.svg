@@ -17,6 +17,15 @@
     <text class="tl-place" x="284.1" y="495.4">중랑IC</text>
     <text class="tl-route tl-small" x="475.7" y="455.8" fill="#19AFA6">제2경춘국도(예정)</text>
   </g>
+  <!-- ⚠⚠ 양평JCT 라벨은 마커 **오른쪽이 아니라 아래**다. 오른쪽에 두면 영문
+       `Yangpyeong JCT`(국문 60px → 119px)가 `Vivaldi Park` 와 60px 겹친다(실측).
+       아래로 내리면 두 언어가 같은 좌표로 성립한다 — 영문 전용 FIXUP 이 필요 없다.
+    ⚠ 지점명은 메인 지도(01)와 같은 표기다 — `감일JCT` · `양평JCT` 로 **(예정)을 붙이지
+       않는다.** 노선 라벨이 (예정)을 이미 말하고, 붙이면 폭이 112px 로 늘어 두 라벨이 겹친다. -->
+  <g id="labels-seoul-yangpyeong" data-route="seoul-yangpyeong" data-transport="road">
+    <text class="tl-place" x="296" y="712">감일JCT</text><text class="tl-place" x="492" y="690">양평JCT</text>
+    <text class="tl-route tl-small" x="330" y="742" fill="#19AFA6">서울~양평고속도로(예정)</text>
+  </g>
   <g id="labels-context-access" data-route="context-access" data-transport="road">
     <text class="tl-place" x="578.0" y="646.4">비발디파크</text><text class="tl-place" x="878.0" y="791.7">원주</text>
     <text class="tl-place tl-small" x="809.1" y="352.1">춘천시청 · 강원도청</text><text class="tl-place" x="763.0" y="549.2">남춘천IC</text>

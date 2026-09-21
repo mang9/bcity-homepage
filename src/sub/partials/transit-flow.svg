@@ -19,6 +19,9 @@
     <g id="motion-route-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
       <path d="M306 520 C403 507 492 486 579 409 C621 411 666 429 710 516"/>
     </g>
+    <g id="motion-route-seoul-yangpyeong" data-route="seoul-yangpyeong" data-transport="road" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
+      <path d="M358 682 C398 694 438 680 478 652 C500 625 512 596 520 572"/>
+    </g>
     <g id="motion-route-yangyang-airport" data-route="yangyang-airport" data-transport="air" stroke="#3195E8" stroke-width="6" stroke-dasharray="18 16">
       <path d="M1361 251 C1230 247 1109 287 1002 346 C886 409 790 470 710 516"/>
     </g>

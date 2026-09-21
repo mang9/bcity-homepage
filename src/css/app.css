@@ -241,8 +241,14 @@
         --lo-pad-t: 128px; --lo-pad-b: 112px; --lo-cap: 30px;   /* 상·하 패딩 + 각주 */
         --lo-map-h: calc(100vh - var(--lo-pad-t) - var(--lo-pad-b) - var(--lo-cap));
         display: grid; align-items: center; gap: clamp(28px, 3.2vw, 60px);
-        /* 우측 카피가 좁아지지 않게 지도 폭을 50vw로 제한한다 */
-        grid-template-columns: minmax(0, min(calc(var(--lo-map-h) * 16 / 9), 50vw)) minmax(0, 1fr);
+        /* 우측 카피가 좁아지지 않게 지도 폭을 50vw로 제한한다.
+           ⚠ 여기 비율은 .lm 의 aspect-ratio 와 **반드시 같아야 한다**.
+             지도 높이 = 열 폭 × 역비율이므로, 이 식이 곧 "지도 높이 ≤ 세로 예산" 보증이다.
+             한쪽만 고치면 세로가 짧은 창에서 지도가 스테이지(100vh·overflow hidden)를 넘는다. */
+        /* ⚠ 상한 56vw 는 **1024 에서 탭이 pill 위로 겹치기 직전 값**이다(2026-09-16 실측).
+             58vw 로 올리면 카피 열이 352px 이 되어 pill 이 4줄로 늘고 그 아래 탭과 겹친다.
+             56vw = 카피 373px · pill 3줄 · 겹침 0 — 여기가 한계다. 올리려면 다시 잴 것. */
+        grid-template-columns: minmax(0, min(calc(var(--lo-map-h) * 16 / 9), 56vw)) minmax(0, 1fr);
         width: 100%; margin: 0;
         padding: var(--lo-pad-t) var(--gut) var(--lo-pad-b) 0; }
       .lo-copy { position: relative; height: 100%; display: flex; flex-direction: column;
@@ -256,6 +262,21 @@
       .lo-title { margin-top: 18px; font-family: var(--font-display); font-weight: 700;
         font-size: clamp(30px, 3.5vw, 54px); line-height: 1.24; letter-spacing: -.025em;
         color: var(--color-text); }
+
+      /* ===== 영문판 전용 타이포 (`/en/` · html[lang="en"]) =====
+         ⚠⚠ **영문은 국문보다 약 1.8배 넓다**(같은 내용에 글자 수가 2.3~2.9배 · §11.99).
+         그래서 좁은 칸에서는 국문 램프를 그대로 쓸 수 없다. 실측(1440):
+           · 칸 폭 504px · 국문 `서울 잠실에서 40분,` 400px / `남춘천 IC 3분` 286px — 여유롭다
+           · 영문 `Namchuncheon IC 3 min` 은 50.4px 에서 **651px** — 줄마다 두 번 접혀 **4줄**이 됐다
+           · 낱말 하나(`Namchuncheon IC`)만으로 491px 이라 **이 크기로는 2줄이 불가능하다**
+         상한 42px 은 「폭 − 40px 여유」 기준이다(1024:24.6/25.8 · 1280:30.7/33 ·
+         1440:34.6/35.9 · 1920:42/41.9 — 앞이 적용값, 뒤가 한계).
+         ⚠ **카피를 고치면 이 값을 다시 잰다.** 가장 긴 줄이 상한을 정한다(§11.76).
+         ⚠ 특이도가 (0,2,1)이라 1800px·2300px 미디어의 `.lo-title`(0,1,0)을 **이긴다** —
+           의도된 것이다(§11.26 · 미디어쿼리는 특이도를 이기지 못한다).
+           다만 그 폭에서는 칸이 더 넓어 45px 까지 올릴 여지가 있다 — **재고 나서** 올릴 것.
+         ⚠ 국문(`lang="ko"`)에는 걸리지 않는다. 영문 램프를 늘릴 일이 생기면 여기에 모은다. */
+      html[lang="en"] .lo-title { font-size: clamp(24px, 2.4vw, 42px); }
       .lo-desc { margin-top: 22px; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.7;
         color: var(--color-text-muted); }
       /* 값 배지 */
@@ -290,6 +311,14 @@
       .lo-note { align-self: stretch; text-align: right;
         font-size: 11.5px; line-height: 1.5; color: var(--color-text-muted); }
 
+      /* 1024~1099 — 지도 상한을 56vw 로 올리면서(2026-09-16) 카피 열이 373px 까지 좁아졌다.
+         탭 3개의 글자 폭 합이 330px 이라 기본 gap 26 으로는 2줄로 접힌다(330 + 52 = 382 > 373).
+         ⚠ 이 구간만 gap 을 줄인다 — 1100 이상은 카피가 400px 이상이라 26 으로도 한 줄이다.
+           탭 라벨을 늘리면 이 계산이 깨지므로 그때 다시 잰다. */
+      @media (min-width: 1024px) and (max-width: 1099px) {
+        .lo-tabs { gap: 18px; }
+      }
+
       @media (max-width: 1023px) {
         /* width:calc(100vw-44px) + padding 0 이면 여백 44px 가 전부 우측으로 가고
            카피가 화면 왼쪽 끝에 붙는다(.lo-title x=0). 폭은 100% 로 두고 좌우
@@ -313,10 +342,33 @@
         .lo-grid { padding: 64px var(--gut) 52px; gap: 18px; }
         .lo-tabs { margin-top: 18px; }
       }
+      /* ⚠⚠ 폰 폭(≤767) — **높이가 넉넉해도** 카피가 스테이지를 넘는다. 2026-09-18 실측:
+           390×844 에서 그리드 984 > 스테이지 844 로 **140px 초과**, 그중 탭이 68px 잘렸다.
+           위 두 블록은 조건이 `max-height` 라 844 짜리 폰에는 **걸리지 않는다** — 그게
+           390 넘침이 오래 남아 있던 이유다(§11.105·§11.106 에 «별건» 으로만 적혀 있었다).
+           넘치는 원인은 창 높이가 아니라 **카피 분량**이므로 폭으로 잡는다.
+         ⚠ 순서가 중요하다 — 위 `max-height: 720px` 블록보다 **뒤**에 와야 한다.
+           앞에 두면 그 블록이 패딩을 64/52 로 되돌려 좁은 폰에서 다시 넘친다.
+         ⚠ 각주(`.lo-note`)는 **남긴다.** 면책 문구이므로 640px 블록처럼 숨기지 않는다 —
+           남겨도 390×844 에서 그리드 840 으로 들어간다(여유 4px).
+         ⚠ 여유가 4px 뿐이다. **카피 pill 이나 제목을 더 늘리면 다시 넘친다** —
+           2026-09-17 수정사항으로 pill 이 4 → 5개가 되면서 이미 한 줄이 늘었다. */
+      @media (max-width: 767px) {
+        .lo-grid { padding: 40px var(--gut) 32px; gap: 14px; }
+        .lo-no { font-size: 32px; }
+        .lo-title { font-size: 26px; margin-top: 10px; }
+        .lo-pills { gap: 8px; margin-top: 14px; }
+        /* ⚠ pill 을 조인다 — 5개가 5줄이 되는 폭에서 **줄마다 6px** 이 줄어든다.
+              글자 크기는 건드리지 않는다(13px 은 사이트 최소치 부근이다). */
+        .lo-pill { padding: 7px 14px; }
+        .lo-tabs { margin-top: 14px; }
+      }
       /* 아이폰 SE 급(가용 높이 ~613px) — 각주를 접고 고스트 번호·제목을 한 단 줄인다.
          지도는 min-height 에 걸려 있어 여기서 더 회수할 곳이 카피뿐이다. */
       @media (max-width: 1023px) and (max-height: 640px) {
-        .lo-grid { padding: 48px var(--gut) 40px; gap: 14px; }
+        /* ⚠ 위 ≤767 블록보다 뒤에 오므로 **여기 패딩이 이긴다.** 48/40 으로 두면
+              좁은 폰에서 위 블록이 조여 둔 값을 되돌려 다시 넘친다. */
+        .lo-grid { padding: 40px var(--gut) 32px; gap: 14px; }
         .lo-note { display: none; }
         .lo-no { font-size: 32px; }
         .lo-title { font-size: 26px; margin-top: 10px; }
@@ -324,16 +376,130 @@
       }
 
       /* ===== 입지 지도 · 경로 모션그래픽 =====
-         좌표계는 배경 이미지 픽셀 공간(1671×949)이라 선/글자 크기도 그 기준이다. */
+         좌표계는 스텝마다 다르다 — 01 접근도 **1500×844**(납품 1672×941 에서 왼쪽만 잘라
+         쓴다 · 2026-09-16), 02·03 1600×900. 셋 다 16:9 라 이 상자에서 레터박스가 없다.
+         .lm-svg 에는 viewBox 가 없고 스텝별 중첩 <svg class="lm-vp"> 가 자기 viewBox 를 갖는다.
+
+         ⚠ 상자 비율은 .lo-grid 의 grid-template-columns 계산식과 **한 쌍**이다
+           (minmax(0, min(calc(var(--lo-map-h) * 16 / 9), 56vw))). 한쪽만 고치면 세로가
+           짧은 창에서 지도가 스테이지(100vh·overflow hidden)를 넘는다.
+         ⚠ 2026-09-15 에 01 을 3:2 로 바꿨다가 되돌렸다. 새 납품본이 16:9 에 맞춰 왔으므로
+           **16/9 를 유지한다** — 여기를 건드릴 이유가 없어졌다. */
       .lm { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; }
       .lm-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-      /* 전경 레이어 — 배경과 같은 프레임에 정렬돼 있어 같은 규칙을 쓴다 */
-      .lm-fg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
-        pointer-events: none; }
-      .lm-svg { position: relative; display: block; width: 100%; height: 100%; }
+      /* ⚠ 가장자리 페이드(.lm-bg.is-edge-fade)는 **두 번 넣었다 두 번 걷었다**(09-15 · 09-16).
+         지형을 잘라 쓸 때 절단면을 흐리는 규칙인데, 2026-09-16 지시로 위·아래·오른쪽을
+         아예 자르지 않게 창을 다시 잡아 필요가 없어졌다(왼쪽은 화면 밖으로 이어진다).
+         **다시 자를 일이 생겨도 먼저 창을 의심할 것** — 값은 CLAUDE.md §11.106 에 있다. */
+      /* 전경 레이어 — 배경과 같은 프레임에 정렬돼 있어 같은 규칙을 쓴다.
+         ⚠ 지금 이 레이어를 쓰는 스텝은 없다(01 은 라벨을 인라인 SVG 로 그린다 · §11.106).
+           래스터 전경이 다시 들어오면 그대로 쓸 수 있게 남겨 둔다 — 파리티 하네스(§11.4)가
+           이 셀렉터를 감시하므로 요소째 지우지 않는다.
+         ⚠ 되살릴 때 경로(.lm-svg)보다 **위**여야 한다. 아래로 깔면 선과 지나가는 빛이
+           배지 위를 덮어 「15분」이 「5분」으로 읽힌다(실측). */
+      .lm-fg { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%;
+        object-fit: contain; pointer-events: none; }
+      .lm-svg { position: relative; z-index: 1; display: block; width: 100%; height: 100%; }
 
+      /* 스텝별 좌표계 뷰포트 — 상자를 꽉 채우고 자기 viewBox 로 레터박싱한다 */
+      .lm-vp { overflow: visible; }
       .lm-g { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility .45s; }
       .lm-g.on { opacity: 1; visibility: visible; }
+
+      /* ── 01 접근도 (1500×844 · 납품 1672×941 에서 왼쪽만 잘랐다) ── 납품 SVG 의 선·라벨을 그대로 그린다.
+         색은 시안 값이 JS 데이터로 온다(DESIGN.md 팔레트보다 밝은 지도 전용 5색).
+         ⚠ 굵기는 납품 routes.svg 와 같아야 한다 — 케이싱 9 · 선 5 · 점선 `6 5`.
+         ⚠ 선은 **항상 그려져 있다.** dash 애니메이션을 걸지 말 것 — 예정 노선의 점선 간격이
+           정체성이라, 선을 그리는 연출을 하면 점선이 실선처럼 자라다 끝에서 튄다.
+           움직이는 것은 그 위를 지나가는 .lm-trail 하나뿐이다. */
+      .lm-cap  { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round;
+        stroke-linejoin: round; }
+      .lm-line { fill: none; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+      .lm-line--plan { stroke-dasharray: 6 5; }
+      /* ⚠⚠ 2026-09-18 — 01 은 선을 **두 벌** 그린다(지시). 아직 지나가지 않은 노선은
+           `--dim` 으로 흐리고, 코멧이 지나간 만큼만 `--lit`(마스크) 안에서 진해진다.
+           10개 선이 처음부터 전부 진해 「너무 복잡하다」는 지적을 받은 자리다.
+         ⚠ 위 주석의 「dash 애니메이션을 걸지 말 것」은 **그대로 유효하다** — 그래서
+           보이는 선이 아니라 **마스크 안 흰 선**의 dash 를 키운다(§11.105 의 기법).
+           점선은 자기 `6 5` 패턴을 그대로 유지한다.
+         ⚠ `.lm-reveal` 굵기 18 은 가장 굵은 간선(10)을 덮는 값이다. 줄이면 그 선의
+           바깥 가장자리가 마스크에 잘려 **간선만 가늘어 보인다.**
+         ⚠ 흐린 값 .3 을 더 내리면 지나가기 전 노선의 방향이 안 읽힌다(지형이 옅다). */
+      .lm-lines--dim { opacity: .3; }
+      .lm-reveal { fill: none; stroke: #fff; stroke-width: 18;
+        stroke-linecap: round; stroke-linejoin: round; }
+      /* 노선 위를 지나가는 빛 — 선(5)보다 굵고 케이싱(9)보다 얇다. 평소 opacity 0 */
+      .lm-trail { fill: none; stroke-width: 8; stroke-linecap: round; opacity: 0; }
+      /* 지점 원·지점명·소요시간 알약 — 납품 labels.svg 를 코드가 그린다.
+         ⚠ <img> 로 얹으면 SVG 가 웹폰트를 못 가져와 Arial 로 떨어진다. 그래서 인라인이다.
+         ⚠⚠ 지점명 아웃라인은 **얇은 halo** 다 — `0.062em`(29px 에서 1.8px).
+           두께가 **두 번** 바뀐 자리다:
+             납품본 `5.2px`(= 0.179em) → 「글자 뒤에 회색 bg 박스처럼 보인다」고 제거
+             → 「화이트 아웃라인까지 빠져버렸다」고 **0.062em 으로 복원**(2026-09-21).
+           박스처럼 뭉친 원인은 아웃라인 자체가 아니라 **두께**였다 —
+           `stroke-linejoin: round` 가 5.2px 에서 글자 획 사이를 메운다. 1/3 로 줄이면
+           획 사이가 안 메워지고 지형 위 경계만 선다.
+         ⚠ **`em` 으로 준다.** 01(29) · 히어로(38) · 02(40) · 03(32) 이 크기가 달라
+           px 로 박으면 씬마다 halo 굵기가 어긋난다. 세 씬이 이 비율을 공유한다.
+         ⚠ 되살릴 때 5.2px 로 돌아가지 말 것 — 반드시 덩어리가 된다.
+         ⚠ `paint-order: stroke` 가 없으면 테두리가 글자 **안쪽**을 먹는다. */
+      /* ⚠ 코어에는 흰 테두리를 두지 않는다 — 뒤에 `.lm-dot-ring` 원반이 있어
+           흰 테두리를 두면 코어와 원반 사이에 흰 고리가 한 겹 더 생긴다. */
+      .lm-dot { stroke: none; }
+      /* ⚠ 2026-09-18 — 지도 글씨는 **Pretendard** 다(지시). 02·03 씬의 지역 글씨가
+           래스터에 Pretendard 로 구워져 있어 01 만 Paperlogy 면 세 씬이 어긋난다.
+         ⚠ `var(--font-body)` 를 쓰지 않는다 — 1순위가 Inter 라 라틴·숫자
+           (`GTX-B` · `IC` · `3분` 의 3)만 Inter 로 갈려 한 라벨 안에서 두 서체가 섞인다.
+         ⚠ **히어로(B-CITY 춘천기업혁신파크)만 Paperlogy 를 유지한다** — 아래 규칙이
+           뒤에 와서 이긴다. 순서를 바꾸면 히어로도 Pretendard 가 된다.
+         ⚠ Pretendard 는 400~800 이 전부 로컬에 있다(assets/vendor/pretendard). */
+      .lm-place, .lm-badge { font-family: "Pretendard", "Noto Sans KR", sans-serif; font-weight: 600; }
+      /* ⚠ 글자 크기는 납품 labels.svg 의 22px 가 아니라 **26px** 다(2026-09-16).
+           위·아래·오른쪽을 자르지 않게 창을 1500 으로 넓히면서 배율이 1.45 → 1.11 배로
+           떨어졌고, 그만큼을 글자로 되찾았다(1440 화면에서 11.8 → 13.9px).
+         ⚠ **28px 부터 라벨이 알약과 부딪힌다**(강촌IC ↔ 45분 · 양평JCT ↔ 서울~양평).
+           26 이 겹침 0 인 상한이다 — 올리려면 겹침을 다시 잴 것. */
+      /* ⚠ 2026-09-18 — 29px 다(시안은 23px). 지형을 자르지 않는 창(1640)을 쓰면
+           배율이 1.02배뿐이라 시안 크기로는 1440 화면에서 11.3px 로 내려간다
+           (사이트 최소 11.5px). §11.106 3차와 같은 처리 — **잃은 배율을 글자로 되찾는다.**
+         ⚠ 창을 좁히면 이 값을 되돌려야 한다. 둘은 한 쌍이다. */
+      .lm-place { font-size: 29px; fill: #111111;
+        paint-order: stroke; stroke: var(--color-bg); stroke-width: 0.062em;
+        stroke-linejoin: round; }
+      /* B-CITY 지명만 강조한다. 줄 간격은 tspan 의 dy 가 em 이라 따라온다.
+         ⚠ 시안은 **두 색**이다 — `B-CITY` 는 브랜드 블루, 부제는 거의 검정.
+           둘째 줄만 색을 바꾸므로 마지막 tspan 을 잡는다(두 줄일 때만 성립한다). */
+      .lm-place--hero { font-family: var(--font-display); font-size: 38px; font-weight: 800;
+        fill: #1767D9; }
+      .lm-place--hero tspan:last-child { fill: #242424; }
+      /* 노드 — 옅은 원반 + 파란 코어 두 겹(§ 렌더러 주석).
+         ⚠ 2026-09-18 — 테두리는 **얇은 회색**이다. 두 번 바뀐 자리다:
+           시안 값(어두운 선) → 걷어냄 → **경계용 회색 하나**(지시).
+         ⚠ **어두운 색을 쓰지 말 것** — 시안 마커에는 원 바깥에 검은 선이 한 겹 있는데
+           그 선을 쓰지 않기로 했다. 옛 값 `#B8D1EA`(회청색)도 쓰지 않는다 — 회색이다.
+         ⚠ 테두리를 걷으면 **원반이 배경과 구분되지 않는다**(실측 대비 1.02~1.33 — 원반
+           #F5FAFF 이 페이지 배경 #F4F8FE 과 거의 같다). 그래서 이 선이 유일한 경계다.
+         ⚠ `stroke-width` 는 **viewBox 단위**다. 창이 1640 이고 1440 화면에서 상자가
+           806px 이라 축척 0.49 — 즉 2 단위가 화면 약 1px 이다(1920 에서 1.3px).
+           더 얇게 주면 1px 아래로 내려가 좁은 화면에서 사라진다. 2 가 하한이다. */
+      .lm-dot-ring { fill: #F5FAFF; stroke: #C9CFD6; stroke-width: 2; }
+      .lm-pill { stroke: #fff; stroke-width: 1.5; }
+      /* 노선명 알약 — 옅은 면 + 색 테두리. 테두리 색은 데이터가 인라인으로 준다. */
+      .lm-pill--out { stroke-width: 2; }
+      /* ⚠ 2026-09-18 — 시간 알약을 **03 씬 기준으로 통일**했다(지시).
+           전에는 01 이 600 · 25px(화면 12.3px)이고 03 이 700 · 26px(13.1px)이라
+           굵기와 크기가 미묘하게 달랐다. 면색도 달랐다(데이터의 `#173F91` → `#344198`).
+         ⚠ **26.6 은 03 의 26 과 화면에서 같은 크기다** — 01 은 뷰박스가 1640,
+           03 은 1600 이라 `26 × 1640/1600 = 26.6` 이라야 맞는다. 창을 바꾸면 다시 잰다.
+         ⚠ `font-weight` 를 여기서 700 으로 덮는다 — 위 `.lm-place, .lm-badge` 가 600 이다. */
+      .lm-badge { font-size: 26.6px; font-weight: 700; fill: #fff; }
+      /* 01 접근도 — 「해당 경로가 지나갈 때」 떠오르는 시간 알약(2026-09-21 지시).
+         ⚠ 기본이 0 이므로 **JS 가 투명도를 돌려주지 않으면 영영 안 보인다.**
+           그 자리는 `playSeq()` 의 `tags` 루프 하나뿐이다 — 지우면 시간이 통째로 사라진다.
+         ⚠ 동작 최소화에서는 CSS 로도 한 번 더 드러낸다(JS 도 같은 일을 한다).
+           둘 중 하나만 두면 rAF 가 묶인 환경에서 시간이 안 보일 수 있다. */
+      .lm-tagseq { opacity: 0; }
+      @media (prefers-reduced-motion: reduce) { .lm-tagseq { opacity: 1 !important; } }
       /* 경로 — 옅은 밑선 위로 마커가 지나가며 진한 선이 이어진다.
          dash 애니메이션에는 filter를 쓰지 않는다(매 프레임 재필터 = 깜빡임·부하). */
       .lm-base { fill: none; stroke: #BBD0EE; stroke-width: 6; stroke-linecap: round; }
@@ -350,13 +516,27 @@
       .lm-g.on .lm-node { opacity: 1; transform: none; }
       .lm-ring { fill: var(--color-surface); stroke: var(--color-primary); stroke-width: 5; }
       .lm-core { fill: var(--color-primary); }
-      .lm-name { font-family: var(--font-body); font-size: 32px; font-weight: 700;
-        fill: var(--color-text); }
+      /* 02·03 지점명 — 2026-09-18 부터 **코드가 그린다**(전에는 배경 래스터에 구워져 있어
+           영문 전환이 되지 않았다). 크기·색은 옛 래스터 실측값이다.
+         ⚠ 서체는 **Pretendard** 다 — 옛 래스터가 Pretendard Bold 였고(폭·높이 역산이
+           1% 안에서 일치했다) 01 지도와도 같은 서체가 된다.
+         ⚠ `var(--font-body)` 를 쓰지 않는다 — 1순위가 Inter 라 라틴·숫자만 갈린다.
+         ⚠ 32 는 **03 기준**이다. 02 는 40 이라 `route.nameSize` 가 인라인으로 덮는다.
+         ⚠ 아웃라인은 **01 과 같은 비율**(`0.062em`)이다 — 두께 경위와 `em` 을 쓰는
+           이유는 `.lm-place` 주석에 있다. 한쪽만 고치면 씬 사이가 어긋난다. */
+      .lm-name { font-family: "Pretendard", "Noto Sans KR", sans-serif; font-size: 32px;
+        font-weight: 700; fill: var(--color-text);
+        paint-order: stroke; stroke: var(--color-bg); stroke-width: 0.062em;
+        stroke-linejoin: round; }
       /* 소요시간 배지 — 경로 위 (예전 방식) */
       .lm-tag { opacity: 0; transition: opacity .5s ease; }
       .lm-g.on .lm-tag { opacity: 1; }
       .lm-tag rect { fill: var(--color-primary); }
-      .lm-tag text { font-family: var(--font-display); font-size: 26px; font-weight: 700; fill: #fff; }
+      /* ⚠ 서체만 Pretendard 로 바꿨다(2026-09-18) — 지도 글씨는 **B-CITY 히어로만
+           Paperlogy** 라는 규칙이 있고(§ `.lm-place` 주석), 그래야 01 시간 알약과
+           글자꼴까지 같아진다. 크기·굵기·색은 이 씬의 값이 기준이다. */
+      .lm-tag text { font-family: "Pretendard", "Noto Sans KR", sans-serif;
+        font-size: 26px; font-weight: 700; fill: #fff; }
       /* 허브 */
       .lm-hub circle.h1 { fill: var(--color-mint); opacity: .2;
         animation: lmHub 2.8s cubic-bezier(.22,1,.36,1) infinite;
@@ -369,6 +549,8 @@
       @media (prefers-reduced-motion: reduce) {
         .lm-path, .lm-node, .lm-tag, .lm-g { transition: none; }
         .lm-path { stroke-dashoffset: 0; }
+        /* 01 접근도는 지나가는 빛만 끈다 — 선·글자는 원래 그려져 있어 정보는 그대로다 */
+        .lm-trail { opacity: 0 !important; }
         .lm-hub circle.h1 { animation: none; }
       }
 
