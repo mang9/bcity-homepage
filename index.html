@@ -2181,6 +2181,16 @@
       /* 01 접근도의 「경로가 지나갈 때 뜨는 시간 알약」 — [{ el, order }] (2026-09-21 지시).
          litG 와 같은 주기·같은 페이드로 움직인다. */
       const seqTag = [];
+      /* ⚠⚠ 알약 폭을 **웹폰트가 로드된 뒤 다시 잰다**(2026-09-21).
+            폭은 `getBBox()` 실측이라 그리는 시점의 글꼴에 달려 있는데, 지도는
+            Pretendard 가 준비되기 전에 한 번 그려진다. 그래서 **Latin·숫자 글리프가
+            폴백 폭으로 잡혀** 알약이 시안보다 좁아졌다 — 실측 좌우 여백이
+            16 이어야 할 자리에 영문 5.7~8.7 · 국문 `GTX-B(예정)` 7.2 였다.
+         ⚠ 한글만인 라벨(`서울양양고속도로`)은 정확히 맞았다 — 그래서 국문에서는
+            눈에 잘 안 띄고 **영문에서 전부 드러난다**(지적 2026-09-21).
+         ⚠ `.lm-tag`(02·03 알약)는 폭을 `n.tag.length * 20 + 34` 공식으로 잡으므로
+            이 문제가 없다. 여기만 실측이다. */
+      const pillFit = [];
       let uid = 0;
 
       // 소요시간 배지 — 해당 경로 곡선의 45% 지점에 놓는다
@@ -2351,11 +2361,15 @@
                                     style: tc ? 'fill:' + tc : '' });
             tx.textContent = t;
             box.appendChild(tx);
-            const bb = tx.getBBox();
-            rect.setAttribute('x', bb.x - PILL_PAD);
-            rect.setAttribute('width', bb.width + PILL_PAD * 2);
-            rect.setAttribute('y', cy - PILL_H / 2);
-            rect.setAttribute('height', PILL_H);
+            const fit = () => {
+              const bb = tx.getBBox();
+              rect.setAttribute('x', bb.x - PILL_PAD);
+              rect.setAttribute('width', bb.width + PILL_PAD * 2);
+              rect.setAttribute('y', cy - PILL_H / 2);
+              rect.setAttribute('height', PILL_H);
+            };
+            fit();
+            pillFit.push(fit);
           });
           groups.push(g);
           return;
@@ -2516,6 +2530,12 @@
       const reduce = matchMedia('(prefers-reduced-motion: reduce)');
       let raf = null;
       strokes.forEach(s => { s.len = s.p.getTotalLength(); });
+      /* 웹폰트가 준비되면 알약 폭을 다시 맞춘다(§`pillFit` 주석).
+         ⚠ `document.fonts` 가 없는 환경에서는 조용히 넘어간다 — 그때는 첫 측정값이
+            그대로 남고, 폴백 글꼴로 그려지므로 그 값이 오히려 맞다. */
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => pillFit.forEach(f => f()));
+      }
 
       const COMET = 130;                                 // 이동 표시용 밝은 구간 길이
       const forR = ri => strokes.filter(s => s.ri === ri);
