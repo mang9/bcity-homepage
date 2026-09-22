@@ -476,7 +476,10 @@
       /* B-CITY 지명만 강조한다. 줄 간격은 tspan 의 dy 가 em 이라 따라온다.
          ⚠ 시안은 **두 색**이다 — `B-CITY` 는 브랜드 블루, 부제는 거의 검정.
            둘째 줄만 색을 바꾸므로 마지막 tspan 을 잡는다(두 줄일 때만 성립한다). */
-      .lm-place--hero { font-family: var(--font-display); font-size: 38px; font-weight: 800;
+      /* ⚠ 2026-09-22 — 38px → **35px**(지시: "춘천기업혁신파크 글씨를 약간 줄여줘").
+           halo 는 `.lm-place` 의 `stroke-width: 0.062em` 이라 **자동으로 따라온다** —
+           px 로 박지 말 것(§11.112). */
+      .lm-place--hero { font-family: var(--font-display); font-size: 35px; font-weight: 800;
         fill: #1767D9; }
       .lm-place--hero tspan:last-child { fill: #242424; }
       /* 노드 — 옅은 원반 + 파란 코어 두 겹(§ 렌더러 주석).
