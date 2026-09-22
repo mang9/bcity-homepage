@@ -36,3 +36,15 @@ node_modules/
 # 개발 확인용 상태 스냅숏 — 샘플 게시물이 든 페이지 사본이라 배포·저장소에 넣지 않는다.
 # 컨펌용 사이트에만 올린다(tools/review-sync.sh 가 스테이지에서 만든다).
 /dev-states/
+
+# ⚠⚠ 영문판 — **번역 확정 전까지 저장소에 넣지 않는다**(사용자 지시).
+#   이 블록이 없으면 `commit:prep` 의 `git add -A` 가 34쪽과 번역 소스를 그대로 커밋한다.
+#   확정되어 공개하기로 하면 ① 이 블록을 지우고 ② `pages.mjs` 의 `EN_READY` 를 기본 true 로
+#   바꾸고(또는 그 스위치를 걷고) ③ `en/` 과 국문 산출물을 **함께** 커밋한다 —
+#   국문만 올리면 GNB·모바일 메뉴의 EN 버튼이 페이지마다 404 가 된다.
+#   ⚠ `package.json` 의 `build:en` 은 이미 추적 중이라 여기로 막을 수 없다.
+#      커밋할 때 `git restore --staged package.json` 으로 인덱스에서 뺀다.
+/en/
+/src/sub/i18n/
+/tools/build/i18n.mjs
+/tools/build/pages-en.mjs

@@ -23,9 +23,13 @@
 /* ⚠ 대메뉴는 **전체 폭 드롭**이다(§9-1 확정 사양 · 개별 드롭다운으로 바꿨다가 되돌린 이력).
      `.gnb` 가 `height: var(--gnb-h)` 로 고정돼 있으면 펼친 패널이 잘리므로,
      펼칠 때는 높이를 풀고(`min-height`) 바가 바탕째 내려온다. */
-.gnb-menu { display: none; align-items: flex-start;
-  gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
-.gnb-item { display: flex; flex-direction: column; }
+/* ⚠⚠ 칸 폭·간격은 **메인 `#gnb` 과 같은 구조**여야 한다(2026-09-21 지시).
+     전에는 서브만 `gap: clamp(22px, 2.4vw, 40px)` + 내용 폭이라 칸이 제각각이었다
+     (영문 실측 106 / 113 / 205 / 114) — 메인은 `width: 168px` 고정 · gap 없음이다.
+     그래서 같은 메뉴가 두 화면에서 다른 간격으로 보였다.
+   ⚠ 값을 고칠 때는 `src/css/app.css` 의 `#gnb .gnb-item` 과 **함께** 고친다. */
+.gnb-menu { display: none; align-items: flex-start; font-size: 16px; font-weight: 600; }
+.gnb-item { display: flex; flex-direction: column; width: 168px; }
 /* ⚠ `align-self: flex-start` 가 없으면 링크가 **하위 패널 폭까지 늘어난다** —
      `.gnb-item` 이 세로 flex 라 기본 `stretch` 가 걸리고, 칸 폭은 가장 넓은 하위 항목이
      정한다. 그러면 `.is-on::after`(left:0; right:0) 밑줄이 글자보다 길어진다.
@@ -45,7 +49,14 @@
 .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
   font-size: 14px; font-weight: 400;
   transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
-.gnb-sub a { display: block; padding: 6px 0; white-space: nowrap;
+/* ⚠⚠ `white-space: nowrap` 을 쓰지 않는다(2026-09-21 지시). 칸이 168px 고정이라
+     168px 를 넘는 라벨이 **옆 칸을 침범해 잘려 보인다**(영문 하위 메뉴에서 실제로
+     37px 침범했다). 두 줄로 떨어지게 둔다 — 라벨이 길어져도 구조가 버틴다.
+   ⚠ 그러면 항목 높이가 달라져 칸마다 세로 길이가 다르다 — 정상이다.
+   ⚠ 이 규칙은 라벨을 줄인 뒤에도 **남겨 둔다.** 지금은 전부 한 줄에 들어가지만
+     다음에 긴 라벨이 들어오면 다시 필요하다. */
+.gnb-sub a { display: block; padding: 6px 0; padding-right: 12px;
+  line-height: 1.45; word-break: keep-all;
   color: var(--color-text-muted); transition: color .15s; }
 .gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
 .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
@@ -63,10 +74,13 @@
 .gnb.is-open .logo { color: var(--color-logo); }
 .gnb-side { display: flex; align-items: center; gap: 14px; height: var(--gnb-h); }
 .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-/* EN 안내 · 말풍선 — 규칙은 여기 없다. `src/shared/gnb-en.css` 한 벌을
-   메인과 **함께 쓴다**(CSS_COMMON 의 `gnb-en`). 고칠 일이 있으면 그 파일을 고친다.
-   ⚠ 트리거는 `.gnb-en` 클래스다 — `partials/gnb.html` 의 EN 스팬이 갖고 있다.
-     `span:last-child` 로 잡던 옛 방식은 말풍선 자신까지 매칭해 위치가 깨졌다. */
+/* 언어 전환(현재 언어 · 다른 언어 · 구분선) — 규칙은 여기 없다.
+   `src/shared/lang-en.css` 한 벌을 메인과 **함께 쓴다**(CSS_COMMON 의 `lang-en`).
+   고칠 일이 있으면 그 파일을 고친다 — 한쪽만 고치면 두 화면이 갈라진다.
+   ⚠ 트리거는 `.gnb-lang` 안의 `.is-on`(현재 언어 · 스팬)과 `a`(다른 언어)다.
+     `span:last-child` 로 잡던 옛 방식은 안쪽 자식까지 매칭해 위치가 깨졌다.
+   ⚠ 그 파일은 **영문판 전용 폭 보정**(`html[lang="en"]`)도 함께 담는다 — 언어와
+     관련된 공용 규칙의 집이다. 옛 이름 `gnb-en.css` 로는 검색되지 않는다. */
 .gnb-sns { display: flex; gap: 8px; }
 .gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
 .gnb-sns a { opacity: .85; transition: opacity .2s; }
@@ -93,3 +107,8 @@
 .mnav a { display: block; padding: 11px 4px; border-bottom: 1px solid var(--color-line);
   font-size: 15px; color: var(--color-text); }
 .mnav a.is-on { color: var(--color-primary); font-weight: 700; }
+/* 모바일 언어 전환 — 목록 맨 아래. `.gnb-lang` 은 1024px 이상에서만 보이므로
+   좁은 화면에서는 이쪽이 유일한 전환 경로다(2026-09-21).
+   ⚠ `.mnav a` 가 `display: block` + 아래 괘선이라 **되돌려야** 한 줄에 놓인다. */
+.mnav-foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--color-line); }
+.mnav-foot .mnav-lang a { display: inline; padding: 0; border: 0; font-size: inherit; }

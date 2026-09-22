@@ -6,7 +6,11 @@
 {{gnbItems}}
       </nav>
       <div class="gnb-side">
-        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span class="gnb-en">EN</span></div>
+        <!-- 언어 전환 — 스타일은 `src/shared/lang-en.css` 한 벌이다(메인과 공유).
+             ⚠ 안쪽 꼴은 `pages.mjs` 의 `EN_READY` 가 정한다(링크 / 준비중 말풍선).
+                꼴을 여기 적지 않는 이유는 `pages-en.mjs` 가 그 산출물을 뒤집기 때문이다 —
+                두 곳에 적으면 한쪽만 고쳐져 치환(1회 일치 assert)이 깨진다. -->
+        <div class="gnb-lang">{{langToggle}}</div>
         <div class="gnb-sns">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
@@ -29,5 +33,11 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
 {{mnavItems}}
+      <!-- 모바일 언어 전환 — `.gnb-lang` 은 1024px 이상에서만 보이므로
+           좁은 화면에서는 **이쪽이 유일한 경로**다(2026-09-21).
+           ⚠ `EN_READY` 가 꺼져 있으면 이 블록이 **통째로 빠진다** — 갈 곳이 없는 전환을
+             메뉴에 두지 않는다(호버가 없어 「준비중」 말풍선도 뜨지 않는다).
+             메인 `index.html` 도 원래 모바일 토글이 없었다. -->
+{{mnavLang}}
     </div>
   </div>

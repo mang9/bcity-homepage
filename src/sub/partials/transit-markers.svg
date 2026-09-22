@@ -7,22 +7,38 @@
   </defs>
   <g id="bcity-markers" fill="#FFFFFF" stroke-width="5" filter="url(#marker-shadow)">
     <g id="markers-itx-cheongchun" data-route="itx-cheongchun" data-transport="rail" stroke="#1758B5">
-      <circle cx="168" cy="579" r="12"/><circle cx="264" cy="540" r="12"/><circle cx="458" cy="496" r="12"/>
+      <circle cx="264" cy="540" r="12"/><circle cx="458" cy="496" r="12"/>
       <circle cx="579" cy="409" r="12"/><circle cx="694" cy="386" r="12"/><circle cx="752" cy="330" r="12"/>
     </g>
     <g id="markers-seoul-yangyang" data-route="seoul-yangyang" data-transport="road" stroke="#527EA8">
-      <circle cx="268" cy="637" r="12"/><circle cx="364" cy="581" r="12"/>
+    <circle cx="268" cy="637" r="12"/><circle cx="422" cy="583" r="12"/><circle cx="619" cy="523" r="12"/>
+  </g>
+    <!-- 서울역 — **GTX-B 만 지난다**(2026-09-22 지시: ITX 는 청량리 시작).
+         ⚠ 링 색은 노선색(#19B9AE)이 아니라 **철도 파랑**이다 — 역은 실재하고
+            「예정」은 점선이 말한다. 다른 역과 같은 색이어야 한 종류로 읽힌다. -->
+    <g id="markers-gtx-b" data-route="gtx-b" data-transport="rail" stroke="#1758B5">
+      <circle cx="168" cy="579" r="12"/>
     </g>
-    <g id="markers-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#527EA8"><circle cx="306" cy="520" r="12"/></g>
+    <g id="markers-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#527EA8">
+    <circle cx="487" cy="520" r="12"/><circle cx="600" cy="480" r="12"/>
+  </g>
     <g id="markers-seoul-yangpyeong" data-route="seoul-yangpyeong" data-transport="road" stroke="#527EA8">
       <circle cx="358" cy="682" r="12"/><circle cx="478" cy="652" r="12"/>
     </g>
-    <g id="markers-context-access" data-route="context-access" data-transport="road" stroke="#527EA8">
-      <circle cx="615" cy="607" r="12"/><circle cx="865" cy="759" r="12"/><circle cx="780" cy="355" r="12"/>
+    <!-- 춘천시청 · 강원도청 — 경로 없이 위치만 표시하는 참조점이다(2026-09-22 지시).
+         ⚠ `data-transport="common"` 이라 어느 카드에서도 음영되지 않는다(locmap.js) —
+            노선이 없으므로 `road` 로 두면 도로 카드에만 살아나는 유령 노드가 된다. -->
+    <g id="markers-civic" data-route="civic" data-transport="common" stroke="#527EA8">
+      <circle cx="776" cy="370" r="8" stroke-width="3.5"/>
     </g>
     <g id="markers-yangyang-airport" data-route="yangyang-airport" data-transport="air" stroke="#3195E8"><circle cx="1361" cy="251" r="14"/></g>
     <g id="markers-sokcho-port" data-route="sokcho-port" data-transport="port" stroke="#13989C"><circle cx="1312" cy="161" r="14"/></g>
-    <g id="markers-donghae-port" data-route="donghae-port" data-transport="port" stroke="#13989C"><circle cx="1588" cy="649" r="14"/></g>
+    <g id="markers-donghae-port" data-route="donghae-port" data-transport="port" stroke="#13989C">
+      <!-- ⚠ 남춘천IC(789,526) 는 **동해항 경로 곡선 위의 점**이다(2026-09-22 지시).
+           전에는 서울양양 그룹의 짧은 스퍼 끝점이었는데 그 스퍼가 B-CITY 링(r38) 안에
+           72% 묻혀 선이 안 보였다. 좌표를 옮기면 **동해항 경로의 `d` 위**여야 한다. -->
+      <circle cx="789" cy="526" r="12"/><circle cx="1588" cy="649" r="14"/>
+    </g>
   </g>
   <g id="marker-bcity" data-route="bcity" data-transport="common" filter="url(#marker-shadow)">
     <circle cx="710" cy="516" r="38" fill="#FFFFFF"/>

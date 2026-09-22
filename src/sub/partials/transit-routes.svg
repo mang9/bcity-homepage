@@ -9,16 +9,21 @@
   </defs>
   <g id="bcity-routes" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#route-shadow)">
     <g id="route-itx-cheongchun" data-route="itx-cheongchun" data-transport="rail" stroke="#1758B5" stroke-width="7">
-      <path d="M168 579 C206 550 230 547 264 540 C330 551 392 530 458 496 C505 470 542 430 579 409 C620 429 656 417 694 386 C718 365 735 340 752 330 C785 331 807 353 797 388 C780 434 747 477 710 516"/>
+      <path d="M264 540 C330 551 392 530 458 496 C505 470 542 430 579 409 C620 429 656 417 694 386 C718 365 735 340 752 330 C785 331 807 353 797 388 C780 434 747 477 710 516"/>
     </g>
     <g id="route-gtx-b" data-route="gtx-b" data-transport="rail" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
-      <path d="M207 555 C304 532 377 514 458 496 C538 480 629 465 710 516"/>
+      <path d="M168 579 C185 566 188 560 207 555 C304 532 377 514 458 496 C514 490 556 452 579 409 C626 440 668 436 704 412 C728 392 744 353 752 330"/>
     </g>
     <g id="route-seoul-yangyang" data-route="seoul-yangyang" data-transport="road" stroke="#527EA8" stroke-width="7">
       <path d="M268 637 C288 605 321 584 364 581 C450 590 520 572 582 539 C628 516 669 504 710 516"/>
-    </g>
+    
+  </g>
     <g id="route-second-gyeongchun" data-route="second-gyeongchun" data-transport="road" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
-      <path d="M306 520 C403 507 492 486 579 409 C621 411 666 429 710 516"/>
+      <!-- ⚠ 세 구간 모두 **그룹의 점선을 그대로 쓴다.** 한 구간만 실선으로 두면
+           그 구간은 완공된 것으로 읽힌다 — 전 구간이 예정이다(2026-09-22 실수 교정). -->
+      <path d="M422 583 C443 562 465 540 487 520"/>
+    <path d="M487 520 C520 498 558 482 600 480"/>
+    <path d="M600 480 C612 495 618 509 619 523"/>
     </g>
     <!-- ⚠ 2026-09-17 수정사항 추가 — 서울~양평고속도로(예정). 경로는 첨부 시안의
          **위치 관계만** 참고했다(감일JCT → 양평JCT → 서울양양 간선 합류).
@@ -33,7 +38,8 @@
          (locmap.js 는 노선 id 를 모른다 · §11.14). JS 를 고칠 필요가 없다.
       ⚠ transit-flow.svg 에 **같은 d** 가 있어야 한다 — 한쪽만 고치면 흐름이 선을 벗어난다. -->
     <g id="route-seoul-yangpyeong" data-route="seoul-yangpyeong" data-transport="road" stroke="#19B9AE" stroke-width="7" stroke-dasharray="3 15">
-      <path d="M358 682 C398 694 438 680 478 652 C500 625 512 596 520 572"/>
+      <path d="M358 682 C398 694 438 680 478 652"/>
+    <path d="M478 652 C466 630 440 604 422 583"/>
     </g>
     <g id="route-yangyang-airport" data-route="yangyang-airport" data-transport="air" stroke="#3195E8" stroke-width="6" stroke-dasharray="18 16">
       <path d="M1361 251 C1230 247 1109 287 1002 346 C886 409 790 470 710 516"/>
@@ -44,11 +50,9 @@
     <g id="route-donghae-port" data-route="donghae-port" data-transport="port" stroke="#13989C" stroke-width="7">
       <path d="M1588 649 C1392 666 1203 640 1034 590 C900 551 796 520 710 516"/>
     </g>
-    <g id="route-context-access" data-route="context-access" data-transport="road" stroke="#527EA8" stroke-width="7">
-      <path d="M306 520 C394 520 486 503 578 477 C628 463 677 477 710 516"/>
-      <path d="M615 607 C650 574 682 542 710 516"/>
-      <path d="M865 759 C867 702 844 644 796 596 C765 566 735 540 710 516"/>
-      <path d="M780 355 C760 409 734 467 710 516"/>
-    </g>
+    <!-- ⚠ 춘천시청 · 강원도청은 **경로 없이 위치만** 표시한다(2026-09-22 지시).
+         되살릴 일이 생기면 `transit-flow.svg` 에 **같은 `d` 를 쌍으로** 넣고,
+         `transit-markers/labels.svg` 의 `data-transport` 를 `common` → `road` 로 되돌린다.
+         옛 경로의 `d` 는 인계 문서 §11.117 후속에 있다. -->
   </g>
 </svg>

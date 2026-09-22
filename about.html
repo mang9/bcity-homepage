@@ -135,9 +135,13 @@
     /* ⚠ 대메뉴는 **전체 폭 드롭**이다(§9-1 확정 사양 · 개별 드롭다운으로 바꿨다가 되돌린 이력).
          `.gnb` 가 `height: var(--gnb-h)` 로 고정돼 있으면 펼친 패널이 잘리므로,
          펼칠 때는 높이를 풀고(`min-height`) 바가 바탕째 내려온다. */
-    .gnb-menu { display: none; align-items: flex-start;
-      gap: clamp(22px, 2.4vw, 40px); font-size: 16px; font-weight: 600; }
-    .gnb-item { display: flex; flex-direction: column; }
+    /* ⚠⚠ 칸 폭·간격은 **메인 `#gnb` 과 같은 구조**여야 한다(2026-09-21 지시).
+         전에는 서브만 `gap: clamp(22px, 2.4vw, 40px)` + 내용 폭이라 칸이 제각각이었다
+         (영문 실측 106 / 113 / 205 / 114) — 메인은 `width: 168px` 고정 · gap 없음이다.
+         그래서 같은 메뉴가 두 화면에서 다른 간격으로 보였다.
+       ⚠ 값을 고칠 때는 `src/css/app.css` 의 `#gnb .gnb-item` 과 **함께** 고친다. */
+    .gnb-menu { display: none; align-items: flex-start; font-size: 16px; font-weight: 600; }
+    .gnb-item { display: flex; flex-direction: column; width: 168px; }
     /* ⚠ `align-self: flex-start` 가 없으면 링크가 **하위 패널 폭까지 늘어난다** —
          `.gnb-item` 이 세로 flex 라 기본 `stretch` 가 걸리고, 칸 폭은 가장 넓은 하위 항목이
          정한다. 그러면 `.is-on::after`(left:0; right:0) 밑줄이 글자보다 길어진다.
@@ -157,7 +161,14 @@
     .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
       font-size: 14px; font-weight: 400;
       transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
-    .gnb-sub a { display: block; padding: 6px 0; white-space: nowrap;
+    /* ⚠⚠ `white-space: nowrap` 을 쓰지 않는다(2026-09-21 지시). 칸이 168px 고정이라
+         168px 를 넘는 라벨이 **옆 칸을 침범해 잘려 보인다**(영문 하위 메뉴에서 실제로
+         37px 침범했다). 두 줄로 떨어지게 둔다 — 라벨이 길어져도 구조가 버틴다.
+       ⚠ 그러면 항목 높이가 달라져 칸마다 세로 길이가 다르다 — 정상이다.
+       ⚠ 이 규칙은 라벨을 줄인 뒤에도 **남겨 둔다.** 지금은 전부 한 줄에 들어가지만
+         다음에 긴 라벨이 들어오면 다시 필요하다. */
+    .gnb-sub a { display: block; padding: 6px 0; padding-right: 12px;
+      line-height: 1.45; word-break: keep-all;
       color: var(--color-text-muted); transition: color .15s; }
     .gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
     .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
@@ -175,10 +186,13 @@
     .gnb.is-open .logo { color: var(--color-logo); }
     .gnb-side { display: flex; align-items: center; gap: 14px; height: var(--gnb-h); }
     .gnb-lang { display: none; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
-    /* EN 안내 · 말풍선 — 규칙은 여기 없다. `src/shared/gnb-en.css` 한 벌을
-       메인과 **함께 쓴다**(CSS_COMMON 의 `gnb-en`). 고칠 일이 있으면 그 파일을 고친다.
-       ⚠ 트리거는 `.gnb-en` 클래스다 — `partials/gnb.html` 의 EN 스팬이 갖고 있다.
-         `span:last-child` 로 잡던 옛 방식은 말풍선 자신까지 매칭해 위치가 깨졌다. */
+    /* 언어 전환(현재 언어 · 다른 언어 · 구분선) — 규칙은 여기 없다.
+       `src/shared/lang-en.css` 한 벌을 메인과 **함께 쓴다**(CSS_COMMON 의 `lang-en`).
+       고칠 일이 있으면 그 파일을 고친다 — 한쪽만 고치면 두 화면이 갈라진다.
+       ⚠ 트리거는 `.gnb-lang` 안의 `.is-on`(현재 언어 · 스팬)과 `a`(다른 언어)다.
+         `span:last-child` 로 잡던 옛 방식은 안쪽 자식까지 매칭해 위치가 깨졌다.
+       ⚠ 그 파일은 **영문판 전용 폭 보정**(`html[lang="en"]`)도 함께 담는다 — 언어와
+         관련된 공용 규칙의 집이다. 옛 이름 `gnb-en.css` 로는 검색되지 않는다. */
     .gnb-sns { display: flex; gap: 8px; }
     .gnb-sns svg { width: 20px; height: 20px; fill: currentColor; }
     .gnb-sns a { opacity: .85; transition: opacity .2s; }
@@ -205,27 +219,68 @@
     .mnav a { display: block; padding: 11px 4px; border-bottom: 1px solid var(--color-line);
       font-size: 15px; color: var(--color-text); }
     .mnav a.is-on { color: var(--color-primary); font-weight: 700; }
+    /* 모바일 언어 전환 — 목록 맨 아래. `.gnb-lang` 은 1024px 이상에서만 보이므로
+       좁은 화면에서는 이쪽이 유일한 전환 경로다(2026-09-21).
+       ⚠ `.mnav a` 가 `display: block` + 아래 괘선이라 **되돌려야** 한 줄에 놓인다. */
+    .mnav-foot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--color-line); }
+    .mnav-foot .mnav-lang a { display: inline; padding: 0; border: 0; font-size: inherit; }
 
-    /* ── gnb-en.css ─────────────────────────────────────────── */
-    /* ===== GNB 영문(EN) 안내 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
-       영문 페이지가 아직 없어 EN 은 링크가 아니라 안내다. 호버·포커스에 아래로 말풍선을 띄운다.
+    /* ── lang-en.css ─────────────────────────────────────────── */
+    /* ===== 언어 관련 공용 규칙 — 메인과 서브페이지가 **함께 쓰는 한 벌** =====
 
-       2026-08-27 에 두 벌을 합쳤다. 전에는 같은 규칙이 `src/css/app.css`(`#gnb .gnb-en`)와
-       `src/sub/css/20-gnb.css`(`.gnb-lang > span:last-child`)에 나뉘어 있었고, 실제로 갈라졌다 —
-       **서브만 흰 바탕에 흰 글자**가 되어 EN 이 보이지 않았다(사용자 지적).
+       ① GNB 언어 전환(KO / EN)  ② 영문판 전용 폭 보정(`html[lang="en"]`)
+
+       ⚠ 파일 이름이 `gnb-en` 이었다(2026-09-21 에 `lang-en` 으로 바꿨다). 「EN 준비중 안내」
+         말풍선만 담던 시절의 이름이라 내용과 어긋나 있었다. 옛 이름으로 검색하면 안 나온다.
+       ⚠⚠ `CSS_COMMON` 배열이 **`pages.mjs` 와 `lint-classes.mjs` 두 곳에 사본으로** 있다.
+         이름을 바꿀 때는 두 곳을 함께 고쳐야 한다 — 한쪽만 고치면 린터가 파일을 못 찾는다.
 
        싣는 경로가 둘이다 — 파일은 하나다:
          메인   `src/css/app.css` 의 `@import ... layer(utilities)`
-         서브   `pages.mjs` 의 CSS_COMMON 에 `gnb-en` 이 들어 있다
-       말풍선을 **넣는 쪽은 JS 다**(메인 `index.html` · 서브 `common.js`) — 마크업에 글자를 박으면
-       CSS 가 늦거나 실패할 때 "준비중입니다" 가 그대로 드러난다(2026-08-27 지시).
+         서브   `pages.mjs` 의 CSS_COMMON 에 `lang-en` 이 들어 있다
+       한쪽만 고치면 두 화면의 언어 전환이 갈라진다. 전에 실제로 갈라져
+       **서브만 흰 바탕에 흰 글자**가 된 적이 있다(2026-08-27 지적).
 
-       ⚠⚠ **`color-mix()` 안에 `currentColor` 를 넣지 않는다.** `color` 가 자기를 참조하는 꼴이라
-         크롬이 상속색 변화를 따라오지 못해 바가 흰 면으로 바뀌어도 글자가 흰색에 머문다.
-         실측값이 `color(srgb 1 1 1 / .6)` 로 굳어 있었다 — 두 상태의 색을 **각각** 적는다.
-       ⚠ `opacity` 도 쓰지 않는다. 0~1 사이면 쌓임 문맥이 생겨 안쪽 말풍선의 `z-index` 가
-         그 안에 갇히고, 결국 GNB 구분선이 말풍선 위로 그려진다(실측: 선이 말풍선을 가로지름).
-       ⚠ 바의 상태 클래스 이름이 메인 · 서브가 다르다(`open`/`solid` ↔ `is-open`/`is-solid`).
+       ⚠⚠ **두 상태를 함께 담는다** — `pages.mjs` 의 `EN_READY` 가 가른다.
+           꺼짐(기본) : EN 이 스팬 + 「준비중입니다」 말풍선(`.gnb-en` · `.gnb-tip`)
+           켜짐       : EN 이 실제 링크(`.gnb-lang a`) · 영문판에서는 KO 쪽이 링크가 된다
+         2026-09-21 에 영문 34쪽을 만들며 말풍선을 걷었다가, 번역 확정 전에는 `en/` 을
+         저장소에 넣지 않기로 해서(EN 링크가 404 가 된다) 2026-09-22 에 되살렸다.
+         **두 벌을 함께 두는 편이 맞다** — 스위치 하나로 오가고, 한쪽만 지우면 그 상태에서
+         안내가 스타일 없이 드러나거나 링크가 밋밋해진다.
+
+       ⚠ 마크업은 두 페이지가 **같은 꼴**이어야 한다 — 현재 언어는 `is-on` 스팬이고 사이에
+         `gnb-lang-sep` 구분선이 온다. `pages-en.mjs` 가 국문 블록의 두 요소를 서로 뒤집어
+         영문판을 만든다(꼴은 `pages.mjs` 의 `langToggle` 을 볼 것 — 파티셜에는 없다).
+       ⚠⚠ **이 주석에 마크업 예시를 글자로 적지 않는다.** 이 파일은 페이지마다 인라인되므로
+         `pages-en.mjs` 의 치환 정규식이 주석을 잡을 수 있고, grep 검증도 오탐이 난다
+         (2026-09-21 에 실제로 겪었다 — 국문 페이지에서 영문 꼴이 검색됐다).
+
+       ⚠ **현재 언어를 색으로 구분하지 않는다.** `10-base.css` 의 `a { color: inherit }` 때문에
+         링크와 스팬이 같은 색이고, 바가 세 상태(투명 · 흰 면 · 펼침)로 색을 갈아입으므로
+         색을 박으면 그중 한 상태에서 묻힌다. **불투명도 + 굵기**로 가른다.
+       ⚠⚠ `opacity` 는 **링크 쪽(`.gnb-lang a`)에만** 쓴다. 준비중 스팬은 안에 `absolute`
+         말풍선을 품으므로 opacity 가 쌓임 문맥을 만들어 `z-index` 를 갇히게 한다 —
+         그쪽은 `color` 로 흐림을 낸다(아래 「EN 준비중」 절의 경고 참고). */
+
+    /* 현재 언어 — 이 페이지의 언어다. 강조해 둔다 */
+    .gnb-lang .is-on { opacity: 1; font-weight: 700; }
+
+    /* 다른 언어 — 실제 링크다. 흐리게 두고 호버·포커스에 진해진다 */
+    .gnb-lang a { opacity: .58; font-weight: 600; transition: opacity .2s ease; }
+    .gnb-lang a:hover,
+    .gnb-lang a:focus-visible { opacity: 1; }
+
+    /* 구분선 — `aria-hidden` 이라 낭독에서 빠진다 */
+    .gnb-lang-sep { opacity: .38; font-weight: 400; }
+
+    /* ===== EN 준비중 (`pages.mjs` 의 `EN_READY` 가 꺼져 있을 때) =====
+
+       ⚠⚠ **`opacity` 를 쓰지 않는다.** 0~1 사이면 쌓임 문맥이 생겨 안쪽 말풍선의 `z-index`
+         가 그 안에 갇히고, GNB 구분선(이것도 absolute 인데 트리에서 **뒤**에 온다)이
+         말풍선 위로 그려져 선이 말풍선을 가로지른다(실측으로 확인한 현상이다).
+         그래서 흐림을 `color` 로 낸다 — 위 `.gnb-lang a` 가 opacity 를 쓰는 것과 다르다.
+       ⚠ 바의 상태 클래스 이름이 메인·서브가 다르다(`open`/`solid` ↔ `is-open`/`is-solid`).
          한 규칙에 둘 다 적는다 — 한쪽만 적으면 그 화면에서 색이 안 바뀐다. */
 
     /* 흰 글자(히어로 사진 위)가 기본이다 */
@@ -239,10 +294,9 @@
     .gnb.is-solid .gnb-en:hover, .gnb.is-open .gnb-en:hover,
     .no-hero .gnb .gnb-en:hover { color: var(--color-text); }
 
-    /* 말풍선 — JS 가 `.gnb-en` 안에 넣는다
+    /* 말풍선 — JS 가 `.gnb-en` 안에 넣는다(메인은 인라인 · 서브는 `common.js`)
        ⚠ `.gnb-lang` 에 `overflow` 가 있으면 잘려서 보이지 않는다.
-       ⚠ `z-index` 가 필요하다. GNB 구분선도 absolute 인데 **트리에서 뒤에** 오므로
-         둘 다 `auto` 면 구분선이 위에 그려져 말풍선을 가른다(2026-08-27 지적). */
+       ⚠ `z-index` 가 필요하다 — 위의 구분선 문제 때문이다. */
     .gnb-tip { position: absolute; z-index: 3; top: calc(100% + 9px); left: 50%;
       transform: translate(-50%, -4px); padding: 6px 11px; border-radius: var(--radius-sm, 8px);
       white-space: nowrap; background: var(--color-navy); color: #fff;
@@ -253,6 +307,85 @@
       border: 4px solid transparent; border-bottom-color: var(--color-navy); }
     .gnb-en:hover .gnb-tip,
     .gnb-en:focus-visible .gnb-tip { opacity: 1; transform: translate(-50%, 0); }
+
+    /* 모바일 메뉴 안의 언어 전환 — 1023px 이하에서는 `.gnb-lang` 이 `display: none` 이라
+       이쪽이 **유일한 전환 경로**다(2026-09-21 지적: 모바일에서 언어를 바꿀 방법이 없었다).
+       ⚠ 메인은 이 블록을 마크업에 직접 갖고 있고 서브는 빌더가 넣는다 — 클래스는 같다. */
+    .mnav-lang { display: flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 700; }
+    .mnav-lang .is-on { color: var(--color-primary); }
+    .mnav-lang a { opacity: .62; transition: opacity .2s ease; }
+    .mnav-lang a:hover,
+    .mnav-lang a:focus-visible { opacity: 1; }
+
+    /* ===== 영문판 전용 폭 보정 =====
+
+       ⚠⚠ **`html[lang="en"]` 로만 건다.** 영문 산출물은 `pages-en.mjs` 가 `lang="en"` 을
+         넣으므로 국문 화면은 한 픽셀도 바뀌지 않는다. 속성 선택자가 특이도를 올려
+         원래 규칙보다 뒤에 오지 않아도 이긴다(이 파일은 `20-gnb.css` 뒤, `30-hero-lnb.css`
+         **앞**에 실린다 — 순서에 기대면 안 되는 자리다).
+       ⚠⚠ **메인에서는 이 블록이 `layer(utilities)` 안에 들어간다**(`app.css` 의 `@import`).
+         레이어 없는 선언이 레이어 안을 항상 이기므로(§1.3 · §6.3), 메인이 같은 클래스를
+         쓰게 되면 이 규칙이 **조용히 무효**가 된다. 지금 메인에 `.closer` 는 없다(실측 0) —
+         메인에도 쓰려면 규칙을 `src/css/app.css` 본문에 직접 적어야 한다.
+
+       ⚠ **넓힐 자리를 골라서 넓힌다.** 영문 카피는 같은 뜻에 글자가 2.3~2.9배 들지만
+         글자 하나가 한글 음절의 약 0.5배라, 대부분의 본문 상자는 이미 한 줄에
+         **66~106자**가 들어간다(읽기 좋은 구간은 65~75자). 거기서 더 넓히면
+         줄 수는 줄어도 **읽기가 나빠진다.** 실측한 한 줄 글자 수:
+           `.closer p` **37** ← 유일하게 좁다 · `.lv-side-lead` 66 · `.nf-d` 74 ·
+           `.kpi-d` 73 · `.dz-intro .lede` 76 · `.ab-vision-d` 76 · `.inf-hero .lede` 79 ·
+           `.closer small` 80 · `.br-lead` 94 · `.sub-d` 96 · `.cc-s` 99 · `.dz-s` 106
+         그래서 넓히는 것은 `.closer p` **하나뿐**이다. 나머지를 건드리지 말 것. */
+
+    /* 마무리 카피 — 30ch 는 **국문 디스플레이 활자에 맞춘 값**이다(한 줄 20음절).
+       영문에서는 한 줄 37자밖에 안 되어 4줄까지 늘어났다(추진일정 · 기대효과).
+       ⚠ 44ch 는 실측으로 고른 값이다(1024~1920 공통):
+           30ch  location[3,2] effect 4 schedule 4 brand 3 concept 3
+           36ch  location[3,2] effect 3 schedule 3 brand 3 concept 2
+           44ch  location[3,2] effect 3 schedule 3 brand 2 concept 2   ← 채택
+           48ch  location[2,2] effect 3 schedule 3 brand 2 concept 2
+         48ch 로 더 넓혀도 **최대 줄 수는 3 으로 같다** — 한 줄이 1920 에서 1280px(60자)까지
+         늘어나는 대가만 늘어난다. 44ch 는 1920 에서 1173px(55자)다.
+       ⚠ 390px 에서는 컨테이너(350px)가 이기므로 이 값과 무관하다 — 그 폭의 줄 수는
+         카피 길이가 정한다(영문 4~5줄). 줄이려면 문면을 줄여야 한다.
+       ⚠ 줄 수가 바뀌면 **Figma 캡처의 `강조 하이라이트` 띠 좌표를 다시 계산해야 한다**
+         (§11.97 — 띠 y 를 줄 번호로 구한다). */
+    html[lang="en"] .closer p { max-width: 44ch; }
+
+    /* 브랜드 · 기본 로고타입 사양 — `dt` 칸이 **52px 고정**이다(`page-brand.css`).
+       국문 최장 라벨이 `국문 표기` 51.5px 라 딱 맞춰 둔 값인데, 영문은 66~90px 라
+       라벨이 칸을 넘어 **`dd` 위로 올라탄다**(실측 겹침 12.7 / 2.4 / **26.4** / 6.1px ·
+       국문은 0). `dt` 는 한 낱말이라 접히지 못해 그대로 오른쪽으로 삐져나온다.
+     ⚠ 잉크 폭 실측 — `Typeface` 66.4 · `Proportion` 76.7 · `Composition` 90.4 ·
+       `Korean rendering` 한 줄에 약 131. **136px 이 네 라벨을 모두 한 줄에 담는 최소값**이다
+       (104·120px 은 `Korean rendering` 만 두 줄로 남는다).
+     ⚠ 대가 — 1024·1200 에서 `Typeface` 의 `dd` 가 두 줄이 된다. 긴 사양 문장이라 자연스럽다.
+     ⚠⚠ **좁은 화면에서는 쌓는다.** 136px 을 그대로 두면 390 에서 `dd` 가 세 줄
+       (`[1,3,3,3]`)까지 늘어난다 — 쌓으면 `[1,2,1,1]` 로 국문(`[1,2,2,2]`)보다도 낫다.
+       ⚠ `gap: 12px` 은 단축이라 **행 간격도 12px** 이다. 쌓을 때 그대로 두면 라벨과 값이
+         따로 읽힌다 → `row-gap` 을 눌러야 한다.
+     ⚠ 라벨 문면이 바뀌면 이 값을 **다시 재라.** `Range` + `getBoundingClientRect` 로
+       잉크 폭을 재고 `dt.right − dd.left` 가 0 이하인지 본다(요소 폭으로는 안 잡힌다). */
+    html[lang="en"] .br-wm-spec div { grid-template-columns: 136px minmax(0, 1fr); }
+    @media (max-width: 767px) {
+      html[lang="en"] .br-wm-spec div { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+    }
+
+    /* 입지 · 교통 카드 목록 — 국문은 `[노선명] [소요시간]` 한 줄이고 값이 `40분` 같은
+       **수치**라 `white-space: nowrap` 이 맞다. 영문 값은 `55 min to Cheongnyangni Station`
+       처럼 **문장**이어서 그 nowrap 이 `auto` 칸을 최대폭으로 붙잡고, 295px 카드에서
+       이름 칸(`1fr`)이 눌려 **이름이 값 위로 올라탄다**(실측 1440 32px · 1024 17px · 390 14곳).
+     ⚠ 값에 줄바꿈만 허용해도(`white-space: normal`) **안 풀린다** — `auto` 칸이 여전히
+       max-content 를 요구해 겹침이 그대로다(실측 2 / 3 / 12곳).
+     ⚠⚠ 이름에 `overflow-wrap: anywhere` 를 주면 겹침은 0 이 되지만 좁은 칸에서 낱말이
+       글자 단위로 쪼개져 **390 에서 항목이 15줄**까지 늘고 카드가 670 → 1294px 이 된다.
+       쓰지 말 것.
+     → **값을 아랫줄로 내린다.** 영문 값은 오른쪽 정렬 수치가 아니라 설명 문구라
+       아랫줄이 읽기에도 맞다. 카드 높이 대가는 1440 +71px · 1024 **−27px** · 390 +12px. */
+    html[lang="en"] .tmode-list span {
+      grid-column: 1 / -1; justify-self: start; white-space: normal;
+    }
 
     /* ── 30-hero-lnb.css ─────────────────────────────────────────── */
     /* ===== 히어로 ===== */
@@ -977,7 +1110,11 @@
         </div>
       </nav>
       <div class="gnb-side">
-        <div class="gnb-lang"><span>KO</span><span aria-hidden="true">|</span><span class="gnb-en">EN</span></div>
+        <!-- 언어 전환 — 스타일은 `src/shared/lang-en.css` 한 벌이다(메인과 공유).
+             ⚠ 안쪽 꼴은 `pages.mjs` 의 `EN_READY` 가 정한다(링크 / 준비중 말풍선).
+                꼴을 여기 적지 않는 이유는 `pages-en.mjs` 가 그 산출물을 뒤집기 때문이다 —
+                두 곳에 적으면 한쪽만 고쳐져 치환(1회 일치 assert)이 깨진다. -->
+        <div class="gnb-lang"><span class="is-on">KO</span><span class="gnb-lang-sep" aria-hidden="true">|</span><span class="gnb-en" aria-disabled="true">EN</span></div>
         <div class="gnb-sns">
           <a href="https://www.youtube.com/@B-CITY-KOREA" target="_blank" rel="noopener" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg>
@@ -1020,6 +1157,12 @@
       <a href="video.html">홍보영상</a>
       <a href="gallery.html">갤러리</a>
       <a href="publication.html">발행물</a>
+      <!-- 모바일 언어 전환 — `.gnb-lang` 은 1024px 이상에서만 보이므로
+           좁은 화면에서는 **이쪽이 유일한 경로**다(2026-09-21).
+           ⚠ `EN_READY` 가 꺼져 있으면 이 블록이 **통째로 빠진다** — 갈 곳이 없는 전환을
+             메뉴에 두지 않는다(호버가 없어 「준비중」 말풍선도 뜨지 않는다).
+             메인 `index.html` 도 원래 모바일 토글이 없었다. -->
+
     </div>
   </div>
 
@@ -1731,8 +1874,17 @@
       addEventListener('resize', function () { if (!wide()) set(false); });
     })();
 
-    /* KO / EN — 영문은 아직 없다. 호버·포커스에 안내를 띄운다(2026-08-27 지시).
-       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다. */
+    /* KO / EN 「준비중입니다」 — `EN_READY` 가 꺼져 있을 때만 붙는다.
+       ⚠ **EN 이 스팬일 때만 동작한다.** 스위치가 켜지면 빌더가 그 자리를 `<a>` 로 내보내
+         `.gnb-en` 이 없어지므로 이 블록은 스스로 빠져나간다 — 조건을 따로 둘 필요가 없다.
+       ⚠ 안내 글자를 마크업에 담지 않는다. CSS 가 늦거나 실패하면 「준비중입니다」가
+         맨 글자로 드러난다(2026-08-27 지적). 그래서 JS 가 넣는다.
+       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다.
+       ⚠⚠ 이 주석에 **치환 문법(중괄호 두 겹)을 글자로 적지 말 것.** JS 는 페이지에
+         인라인되므로 빌더가 「전개되지 않은 값이 남았다」로 죽는다(§11.91-1 의 함정 —
+         2026-09-21 에 실제로 여기서 한 번 죽였다).
+       ⚠ 이 블록과 `lang-en.css` 의 `.gnb-en`·`.gnb-tip` 규칙은 **한 쌍**이다.
+         한쪽만 두면 안내가 스타일 없이 드러나거나(JS 만) 아무 일도 없다(CSS 만). */
     (function () {
       var lang = document.querySelector('.gnb-lang');
       if (!lang) return;
@@ -1740,7 +1892,6 @@
       if (!en || en.textContent.trim() !== 'EN') return;
       en.setAttribute('tabindex', '0');
       en.setAttribute('role', 'button');
-      en.setAttribute('aria-disabled', 'true');
       var tip = document.createElement('span');
       tip.className = 'gnb-tip';
       tip.textContent = '준비중입니다';

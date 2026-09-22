@@ -26,8 +26,17 @@
       addEventListener('resize', function () { if (!wide()) set(false); });
     })();
 
-    /* KO / EN — 영문은 아직 없다. 호버·포커스에 안내를 띄운다(2026-08-27 지시).
-       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다. */
+    /* KO / EN 「준비중입니다」 — `EN_READY` 가 꺼져 있을 때만 붙는다.
+       ⚠ **EN 이 스팬일 때만 동작한다.** 스위치가 켜지면 빌더가 그 자리를 `<a>` 로 내보내
+         `.gnb-en` 이 없어지므로 이 블록은 스스로 빠져나간다 — 조건을 따로 둘 필요가 없다.
+       ⚠ 안내 글자를 마크업에 담지 않는다. CSS 가 늦거나 실패하면 「준비중입니다」가
+         맨 글자로 드러난다(2026-08-27 지적). 그래서 JS 가 넣는다.
+       ⚠ `title` 속성을 쓰지 않는다 — 뜨는 데 1초 넘게 걸리고 모양을 정할 수 없다.
+       ⚠⚠ 이 주석에 **치환 문법(중괄호 두 겹)을 글자로 적지 말 것.** JS 는 페이지에
+         인라인되므로 빌더가 「전개되지 않은 값이 남았다」로 죽는다(§11.91-1 의 함정 —
+         2026-09-21 에 실제로 여기서 한 번 죽였다).
+       ⚠ 이 블록과 `lang-en.css` 의 `.gnb-en`·`.gnb-tip` 규칙은 **한 쌍**이다.
+         한쪽만 두면 안내가 스타일 없이 드러나거나(JS 만) 아무 일도 없다(CSS 만). */
     (function () {
       var lang = document.querySelector('.gnb-lang');
       if (!lang) return;
@@ -35,7 +44,6 @@
       if (!en || en.textContent.trim() !== 'EN') return;
       en.setAttribute('tabindex', '0');
       en.setAttribute('role', 'button');
-      en.setAttribute('aria-disabled', 'true');
       var tip = document.createElement('span');
       tip.className = 'gnb-tip';
       tip.textContent = '준비중입니다';

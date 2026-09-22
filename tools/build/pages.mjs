@@ -33,7 +33,7 @@ const read = (...p) => readFileSync(join(...p), 'utf8');
 
 /** 공통 CSS — 이 순서가 곧 캐스케이드 순서다. 페이지 CSS 는 항상 뒤에 붙는다.
  *  overview.html 원본과 같은 순서를 유지하고 있다(리팩터 제로디프의 근거). */
-const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'gnb-en', '30-hero-lnb', '40-section', '80-footer', '90-motion', 'contact'];
+const CSS_COMMON = ['00-tokens', '10-base', '20-gnb', 'lang-en', '30-hero-lnb', '40-section', '80-footer', '90-motion', 'contact'];
 
 const nav = JSON.parse(read(SUB, 'nav.json'));
 const layout = read(SUB, 'layout.html');
@@ -188,6 +188,24 @@ const SITE_URL = 'https://mang9.github.io/bcity-homepage';
    ⚠ 되돌리기는 이 한 줄이다. 그리고 index.html 의 같은 태그도 **함께** 지운다
      (메인은 손글씨라 이 스위치가 닿지 않는다). */
 const NOINDEX = true;
+
+/* ⚠⚠ 영문판 공개 스위치 — **기본은 false(비공개)** 다.
+     false → GNB·모바일 메뉴의 `EN` 이 링크가 아니라 「준비중입니다」 말풍선(`.gnb-en`)
+     true  → `en/<slug>.html` 로 가는 실제 링크
+
+   **왜 스위치가 필요한가** — 번역이 확정되기 전까지 `en/` 은 저장소에 넣지 않는다
+   (사용자 지시 · `.gitignore` 에 그 블록이 있다). 그런데 링크를 그대로 두고 국문만
+   배포하면 **EN 버튼이 페이지마다 404** 가 된다(18쪽 × 2 = 36개). 2026-09-22 에
+   그 상태로 커밋하려다 발견해 이 스위치를 넣었다.
+
+   ⚠ 로컬에서 영문을 볼 때는 `npm run build:en` 이 `EN_READY=1` 로 국문을 먼저 빌드한다
+     — `pages-en.mjs` 가 **국문 산출물의 링크 꼴을 뒤집어** 영문판을 만들기 때문에,
+     이 값이 false 면 그 1회 일치 assert 가 대상을 못 찾고 빌드가 죽는다.
+   ⚠⚠ **커밋 직전에는 반드시 기본 빌드(`build:pages`)를 다시 돌린다.** `build:en` 을
+     돌린 작업트리에는 `en/` 링크가 남아 있다. `commit:prep` 이 그 일을 한다.
+   ⚠ 메인 `index.html` 은 손글씨라 이 스위치가 닿지 않는다 — 공개할 때 그쪽
+     `.gnb-en` 버튼과 인라인 말풍선 스크립트도 **함께** 고쳐야 한다. */
+const EN_READY = process.env.EN_READY === '1';
 
 /* ⚠ 스위치와 도메인이 어긋나면 여기서 막는다.
    github.io = 미리보기 → noindex 여야 하고, 그 밖의 도메인 = 실서비스 → 색인돼야 한다. */
@@ -647,8 +665,12 @@ function filterTabs(CAT, rows, keyOf, label) {
    목록 페이지(build)와 상세 페이지(buildDetails)가 **같은 함수를 쓴다.**
    따로 두면 한쪽만 고쳐져 GNB·LNB·CSS 번들이 어긋난다. */
 
-/** GNB · 모바일 메뉴 · LNB · 푸터 — nav.json 에서 유도 */
-function navBits(cat, navKey) {
+/** GNB · 모바일 메뉴 · LNB · 푸터 — nav.json 에서 유도
+ *
+ *  ⚠ `slug` 는 **언어 전환 링크에만** 쓴다. 영문판은 `en/<slug>.html` 이라
+ *    이 값이 페이지마다 달라진다 — 카테고리에서 유도할 수 없어 인수로 받는다.
+ *    안 넘기면 영문 메인으로 보낸다(같은 페이지의 영문판이 없을 때의 안전한 목적지다). */
+function navBits(cat, navKey, slug) {
   /* 대메뉴 — 호버하면 하위 메뉴가 펼쳐진다(2026-08-27 지시). 메인 `index.html` 과 같은
      **전체 폭 드롭**(§9-1 확정 사양)이며, 하위 항목은 같은 `nav.json` 에서 온다.
      ⚠ 카테고리 키로 짝지운다 — `gnb` 배열과 `categories` 배열이 따로라 순서에 기대면 어긋난다. */
@@ -687,7 +709,21 @@ ${subs}
     `          <a href="${f.href}">${esc(f.label)}</a>`
   ).join('\n');
 
-  return { gnbItems, mnavItems, lnbItems, footItems };
+  /* 언어 전환 — `EN_READY`(위 상수)가 두 꼴을 가른다.
+     ⚠⚠ **켜진 꼴을 바꾸면 `pages-en.mjs` 의 1회 일치 치환이 깨진다.** 그쪽은 이 산출물에서
+       `is-on` 스팬과 링크를 찾아 서로 뒤집는다 — 클래스·순서·구분선까지 그대로 둘 것.
+     ⚠ 꺼진 꼴의 `.gnb-en` 은 **글자를 마크업에 담지 않는다.** 「준비중입니다」는
+       `common.js`(서브) · 인라인 스크립트(메인)가 넣는다 — CSS 가 늦거나 실패해도
+       안내가 맨 글자로 드러나지 않게 하려는 것이다(§11.87). */
+  const sep = '<span class="gnb-lang-sep" aria-hidden="true">|</span>';
+  const enOn = `<a href="en/${slug || 'index'}.html">EN</a>`;
+  const enOff = '<span class="gnb-en" aria-disabled="true">EN</span>';
+  const langToggle = `<span class="is-on">KO</span>${sep}${EN_READY ? enOn : enOff}`;
+  const mnavLang = EN_READY
+    ? `      <div class="mnav-foot">\n        <div class="mnav-lang">${langToggle}</div>\n      </div>`
+    : '';
+
+  return { gnbItems, mnavItems, lnbItems, footItems, langToggle, mnavLang };
 }
 
 /** 히어로 제목 아래 한 줄. front-matter 의 `heroLede` 가 있을 때만 문단을 만든다.
@@ -804,7 +840,7 @@ function build(file) {
     heroImg: fm.heroImg, heroPos: heroPos(fm), h1: fm.h1, heroLede: heroLede(fm),
     catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
     navLabel: esc(fm.crumb || item.label),
-    ...navBits(cat, fm.nav),
+    ...navBits(cat, fm.nav, fm.slug),
   };
   const heroCtx = { ...heroCtx0,
     hero: heroBlock(cat, fm, heroCtx0, file),
@@ -844,6 +880,7 @@ function buildDetails(file) {
     heroImg: fm.heroImg, heroPos: heroPos(fm), h1: fm.h1, heroLede: heroLede(fm),
     catLabel: esc(cat.label), catNo: cat.no, catEn: cat.en,
     navLabel: esc(item.label),
+    /* ⚠ 언어 전환은 행마다 다르다(slug) — 아래 `rows.forEach` 안에서 덮어쓴다. */
     ...navBits(cat, fm.nav),
   };
   const dHeroCtx = { ...dHeroCtx0,
@@ -873,6 +910,9 @@ function buildDetails(file) {
       css: cssBundle(fm), js: jsBundle(fm),
       main: render(body, ctx, 1),
       ...dHeroCtx,
+      /* ⚠ `dHeroCtx` **뒤에** 온다 — 상세 페이지의 영문판 주소는 행마다 다르므로
+           `navBits` 가 만든 목록 페이지 값을 여기서 덮어야 한다. */
+      ...navBits(cat, fm.nav, slug),
     });
     out.push({ out: join(ROOT, `${slug}.html`), html: banner(file) + html, slug });
   });
@@ -958,7 +998,7 @@ function build404() {
        전부 펼치고 모바일은 햄버거로 같은 목록이 열린다 — 같은 것을 두 번 두는 셈이었다.
        되살릴 일이 있으면 `nav.categories` 를 `.nf-card` 로 도는 생성기를 여기 다시 만들고
        (`menu: false` 인 회사소개는 GNB 와 같은 기준으로 제외), CSS 도 함께 되살린다. */
-  const heroCtx = { ...navBits(cat, ''), hero: '', bodyAttr: ' class="no-hero"' };
+  const heroCtx = { ...navBits(cat, '', '404'), hero: '', bodyAttr: ' class="no-hero"' };
 
   let html = banner(file) + render(layout, {
     title: esc(fm.title),
