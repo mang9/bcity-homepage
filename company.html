@@ -158,9 +158,14 @@
     /* ⚠ 글자 값은 메인 `#gnb .gnb-sub a` 와 **같아야 한다**(실측으로 맞췄다):
          14px · weight 400 · `--color-text-muted` · 위아래 6px 패딩.
          전에는 500 + 상속색이라 서브페이지만 굵고 진했다. */
-    .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+    /* ⚠⚠ `max-height` 가 아니라 **`grid-template-rows`** 로 접는다(2026-09-29 지시).
+           근거·함정은 메인 `src/css/app.css` 의 `#gnb .gnb-sub` 주석에 모아 두었다.
+           요약: `minmax(0, 0fr)`(`0fr` 아님) + 안쪽 `min-height: 0` **둘 다** 필요하고,
+           패딩은 안쪽이 갖는다. 메인과 **함께** 고친다. */
+    .gnb-sub { display: grid; grid-template-rows: minmax(0, 0fr); opacity: 0; overflow: hidden;
       font-size: 14px; font-weight: 400;
-      transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
+      transition: grid-template-rows .32s ease, opacity .28s ease; }
+    .gnb-sub-in { min-height: 0; padding-top: 20px; padding-bottom: 28px; }
     /* ⚠⚠ `white-space: nowrap` 을 쓰지 않는다(2026-09-21 지시). 칸이 168px 고정이라
          168px 를 넘는 라벨이 **옆 칸을 침범해 잘려 보인다**(영문 하위 메뉴에서 실제로
          37px 침범했다). 두 줄로 떨어지게 둔다 — 라벨이 길어져도 구조가 버틴다.
@@ -171,7 +176,7 @@
       line-height: 1.45; word-break: keep-all;
       color: var(--color-text-muted); transition: color .15s; }
     .gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
-    .gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
+    .gnb.is-open .gnb-sub { grid-template-rows: minmax(0, 1fr); opacity: 1; }
     /* 대메뉴와 하위 사이 구분선 — 메인 `#gnb .gnb-divider` 와 같은 어법이다.
        ⚠ 요소를 새로 만들지 않고 `::after` 로 그린다. 바 전체 폭에 걸쳐야 하므로
          `.gnb` 기준 absolute 이며, 위치는 **한 줄 높이(`--gnb-h`)** 바로 아래다. */
@@ -998,9 +1003,20 @@
       width: min(100%, 320px); margin-inline: auto;
       clip-path: polygon(50% 0, 100% 46%, 76% 46%, 76% 100%, 24% 100%, 24% 46%, 0 46%);
       background: linear-gradient(180deg, #8fd0ff, var(--bs-out)); }
+    /* ⚠⚠ 글자 폭 상한 — `clip-path` 는 **자르기만 한다.** 넘친 글자는 잘려서 사라진다.
+         보이는 기둥은 위 polygon 의 24%~76% = **띠 폭의 52%** 뿐이다(1920 에서 166.4px).
+         영문 `Equity contribution` 이 10.19em(1920 에서 203.9px)이라 양쪽으로 18.7px 씩
+         잘려 나갔다 — 두 줄로 접어서 고쳤다(2026-09-23 지시).
+       · `52%` 는 **기둥 밖으로 나가지 않게** 하는 구조적 한계선이다.
+       · `8em`  은 **두 줄로 접히게** 하는 값이다. 실측(Paperlogy Bold) —
+         `Equity contribution` 10.19em · `contribution` 6.57em · `출자금 납부` 4.62em.
+         8 은 그 사이라 영문은 어느 폭에서나 접히고 국문은 어디서도 접히지 않는다(렌더 동일).
+       ⚠ 문면을 바꾸면 이 두 값을 **다시 잰다** — 한 낱말이 8em 을 넘으면 그 줄이 기둥을 넘는다. */
     .bs-fund b { font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(14px, 1.3vw, 20px); color: #fff; }
-    .bs-fund i { font-style: normal; font-size: clamp(11px, .9vw, 13px); color: rgba(255,255,255,.9); }
+      font-size: clamp(14px, 1.3vw, 20px); color: #fff;
+      max-width: min(8em, 52%); text-align: center; }
+    .bs-fund i { font-style: normal; font-size: clamp(11px, .9vw, 13px); color: rgba(255,255,255,.9);
+      max-width: min(8em, 52%); text-align: center; }
 
     /* ── PFV 출자자 ───────────────────────────────────────────────────── */
     .bs-holders { padding: clamp(18px, 2vw, 30px);
@@ -1240,38 +1256,46 @@
         <div class="gnb-item">
           <a class="gnb-link is-on" href="overview.html" aria-current="page">사업소개</a>
           <div class="gnb-sub">
+            <div class="gnb-sub-in">
             <a href="overview.html">사업개요</a>
             <a href="location.html">입지</a>
             <a href="effect.html">기대효과</a>
             <a href="schedule.html">추진일정</a>
             <a href="company.html" class="is-on">사업주체</a>
+            </div>
           </div>
         </div>
         <div class="gnb-item">
           <a class="gnb-link" href="brand.html">도시소개</a>
           <div class="gnb-sub">
+            <div class="gnb-sub-in">
             <a href="brand.html">브랜드</a>
             <a href="concept.html">컨셉</a>
             <a href="districts.html">구역 소개</a>
             <a href="living.html">정주환경</a>
+            </div>
           </div>
         </div>
         <div class="gnb-item">
           <a class="gnb-link" href="invest.html">투자·입주</a>
           <div class="gnb-sub">
+            <div class="gnb-sub-in">
             <a href="invest.html#land">토지확보 요건</a>
             <a href="invest.html#zone">투자 혜택</a>
             <a href="#contact">문의하기</a>
+            </div>
           </div>
         </div>
         <div class="gnb-item">
           <a class="gnb-link" href="notice.html">홍보센터</a>
           <div class="gnb-sub">
+            <div class="gnb-sub-in">
             <a href="notice.html">공지사항</a>
             <a href="press.html">언론보도</a>
             <a href="video.html">홍보영상</a>
             <a href="gallery.html">갤러리</a>
             <a href="publication.html">발행물</a>
+            </div>
           </div>
         </div>
       </nav>

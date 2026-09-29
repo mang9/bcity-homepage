@@ -46,9 +46,14 @@
 /* ⚠ 글자 값은 메인 `#gnb .gnb-sub a` 와 **같아야 한다**(실측으로 맞췄다):
      14px · weight 400 · `--color-text-muted` · 위아래 6px 패딩.
      전에는 500 + 상속색이라 서브페이지만 굵고 진했다. */
-.gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
+/* ⚠⚠ `max-height` 가 아니라 **`grid-template-rows`** 로 접는다(2026-09-29 지시).
+       근거·함정은 메인 `src/css/app.css` 의 `#gnb .gnb-sub` 주석에 모아 두었다.
+       요약: `minmax(0, 0fr)`(`0fr` 아님) + 안쪽 `min-height: 0` **둘 다** 필요하고,
+       패딩은 안쪽이 갖는다. 메인과 **함께** 고친다. */
+.gnb-sub { display: grid; grid-template-rows: minmax(0, 0fr); opacity: 0; overflow: hidden;
   font-size: 14px; font-weight: 400;
-  transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
+  transition: grid-template-rows .32s ease, opacity .28s ease; }
+.gnb-sub-in { min-height: 0; padding-top: 20px; padding-bottom: 28px; }
 /* ⚠⚠ `white-space: nowrap` 을 쓰지 않는다(2026-09-21 지시). 칸이 168px 고정이라
      168px 를 넘는 라벨이 **옆 칸을 침범해 잘려 보인다**(영문 하위 메뉴에서 실제로
      37px 침범했다). 두 줄로 떨어지게 둔다 — 라벨이 길어져도 구조가 버틴다.
@@ -59,7 +64,7 @@
   line-height: 1.45; word-break: keep-all;
   color: var(--color-text-muted); transition: color .15s; }
 .gnb-sub a:hover, .gnb-sub a.is-on { color: var(--color-primary); }
-.gnb.is-open .gnb-sub { max-height: 320px; opacity: 1; padding-top: 20px; padding-bottom: 28px; }
+.gnb.is-open .gnb-sub { grid-template-rows: minmax(0, 1fr); opacity: 1; }
 /* 대메뉴와 하위 사이 구분선 — 메인 `#gnb .gnb-divider` 와 같은 어법이다.
    ⚠ 요소를 새로 만들지 않고 `::after` 로 그린다. 바 전체 폭에 걸쳐야 하므로
      `.gnb` 기준 absolute 이며, 위치는 **한 줄 높이(`--gnb-h`)** 바로 아래다. */

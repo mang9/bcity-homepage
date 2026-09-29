@@ -683,7 +683,9 @@ function navBits(cat, navKey, slug) {
     return `        <div class="gnb-item">
           <a class="gnb-link${on ? ' is-on' : ''}" href="${g.href}"${on ? ' aria-current="page"' : ''}>${esc(g.label)}</a>
           <div class="gnb-sub">
+            <div class="gnb-sub-in">
 ${subs}
+            </div>
           </div>
         </div>`;
   }).join('\n');

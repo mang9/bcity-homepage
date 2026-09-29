@@ -154,7 +154,9 @@
       .bcity-logo-lg { height: 24px; }
       /* 투명 헤더(영상 위)에서는 흰색 + 그림자, 흰 헤더에서는 브랜드 네이비 */
       #gnb:not(.solid) .bcity-logo { color: #fff; filter: drop-shadow(0 1px 10px rgba(0,10,30,.55)); }
-      #gnb.solid .bcity-logo { color: #2C3E91; filter: none; }
+      /* ⚠ 리터럴이 아니라 토큰이다(§11.111) — 바로 아래 `#gnb.solid .gnb-logo` 와 같은 값이고,
+           리터럴로 두면 토큰이 바뀔 때 로고만 옛 색으로 남는다. */
+      #gnb.solid .bcity-logo { color: var(--color-primary); filter: none; }
 
       /* ===== GNB ===== */
       :root { --gnb-pad-top: 20px; }          /* GNB 상단 여백 */
@@ -182,9 +184,22 @@
       #gnb .gnb-tick { display: inline-block; width: 7px; height: 1px; background: currentColor; opacity: .5; flex-shrink: 0; }
 
       /* 독립 CTA (헤더) */
-      #gnb .gnb-sub { max-height: 0; opacity: 0; overflow: hidden; padding-top: 0;
-        transition: max-height .32s ease, opacity .28s ease, padding-top .32s ease; }
-      #gnb.open .gnb-sub { max-height: 460px; opacity: 1; padding-top: 24px; padding-bottom: 30px; }
+      /* ⚠⚠ `max-height` 가 아니라 **`grid-template-rows`** 로 접는다(2026-09-29 지시).
+             max-height 는 ① 레이아웃 스래시를 만들고 ② `460px` 이라는 **매직 넘버 상한**이라
+             하위 항목이 늘면 조용히 잘린다. §11.124 의 `.za` 와 같은 처방이다.
+           ⚠ **`0fr` 이 아니라 `minmax(0, 0fr)`** 이다. `0fr` 은 `minmax(auto, 0fr)` 로 풀려
+             트랙이 자식의 min-content 만큼 남는다 — 닫아도 내용이 비친다.
+           ⚠ 안쪽 `.gnb-sub-in` 에 **`min-height: 0`** 이 함께 필요하다. 그리드 아이템의
+             기본 `min-height: auto` 가 내용 높이를 붙잡는다. **둘 중 하나만 하면 안 닫힌다.**
+           ⚠ 패딩은 **안쪽**이 갖는다. 그리드 컨테이너에 두면 닫힌 상태에서도 패딩이 남는다 —
+             그래서 `padding-top` 전환도 필요 없어졌다.
+           ⚠ `grid-template-rows` 전환을 모르는 브라우저(Firefox<120)는 **전환 없이 즉시**
+             열린다 — 기능은 그대로다. `max-height` 폴백을 되살리면 상한이 다시 생긴다.
+           ⚠ 서브페이지 `src/sub/css/20-gnb.css` 의 같은 규칙과 **함께** 고친다. */
+      #gnb .gnb-sub { display: grid; grid-template-rows: minmax(0, 0fr); opacity: 0; overflow: hidden;
+        transition: grid-template-rows .32s ease, opacity .28s ease; }
+      #gnb .gnb-sub-in { min-height: 0; padding-top: 24px; padding-bottom: 30px; }
+      #gnb.open .gnb-sub { grid-template-rows: minmax(0, 1fr); opacity: 1; }
       /* ⚠⚠ `white-space: nowrap` 을 쓰지 않는다(2026-09-21 지시). 칸이 168px 고정이라
            168px 를 넘는 라벨이 **옆 칸을 침범해 잘려 보인다**(영문에서 실제로 37px
            침범했다). 두 줄로 떨어지게 둔다 — 라벨을 줄인 뒤에도 규칙은 남겨 둔다.
@@ -207,8 +222,12 @@
       #mobileNav.hidden-nav { opacity: 0; visibility: hidden; pointer-events: none; }
       #mobileNav .m-panel { transition: transform .3s cubic-bezier(.22,1,.36,1); }
       #mobileNav.hidden-nav .m-panel { transform: translateX(100%); }
-      .m-sub { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-      .m-acc.open .m-sub { max-height: 520px; }
+      /* ⚠ 메가메뉴와 같은 어법(위 주석 참고). 여기는 마크업에 안쪽 래퍼가 이미 있어
+           `> *` 로 잡는다 — 클래스가 Tailwind 유틸리티라 이름으로 못 부른다. */
+      .m-sub { display: grid; grid-template-rows: minmax(0, 0fr); overflow: hidden;
+        transition: grid-template-rows .3s ease; }
+      .m-sub > * { min-height: 0; }
+      .m-acc.open .m-sub { grid-template-rows: minmax(0, 1fr); }
       .m-acc.open .m-caret { transform: rotate(180deg); }
       .m-caret { transition: transform .3s ease; }
 
@@ -361,10 +380,11 @@
          ⚠ 여유가 4px 뿐이다. **카피 pill 이나 제목을 더 늘리면 다시 넘친다** —
            2026-09-17 수정사항으로 pill 이 4 → 5개가 되면서 이미 한 줄이 늘었다. */
       @media (max-width: 767px) {
-        .lo-grid { padding: 40px var(--gut) 32px; gap: 14px; }
+        .lo-grid { padding: 40px var(--gut) 24px; gap: 14px; }
         .lo-no { font-size: 32px; }
         .lo-title { font-size: 26px; margin-top: 10px; }
-        .lo-pills { gap: 8px; margin-top: 14px; }
+        /* ⚠ gap 6 — 영문은 pill 이 11줄까지 가므로 줄마다 2px 이 22px 이 된다(2026-09-28) */
+        .lo-pills { gap: 6px; margin-top: 14px; }
         /* ⚠ pill 을 조인다 — 5개가 5줄이 되는 폭에서 **줄마다 6px** 이 줄어든다.
               글자 크기는 건드리지 않는다(13px 은 사이트 최소치 부근이다). */
         .lo-pill { padding: 7px 14px; }
@@ -372,7 +392,9 @@
       }
       /* 아이폰 SE 급(가용 높이 ~613px) — 각주를 접고 고스트 번호·제목을 한 단 줄인다.
          지도는 min-height 에 걸려 있어 여기서 더 회수할 곳이 카피뿐이다. */
-      @media (max-width: 1023px) and (max-height: 640px) {
+      /* ⚠ 기준을 640 → **760** 으로 올렸다(2026-09-28). 360x740 급에서 입지 상단 줄이
+         흐름에 들어간 뒤 각주 17px 이 마지막 회수분이었다. */
+      @media (max-width: 1023px) and (max-height: 760px) {
         /* ⚠ 위 ≤767 블록보다 뒤에 오므로 **여기 패딩이 이긴다.** 48/40 으로 두면
               좁은 폰에서 위 블록이 조여 둔 값을 되돌려 다시 넘친다. */
         .lo-grid { padding: 40px var(--gut) 32px; gap: 14px; }
@@ -608,6 +630,10 @@
       .ov-rule { display: block; width: 0; height: 1px; background: rgba(255,255,255,.55);
         transition: width .9s cubic-bezier(.22,1,.36,1) .2s; }
       .ov.in .ov-rule { width: 42px; }
+      /* ⚠⚠ 입지 상단 줄 — 데스크톱에서는 **아무것도 하지 않는다**(`display: contents`).
+         자식(`.ov-eyebrow` · `.ov-more`)이 스테이지 기준 절대배치를 그대로 유지한다.
+         모바일 규칙은 ≤1023 블록에 있다. */
+      .lo-top { display: contents; }
       /* 상단 우 링크 */
       .ov-more { position: absolute; right: var(--gut); top: 70px; z-index: 4;
         display: inline-flex; align-items: center; gap: 12px; padding-bottom: 7px;
@@ -664,6 +690,25 @@
       @media (max-width: 1023px) {
         .ov-eyebrow { left: 22px; top: 84px; }
         .ov-more { right: 22px; top: 80px; font-size: 13px; }
+        /* ⚠⚠ **입지만** 흐름 안으로 되돌린다.** 모바일에서 지도가 y40 부터 오는데
+           아이브로우(top 84) · 링크(top 80)가 그 자리라 **지도 글자 위에 얹혔다**
+           (2026-09-28 실측: 아이브로우 ⟷ GTX-B 알약 7x6 · 자세히보기 ⟷ 춘천역 24x7 ·
+           강릉 · 양양국제공항). 지도 위쪽 여백은 쓸 수 없다 — GNB 가 `fixed` 로 y0~64 를 덮는다.
+         ⚠ `#business` 는 배경 **사진** 위라 글자와 겹치지 않는다 — 절대배치를 그대로 둔다.
+         ⚠ `padding-top: 72` = GNB 64 + 8. 더 줄이면 GNB 에 붙는다. */
+        #location .lo-top { display: flex; align-items: center; justify-content: space-between;
+          gap: 12px; padding: 72px var(--gut) 0; }
+        #location .lo-top .ov-eyebrow,
+        #location .lo-top .ov-more { position: static; top: auto; left: auto; right: auto; }
+        /* 그 줄이 여백을 대신하므로 그리드 위 패딩을 회수한다 */
+        #location .lo-grid { padding-top: 8px; }
+        /* ⚠⚠ **영문만** 더 조인다 — 국문은 이미 여유가 있고 인상을 지킨다.
+           영문 pill 은 문면이 1.5~2배라 390 에서 2줄(61px), 375 에서는 더 늘어난다.
+           `.lo-copy` 가 국문 435 vs 영문 500 이고 그 차이가 그대로 스테이지 초과가 된다.
+         ⚠ 12px 은 사이트 최소(`.lo-note` 11.5px)보다 크고 `DESIGN.md` 램프에 있는 단계다.
+         ⚠ 고스트 번호는 **장식**이다 — 섹션 번호는 아이브로우(`01`)가 이미 말한다. */
+        html[lang="en"] #location .lo-pill { font-size: 12px; padding: 6px 12px; }
+        html[lang="en"] #location .lo-no { display: none; }
         .ov-center { top: 24%; }
         /* 인디케이터를 지표 위에 세로로 쌓는다. 지표 높이(2열 2행 = 222px)가 바뀌어도 겹치지 않는다 */
         .ov-bottom { display: flex; flex-direction: column; align-items: center; gap: 20px;
@@ -1041,7 +1086,6 @@
         .dz-left .za-head { padding: 9px 14px; }
         .dz-left .za-name { font-size: 14px; }
         .dz-left .za-num { width: 30px; height: 30px; }
-        .dz-left .za.open .za-body { max-height: 300px; }
         .dz-dots { right: 10px; }
       }
 
@@ -1062,9 +1106,22 @@
         white-space: nowrap; }
       .za-caret { flex-shrink: 0; color: var(--color-text-muted); transition: transform .35s ease; }
       .za.open .za-caret { transform: rotate(180deg); }
-      .za-body { max-height: 0; overflow: hidden; transition: max-height .45s cubic-bezier(.22,1,.36,1); }
-      .za.open .za-body { max-height: 720px; }
-      .za-inner { border-top: 1px solid var(--color-line); padding: 20px 22px 22px; }
+      /* ⚠⚠ **내용 높이에 맞춰 열린다 — `max-height` 고정값을 쓰지 않는다.**
+         2026-09-28 실측: 모바일 `300px` 에서 국문 12~30 · **영문 71~96px 이 잘렸다**
+         (영문 카피가 길어 내용이 396px 까지 간다). 데스크톱 `720px` 은 우연히 충분했지만
+         값을 두 벌로 두면 **한쪽만 낡는다** — `0fr → 1fr` 하나로 통일한다.
+       ⚠ `.dz-left` 가 `overflow-y: auto` 라 세로가 늘어도 스크롤로 닿는다.
+       ⚠ `.za-inner` 의 `min-height: 0` 이 **반드시 필요하다** — 그리드 아이템은 기본
+         `min-height: auto` 라 내용 높이를 유지해 `0fr` 에서도 닫히지 않는다.
+       ⚠ `grid-template-rows` 전환을 모르는 브라우저(Firefox<120)에서는 **전환 없이
+         즉시 열린다** — 기능은 그대로다. `max-height` 폴백을 되살리면 다시 잘린다. */
+      /* ⚠⚠ **`0fr` 이 아니라 `minmax(0, 0fr)`** 이다. `0fr` 은 `minmax(auto, 0fr)` 로
+         해석되어 트랙의 base size 가 **아이템의 min-content** 로 남는다 —
+         `.za-inner` 의 `padding 20+22 + border 1 = 43px` 이 닫힌 뒤에도 보였다(실측). */
+      .za-body { display: grid; grid-template-rows: minmax(0, 0fr); overflow: hidden;
+        transition: grid-template-rows .45s cubic-bezier(.22,1,.36,1); }
+      .za.open .za-body { grid-template-rows: minmax(0, 1fr); }
+      .za-inner { min-height: 0; border-top: 1px solid var(--color-line); padding: 20px 22px 22px; }
 
 
       /* 히어로 스크롤 시 미세 줌아웃 (스크롤에 반응하는 느낌)
