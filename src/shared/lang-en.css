@@ -90,6 +90,16 @@
 .mnav-lang a:hover,
 .mnav-lang a:focus-visible { opacity: 1; }
 
+/* EN 준비중 — **모바일 전용 꼴**이다(2026-09-29).
+   ⚠⚠ 여기서는 `.gnb-en` 말풍선을 쓸 수 없다. 좁은 화면에는 호버가 없어 안내가 영영
+     안 뜨고, 그러면 아무 반응 없는 죽은 글자만 남는다. 그래서 **「준비중」을 글자로** 보인다.
+   ⚠ 링크가 아니므로 `opacity` 가 아니라 `color` 로 흐림을 낸다(위 `.mnav-lang a` 와 다르다).
+   ⚠ 영문이 공개되면 이 스팬이 `<a>` 로 바뀌어 이 규칙이 저절로 비켜난다 —
+     `pages.mjs` 의 `mnavEn` 과 메인 `index.html` 두 곳을 함께 고칠 것. */
+.mnav-en { display: inline-flex; align-items: baseline; gap: 5px;
+  color: var(--color-text-muted); cursor: default; }
+.mnav-en i { font-style: normal; font-size: 11.5px; font-weight: 600; opacity: .78; }
+
 /* ===== 영문판 전용 폭 보정 =====
 
    ⚠⚠ **`html[lang="en"]` 로만 건다.** 영문 산출물은 `pages-en.mjs` 가 `lang="en"` 을

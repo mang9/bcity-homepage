@@ -721,9 +721,17 @@ ${subs}
   const enOn = `<a href="en/${slug || 'index'}.html">EN</a>`;
   const enOff = '<span class="gnb-en" aria-disabled="true">EN</span>';
   const langToggle = `<span class="is-on">KO</span>${sep}${EN_READY ? enOn : enOff}`;
-  const mnavLang = EN_READY
-    ? `      <div class="mnav-foot">\n        <div class="mnav-lang">${langToggle}</div>\n      </div>`
-    : '';
+  /* 모바일 메뉴 — 1023px 이하에서는 `.gnb-lang` 이 숨겨져 **여기가 유일한 전환 경로**다.
+     ⚠⚠ 꺼진 꼴에서도 **줄을 남긴다**(2026-09-29 지시 「모바일에서 한/영 선택이 없어졌다」).
+       전에는 통째로 뺐는데, 그러면 좁은 화면에서 이 사이트가 한국어뿐인 것처럼 읽힌다.
+     ⚠ 좁은 화면에는 호버가 없어 데스크톱의 「준비중입니다」 말풍선이 뜨지 않는다 —
+       그래서 `.gnb-en` 이 아니라 **글자로 보이는 `.mnav-en`** 을 쓴다. 꼴이 다른 이유다.
+     ⚠ 메인 `index.html` 은 이 블록을 마크업에 직접 갖고 있다. **함께 고칠 것.** */
+  const mnavEn = EN_READY ? enOn
+    : '<span class="mnav-en" aria-disabled="true">EN<i>준비중</i></span>';
+  const mnavLang = `      <div class="mnav-foot">\n` +
+    `        <div class="mnav-lang"><span class="is-on">KO</span>${sep}${mnavEn}</div>\n` +
+    `      </div>`;
 
   return { gnbItems, mnavItems, lnbItems, footItems, langToggle, mnavLang };
 }
