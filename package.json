@@ -13,7 +13,8 @@
     "commit:prep": "npm run build:deploy && git add -A && npm run build:pages && echo \"  인덱스=배포본 · 작업트리=샘플 — 이제 git commit 하세요\"",
     "dev": "tailwindcss -i src/css/app.css -o assets/css/app.css --watch",
     "build:pretty": "tailwindcss -i src/css/app.css -o assets/css/app.css",
-    "lint:classes": "node tools/build/lint-classes.mjs"
+    "lint:classes": "node tools/build/lint-classes.mjs",
+    "build:en": "EN_READY=1 node tools/build/pages.mjs && node tools/build/pages-en.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.11"
