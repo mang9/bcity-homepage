@@ -996,14 +996,13 @@
        프라이머리 컬러다(2026-08-24 지시). ⚠ SVG 안에 색을 박아 두면 이 값이 무시된다. */
     .iv-sz-ic { flex: none; display: grid; place-items: center; width: 52px; height: 52px;
       border-radius: 999px; background: var(--color-bg); color: var(--color-primary); }
-    /* ⚠ 아이콘을 img 태그로 넣으면 안 된다. **외부 SVG 는 문서의 `currentColor` 를 상속하지
-         않아** 글리프가 검정으로 찍힌다(실측 #000000, computed 는 프라이머리였다).
-         `mask-image` 로 모양만 쓰고 색은 `background: currentColor` 가 낸다 — 그래야 같은
-         파일 하나로 특구 카드(프라이머리)와 주요 혜택 카드(흰색)를 모두 칠할 수 있다.
-       ⚠ CSS 는 페이지마다 인라인되므로 `url()` 은 **문서 기준** 상대경로다(§11.5). */
-    .iv-ic { display: block; width: 24px; height: 24px; background: currentColor;
-      -webkit-mask: var(--ic) center / contain no-repeat;
-              mask: var(--ic) center / contain no-repeat; }
+    /* ⚠⚠ 아이콘은 **인라인 `<svg>`** 다(§5 · 2026-09-30). 여기에 색을 박지 말 것 —
+         SVG 가 `fill`/`stroke="currentColor"` 라 위 배지의 `color` 를 그대로 쓴다.
+       ⚠ `background`·`mask` 를 되살리지 말 것. 외부 파일 + `mask-image` 로 두었더니 그 SVG 가
+         한 번이라도 못 오는 순간 **아무 표시 없이 빈 원**이 됐다(2026-09-30 신고 · 차단 재현 확인).
+         `img` 태그는 반대로 `currentColor` 를 상속하지 못해 검정으로 찍힌다 — 그래서 인라인이다.
+         원본 5개는 `assets/icon/` 에 출처 기록과 함께 남아 있다. */
+    .iv-ic { display: block; width: 24px; height: 24px; }
     .iv-sz-t { margin: 0; font-family: var(--font-display);
       font-weight: 700; font-size: clamp(15.5px, 1.25vw, 19px); line-height: 1.4;
       letter-spacing: -.015em; color: var(--color-primary); word-break: keep-all; }
@@ -1418,7 +1417,7 @@
         <ul class="iv-szs">
           <li class="iv-sz rv">
             <div class="iv-sz-h">
-              <span class="iv-sz-ic"><i class="iv-ic" style="--ic: url(../assets/icon/zone-dna.svg)" aria-hidden="true"></i></span>
+              <span class="iv-sz-ic"><svg class="iv-ic" aria-hidden="true" fill="currentColor" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><g><path d="M68 48C68 36.129 59.19 30.8 50.142 26 59.19 21.2 68 15.871 68 4L66 4C66.0275 6.40431 65.5548 8.78809 64.612 11L31.388 11C30.4452 8.78809 29.9725 6.40431 30 4L28 4C28 15.871 36.81 21.2 45.858 26 36.81 30.8 28 36.129 28 48 28 59.871 36.81 65.2 45.858 70 36.81 74.8 28 80.129 28 92L30 92C29.9725 89.5957 30.4452 87.2119 31.388 85L64.612 85C65.5548 87.2119 66.0275 89.5957 66 92L68 92C68 80.129 59.19 74.8 50.142 70 59.19 65.2 68 59.871 68 48ZM32.41 13 63.59 13C60.371 18.268 54.335 21.533 48 24.869 41.665 21.533 35.629 18.268 32.41 13ZM48 27.131C54.335 30.467 60.371 33.731 63.59 39L32.41 39C35.629 33.732 41.665 30.467 48 27.131ZM31.388 41 64.612 41C66.4627 45.4832 66.4627 50.5168 64.612 55L31.388 55C29.5373 50.5168 29.5373 45.4832 31.388 41ZM63.588 83 32.41 83C35.629 77.732 41.665 74.467 48 71.131 54.335 74.467 60.371 77.732 63.59 83ZM48 68.869C41.665 65.533 35.629 62.268 32.41 57L63.59 57C60.371 62.268 54.335 65.533 48 68.869Z" stroke="currentColor" stroke-width="4.8" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" stroke-opacity="1" fill="currentColor" fill-opacity="1"/></g></svg></span>
               <div>
                 <h4 class="iv-sz-t">Bio sector<br /><b>National High-Tech Strategic Industry Specialized Complex</b></h4>
                 <p class="iv-sz-area">Designated: Chuncheon · Hongcheon</p>
@@ -1442,7 +1441,7 @@
           </li>
           <li class="iv-sz rv">
             <div class="iv-sz-h">
-              <span class="iv-sz-ic"><i class="iv-ic" style="--ic: url(../assets/icon/zone-globe.svg)" aria-hidden="true"></i></span>
+              <span class="iv-sz-ic"><svg class="iv-ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg></span>
               <div>
                 <h4 class="iv-sz-t">Global Innovation<br /><b>Regulation-Free Special Zone</b></h4>
                 <p class="iv-sz-area">Designated: Chuncheon · Wonju</p>
@@ -1468,7 +1467,7 @@
           </li>
           <li class="iv-sz rv">
             <div class="iv-sz-h">
-              <span class="iv-sz-ic"><i class="iv-ic" style="--ic: url(../assets/icon/zone-edu.svg)" aria-hidden="true"></i></span>
+              <span class="iv-sz-ic"><svg class="iv-ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /><path d="M22 10v6" /><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></svg></span>
               <div>
                 <h4 class="iv-sz-t">Education Development Special Zone<br /><i>pilot</i></h4>
                 <p class="iv-sz-area">Designated: Chuncheon · Wonju · Hwacheon</p>
@@ -1503,7 +1502,7 @@
         <ul class="iv-sum rv">
           <li class="iv-sum-i">
             <div class="iv-sum-h">
-              <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(../assets/icon/benefit-subsidy.svg)" aria-hidden="true"></i></span>
+              <span class="iv-sum-ic"><svg class="iv-ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /><path d="M6 12h.01" /><path d="M18 12h.01" /></svg></span>
               <div>
                 <p class="iv-sum-no"><b>01</b>SUBSIDY</p>
                 <b class="iv-sum-t">Investment & relocation subsidies</b>
@@ -1514,7 +1513,7 @@
           </li>
           <li class="iv-sum-i">
             <div class="iv-sum-h">
-              <span class="iv-sum-ic"><i class="iv-ic" style="--ic: url(../assets/icon/benefit-tax.svg)" aria-hidden="true"></i></span>
+              <span class="iv-sum-ic"><svg class="iv-ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19" /><circle cx="6.5" cy="6.5" r="2.5" /><circle cx="17.5" cy="17.5" r="2.5" /></svg></span>
               <div>
                 <p class="iv-sum-no"><b>02</b>TAX</p>
                 <b class="iv-sum-t">Tax relief</b>
