@@ -92,6 +92,66 @@
         "value": "cubic-bezier(.34, 1.56, .64, 1)",
         "createdAt": "2026-09-18T07:25:34.126Z",
         "reason": "메가메뉴 등장 연출의 확정값. 2026-09-18 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.06)",
+        "createdAt": "2026-09-30T00:43:14.474Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.08)",
+        "createdAt": "2026-09-30T00:43:14.526Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.22)",
+        "createdAt": "2026-09-30T00:43:14.576Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.24)",
+        "createdAt": "2026-09-30T00:43:14.629Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.34)",
+        "createdAt": "2026-09-30T00:43:14.681Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.55)",
+        "createdAt": "2026-09-30T00:43:14.733Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.56)",
+        "createdAt": "2026-09-30T00:43:14.785Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.6)",
+        "createdAt": "2026-09-30T00:43:14.840Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,10,30,.74)",
+        "createdAt": "2026-09-30T00:43:14.895Z",
+        "reason": "그림자 전용 네이비 리터럴 — DESIGN.md 에 그림자 토큰이 없다. 2026-09-30 사용자 확인"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(0,0,0,.15)",
+        "createdAt": "2026-09-30T00:43:14.950Z",
+        "reason": "컨셉 다이어그램 .cn-card 그림자 — Figma 시안 값 그대로. 2026-09-30 사용자 확인"
       }
     ]
   }
