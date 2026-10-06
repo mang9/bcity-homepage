@@ -297,7 +297,9 @@ export function loadDict(root) {
      `b[data-short]::after { content: attr(data-short) }` 로 나온다). CSS 생성
      콘텐츠라 렌더 스캔도 `_leftover` 도 보지 못해 **영문판에 한국어가 남아 있었다**
      (2026-10-06 발견). 번역 대상 속성에 넣어 사전이 닿게 한다. */
-const ATTR = /(\s(?:alt|title|aria-label|placeholder|content|data-short)=")([^"]*)(")/g;
+/* ⚠ `data-title` — 확대보기(`lightbox.js`)의 **캡션**이자 이미지 `alt` 다. 화면에 나온다.
+     사업주체 공문 5건이 목록(`.doc-n`)은 번역됐는데 캡션만 한국어로 남아 있었다. */
+const ATTR = /(\s(?:alt|title|aria-label|placeholder|content|data-short|data-title)=")([^"]*)(")/g;
 const TEXT = />([^<>]+)(?=<)/g;
 const LIT = /(['"])((?:\\.|(?!\1)[^\\\n])*)\1/g;
 
