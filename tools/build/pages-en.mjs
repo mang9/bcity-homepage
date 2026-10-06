@@ -238,7 +238,7 @@ const FIXUPS = {
          ② **`(planned)` 이 사라져 「예정」이라는 정보가 영문판에서 없어진다.**
        ⚠ 지도 라벨은 축약형이 맞다(좁은 자리) — 그래서 사전 값을 바꾸지 않고 여기만 되돌린다.
        ⚠ `from` 은 번역된 뒤의 문자열이다. 사전이 그 문면을 바꾸면 1회 일치 assert 가 잡는다. */
-    ['<b>Seoul–Yangpyeong Expwy</b> <span>30 min to Seoul</span>',
+    ['<b>Seoul–Yangpyeong Expwy (planned)</b> <span>30 min to Seoul</span>',
      '<b>Seoul–Yangpyeong Expressway (planned)</b> <span>30 min to Seoul</span>'],
 
     /* ⚠⚠ **종합 교통도 라벨 — 영문 전용 위치.** 2026-09-22 에 전면 재배치했다.
@@ -351,8 +351,8 @@ const FIXUPS = {
        ⚠ 앞선 자리(383,651.5)는 **양평JCT 마커를 14.6 파고들었다.**
        ⚠ 이 자리의 선 기울기는 −5° 라 회전 없는(0°) 라벨과 오히려 더 잘 맞는다
          — 옛 자리는 −35.9° 였다(실측). */
-    ['x="431" y="627.5" fill="#19AFA6">Seoul–Yangpyeong Expwy<',
-     'x="287" y="713.5" fill="#19AFA6">Seoul–Yangpyeong Expwy<'],
+    ['x="431" y="627.5" fill="#19AFA6">Seoul–Yangpyeong Expwy (planned)<',
+     'x="287" y="713.5" fill="#19AFA6">Seoul–Yangpyeong Expwy (planned)<'],
     /* 동해항 — 왼쪽으로 31. 프레임(1672)을 4 넘던 것이 여유 27.5 가 되고,
        글자 중심이 자기 마커(1588)와 맞아떨어진다.
        ⚠ `text-anchor="middle"` 로 풀지 않는다 — `.tl-place` 에 CSS 가 걸리면

@@ -36,7 +36,7 @@
 | #광역접근성 | 서울도, 세계도 1시간 거리 | **Seoul and the world, an hour away** | 33 |
 |  | 서울과의 미팅도, 양양국제공항을 통한 해외 출장도 모두 1시간이면 충분합니다. GTX-B · ITX · 고속도로가 연결되는 광역 교통망 위에서 B-CITY는 수도권의 모든 기회와 닿아 있고, 국제공항을 통해 세계와도 가장 가까이 연결됩니다. | A meeting in Seoul or a flight abroad from Yangyang International Airport — both within an hour. On a regional network of GTX-B, ITX and expressways, B-CITY reaches every opportunity in the Seoul metropolitan area, and the airport puts the rest of the world close. | **254** (≤ 258) |
 | #산학연협력 | 협업이 일상이 되는 도시 | **A city where collaboration is routine** | 37 |
-| | 도시 안에 입주한 기업, 연구 기관, 대학이 거리적으로도 일상적으로도 가까이 있습니다. 오전 회의가 끝나고 점심에 인근 연구진을 만나고, 오후에는 대학 캠퍼스에서 공동 프로젝트를 이어갑니다. 협력은 멀리 떠나야 하는 일이 아니라, 이 도시 안에서 자연스럽게 일어나는 일상입니다. | Companies, research institutes and universities sit close together here — in distance and in daily routine. A morning meeting, lunch with researchers nearby, an afternoon on a university campus working on a joint project. Collaboration is not a trip you take; it is what the day looks like. | **286** (≤ 292) |
+| | 도시 안에 입주한 기업, 연구 기관, 대학이 거리적으로도 일상적으로도 가까이 있습니다. 오전 회의가 끝나고 점심에 인근 연구진을 만나고, 오후에는 대학 캠퍼스에서 공동 프로젝트를 이어갑니다. 협력은 멀리 떠나야 하는 일이 아니라, 이 도시 안에서 자연스럽게 일어나는 일상입니다. | Companies, research institutes and universities sit close together here — in distance and in daily routine. A morning meeting, lunch with researchers nearby, an afternoon on a university campus working on a joint project. Collaboration becomes part of the daily routine. | **286** (≤ 292) |
 
 ## 02 주거 환경 → Residential Environment
 
@@ -51,9 +51,9 @@
 | # | 한국어 | English | 글자 |
 |---|---|---|---|
 | #스마트 라이프 | AI · IoT 기반 첨단 주거 환경 | **AI- and IoT-enabled homes** | 27 |
-| | AI와 IoT가 집안 곳곳에 스며들어 일상의 모든 순간을 더 편리하게 만듭니다. 조명 · 온도 · 보안은 자동으로 관리되고, 영양 관리 시스템이 건강한 식단을 챙기며, 통합 의료 생태계가 가족 모두의 건강을 살핍니다. 하이퍼엔드 시니어 하우징부터 일반 주거까지 첨단 기술이 만드는 새로운 주거 경험이 시작됩니다. | AI and IoT reach into every room. Lighting, temperature and security manage themselves; a nutrition system looks after meals; and an integrated care network watches over the whole family. From ultra-premium senior housing to standard homes, a new way of living begins. | **263** (≤ 258 → **5자 초과. 아래 대안 참조**) |
+| | AI와 IoT가 집안 곳곳에 스며들어 일상의 모든 순간을 더 편리하게 만듭니다. 조명 · 온도 · 보안은 자동으로 관리되고, 영양 관리 시스템이 건강한 식단을 챙기며, 통합 의료 생태계가 가족 모두의 건강을 살핍니다. 하이퍼엔드 시니어 하우징부터 일반 주거까지 첨단 기술이 만드는 새로운 주거 경험이 시작됩니다. | AI and IoT reach into every room. Lighting, temperature and security manage themselves; a nutrition system looks after meals; and an integrated care network watches over the whole family. This applies to every home, from ultra-premium senior housing to standard units. | **263** (≤ 258 → **5자 초과. 아래 대안 참조**) |
 | #보행친화도시 | 보행자 중심 도시 네트워크 | **A pedestrian-first network** | 26 |
-| | B-CITY의 보행자 중심 네트워크가 도시 전체를 자연스럽게 연결합니다. 아이의 등하굣길도, 출근길도, 장보러 가는 길도 모두 안전하고 가까운 거리 안에 있습니다. 복잡한 이동이 없는 일상에서 하루는 더 여유로워집니다. | B-CITY’s pedestrian-first network ties the whole city together. The school run, the commute, the trip to the shops — all of it safe and close. Days go easier without complicated journeys. | **183** (≤ 190) |
+| | B-CITY의 보행자 중심 네트워크가 도시 전체를 자연스럽게 연결합니다. 아이의 등하굣길도, 출근길도, 장보러 가는 길도 모두 안전하고 가까운 거리 안에 있습니다. 복잡한 이동이 없는 일상에서 하루는 더 여유로워집니다. | B-CITY’s pedestrian-first network ties the whole city together. The school run, the commute, the trip to the shops — all of it safe and close. Everyday trips stay short and simple. | **183** (≤ 190) |
 | #소셜믹스 | 다양한 주거 유형이 공존하는 도시 | **A city of many housing types** | 28 |
 | | 단독주택, 공동주택, 주상복합까지 다양한 주거 유형이 한 도시 안에 공존합니다. 세대도 라이프스타일도 서로 다른 이웃들이 공원과 광장에서 자연스럽게 만납니다. 다양한 사람들이 어우러지는 풍경 속에서 건강한 동네 문화가 자라납니다. | Detached homes, apartments and mixed-use residential all share one city. Neighbors of different ages and different lives meet in the parks and plazas. A healthy local culture grows out of that mix. | **195** (≤ 197) |
 | #Green & Blue | 자연 · 녹지 · 수변이 가까운 도시 | **Green space and water, close at hand** | 36 |
@@ -86,7 +86,7 @@
 | #글로벌교육 | 세계 수준의 교육이 가까이에 | **World-class learning, close at hand** | 34 |
 |  | 「기업도시개발특별법」 제38조에 따른 외국교육기관 설립으로 글로벌 교육 환경이 도시 안에 마련됩니다. 해외로 떠나지 않아도 세계 수준의 교육을 누릴 수 있고, 국제적인 시야를 가진 인재가 자연스럽게 모이는 국제도시로서의 기반이 함께 만들어집니다. | Foreign education institutions, established under Article 38 of the Special Act on the Development of Enterprise Cities, bring a global learning environment into the city — and with it the making of an international city. | **200** (≤ 228) |
 | #개방형교육 | 도시 전체가 학교가 되는 교육도시 | **The whole city as a school** | 26 |
-| | 학교 안에서만 배움이 끝나지 않습니다. 도시 내 입주 기업, 연구 기관, 그리고 강원대 · 한림대 등 지역 거점 대학이 유기적으로 연결됩니다. AI 기반 진로 체험부터 산 · 학 공동 프로젝트까지, 교실 밖에서 만나는 진짜 배움이 B-CITY의 일상이 됩니다. | Learning does not stop at the school gate. Tenant companies, research institutes and regional universities all connect. From AI-based career experience to joint industry projects, the real lessons happen outside the classroom. | **225** (≤ 228) |
+| | 학교 안에서만 배움이 끝나지 않습니다. 도시 내 입주 기업, 연구 기관, 그리고 강원대 · 한림대 등 지역 거점 대학이 유기적으로 연결됩니다. AI 기반 진로 체험부터 산 · 학 공동 프로젝트까지, 교실 밖에서 만나는 진짜 배움이 B-CITY의 일상이 됩니다. | Learning continues beyond the school. Tenant companies, research institutes and regional universities all connect. From AI-based career experience to joint industry projects, students learn by working on real problems. | **225** (≤ 228) |
 
 ## 04 문화시설 → Culture & Leisure
 
@@ -101,11 +101,11 @@
 | # | 한국어 | English | 글자 |
 |---|---|---|---|
 | #골프레저 | 일상이 된 골프 라이프 | **Golf as part of everyday life** | 24 |
-|  | 남춘천 IC에서 3분, 서울에서 50분 거리. B-CITY 안에 자리한 285,000평 규모의 골프장에서 일상처럼 라운딩을 즐길 수 있습니다. 멀리 떠나야만 했던 골프가 출근길 같은 일상이 되는 곳. 가까이 있어 더 자주, 더 편하게 누립니다. | Three minutes from Nam-Chuncheon IC and 50 minutes from Seoul: a 943,000 m² course within B-CITY, accessible on an ordinary weekday. A course of this scale, previously a destination trip, now lies inside the city. | **180** (≤ 203) |
+|  | 남춘천 IC에서 3분, 서울에서 50분 거리. B-CITY 안에 자리한 285,000평 규모의 골프장에서 일상처럼 라운딩을 즐길 수 있습니다. 멀리 떠나야만 했던 골프가 출근길 같은 일상이 되는 곳. 가까이 있어 더 자주, 더 편하게 누립니다. | Three minutes from Nam-Chuncheon IC and 50 minutes from Seoul: a 943,000 m² course within B-CITY, accessible on an ordinary weekday. A course of this scale, once a weekend trip, is now part of the city. | **180** (≤ 203) |
 | #문화광장 | 도시 한복판의 문화 거점 | **A cultural anchor downtown** | 26 |
-| | 비즈니스 콤플렉스 중심부에 자리한 문화시설은 상업 · 업무와 어우러진 도시의 문화 코어입니다. 전시 · 공연 · 이벤트가 이어지는 도심 광장은 출근길에도, 퇴근길에도 일상의 풍경이 됩니다. 문화를 만나기 위해 멀리 가지 않아도 되는, 가까이 있는 문화 공간이 펼쳐집니다. | The cultural venues at the heart of the Business Complex sit among the shops and offices as the city’s cultural core. Exhibitions, performances and events make the plaza part of the daily commute, both ways. | **207** (≤ 224) |
+| | 비즈니스 콤플렉스 중심부에 자리한 문화시설은 상업 · 업무와 어우러진 도시의 문화 코어입니다. 전시 · 공연 · 이벤트가 이어지는 도심 광장은 출근길에도, 퇴근길에도 일상의 풍경이 됩니다. 문화를 만나기 위해 멀리 가지 않아도 되는, 가까이 있는 문화 공간이 펼쳐집니다. | The cultural venues at the heart of the Business Complex sit among the shops and offices as the city’s cultural core. Exhibitions, performances and events bring the plaza to life on the way to and from work. | **207** (≤ 224) |
 | #그린네트워크 | 도시 전체가 녹지로 채워진 도심 속 자연 | **Green through the whole city** | 28 |
-| | 도시 면적의 26%가 공원과 녹지로 채워진 B-CITY. 어디서든 자연이 가까운 환경에서 일상의 모든 순간이 더 여유로워집니다. 산책로와 수변 공간, 도심 속 녹지가 이어져 출근 전 아침 산책도, 점심시간의 잠깐 휴식도 자연 속에서 즐길 수 있습니다. | Parks and green space fill 26% of B-CITY, so every moment of the day has more room in it. Trails, waterfront and inner-city green connect — a morning walk before work, a short break at lunch. | **190** (≤ 207) |
+| | 도시 면적의 26%가 공원과 녹지로 채워진 B-CITY. 어디서든 자연이 가까운 환경에서 일상의 모든 순간이 더 여유로워집니다. 산책로와 수변 공간, 도심 속 녹지가 이어져 출근 전 아침 산책도, 점심시간의 잠깐 휴식도 자연 속에서 즐길 수 있습니다. | Parks and green space make up 26% of B-CITY, so open space is never far away. Trails, waterfront and inner-city green connect — a morning walk before work, a short break at lunch. | **190** (≤ 207) |
 | #관광인프라 | 가볍게 떠날 수 있는 여행의 도시 | **Leisure destinations within easy reach** | 27 |
 | | B-CITY 가까이에는 춘천이 자랑하는 대표 관광 · 레저 명소들이 자리하고 있습니다. 남이섬과 강촌, 김유정 문학촌, 의암호와 소양강, 그리고 비발디파크까지 — 차로 짧은 거리에서 사계절 내내 다채로운 즐거움을 누릴 수 있습니다. 주말마다 떠나는 여행이 멀지 않은 곳에서 시작되는, 관광 인프라가 가까운 도시입니다. | Chuncheon’s best-known destinations are right next door: Nami Island and Gangchon, the Kim Yu-jeong Literary Village, Lake Uiam and the Soyang River, Vivaldi Park. A short drive, and something different in every season. | **220** (≤ 267) |
 

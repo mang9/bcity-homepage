@@ -61,7 +61,7 @@
 | 한국어 | English |
 |---|---|
 | `NATIONAL STRATEGY` / 특화단지 지정 | `NATIONAL STRATEGY` |
-| 정부가 보증하고 전폭적으로 지원하는 범국가적 프로젝트로<br>**2024년 바이오 분야 국가첨단전략산업 특화단지 지정** | A national project backed by full government support —<br>**designated a National High-Tech Strategic Industry Specialized Complex for bio in 2024** |
+| 정부가 보증하고 전폭적으로 지원하는 범국가적 프로젝트로<br>**2024년 바이오 분야 국가첨단전략산업 특화단지 지정** | A national project backed by full government support —<br>**designated a National High-Tech Strategic Industry Specialized Complex for biotechnology in 2024** |
 | 바이오분야<br>국가첨단전략산업<br>특화단지 *(라벨)* | Biotechnology<br>National High-Tech Strategic Industry Specialized Complex |
 
 > ⚠ 원문은 **2025년 지정**이라고 쓰지만 추진일정 페이지의 근거는 **2024.06.27 제6차
@@ -90,7 +90,7 @@
 
 | 한국어 | English |
 |---|---|
-| 바이오 분야 국가첨단전략산업 특화단지 5개 권역 위치 | The five regions designated as National High-Tech Strategic Industry Specialized Complexes for bio |
+| 바이오 분야 국가첨단전략산업 특화단지 5개 권역 위치 | The five regions designated as National High-Tech Strategic Industry Specialized Complexes for biotechnology |
 | 춘천시와 홍천군이 표시된 강원도 | Gangwon State, with Chuncheon and Hongcheon marked |
 
 ---

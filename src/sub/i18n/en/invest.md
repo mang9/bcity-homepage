@@ -76,7 +76,7 @@
 | 실증 책임보험료 지원 | Support for liability insurance premiums for demonstration projects |
 | 글로벌 공동 실증 R&D 예산 지원 | Budget support for joint international demonstration R&D |
 | **부담금 · 조세** | **Levies & taxes** |
-| 개발 / 농지 / 교통 / 산지 등 8종 부담금 감면 | Reduction of 8 levies, including development, farmland, traffic and forest |
+| 개발 / 농지 / 교통 / 산지 등 8종 부담금 감면 | Reduction of eight levies, including development, farmland, forest and traffic charges |
 | 사업자 조세 감면 | Tax relief for operators |
 | 중소벤처기업부 특구 지정 (2023. 12. 28.) · 고시 제2024-33호 | Designated by the Ministry of SMEs and Startups (2023.12.28) · Notice No. 2024-33 |
 

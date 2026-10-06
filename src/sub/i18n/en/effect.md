@@ -82,7 +82,7 @@
 
 | 한국어 | English |
 |---|---|
-| B-CITY는 단순한 도시개발을 넘어,<br>지역과 국가, 그리고 세계에 새로운 가치를 만들어가는 **미래 성장의 출발점**이 됩니다 | B-CITY is more than an urban development.<br>It is **where future growth begins** — for the region, the country and the world |
+| B-CITY는 단순한 도시개발을 넘어,<br>지역과 국가, 그리고 세계에 새로운 가치를 만들어가는 **미래 성장의 출발점**이 됩니다 | B-CITY is an urban development built to drive growth for Chuncheon, Korea and beyond. |
 
 ## 사진 alt
 

@@ -26,7 +26,7 @@
 | 한국어 | English |
 |---|---|
 | 수도권의 한계를 넘어선 **기업도시의 표준** | Beyond the limits of the Seoul metropolitan area — **a new standard for the enterprise city** |
-| 바이오테크이노밸리는 단순한 사업 시행사가 아닌, B-CITY의 비전 동반자입니다.<br>AI와 BIO가 융합되는 첨단산업 도시, 일과 삶이 어우러지는 자족형 도시, 자연과 첨단이 공존하는 지속가능한 도시를 만들어가며 대한민국 미래 도시의 새로운 기준을 제시하고자 합니다. | Biotech Innovalley is not merely the developer of B-CITY but a partner in its vision.<br>An advanced-industry city where AI and bio converge; a self-sufficient city where work and life fit together; a city where nature and technology coexist. |
+| 바이오테크이노밸리는 단순한 사업 시행사가 아닌, B-CITY의 비전 동반자입니다.<br>AI와 BIO가 융합되는 첨단산업 도시, 일과 삶이 어우러지는 자족형 도시, 자연과 첨단이 공존하는 지속가능한 도시를 만들어가며 대한민국 미래 도시의 새로운 기준을 제시하고자 합니다. | As B-CITY’s developer, Biotech Innovalley is also a long-term partner in its vision.<br>We are building an advanced-industry city where AI and bio converge, a self-sufficient city where work and life fit together, and a sustainable city where nature and technology coexist. |
 | Be the Light, Be the Future | Be the Light, Be the Future |
 
 > ⚠ 비전 본문은 **한 문장을 세 항목 + 결론으로 쪼갰다.** 한국어는 세 개의 관형절이 하나의 목적어를

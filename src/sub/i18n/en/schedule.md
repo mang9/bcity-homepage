@@ -24,9 +24,9 @@
 |---|---|
 | 제19차 국민행복포럼 대통령 발언 | Presidential remarks at the 19th People’s Happiness Forum |
 | 강원특별자치도 토지거래허가구역 지정<br>*강원특별자치도 공고 제2024-426호* | Land Transaction Permission Zone designated by Gangwon State<br>*Gangwon State Announcement No. 2024-426* |
-| **기업혁신파크 선도사업 공모 결과 알림**<br>*국토교통부 성장거점정책과-691* | **Pilot project selection announced**<br>*MOLIT, Growth Hub Policy Division-691* |
+| **기업혁신파크 선도사업 공모 결과 알림**<br>*국토교통부 성장거점정책과-691* | **Pilot project selection announced**<br>*MOLIT Growth Hub Policy Division, Document No. 691* |
 | 기업혁신파크 선도사업 국토부 1차 협의 | First consultation with MOLIT |
-| **바이오 국가첨단전략산업 특화단지 선정**<br>*춘천 · 홍천* | **Designated a National High-Tech Strategic Industry Specialized Complex for bio**<br>*Chuncheon · Hongcheon* |
+| **바이오 국가첨단전략산업 특화단지 선정**<br>*춘천 · 홍천* | **Designated a National High-Tech Strategic Industry Specialized Complex for biotechnology**<br>*Chuncheon · Hongcheon* |
 | 개발행위허가 제한지역 지정 고시<br>*춘천시 고시 제2024-468호* | Development Activity Permit Restriction Area designated<br>*Chuncheon City Notice No. 2024-468* |
 | 강원도 및 춘천시 PFV 출자지분 확정 | Gangwon State and Chuncheon City confirmed their PFV equity stakes |
 | 환경영향평가협의회 심의 | Environmental Impact Assessment Council review |

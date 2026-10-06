@@ -118,8 +118,8 @@
 | `02` OVERVIEW · 사업개요 | `02` OVERVIEW |
 | 국토교통부 주관의 / **민간기업 중심 도시개발 사업** | **Private-sector-led urban development**<br>under the Ministry of Land, Infrastructure and Transport |
 | 총 사업비 약 1.1조원의 대규모 국가도시개발 프로젝트로, 총 면적 약 110만평(여의도 면적 1.25배 규모)의 부지 위에 혁신 생태계가 만들어집니다 | A national urban development project of about KRW 1.1 trillion, building an innovation ecosystem on roughly 3.63 km² — 1.25 times the area of Yeouido |
-| 2024년 바이오 분야 / **국가첨단전략산업 특화단지 지정** | Designated in 2024 as a **National High-Tech Strategic Industry Specialized Complex** for bio |
-| 정부가 보증하고 전폭적으로 지원하는 범국가적 프로젝트입니다. 인허가 패스트트랙부터 최대 규모 세제 혜택까지, 성공적 비즈니스를 위한 전방위적 특구 지원이 제공됩니다. | A nationwide project backed by government support. From fast-track permitting to significant tax incentives, special-zone programs support key stages of business development. |
+| 2024년 바이오 분야 / **국가첨단전략산업 특화단지 지정** | Designated in 2024 as a National High-Tech Strategic Industry Specialized Complex **National High-Tech Strategic Industry Specialized Complex** for biotechnology |
+| 정부가 보증하고 전폭적으로 지원하는 범국가적 프로젝트입니다. 인허가 패스트트랙부터 최대 규모 세제 혜택까지, 성공적 비즈니스를 위한 전방위적 특구 지원이 제공됩니다. | A national project backed by government support. From fast-track permitting to significant tax incentives, special-zone programs support key stages of business development. |
 
 ### 지표 4종 (`.ov-stat` · 카운트업)
 
@@ -469,7 +469,7 @@
 | 필수 항목에 동의해 주세요. | Please agree to the required collection and use of personal data. |
 | **선택** *(태그)* | **Optional** |
 | 마케팅 활용 동의에 동의합니다 | I agree to the use of my data for marketing |
-| 사업 주관 | **Project sponsor** |
+| 사업 주관 | **Project developer** |
 | 처리 절차 | **What happens next** |
 | 문의 접수 | We receive your inquiry |
 | 담당자 배정 · 내용 검토 | We assign your inquiry to the relevant team for review |
@@ -610,7 +610,7 @@ SVG 로 그린다. 그래서 다른 절의 대조표에 없었고, 영문 빌드
 | 서울양양고속도로 | **Seoul–Yangyang Expressway** |
 | 40분 | **40 min** |
 | 제2경춘국도(예정) | **2nd Gyeongchun National Road (planned)** |
-| 서울~양평고속도로(예정) | **Seoul–Yangpyeong Expwy** |
+| 서울~양평고속도로(예정) | **Seoul–Yangpyeong Expwy (planned)** |
 | 3분 | **3 min** |
 | 10분 | **10 min** |
 | 15분 | **15 min** |

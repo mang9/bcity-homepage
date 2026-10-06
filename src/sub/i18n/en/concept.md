@@ -33,7 +33,7 @@
 | | Low & Wide 설계로 초기 투자비 절감 | Low-and-wide design reduces up-front investment |
 | | 입주기업 전용 데이터센터 구축 | Dedicated data centers for tenant companies |
 | `03` | **연산 기반** / AI 연산부터 도시 운영까지 담당하는 컴퓨팅 기반 | **Compute** / The computing base for AI workloads and city operations alike |
-| | NVIDIA 기반 고성능 GPU 바이오 플랫폼 | A high-performance NVIDIA GPU platform for bio |
+| | NVIDIA 기반 고성능 GPU 바이오 플랫폼 | A high-performance NVIDIA GPU platform for biotechnology |
 | | 바이오 · 의료 데이터 수집 · 관리 · 연구 | Collection, management and research of bio and medical data |
 | | 도시 운영 시스템 실시간 연산 지원 | Real-time compute for city operating systems |
 
@@ -58,7 +58,7 @@
 | `03` | **집적 규모** / 82,000평 규모 첨단 바이오 클러스터 | **Scale** / An advanced bio cluster of 271,000 m² |
 | | 첨단 바이오 클러스터 82,000평 조성 | 271,000 m² (82,000 pyeong) of advanced bio cluster development |
 | | 데이터 수집 · AI 분석 · 생산으로 이어지는 밸류체인 | A value chain from data collection to AI analysis to production |
-| | 생산 · 임상 데이터 환류로 선순환 구조 실현 | Production and clinical data feed back in, compounding the cycle |
+| | 생산 · 임상 데이터 환류로 선순환 구조 실현 | Production and clinical data feed back into research, strengthening each cycle |
 
 > ⚠ 「82,000평」을 **`271,000 m²` 로 앞세웠다**(`GLOSSARY.md` §7). 카드 제목은 평을 생략하고,
 > 불릿에서만 괄호로 병기한다 — 같은 카드에서 두 번 병기하면 길어진다.
@@ -90,7 +90,7 @@
 
 | 한국어 | English |
 |---|---|
-| `04` 스마트 푸드와 물류가 연결되는 산업 허브 | `04` An industrial hub where smart food meets logistics |
+| `04` 스마트 푸드와 물류가 연결되는 산업 허브 | `04` An industrial hub for smart food and logistics |
 | 연 2조원의 대규모 군 급식 민간 위탁 수요를 안정적으로 확보하는<br>차세대 강원형 푸드물류 클러스터 거점 도시 | A next-generation food and logistics cluster — a Gangwon model —<br>with secure access to KRW 2 trillion a year in outsourced military food service |
 | 2022년부터 급식업체 선정에 완전경쟁입찰제가 도입되어 민간 위탁 급식이 점진적으로 확대되고 있습니다 | Open competitive bidding for food service contracts was introduced in 2022, and outsourcing has been expanding since |
 

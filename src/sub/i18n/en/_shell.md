@@ -81,7 +81,7 @@
 
 | 페이지 | English title | English description (자) |
 |---|---|---|
-| 사업개요 | Overview · B-CITY … | **A KRW 1.1 trillion, 3,632,899 m² urban development led by private enterprise under MOLIT, and a designated National High-Tech Strategic Industry Specialized Complex for bio.** (173) |
+| 사업개요 | Overview · B-CITY … | **A KRW 1.1 trillion, 3,632,899 m² urban development led by private enterprise under MOLIT, and a designated National High-Tech Strategic Industry Specialized Complex for biotechnology.** (173) |
 | 입지 | Location · B-CITY … | **Within an hour of Seoul and the surrounding metropolitan area — the GTX-B extension, 2nd Gyeongchun National Road, airports and ports all within reach.** (151) |
 | 기대효과 | Impact · B-CITY … | **A self-sufficient city planned for approx. 16,000 residents in 6,366 households, with impact across the economy, industry, society, regions and the environment.** (160) |
 | 추진일정 | Timeline · B-CITY … | **From the 2023 call for Enterprise Innovation Park proposals to full completion in 2033 — progress to date and the road ahead, year by year.** (139) |

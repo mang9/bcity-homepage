@@ -61,7 +61,7 @@
 | **구성** DC1~DC5 / 총 5개 블럭 | **Composition** DC1–DC5 / Five blocks |
 | **전력** 435MW / 목표 PUE 1.2 | **Power** 435 MW / Target PUE 1.2 |
 | ※ 5개의 데이터센터 부지로 구성된 집적 단지 | \* A complex of five data center sites |
-| AI 데이터 클러스터는 B-CITY의 **디지털 동력**입니다.<br>국가 AI 경쟁력의 새로운 기준이 되는 하이퍼스케일 데이터 인프라가 이곳에서 시작됩니다. | The AI Data Cluster is B-CITY’s **digital engine**.<br>Hyperscale data infrastructure that resets the benchmark for Korea’s AI competitiveness starts here. |
+| AI 데이터 클러스터는 B-CITY의 **디지털 동력**입니다.<br>국가 AI 경쟁력의 새로운 기준이 되는 하이퍼스케일 데이터 인프라가 이곳에서 시작됩니다. | The AI Data Cluster is B-CITY’s **digital engine**.<br>Its hyperscale data infrastructure is built to strengthen Korea’s AI competitiveness. |
 
 | 핵심가치 | 한국어 | English |
 |---|---|---|
@@ -76,7 +76,7 @@
 | `3` | **입주기업 전용 DC 구축** | **Dedicated data centers for tenants** |
 | | 바이오 · 의료 전용 AI 데이터센터 | AI data centers dedicated to bio and medical work |
 | | 바이오 R&D 가속화 전용 SW 생태계 | A software ecosystem built to accelerate bio R&D |
-| | 데이터 안심존 운영 | A data safe zone |
+| | 데이터 안심존 운영 | A secure data zone |
 
 ## 02 첨단 바이오 클러스터 → Advanced Bio Cluster
 
@@ -89,7 +89,7 @@
 | **용도지역** 일반공업지역 / 준공업지역 · 건폐율 70% · 용적률 350~400% | **Zoning** General Industrial Zone / Semi-Industrial Zone · BCR 70% · FAR 350–400% |
 | **구성** HT1~HT2 / 총 2개 구역 | **Composition** HT1–HT2 / Two blocks |
 | **산업 연계** 국가첨단전략산업 / 특화단지 | **Industry link** National High-Tech Strategic Industry / Specialized Complex |
-| 첨단 바이오 클러스터는 B-CITY의 **산업 동력**입니다.<br>바이오와 AI가 융합되고, R&D와 산업화가 연결되는 차세대 첨단산업의 거점이 이곳에서 완성됩니다. | The Advanced Bio Cluster is B-CITY’s **industrial engine**, connecting biotechnology and AI,<br>and linking R&D with commercialization. |
+| 첨단 바이오 클러스터는 B-CITY의 **산업 동력**입니다.<br>바이오와 AI가 융합되고, R&D와 산업화가 연결되는 차세대 첨단산업의 거점이 이곳에서 완성됩니다. | The Advanced Bio Cluster is B-CITY’s **industrial core**, connecting biotechnology and AI,<br>and linking R&D with commercialization. |
 
 | 핵심가치 | 한국어 | English |
 |---|---|---|
@@ -112,12 +112,12 @@
 |---|---|
 | `03` 푸드 물류 클러스터 | `03` Food & Logistics Cluster |
 | AI 콜드체인 허브이자 군 급식 수요 대응 거점 | **An AI-enabled cold-chain hub serving military food-service needs** |
-| AI 데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응 | Leading a data-driven future food industry and serving roughly KRW 2 trillion a year in outsourced military food service |
+| AI 데이터 기반 미래형 식품산업 주도 및 연간 약 2조원 규모에 달하는 군 급식 민간위탁 수요 대응 | Leading the data-driven future of food, targeting the roughly KRW 2 trillion annual market for outsourced military food service |
 | **부지 면적** 약 4.2만평 / 138,860㎡ (42,005평) | **Site area** 138,860 m² / 42,005 pyeong |
 | **용도지역** 준공업지역 / 건폐율 70% · 용적률 400% | **Zoning** Semi-Industrial Zone / BCR 70% · FAR 400% |
 | **구성** FU1~FU4 / 총 4개 구역 | **Composition** FU1–FU4 / Four blocks |
 | **접근성** 남춘천 IC 3분 / 서울양양고속도로 | **Access** 3 min to Nam-Chuncheon IC / Seoul–Yangyang Expressway |
-| 푸드 물류 클러스터는 B-CITY의 **지속가능한 동력**입니다.<br>첨단 ICT와 친환경 선순환이 결합된 강원형 푸드테크 거점이 이곳에서 시작됩니다. | The Food & Logistics Cluster is B-CITY’s **sustainable engine**.<br>A Gangwon model for food tech, joining advanced ICT with a low-impact circular approach, starts here. |
+| 푸드 물류 클러스터는 B-CITY의 **지속가능한 동력**입니다.<br>첨단 ICT와 친환경 선순환이 결합된 강원형 푸드테크 거점이 이곳에서 시작됩니다. | The Food & Logistics Cluster is B-CITY’s **sustainable engine**.<br>It combines advanced ICT with a low-impact, circular approach in a model built for Gangwon. |
 
 | 핵심가치 | 한국어 | English |
 |---|---|---|
@@ -144,12 +144,12 @@
 |---|---|
 | `04` 바이오MICE 클러스터 | `04` Bio-MICE Cluster |
 | 지속가능한 바이오 · 헬스 산업 커뮤니티 조성 | **A lasting community for the bio and health industries** |
-| 일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성 | Beyond one-off and recurring events — a year-round network connecting medicine, biotechnology, healthcare and investment |
+| 일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성 | Beyond one-off events — a year-round network connecting medicine, biotechnology, healthcare and investment |
 | **부지 면적** 약 3.9만평 / 128,634㎡ (약 38,912평) | **Site area** 128,634 m² / approx. 38,912 pyeong |
-| **용도지역** 복합용지 / MICE · 의료시설 등 · 건폐율 70% | **Zoning** Mixed-use land / MICE, medical and related · BCR 70% |
+| **용도지역** 복합용지 / MICE · 의료시설 등 · 건폐율 70% | **Zoning** Mixed-use land / MICE, medical facilities, etc. · BCR 70%, medical and related · BCR 70% |
 | **구성** BIO1~BIO4 / 총 4개 구역 | **Composition** BIO1–BIO4 / Four blocks |
 | **특구** AI 헬스케어 / 국가첨단전략산업 | **Special zone** AI Healthcare / National High-Tech Strategic Industry |
-| 바이오MICE 클러스터는 B-CITY의 **글로벌 동력**입니다.<br>정밀의료와 글로벌 협력이 만나는 차세대 헬스케어 산업의 중심이 이곳에서 완성됩니다. | The Bio-MICE Cluster is B-CITY’s **global engine**.<br>Precision medicine meets international collaboration at the center of next-generation healthcare. |
+| 바이오MICE 클러스터는 B-CITY의 **글로벌 동력**입니다.<br>정밀의료와 글로벌 협력이 만나는 차세대 헬스케어 산업의 중심이 이곳에서 완성됩니다. | The Bio-MICE Cluster is B-CITY’s **global gateway**.<br>It brings together precision medicine and international collaboration in healthcare. |
 | 과학자마을 *(표 비고)* | Scientists’ Village |
 | 의료시설 / MICE 복합용지 *(표 비고)* | Medical facilities / MICE mixed-use |
 
@@ -157,8 +157,8 @@
 |---|---|---|
 | `1` | **통합 의료 플랫폼** | **Integrated care platform** |
 | | AI 헬스케어 글로벌 혁신 규제자유특구 | Gangwon AI Healthcare Global Innovation Special Zone |
-| | 바이오 국가첨단전략산업 특화단지 | National High-Tech Strategic Industry Specialized Complex for bio |
-| | 글로벌 바이오 · 제약 연구 혁신 포럼 | A global forum for bio and pharma research innovation |
+| | 바이오 국가첨단전략산업 특화단지 | National High-Tech Strategic Industry Specialized Complex for biotechnology |
+| | 글로벌 바이오 · 제약 연구 혁신 포럼 | A global forum for biotechnology and pharma research innovation |
 | `2` | **정밀의료 빅데이터 허브** | **Precision-medicine data hub** |
 | | 분산형 · 가상 임상시험 | Decentralized and virtual clinical trials |
 | | 인실리코 시뮬레이션 RWD 공급 기지 | A supply base of real-world data (RWD) for in silico simulation |
@@ -172,13 +172,13 @@
 | 한국어 | English |
 |---|---|
 | `05` 비즈니스 콤플렉스 | `05` Business Complex |
-| 상업 · 업무 · 문화가 융합된 강원 관문 | **Gangwon’s gateway, where retail, offices and culture meet** |
+| 상업 · 업무 · 문화가 융합된 강원 관문 | **Gangwon’s gateway for retail, offices and culture** |
 | B-CITY의 활력을 만드는 단핵 복합 상권 및 문화 거점 · 직 · 주 · 락 중심 주민친화적 상권 조성 | A central commercial and cultural hub that brings energy to B-CITY, with spaces for residents to work, live and enjoy leisure. |
 | **부지 면적** 약 1.7만평 / 55,703㎡ (약 16,850평) | **Site area** 55,703 m² / approx. 16,850 pyeong |
 | **용도지역** 일반상업지역 / 건폐율 80% · 용적률 600% | **Zoning** General Commercial Zone / BCR 80% · FAR 600% |
 | **업무시설** 29,583㎡ / 8,949평 | **Office** 29,583 m² / 8,949 pyeong |
 | **상업시설** 26,120㎡ / 7,901평 | **Retail** 26,120 m² / 7,901 pyeong |
-| 비즈니스 콤플렉스는 B-CITY의 **활력의 심장**입니다.<br>상업 · 업무 · 문화가 하나의 공간에서 만나는 도시의 가장 활기찬 무대가 이곳에서 완성됩니다. | The Business Complex is **the heart of B-CITY’s energy**.<br>Retail, offices and culture share one place — the city’s liveliest stage. |
+| 비즈니스 콤플렉스는 B-CITY의 **활력의 심장**입니다.<br>상업 · 업무 · 문화가 하나의 공간에서 만나는 도시의 가장 활기찬 무대가 이곳에서 완성됩니다. | The Business Complex is **B-CITY’s busiest district**.<br>Retail, offices and culture share one place — the city’s liveliest stage. |
 
 | 핵심가치 | 한국어 | English |
 |---|---|---|
@@ -214,7 +214,7 @@
 | `1` | **소셜믹스** | **Social mix** |
 | | 전 단지가 학교 · 공원 · 상가 등 접근성이 우수해 편리하고 쾌적한 정주 여건 마련 | Every neighborhood sits close to schools, parks and shops — convenient and comfortable to live in |
 | | 아파트 · 시니어하우징 · 주상복합 · 단독주택 등 다양한 주거 유형 계획 | A planned mix of apartments, senior housing, mixed-use residential and detached homes |
-| `2` | **워라밸 힐링 라이프** | **Balance and recovery** |
+| `2` | **워라밸 힐링 라이프** | **Work–life balance** |
 |  | AI 데이터 클러스터 및 첨단산업 클러스터 밀착 배치로 직주근접 | Placed next to the AI Data Cluster and the advanced-industry clusters, so home and work are close |
 | | 보행자 중심 네트워크 조성 | A pedestrian-first network |
 | | Green & Blue Life 완성 | Green & Blue Living |
@@ -235,7 +235,7 @@
 | **외국인교육기관** 약 1.2만평 / 40,539㎡ · 건폐율 50% | **Foreign institutions** 40,539 m² / BCR 50% |
 | **도입시설** 교육시설 / 유 · 초 · 중 · 고 · 외국교육기관 | **Facilities** Schools / Kindergarten, elementary, middle and high schools, and a foreign educational institution |
 | **연계** 교육발전특구 / 에듀포레스트 춘천 (시범사업) | **Linked to** Education Development Special Zone / Edu-Forest Chuncheon (pilot) |
-| 에듀 콤플렉스는 B-CITY의 **지속가능한 성장 동력**입니다.<br>도시 전체가 학교가 되고, 일상이 교육이 되는 새로운 배움의 도시가 이곳에서 시작됩니다. | The Education Complex is B-CITY’s **engine for lasting growth**.<br>The whole city becomes a school, and daily life becomes learning. |
+| 에듀 콤플렉스는 B-CITY의 **지속가능한 성장 동력**입니다.<br>도시 전체가 학교가 되고, 일상이 교육이 되는 새로운 배움의 도시가 이곳에서 시작됩니다. | The Education Complex is B-CITY’s **foundation for long-term growth**.<br>Learning extends from the classroom into the whole city. |
 | 유치원 / 초등학교 / 중학교 / 고등학교 / 외국교육기관 *(표)* | Kindergarten / Elementary school / Middle school / High school / Foreign educational institution |
 
 | 핵심가치 | 한국어 | English |
@@ -268,7 +268,7 @@
 | **코스 구분** 대중형 · 18홀 / PAR 72 | **Course** Public · 18 holes / Par 72 |
 | **코스 연장** 6,570m | **Course length** 6,570 m |
 | **부대시설** 4대 시설 / 클럽하우스 · 그늘집 · 관리동 · 연습시설 | **Support facilities** Four types / clubhouse, halfway house, maintenance building, practice facility |
-| 골프레저 콤플렉스는 B-CITY의 **웰니스 동력**입니다.<br>자연과 데이터, 여가와 건강이 만나는 새로운 라이프스타일의 무대가 이곳에서 펼쳐집니다. | The Golf & Leisure Complex is B-CITY’s **wellness engine**.<br>Nature and data, leisure and health meet on a new stage for living. |
+| 골프레저 콤플렉스는 B-CITY의 **웰니스 동력**입니다.<br>자연과 데이터, 여가와 건강이 만나는 새로운 라이프스타일의 무대가 이곳에서 펼쳐집니다. | The Golf & Leisure Complex is B-CITY’s **wellness engine**.<br>It combines nature, leisure and health data. |
 | 클럽하우스 1동 / 그늘집 2동 / 관리동 2동 / 연습시설 1동 *(표)* | Clubhouse ×1 / Halfway house ×2 / Maintenance building ×2 / Practice facility ×1 |
 
 #### 시설 표의 칸 — `<td>` 하나가 한 덩이다
@@ -294,7 +294,7 @@
 
 | 핵심가치 | 한국어 | English |
 |---|---|---|
-| `1` | **바이오 스마트 / 피지컬 AI** | **Bio-smart / Physical AI** |
+| `1` | **바이오 스마트 / 피지컬 AI** | **Bio-health data / Physical AI** |
 | | 라운딩 시 생체 데이터 수집 · 분석 | Biometric data collected and analyzed during play |
 | | 메디컬 케어 클럽하우스 운영 | A clubhouse with medical care |
 | | 피지컬 AI 기반 로봇 캐디 | Physical AI robot caddies |

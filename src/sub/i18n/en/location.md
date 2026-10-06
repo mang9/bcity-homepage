@@ -33,7 +33,7 @@
 | **GTX-B** / 서울역 50분 / 추진 중 (2030년 개통 예정) | **GTX-B** / 50 min to Seoul Station / In progress (opening planned 2030) |
 | **ITX-청춘** / 청량리역 55분 / 운영 중 | **ITX-Cheongchun** / 55 min to Cheongnyangni Station / In service |
 | **경춘선** / 청량리 연결 / 운영 중 | **Gyeongchun Line** / Connections to Cheongnyangni / In service |
-| GTX-B 춘천 연장 시 서울 핵심 업무지구까지 50분대 | With the planned GTX-B extension to Chuncheon, travel to Seoul’s key business districts is expected to take around 50–59 minutes. *(129)* |
+| GTX-B 춘천 연장 시 서울 핵심 업무지구까지 50분대 | With the planned GTX-B extension to Chuncheon, Seoul’s key business districts will be under an hour away. *(129)* |
 
 #### 도로 → Road
 

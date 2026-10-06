@@ -8,7 +8,7 @@
 | 한국어 | English |
 |---|---|
 | `BRAND NAME` / 브랜드 네임 | `BRAND NAME` |
-| 도시와 바이오가 하나가 되는 곳,<br>바이오와 도시 인프라가 만나 새로운 가치를 만듭니다 | Where biotechnology and urban life converge<br>Creating new value where bio meets city infrastructure |
+| 도시와 바이오가 하나가 되는 곳,<br>바이오와 도시 인프라가 만나 새로운 가치를 만듭니다 | A city built for biotechnology<br>Creating new value where bio meets city infrastructure |
 | B-CITY의 심볼은 두 개의 알파벳 “B” 구조를 기반으로 설계되었습니다. 좌우의 형태는 서로 독립된 산업과 기능을 의미하며, 중앙의 유기적인 연결 구조를 통해 하나의 미래 도시 시스템으로 통합됩니다. | The B-CITY symbol is built from two letter “B” forms. The left and right shapes stand for industries and functions that are independent of one another; the organic structure at the center draws them into a single system for the city of the future. |
 
 ### 심볼 해석 3카드
@@ -41,7 +41,7 @@
 | 국문 표기 / 비시티 — 「비-시티」로 끊어 쓰지 않는다 | **Korean rendering** / 비시티 — never hyphenated as 「비-시티」 |
 | 심볼 마크 / `SYMBOL MARK` | `SYMBOL MARK` |
 | **민트 레이어** / 바이오 · 생명의 흐름 | **Mint layer** / Bio — the flow of life |
-| **애저 레이어** / AI · 데이터의 광채 | **Azure layer** / AI — the brilliance of data |
+| **애저 레이어** / AI · 데이터의 광채 | **Azure layer** / AI — the brilliance of data — the brilliance of data |
 | **두 레이어의 교차점** / 혁신과 연결 | **Where the layers cross** / Innovation and connection |
 | 두 개의 레이어가 교차하는 추상 심볼입니다.<br>워드마크와 함께 쓰거나, 작은 매체에서는 단독으로 씁니다. | An abstract symbol of two crossing layers.<br>Use it with the wordmark, or on its own in small formats. |
 
