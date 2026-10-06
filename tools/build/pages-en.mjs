@@ -79,9 +79,15 @@ function collapseEyebrow(html) {
     // 섹션 아이브로우 — 영문 낱말이 <b> 에 있으면 한국어 <span> 을 버린다
     .replace(/(<b>([^<]+)<\/b>)\s*<span>([^<]*[가-힣][^<]*)<\/span>/g,
       (m, b, txt, span) => (CAPS.test(txt.trim()) ? b : m))
-    // 히어로 아이브로우 — `CATEN · 카테고리` 에서 영문만 남긴다
-    .replace(/(<span>)([A-Z][A-Z0-9 &]*)\s*·\s*[^<]*[가-힣][^<]*(<\/span>)/g,
-      (m, a, en, z) => a + en.trim() + z)
+    /* 히어로 · 섹션 아이브로우 — `LOCATION · 입지` 에서 영문만 남긴다.
+       ⚠⚠ **아이브로우 안으로 한정한다.** 조건 없이 걸면 똑같은 `<span>라틴 · 한글</span>`
+         꼴인 **브랜드 레이어**(`AI · 데이터의 광채`)와 **구역 개요 값**
+         (`MICE · 의료시설 등 · 건폐율 70%`)까지 라틴 낱말만 남기고 잘라 낸다 —
+         그 두 자리가 실제로 `AI` · `MICE` 로 나가고 있었다(2026-10-06 발견).
+         사전에는 올바른 번역이 **있었는데** 이 규칙이 뒤에서 덮었다. */
+    .replace(/<p class="(?:hero|ov)-eyebrow[^"]*">[\s\S]*?<\/p>/g, (block) =>
+      block.replace(/(<span>)([A-Z][A-Z0-9 &]*)\s*·\s*[^<]*[가-힣][^<]*(<\/span>)/,
+        (m, a, en, z) => a + en.trim() + z))
     /* 브랜드 색 스와치 — `<b>Indigo</b><span>인디고</span>` 는 라틴 이름 + 한국어 음역이다.
        음역을 버린다(번역하면 `Indigo Indigo` 가 된다).
        ⚠⚠ **`.br-swatch-h` 안으로 한정한다.** 똑같은 `<b>+<span>` 꼴이 구역소개에서는

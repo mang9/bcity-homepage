@@ -146,7 +146,7 @@
 | 지속가능한 바이오 · 헬스 산업 커뮤니티 조성 | **A lasting community for the bio and health industries** |
 | 일회성 · 정기성을 넘어, 의료 + 바이오 + 헬스 + 투자가 상시 교류하는 산업 네트워크 완성 | Beyond one-off events — a year-round network connecting medicine, biotechnology, healthcare and investment |
 | **부지 면적** 약 3.9만평 / 128,634㎡ (약 38,912평) | **Site area** 128,634 m² / approx. 38,912 pyeong |
-| **용도지역** 복합용지 / MICE · 의료시설 등 · 건폐율 70% | **Zoning** Mixed-use land / MICE, medical facilities, etc. · BCR 70%, medical and related · BCR 70% |
+| **용도지역** 복합용지 / MICE · 의료시설 등 · 건폐율 70% | **Zoning** Mixed-use land / MICE, medical facilities, etc. · BCR 70% |
 | **구성** BIO1~BIO4 / 총 4개 구역 | **Composition** BIO1–BIO4 / Four blocks |
 | **특구** AI 헬스케어 / 국가첨단전략산업 | **Special zone** AI Healthcare / National High-Tech Strategic Industry |
 | 바이오MICE 클러스터는 B-CITY의 **글로벌 동력**입니다.<br>정밀의료와 글로벌 협력이 만나는 차세대 헬스케어 산업의 중심이 이곳에서 완성됩니다. | The Bio-MICE Cluster is B-CITY’s **global gateway**.<br>It brings together precision medicine and international collaboration in healthcare. |
