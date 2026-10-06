@@ -293,7 +293,11 @@ export function loadDict(root) {
  *   ④ 는 요소 하나의 내용을 다룬다. ④ 를 먼저 돌리면 넓은 덩이의 앞조각만 번역돼
  *   뒤조각이 한국어로 남고(`<b>40분</b>`), 넓은 규칙은 키가 사라져 영원히 안 맞는다.
  */
-const ATTR = /(\s(?:alt|title|aria-label|placeholder|content)=")([^"]*)(")/g;
+/* ⚠ `data-short` — 사업개요 특화단지 지도의 **짧은 지역명**이다(767px 이하에서
+     `b[data-short]::after { content: attr(data-short) }` 로 나온다). CSS 생성
+     콘텐츠라 렌더 스캔도 `_leftover` 도 보지 못해 **영문판에 한국어가 남아 있었다**
+     (2026-10-06 발견). 번역 대상 속성에 넣어 사전이 닿게 한다. */
+const ATTR = /(\s(?:alt|title|aria-label|placeholder|content|data-short)=")([^"]*)(")/g;
 const TEXT = />([^<>]+)(?=<)/g;
 const LIT = /(['"])((?:\\.|(?!\1)[^\\\n])*)\1/g;
 

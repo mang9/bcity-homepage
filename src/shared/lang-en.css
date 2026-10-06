@@ -168,3 +168,10 @@ html[lang="en"] .br-wm-spec div { grid-template-columns: 136px minmax(0, 1fr); }
 html[lang="en"] .tmode-list span {
   grid-column: 1 / -1; justify-self: start; white-space: normal;
 }
+
+/* 특화단지 지도의 짧은 지역명 — 영문이 2배 길다. ⚠ 이름을 줄이지 말 것(두 지역을 묶어
+   가리킨다). ⚠ `page-overview.css` 의 768px 미만 규칙을 덮으므로 같은 폭으로 감싼다. */
+@media (max-width: 767px) {
+  html[lang="en"] .bc-call b[data-short]::after { font-size: 11px; }
+  html[lang="en"] .bc-call-in { padding: 5px 7px; }
+}

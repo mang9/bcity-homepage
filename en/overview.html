@@ -405,6 +405,13 @@
       grid-column: 1 / -1; justify-self: start; white-space: normal;
     }
 
+    /* 특화단지 지도의 짧은 지역명 — 영문이 2배 길다. ⚠ 이름을 줄이지 말 것(두 지역을 묶어
+       가리킨다). ⚠ `page-overview.css` 의 768px 미만 규칙을 덮으므로 같은 폭으로 감싼다. */
+    @media (max-width: 767px) {
+      html[lang="en"] .bc-call b[data-short]::after { font-size: 11px; }
+      html[lang="en"] .bc-call-in { padding: 5px 7px; }
+    }
+
     /* ── 30-hero-lnb.css ─────────────────────────────────────────── */
     /* ===== 히어로 ===== */
     .hero { position: relative; min-height: clamp(340px, 48vh, 520px); display: flex;
@@ -1248,19 +1255,19 @@
               <div class="bc-frame">
                 <img src="../assets/img/bio-cluster-kr.png" alt="The five regions designated as National High-Tech Strategic Industry Specialized Complexes for biotechnology" />
                 <div class="bc-call bc-call--key" style="--x:66.0%; --y:21.4%; --d:.05s">
-                  <div class="bc-call-in"><b data-short="강원">Gangwon (Chuncheon · Hongcheon)</b><span>AI-driven drug development and small- and mid-sized CDMOs</span></div>
+                  <div class="bc-call-in"><b data-short="Gangwon">Gangwon (Chuncheon · Hongcheon)</b><span>AI-driven drug development and small- and mid-sized CDMOs</span></div>
                 </div>
                 <div class="bc-call bc-call--l" style="--x:34.4%; --y:26.1%; --d:.18s">
-                  <div class="bc-call-in"><b data-short="인천 · 경기">Incheon · Siheung, Gyeonggi</b><span>The world’s leading biotechnology mega-cluster</span></div>
+                  <div class="bc-call-in"><b data-short="Incheon · Gyeonggi">Incheon · Siheung, Gyeonggi</b><span>The world’s leading biotechnology mega-cluster</span></div>
                 </div>
                 <div class="bc-call bc-call--l" style="--x:40.4%; --y:47.6%; --d:.31s">
-                  <div class="bc-call-in"><b data-short="대전">Daejeon (Yuseong)</b><span>an open-innovation hub for novel drugs</span></div>
+                  <div class="bc-call-in"><b data-short="Daejeon">Daejeon (Yuseong)</b><span>an open-innovation hub for novel drugs</span></div>
                 </div>
                 <div class="bc-call" style="--x:74.8%; --y:46.8%; --d:.44s">
-                  <div class="bc-call-in"><b data-short="경북">Gyeongbuk (Andong · Pohang)</b><span>national vaccine base and global vaccine hub</span></div>
+                  <div class="bc-call-in"><b data-short="Gyeongbuk">Gyeongbuk (Andong · Pohang)</b><span>national vaccine base and global vaccine hub</span></div>
                 </div>
                 <div class="bc-call bc-call--l" style="--x:32.6%; --y:69.1%; --d:.57s">
-                  <div class="bc-call-in"><b data-short="전남">Jeonnam (Hwasun)</b><span>national vaccine base and global vaccine hub</span></div>
+                  <div class="bc-call-in"><b data-short="Jeonnam">Jeonnam (Hwasun)</b><span>national vaccine base and global vaccine hub</span></div>
                 </div>
               </div>
             </figure>
@@ -1284,10 +1291,10 @@
                   <g class="bc-dot"><circle cx="275" cy="222" r="7" /><circle cx="275" cy="222" r="3" /></g>
                 </svg>
                 <div class="bc-call bc-call--cc" style="--x:56.1%; --y:14.1%; --d:.70s">
-                  <div class="bc-call-in"><b data-short="춘천">Chuncheon (prevention · diagnostics)</b><span>Enterprise Innovation Park, Kangwon National University, Geodu Agro-Industrial Complex</span></div>
+                  <div class="bc-call-in"><b data-short="Chuncheon">Chuncheon (prevention · diagnostics)</b><span>Enterprise Innovation Park, Kangwon National University, Geodu Agro-Industrial Complex</span></div>
                 </div>
                 <div class="bc-call bc-call--hc bc-call--l" style="--x:43.9%; --y:85.9%; --d:.83s">
-                  <div class="bc-call-in"><b data-short="홍천">Hongcheon (antibodies)</b><span>Hongcheon National Antibody Cluster, Bukbang Agro-Industrial Complex</span></div>
+                  <div class="bc-call-in"><b data-short="Hongcheon">Hongcheon (antibodies)</b><span>Hongcheon National Antibody Cluster, Bukbang Agro-Industrial Complex</span></div>
                 </div>
               </div>
             </figure>

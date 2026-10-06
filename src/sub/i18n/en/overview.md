@@ -112,3 +112,19 @@
 | 도입시설 (정주) | `Scientists' Village)` → **`Scientists' Village, etc.)`** · `accommodation, tourism and leisure` → **`tourist accommodation and leisure`** | 담당자 확정. 국문의 「등」을 되살리고 숙박·관광을 한 묶음으로 본다 |
 | 도입시설 (첨단) | `(IT, biotechnology, AI and data)` → **`(IT, BT, AI and data)`** · `industrial and office facilities` → **`office facilities`** | 국문 표기(`BT`)를 그대로 쓴다. 위 행의 `industrial` 중복을 걷었다 |
 | ⚠ 위 표의 「「등」을 생략」 항목 | **정주 행에는 더 이상 해당하지 않는다** | 첨단 행은 여전히 `etc.` 없이 둔다 — 두 행의 처리가 갈렸다 |
+
+## 특화단지 지도 — 짧은 지역명 (`data-short`)
+
+767px 이하에서 말풍선이 이 값으로 바뀐다(`b[data-short]::after`). 말풍선 전체 이름의
+**앞머리와 같아야** 한다 — 좁은 화면에서만 보이므로 짧을수록 좋다.
+
+| 한국어 | English |
+|---|---|
+| 강원 | **Gangwon** |
+| 인천 · 경기 | **Incheon · Gyeonggi** |
+| 대전 | **Daejeon** |
+| 경북 | **Gyeongbuk** |
+| 전남 | **Jeonnam** |
+| 홍천 | **Hongcheon** |
+
+⚠ `춘천` 은 `index.md` 에 이미 `Chuncheon` 으로 있다 — 여기 또 넣지 않는다(먼저 등록된 것이 이긴다).
