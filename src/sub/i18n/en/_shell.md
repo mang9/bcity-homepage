@@ -171,7 +171,7 @@
 | 전체 / 언론사별 / 기간별 | **All** / **By outlet** / **By date** | 언론보도 컨트롤(현재 꺼져 있다) |
 | 제목 · 내용 검색 | **Search titles and content** | |
 | 검색 | **Search** | |
-| N건 표시 중 | **Showing N items** | |
+| %n건 표시 중 | **%n shown** | `filter.js` 의 분류 결과 알림(.sr · 낭독 전용). `%n` 이 숫자 자리 — 코드 리터럴과 **꼴이 같아야** 치환된다 |
 | 확대해서 보기 *(.sr)* | **View larger** |  |
 | 재생 *(.sr)* | **Play** |  |
 | 새 창으로 열기 / 새 창으로 보기 | **Open in a new window** / **View in a new window** |  |

@@ -2251,7 +2251,10 @@
           b.classList.toggle('is-on', on);
           b.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
-        if (live) live.textContent = n + '건 표시 중';
+        /* ⚠ 숫자를 **리터럴 안**에 `%n` 으로 둔다 — 치환기는 JS 문자열 리터럴을
+           통째로 바꾸고(§11.110) 사전 값은 trim 되므로, `n + '건 표시 중'` 꼴이면
+           영문에 필요한 앞 공백(`12 shown`)을 사전으로 줄 방법이 없다. */
+        if (live) live.textContent = '%n shown'.replace('%n', n);
       };
 
       btns.forEach(function (b) {
