@@ -73,8 +73,22 @@ function liftAssets(html) {
  * ⚠ 치환 **전에** 돌린다. 번역 뒤에는 어느 쪽이 뜻풀이였는지 알 수 없다.
  * ⚠ `_shell.md` §3 은 같은 자리를 `01 PROJECT` 로 적어 두어 §1 과 어긋난다 — 확인 필요.
  */
+/* 히어로 아이브로우의 라틴 라벨을 **대메뉴 라벨로 통일한다**(2026-10-06 지시).
+   국문 마크업은 `BUSINESS · 사업소개` 인데 상단 메뉴 영문은 `The Project` 라 둘이 갈렸다.
+   ⚠ 값은 `_shell.md` §1 의 대메뉴 라벨과 **같아야 한다** — 한쪽만 고치면 다시 갈린다.
+   ⚠ 대문자로 적는다. `.hero-eyebrow span` 은 `letter-spacing: .2em` 이고 CSS 에
+     `text-transform` 이 **없다** — 마크업 글자가 그대로 보인다.
+   ⚠ `LOCATION` · `OVERVIEW` 는 **메인 안의 섹션** 이름이지 대메뉴가 아니다. 넣지 않는다. */
+const EYEBROW_EN = {
+  'BUSINESS': 'THE PROJECT',
+  'INVEST': 'INVEST &amp; LOCATE',
+  'PR CENTER': 'NEWS &amp; MEDIA',
+  'COMPANY': 'ABOUT US',
+};
+
 function collapseEyebrow(html) {
   const CAPS = /^[A-Z0-9][A-Z0-9 &·.\-]*$/;
+  const menu = (v) => EYEBROW_EN[v] || v;
   return html
     /* 섹션 아이브로우 — 두 꼴이 있다.
          ① `<b>BRAND NAME</b><span>브랜드 네임</span>` — 영문 이름이 <b> 에 있다 → <span> 을 버린다
@@ -86,9 +100,9 @@ function collapseEyebrow(html) {
       const t = txt.trim();
       if (/^\d+$/.test(t)) {
         const en = span.match(/^\s*([A-Z][A-Z0-9 &]*?)\s*·/);
-        return en ? `${b}<span>${en[1]}</span>` : m;
+        return en ? `${b}<span>${menu(en[1])}</span>` : m;
       }
-      return CAPS.test(t) ? b : m;
+      return CAPS.test(t) ? `<b>${menu(t)}</b>` : m;
     })
     /* 히어로 · 섹션 아이브로우 — `LOCATION · 입지` 에서 영문만 남긴다.
        ⚠⚠ **아이브로우 안으로 한정한다.** 조건 없이 걸면 똑같은 `<span>라틴 · 한글</span>`

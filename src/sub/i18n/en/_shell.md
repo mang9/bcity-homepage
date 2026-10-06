@@ -14,6 +14,24 @@
 | 홍보센터 | **News & Media** | `nav.json` 의 `en` 값을 그대로 |
 | 회사소개 | **About Us** | 푸터에서만 닿는 단일 페이지 |
 
+#### ⚠ 히어로 아이브로우도 **이 라벨을 쓴다**(2026-10-06 지시)
+
+국문 마크업은 `01 BUSINESS · 사업소개` 인데 영문은 위 표의 대메뉴 라벨로 통일한다 —
+`01 THE PROJECT` · `03 INVEST & LOCATE` · `04 NEWS & MEDIA` · `ABOUT US`.
+
+| 국문 아이브로우 | 영문 |
+|---|---|
+| `BUSINESS` | `THE PROJECT` |
+| `INVEST` | `INVEST & LOCATE` |
+| `PR CENTER` | `NEWS & MEDIA` |
+| `COMPANY` | `ABOUT US` |
+
+⚠⚠ **값은 `pages-en.mjs` 의 `EYEBROW_EN` 에 있다** — 사전이 아니다(치환 단위가 맞지 않는다).
+  이 표를 고치면 **그 상수도 함께 고친다.** 한쪽만 고치면 메뉴와 히어로가 다시 갈린다.
+⚠ **대문자로 적는다.** `.hero-eyebrow span` 은 `letter-spacing: .2em` 이고 CSS 에
+  `text-transform` 이 **없다** — 마크업 글자가 그대로 보인다.
+⚠ `LOCATION` · `OVERVIEW` 는 **메인 안의 섹션** 이름이지 대메뉴가 아니다 — 바꾸지 않는다.
+
 카테고리 번호·아이브로우는 그대로 — `01 BUSINESS` · `02 CITY` · `03 INVEST` · `04 PR CENTER` · `COMPANY`.
 
 #### ⚠⚠ 메뉴 라벨 폭 — 번역과 «간격이 일정하지 않다» 는 **같은 원인**이다
