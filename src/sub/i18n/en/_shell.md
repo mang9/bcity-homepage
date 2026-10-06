@@ -167,7 +167,7 @@
 | 전체 | **All** | 분류 탭 |
 | 행사 / 현장 / 조감도 / 기타 | **Events** / **Site photos** / **Renderings** / **Other** | 갤러리 분류 |
 | 카달로그 / IM / 브로슈어 / 리포트 | **Catalog**s / Information Memoranda (**IM**) / **Brochure**s / **Report**s | 발행물 분류. ⚠ `IM` 은 첫 등장에서 `Information Memorandum (IM)` 으로 풀어 쓴다 |
-| 갤러리 분류 / 발행물 분류 *(aria)* | **Gallery category** / **Publication type** | |
+| 언론보도 분류 / 갤러리 분류 / 발행물 분류 *(aria)* | **Press category** / **Gallery category** / **Publication type** | ⚠ `언론보도 분류` 는 `SHOW_LIST_FILTERS` 를 켤 때만 나타난다 — 없으면 영문 빌드가 죽는다 |
 | 전체 / 언론사별 / 기간별 | **All** / **By outlet** / **By date** | 언론보도 컨트롤(현재 꺼져 있다) |
 | 제목 · 내용 검색 | **Search titles and content** | |
 | 검색 | **Search** | |

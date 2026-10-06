@@ -655,7 +655,12 @@ function filterTabs(CAT, rows, keyOf, label) {
       `${text}<span class="pr-filter-n">${n}</span></button>`;
   };
 
-  return '        <nav class="pr-filters" aria-label="' + label + '">\n' +
+  /* ⚠ 분류 탭과 **낭독 알림은 한 쌍**이다 — 여기서 함께 만든다.
+       전에는 `src/sub/pages/gallery.html` 에 손으로 적혀 있어 **발행물에만 빠져
+       있었다**(분류를 바꿔도 스크린리더에 아무 안내가 가지 않았다).
+       `filter.js` 가 `getElementById('filterCount')` 로 찾으므로 id 는 이 이름이어야 한다. */
+  return '        <p class="sr" id="filterCount" role="status" aria-live="polite"></p>\n' +
+    '        <nav class="pr-filters" aria-label="' + label + '">\n' +
     [tab('all', '전체', rows.length, true)]
       .concat(CAT.map(([k, t]) => tab(k, t, count[k] || 0, false)))
       .join('\n') + '\n        </nav>';
