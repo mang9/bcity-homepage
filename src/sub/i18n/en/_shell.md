@@ -81,9 +81,9 @@
 
 | 페이지 | English title | English description (자) |
 |---|---|---|
-| 사업개요 | Overview · B-CITY … | **A KRW 1.1 trillion, 3,632,899 m² urban development led by private enterprise under MOLIT, and a designated National High-Tech Strategic Industry Specialized Complex for biotechnology.** (173) |
+| 사업개요 | Overview · B-CITY … | **A KRW 1.1 trillion, 3.63 km² private-led urban development under MOLIT and a National High-Tech Strategic Industry Specialized Complex for biotechnology.** (153) |
 | 입지 | Location · B-CITY … | **Within an hour of Seoul and the surrounding metropolitan area — the GTX-B extension, 2nd Gyeongchun National Road, airports and ports all within reach.** (151) |
-| 기대효과 | Impact · B-CITY … | **A self-sufficient city planned for approx. 16,000 residents in 6,366 households, with impact across the economy, industry, society, regions and the environment.** (160) |
+| 기대효과 | Impact · B-CITY … | **A self-sufficient city planned for approx. 16,000 residents in 6,366 households, with economic, industrial, social, regional and environmental impact.** (150) |
 | 추진일정 | Timeline · B-CITY … | **From the 2023 call for Enterprise Innovation Park proposals to full completion in 2033 — progress to date and the road ahead, year by year.** (139) |
 | 사업주체 | Developer · B-CITY … | **A PFV structure selected by MOLIT, funded by Gangwon State and Chuncheon City, and anchored by Douzone Bizon. Meet the partners behind B-CITY.** (142) |
 | 브랜드 | Brand · B-CITY … | **Where the city and biotechnology become one. The B-CITY brand name, symbol, logotype system and the three-color palette of Indigo, Mint and Azure.** (146) |
