@@ -61,15 +61,18 @@
 | 한국어 | English |
 |---|---|
 | `NATIONAL STRATEGY` / 특화단지 지정 | `NATIONAL STRATEGY` |
-| 정부가 지정하는 범국가적 프로젝트로<br>**2024년 바이오 분야 국가첨단전략산업 특화단지 지정** | A government-designated national project —<br>**designated a National High-Tech Strategic Industry Specialized Complex for biotechnology in 2024** |
+| 정부가 지정하는 범국가적 프로젝트로<br>**2024년 바이오 분야 국가첨단전략산업 특화단지 지정** | A government-designated national project —<br>**named a National High-Tech Strategic Industry Specialized Complex for biotechnology in 2024** |
 | 바이오분야<br>국가첨단전략산업<br>특화단지 *(라벨)* | Biotechnology<br>National High-Tech Strategic Industry Specialized Complex |
 
-> ⚠ **`designated` 가 한 셀 안에서 두 번 나온다** — 국문이 「정부가 **지정**하는 … 특화단지
-> **지정**」으로 같은 말을 두 번 쓰기 때문이고, 영문도 그 중복을 그대로 안는다.
+> ⚠⚠ **「특화단지 지정」의 동사는 세 쪽이 `named` 로 통일돼 있다** — 사업개요(이 셀 둘째 줄) ·
+> 메인 지표 · 추진일정 2024. 첫 줄이 `government-designated` 라 둘째 줄까지 `designated` 면
+> 한 셀 안에서 같은 말이 두 번 나온다(국문이 「정부가 **지정**하는 … 특화단지 **지정**」이라 그렇다).
+> **셋 중 하나만 고치면 같은 사실이 쪽마다 다른 동사로 적힌다 — 고칠 때는 반드시 세 곳을 함께 본다.**
+> ⚠ `selected as` 를 쓰지 않는다 — 추진일정의 「선도사업 **선정**」(`selection announced`)과 겹쳐
+> 두 제도가 구분되지 않는다.
+> ⚠ 첫 줄에서 `designated` 를 빼지 않는다(`backed by` · `under` 등) — 「지정」의 법정 어감이 사라진다.
 > 2026-11-13 검수 의견은 `A government-supported national project` 였으나 **그 시점의 국문이
-> 「지원」이었다** — 국문이 「지정」으로 확정되면서 사용자 지시로 `government-designated` 로 맞췄다.
-> 검수안의 **문형**(`A government-{분사} national project`)은 그대로 살렸다.
-> ⚠ 첫 줄에서 `designated` 를 피하려 하면(`backed by` · `under` 등) 「지정」의 법정 어감이 사라진다.
+> 「지원」이었다.** 국문이 「지정」으로 확정되면서 검수안의 문형만 살려 분사를 바꿨다.
 > ⚠ 원문은 **2025년 지정**이라고 쓰지만 추진일정 페이지의 근거는 **2024.06.27 제6차
 > 국가첨단전략산업위원회 의결**이다. 투자·입주 페이지도 `2024. 06. 27.` 로 적는다.
 > **번역에서는 원문을 바꾸지 않았다** — 한국어 원문의 연도 불일치이므로 한국어 쪽에서 먼저 정리해야 한다.
