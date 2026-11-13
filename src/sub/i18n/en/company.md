@@ -6,7 +6,7 @@
 |---|---|
 | `BUSINESS STRUCTURE` / 사업 구조 | `BUSINESS STRUCTURE` |
 | 민·관이 함께 만드는, **가장 단단한 사업 구조** | **A robust project structure** built on public–private partnership |
-| 국토교통부가 선정하고, 강원도와 춘천시가 투자하며, 대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다. | Selected by the Ministry of Land, Infrastructure and Transport, backed by equity investment from Gangwon State and Chuncheon City, and anchored by a leading Korean ICT company, B-CITY brings public and private partners together. |
+| 국토교통부가 선정하고, 대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다. | Selected by the Ministry of Land, Infrastructure and Transport and anchored by a leading Korean ICT company, B-CITY brings public and private partners together. |
 
 > ⚠ 원문 리드가 「강원도」라고 쓰지만 같은 페이지의 파트너 카드는 「강원특별자치도」다.
 > 영문은 **`Gangwon State` 로 통일**했다. 한국어 쪽도 통일이 필요하다 — **확인 필요.**
@@ -75,6 +75,10 @@
 | 제약 · 바이오기업 | Pharmaceutical and biotech companies |  |
 | 출자 37.3% | 37.3% equity |  |
 
+> ⚠ **`GI · 공공` · `강원특별자치도 / 4.9%` · `춘천시 / 4.9%` 세 키는 2026-11-13 부터 고아다** —
+> 지자체 출자 서술을 내리면서 구조도에서 그 카드를 통째로 뺐다(CLAUDE.md §11.131).
+> **지우지 않는다** — 5강점 05 에 `GI` 가 남아 있고, 되살릴 때 그대로 쓴다.
+
 > ⚠ 위 세 줄은 **칸을 따로 넣어야 했다.** 구조도의 출자자 카드는
 > `<span class="bs-hn">중소형 CDMO</span><i>제약 · 바이오기업</i>` 두 칸이고, 바로 위 행은
 > 기울임 주석(`*(…)*`)을 문서 표기로 보고 걷어내므로 그 칸과 맞지 않는다.
@@ -99,9 +103,9 @@
 | 한국어 | English | 글자 |
 |---|---|---|
 | 이 구조가 만드는 다섯 가지 강점 | **Five strengths of the project structure** |  |
-| `01` **민·관 합동** / 정부 · 지자체 · 민간 자본 결합 | `01` **Public–private** partnership / Central and local government and private capital combined | 14 / 57 |
+| `01` **민·관 합동** / 정부 · 지자체 · 민간 주도 사업 | `01` **Public–private** partnership / Central government, local government and private sector led | 14 / 59 |
 | `02` **공신력 확보** / 국토교통부 선도사업 지정 | `02` **Institutional credibility** / Selected as a MOLIT project | 25 / 27 |
-| `03` **추진 가속화** / 지자체 직접 출자로 인허가 연계 강화 | `03` **Faster delivery** / Local government equity participation strengthens permitting coordination | 15 / 73 |
+| `03` **추진 가속화** / 인허가 연계 강화 | `03` **Faster delivery** / Stronger permitting coordination | 15 / 32 |
 | `04` **자산 분리** / PFV–AMC 분리 운영으로 투명성 확보 | `04` **Asset separation** / Separate PFV and AMC operations support transparency | 16 / 52 |
 | `05` **다층 파트너십** / 앵커 · GI · FI · CI · SI 구조 | `05` **Multi-tier partnership** / Anchor company · GI · FI · CI · SI | 22 / 34 |
 
@@ -137,6 +141,10 @@
 | 보기 *(버튼)* | **View** |
 | ※ [보기]를 누르면 공문 원본을 확대해 보실 수 있습니다. | \* Select **View** to open the original document at full size. **Documents are in Korean.** |
 
+> ⚠ **`강원특별자치도 · 춘천시 출자지분 확정 공문` 키는 2026-11-13 부터 고아다** —
+> 그 행을 목록에서 뺐다(CLAUDE.md §11.131). 스캔 파일
+> `assets/doc/gangwon-equity-2024-09-09.avif` 는 지우지 않았다.
+
 > ⚠ 공문 스캔(`assets/doc/*.avif`)은 **전부 한국어**다. 번역할 수 없으므로 각주에
 > `Documents are in Korean.` 을 더했다 — 없으면 영문 독자가 열고 나서 당황한다.
 
@@ -154,8 +162,8 @@
 |---|---|
 | **관계 기관** / `GOVERNMENT PARTNERS` / 사업 인가 · 지원의 핵심 주체 | **Authorities** / `GOVERNMENT PARTNERS` / The bodies that approve and support the project |
 | **국토교통부** / 춘천기업혁신파크 선도사업 선정 기관<br>통합개발계획 승인 및 사업 전반의 인허가 주관 | **Ministry of Land, Infrastructure and Transport** / Selected the Chuncheon EIP project<br>Approves the Integrated Development Plan and oversees permitting |
-| **강원특별자치도** / B-CITY 사업 PFV **출자 4.9%**<br>광역 행정 지원 및 첨단산업 정책 연계 | **Gangwon State** / **4.9% equity** in the B-CITY PFV<br>Regional administrative support and advanced-industry policy alignment |
-| **춘천시** / B-CITY 사업 PFV **출자 4.9%**<br>사업 인허가 협력 및 지역 인프라 지원 | **Chuncheon City** / **4.9% equity** in the B-CITY PFV<br>Permitting cooperation and local infrastructure support |
+| **강원특별자치도** / 광역 행정 지원 및 첨단산업 정책 연계 | **Gangwon State** / Regional administrative support and advanced-industry policy alignment |
+| **춘천시** / 사업 인허가 협력 및 지역 인프라 지원 | **Chuncheon City** / Permitting cooperation and local infrastructure support |
 
 ### 앵커 기업 · 자산관리 · 금융 파트너
 

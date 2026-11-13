@@ -1042,8 +1042,13 @@
     .bs-holders-h { margin: 0 0 clamp(14px, 1.4vw, 20px); text-align: center;
       font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.2vw, 18px);
       letter-spacing: .02em; color: var(--color-primary); }
+    /* ⚠ 열 수를 숫자로 박지 않는다 — 출자자가 늘거나 줄면 **빈 칸이 남고 카드 폭도 그대로**다.
+         `auto-fit` 이 빈 트랙을 접어 주므로 항목 수가 바뀌어도 마크업·CSS 를 손댈 필요가 없다.
+         실측(1440 컨테이너 1162 · 1024 컨테이너 897) — 3~6개가 전부 한 줄 균등 · 글자 넘침 0.
+         ⚠ `minmax(0, 1fr)` 로는 안 된다 — min 이 0 이면 트랙이 무한히 생겨 접히지 않는다.
+            min 은 **실제 최소 폭**이어야 하고, 140 은 6개까지 한 줄에 담는 값이다. */
     .bs-holder-s { list-style: none; display: grid; gap: clamp(8px, 1vw, 14px);
-      grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; }
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin: 0; padding: 0; }
     .bs-holder { display: flex; flex-direction: column;
       border: 1px solid var(--bs-edge); border-radius: var(--radius-md); overflow: hidden; }
     .bs-holder-h { margin: 0; padding: 9px 10px; background: #eaf2ff; text-align: center;
@@ -1420,8 +1425,8 @@
       <div class="wrap">
         <p class="eyebrow rv"><i aria-hidden="true"></i><b>BUSINESS STRUCTURE</b><span>사업 구조</span></p>
         <h2 class="h2 rv">민·관이 함께 만드는, <em>가장 단단한 사업 구조</em></h2>
-        <p class="lede rv">국토교통부가 선정하고, 강원도와 춘천시가 투자하며,
-          대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다.</p>
+        <p class="lede rv">국토교통부가 선정하고, 대한민국 대표 ICT 기업이 앵커로 참여하는
+          B-CITY는 시작부터 다릅니다.</p>
 
         <div class="tr-block rv">
           <div class="sub-h"><h3 class="sub-t">명목회사(PFV) 중심의 투명한 사업 운영</h3></div>
@@ -1499,19 +1504,14 @@
 
             <div class="bs-holders">
               <p class="bs-holders-h">PFV 출자자</p>
+              <!-- ⚠ 출자자를 늘리거나 줄일 때 **마크업·CSS 를 손댈 필요가 없다** —
+                   열은 `repeat(auto-fit, …)` 가 개수에 맞춰 만든다(page-company.css 참고). -->
               <ul class="bs-holder-s">
               <li class="bs-holder">
                 <p class="bs-holder-h">앵커기업 · AMC</p>
                 <ul class="bs-holder-l">
                   <li><span class="bs-hn">더존비즈온</span><em>37.3%</em></li>
                   <li><span class="bs-hn">바이오테크이노밸리자산관리<i>AMC</i></span><em>0.2%</em></li>
-                </ul>
-              </li>
-              <li class="bs-holder">
-                <p class="bs-holder-h">GI · 공공</p>
-                <ul class="bs-holder-l">
-                  <li><span class="bs-hn">강원특별자치도</span><em>4.9%</em></li>
-                  <li><span class="bs-hn">춘천시</span><em>4.9%</em></li>
                 </ul>
               </li>
               <li class="bs-holder">
@@ -1548,11 +1548,11 @@
           <div class="sub-h"><h3 class="sub-t">이 구조가 만드는 다섯 가지 강점</h3></div>
           <ol class="mrt">
             <li class="mrt-i"><span class="mrt-n">01</span>
-              <b class="mrt-t">민·관 합동</b><span class="mrt-d">정부 · 지자체 · 민간 자본 결합</span></li>
+              <b class="mrt-t">민·관 합동</b><span class="mrt-d">정부 · 지자체 · 민간 주도 사업</span></li>
             <li class="mrt-i"><span class="mrt-n">02</span>
               <b class="mrt-t">공신력 확보</b><span class="mrt-d">국토교통부 선도사업 지정</span></li>
             <li class="mrt-i"><span class="mrt-n">03</span>
-              <b class="mrt-t">추진 가속화</b><span class="mrt-d">지자체 직접 출자로 인허가 연계 강화</span></li>
+              <b class="mrt-t">추진 가속화</b><span class="mrt-d">인허가 연계 강화</span></li>
             <li class="mrt-i"><span class="mrt-n">04</span>
               <b class="mrt-t">자산 분리</b><span class="mrt-d">PFV–AMC 분리 운영으로 투명성 확보</span></li>
             <li class="mrt-i"><span class="mrt-n">05</span>
@@ -1577,12 +1577,6 @@
               <span class="doc-n">국토교통부 기업혁신파크 선도사업 선정 공문</span>
               <button type="button" class="doc-view" data-lb="image"
                       data-src="assets/doc/molit-selection-2024-03-27.avif" data-title="국토교통부 기업혁신파크 선도사업 선정 공문">보기</button>
-            </li>
-            <li>
-              <time datetime="2024-09-09">2024.09.09</time>
-              <span class="doc-n">강원특별자치도 · 춘천시 출자지분 확정 공문</span>
-              <button type="button" class="doc-view" data-lb="image"
-                      data-src="assets/doc/gangwon-equity-2024-09-09.avif" data-title="강원특별자치도 · 춘천시 출자지분 확정 공문">보기</button>
             </li>
             <li>
               <time datetime="2024-03-18">2024.03.18</time>
@@ -1629,12 +1623,12 @@
             <li class="ptn-card">
               <span class="ptn-logo"><img src="assets/logo/partner-gangwon.png" alt="강원특별자치도" style="--lh:28px" loading="lazy" decoding="async" /></span>
               <b>강원특별자치도</b>
-              <span>B-CITY 사업 PFV <em>출자 4.9%</em><br />광역 행정 지원 및 첨단산업 정책 연계</span>
+              <span>광역 행정 지원 및 첨단산업 정책 연계</span>
             </li>
             <li class="ptn-card">
               <span class="ptn-logo"><img src="assets/logo/partner-chuncheon-city.svg" alt="춘천시" style="--lh:35px" loading="lazy" decoding="async" /></span>
               <b>춘천시</b>
-              <span>B-CITY 사업 PFV <em>출자 4.9%</em><br />사업 인허가 협력 및 지역 인프라 지원</span>
+              <span>사업 인허가 협력 및 지역 인프라 지원</span>
             </li>
           </ul>
         </div>

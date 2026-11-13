@@ -136,8 +136,13 @@
 .bs-holders-h { margin: 0 0 clamp(14px, 1.4vw, 20px); text-align: center;
   font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 1.2vw, 18px);
   letter-spacing: .02em; color: var(--color-primary); }
+/* ⚠ 열 수를 숫자로 박지 않는다 — 출자자가 늘거나 줄면 **빈 칸이 남고 카드 폭도 그대로**다.
+     `auto-fit` 이 빈 트랙을 접어 주므로 항목 수가 바뀌어도 마크업·CSS 를 손댈 필요가 없다.
+     실측(1440 컨테이너 1162 · 1024 컨테이너 897) — 3~6개가 전부 한 줄 균등 · 글자 넘침 0.
+     ⚠ `minmax(0, 1fr)` 로는 안 된다 — min 이 0 이면 트랙이 무한히 생겨 접히지 않는다.
+        min 은 **실제 최소 폭**이어야 하고, 140 은 6개까지 한 줄에 담는 값이다. */
 .bs-holder-s { list-style: none; display: grid; gap: clamp(8px, 1vw, 14px);
-  grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; }
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin: 0; padding: 0; }
 .bs-holder { display: flex; flex-direction: column;
   border: 1px solid var(--bs-edge); border-radius: var(--radius-md); overflow: hidden; }
 .bs-holder-h { margin: 0; padding: 9px 10px; background: #eaf2ff; text-align: center;

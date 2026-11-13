@@ -32,6 +32,10 @@
 | 환경영향평가협의회 심의 | Environmental Impact Assessment Council review |
 | 토지거래허가구역 조정 공고<br>*강원특별자치도 공고 제2024-1965호* | Land Transaction Permission Zone adjusted<br>*Gangwon State Announcement No. 2024-1965* |
 
+> ⚠ **`강원도 및 춘천시 PFV 출자지분 확정` 키는 2026-11-13 부터 고아다** —
+> 지자체 출자 서술을 내리면서 `09.09` 항목을 타임라인에서 뺐다(CLAUDE.md §11.131).
+> 지우지 않는다. 되살릴 때 그대로 쓴다.
+
 ## 2025
 
 | 한국어 | English |
