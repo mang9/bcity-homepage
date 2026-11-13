@@ -6,7 +6,7 @@
 |---|---|
 | `BUSINESS STRUCTURE` / 사업 구조 | `BUSINESS STRUCTURE` |
 | 민·관이 함께 만드는, **가장 단단한 사업 구조** | **A robust project structure** built on public–private partnership |
-| 국토교통부가 선정하고, 대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다. | Selected by the Ministry of Land, Infrastructure and Transport and anchored by a leading Korean ICT company, B-CITY brings public and private partners together. |
+| 국토교통부가 선정하고, 대한민국 대표 ICT 기업이 앵커로 참여하는 B-CITY는 시작부터 다릅니다. | Selected by the Ministry of Land, Infrastructure and Transport and anchored by a leading Korean ICT company, B-CITY stands apart from the outset. |
 
 > ⚠ 원문 리드가 「강원도」라고 쓰지만 같은 페이지의 파트너 카드는 「강원특별자치도」다.
 > 영문은 **`Gangwon State` 로 통일**했다. 한국어 쪽도 통일이 필요하다 — **확인 필요.**
@@ -103,9 +103,9 @@
 | 한국어 | English | 글자 |
 |---|---|---|
 | 이 구조가 만드는 다섯 가지 강점 | **Five strengths of the project structure** |  |
-| `01` **민·관 합동** / 정부 · 지자체 · 민간 주도 사업 | `01` **Public–private** partnership / Central government, local government and private sector led | 14 / 59 |
+| `01` **민·관 합동** / 정부 · 지자체 · 민간 주도 사업 | `01` **Public–private** partnership / A project led by the central government, local governments, and the private sector | 14 / 81 |
 | `02` **공신력 확보** / 국토교통부 선도사업 지정 | `02` **Institutional credibility** / Selected as a MOLIT project | 25 / 27 |
-| `03` **추진 가속화** / 인허가 연계 강화 | `03` **Faster delivery** / Stronger permitting coordination | 15 / 32 |
+| `03` **추진 가속화** / 인허가 연계 강화 | `03` **Faster delivery** / Stronger Coordination on Permits and Approvals | 15 / 45 |
 | `04` **자산 분리** / PFV–AMC 분리 운영으로 투명성 확보 | `04` **Asset separation** / Separate PFV and AMC operations support transparency | 16 / 52 |
 | `05` **다층 파트너십** / 앵커 · GI · FI · CI · SI 구조 | `05` **Multi-tier partnership** / Anchor company · GI · FI · CI · SI | 22 / 34 |
 

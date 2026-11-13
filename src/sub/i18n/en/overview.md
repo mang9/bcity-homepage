@@ -61,15 +61,13 @@
 | 한국어 | English |
 |---|---|
 | `NATIONAL STRATEGY` / 특화단지 지정 | `NATIONAL STRATEGY` |
-| 정부가 지정하는 범국가적 프로젝트로<br>**2024년 바이오 분야 국가첨단전략산업 특화단지 지정** | A nationally designated project —<br>**designated a National High-Tech Strategic Industry Specialized Complex for biotechnology in 2024** |
+| 정부가 지정하는 범국가적 프로젝트로<br>**2024년 바이오 분야 국가첨단전략산업 특화단지 지정** | A government-supported national project —<br>**designated a National High-Tech Strategic Industry Specialized Complex for biotechnology in 2024** |
 | 바이오분야<br>국가첨단전략산업<br>특화단지 *(라벨)* | Biotechnology<br>National High-Tech Strategic Industry Specialized Complex |
 
-> ⚠ **`designated` 가 한 셀 안에서 두 번 나온다** — 2026-11-13 에 국문이
-> 「정부가 **지원**하는」 → 「정부가 **지정**하는」으로 바뀌면서, 둘째 줄의 「특화단지 **지정**」과
-> 같은 말이 겹쳤다. 국문이 그 중복을 안고 있으므로 영문도 그대로 따랐다.
-> 첫 줄에서 `designated` 를 피하려 하면(`backed by` · `under` 등) 「지정」의 법정 어감이 사라진다.
-> **담당자 검수 때 함께 볼 것.**
-
+> ⚠ **국문은 「정부가 지정하는」인데 영문은 `government-supported` 다** — 2026-11-13 검수
+> 의견(`A government-supported national project`)을 그대로 채택한 결과다. 검수 시점의 국문이
+> 「정부가 **지원**하는」이었고, 그 뒤 국문만 「지정」으로 바뀌었다. **사용자 확인을 받고 영문은
+> 검수안을 따랐다** — 덕분에 둘째 줄의 `designated a National High-Tech …` 와 겹치지도 않는다.
 > ⚠ 원문은 **2025년 지정**이라고 쓰지만 추진일정 페이지의 근거는 **2024.06.27 제6차
 > 국가첨단전략산업위원회 의결**이다. 투자·입주 페이지도 `2024. 06. 27.` 로 적는다.
 > **번역에서는 원문을 바꾸지 않았다** — 한국어 원문의 연도 불일치이므로 한국어 쪽에서 먼저 정리해야 한다.

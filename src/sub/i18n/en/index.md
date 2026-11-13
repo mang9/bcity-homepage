@@ -119,7 +119,7 @@
 | 국토교통부 주관의 / **민간기업 중심 도시개발 사업** | **Private-sector-led urban development**<br>under the Ministry of Land, Infrastructure and Transport |
 | 총 사업비 약 1.1조원의 대규모 국가도시개발 프로젝트로, 총 면적 약 110만평(여의도 면적 1.25배 규모)의 부지 위에 혁신 생태계가 만들어집니다 | A national urban development project of about KRW 1.1 trillion, building an innovation ecosystem on roughly 3.63 km² — 1.25 times the area of Yeouido |
 | 2024년 바이오 분야 / **국가첨단전략산업 특화단지 지정** | Designated in 2024 as a **National High-Tech Strategic Industry Specialized Complex** for biotechnology |
-| 정부가 지정하는 범국가적 프로젝트입니다. 인허가 패스트트랙부터 최대 규모 세제 혜택까지, 성공적 비즈니스를 위한 전방위적 특구 지원이 제공됩니다. | A nationally designated project. From fast-track permitting to significant tax incentives, special-zone programs support key stages of business development. |
+| 정부가 지정하는 범국가적 프로젝트입니다. 인허가 패스트트랙부터 최대 규모 세제 혜택까지, 성공적 비즈니스를 위한 전방위적 특구 지원이 제공됩니다. | A government-supported national project. From fast-track permitting to significant tax incentives, special-zone programs support key stages of business development. |
 
 ### 지표 4종 (`.ov-stat` · 카운트업)
 
@@ -375,7 +375,7 @@
 | 한국어 | English |
 |---|---|
 | 대한민국 AI·바이오 산업의 중심에서<br>글로벌 경쟁력을 갖춘 혁신 생태계를 완성합니다 | Building a globally competitive innovation ecosystem<br>at the heart of Korea’s AI and biotechnology industries |
-| 관계기관 & 파트너 | **Partners & authorities** |
+| 관계기관 & 파트너 | **Related Organizations & Partners** |
 | **바이오테크 이노밸리 PFV** | **Biotech Innovalley PFV** |
 | 주소 : 서울특별시 광진구 자양로58 태림빌딩 3층 | Address: 3F Taerim Bldg., 58 Jayang-ro, Gwangjin-gu, Seoul, Republic of Korea |
 | 사업자등록번호 : 883-81-03982 | Business registration no.: 883-81-03982 |
